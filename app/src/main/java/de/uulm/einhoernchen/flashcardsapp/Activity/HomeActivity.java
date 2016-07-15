@@ -1,8 +1,17 @@
 package de.uulm.einhoernchen.flashcardsapp.Activity;
 
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -12,17 +21,55 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ImageView;
+import android.widget.TextView;
 
+import com.amulyakhare.textdrawable.TextDrawable;
+import com.amulyakhare.textdrawable.util.ColorGenerator;
+
+import java.io.File;
+import java.sql.SQLException;
+
+import de.uulm.einhoernchen.flashcardsapp.Database.DbManager;
+import de.uulm.einhoernchen.flashcardsapp.Fragment.HomeFragment;
+import de.uulm.einhoernchen.flashcardsapp.Fragment.ItemFragment;
+import de.uulm.einhoernchen.flashcardsapp.Models.User;
 import de.uulm.einhoernchen.flashcardsapp.R;
+import de.uulm.einhoernchen.flashcardsapp.Util.ImageProcessor;
+import de.uulm.einhoernchen.flashcardsapp.Util.PermissionManager;
 
 public class HomeActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener, HomeFragment.OnFragmentInteractionListener, ItemFragment.OnListFragmentInteractionListener {
+
+
+    private DbManager db;
+    private User user;
+    private Context context;
+    private ImageView profileImage;
+    private NavigationView navigationView;
+    private Toolbar toolbar;
+
+
+
+    private static final int MY_INTENT_CLICK=302;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        this.context = this;
+
         setContentView(R.layout.activity_home);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+
+        HomeFragment fragment = new HomeFragment();
+        android.support.v4.app.FragmentTransaction fragmentTransaction =
+                getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.add(R.id.fragment_container_home, fragment);
+        fragmentTransaction.commit();
+
+        // Set the fragment initially
+
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -41,9 +88,141 @@ public class HomeActivity extends AppCompatActivity
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+        View header = navigationView.getHeaderView(0);
+
+        openDb();
+
+        user = db.getUser(); Log.d("user--->", user.toString());
+
+        profileImage = (ImageView) header.findViewById(R.id.imageViewProfilePhoto);
+        setProfileImage();
+
+        TextView profileName = (TextView) header.findViewById(R.id.textViewProfileName);
+        TextView profileEmail = (TextView) header.findViewById(R.id.textViewProfileEmail);
+
+        profileName.setText(user.getName());
+        profileEmail.setText(user.getEmail());
+
+        /**
+         * Adds clicklistener to the profile image
+         * you can choose image of gallery or from camera
+         */
+        profileImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int btn) {
+
+                        switch (btn){
+
+                            case DialogInterface.BUTTON_POSITIVE:
+
+                                Intent camIntent = new Intent("android.media.action.IMAGE_CAPTURE");
+                                startActivityForResult(camIntent, 1);
+                                break;
+
+                            case DialogInterface.BUTTON_NEGATIVE:
+
+                                Intent intent = new Intent();
+                                intent.setType("image/*");
+                                intent.setAction(Intent.ACTION_GET_CONTENT);
+                                startActivityForResult(Intent.createChooser(intent, "Select File"),MY_INTENT_CLICK);
+                                break;
+
+                            default:
+                                // On canel
+                                break;
+                        }
+                    }
+                };
+                AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                builder.setMessage(R.string.prompt_choose_profile)
+                        .setPositiveButton(R.string.prompt_choose_camera, dialogClickListener)
+                        .setNegativeButton(R.string.prompt_choose_gallery, dialogClickListener)
+                        .setNeutralButton(R.string.prompt_cancel, dialogClickListener).show();
+            }
+
+        });
+
+
     }
+
+
+    /**
+     * Searches for a profile image an sets it to the view
+     *
+     */
+    private void setProfileImage() {
+
+        File sd =  Environment.getExternalStorageDirectory();
+
+        File folder = new File(sd + "/flashcards");
+        boolean success = true;
+
+        if (!folder.exists()) {
+            success = folder.mkdir();
+        }
+
+        if (success) {
+
+            File image = new File(sd+"/flashcards", user.getUserId()+"_flashcards_profile.png");
+
+            if (image.exists()) {
+                BitmapFactory.Options bmOptions = new BitmapFactory.Options();
+                Bitmap bitmap = BitmapFactory.decodeFile(image.getAbsolutePath(), bmOptions);
+                profileImage.setImageBitmap(bitmap);
+            }
+
+        }
+
+    }
+
+
+    /**
+     * Here you get the return values of the intends
+     *
+     * @param requestCode
+     * @param resultCode
+     * @param data
+     */
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode != RESULT_OK) return;
+
+
+        // Get Photo from camera intent
+        if (resultCode == RESULT_OK && data.getData() == null && requestCode != MY_INTENT_CLICK) {
+
+            Bitmap bitmap = (Bitmap) data.getExtras().get("data");
+            ImageProcessor.savebitmap(bitmap, user.getUserId());
+            setProfileImage();
+
+        }
+
+        // Get Data from Gallery intent
+        if (requestCode == MY_INTENT_CLICK) {
+
+            if (null == data) return;
+
+            String selectedImagePath;
+            Uri selectedImageUri = data.getData();
+
+            //MEDIA GALLERY
+            PermissionManager.verifyStoragePermissionsWrite(this);
+            selectedImagePath = ImageProcessor.getPath(getApplicationContext(), selectedImageUri);
+            BitmapFactory.Options bmOptions = new BitmapFactory.Options();
+
+            Bitmap bitmap = BitmapFactory.decodeFile(selectedImagePath, bmOptions);
+            ImageProcessor.savebitmap(bitmap, user.getUserId());
+            setProfileImage();
+        }
+
+    }
+
 
     @Override
     public void onBackPressed() {
@@ -83,22 +262,82 @@ public class HomeActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
+        if (id == R.id.nav_home) {
 
-        } else if (id == R.id.nav_slideshow) {
+            HomeFragment fragment = new HomeFragment();
+            android.support.v4.app.FragmentTransaction fragmentTransaction =
+                    getSupportFragmentManager().beginTransaction();
+            fragmentTransaction.replace(R.id.fragment_container_home, fragment);
+            fragmentTransaction.commit();
 
-        } else if (id == R.id.nav_manage) {
+        } else if (id == R.id.nav_catalogue) {
+
+            ItemFragment fragment = new ItemFragment();
+            android.support.v4.app.FragmentTransaction fragmentTransaction =
+                    getSupportFragmentManager().beginTransaction();
+            fragmentTransaction.replace(R.id.fragment_container_home, fragment);
+            fragmentTransaction.commit();
+
+        } else if (id == R.id.nav_profile) {
+
+        } else if (id == R.id.nav_challenge) {
+
+        } else if (id == R.id.nav_settings) {
+
+        } else if (id == R.id.nav_help) {
 
         } else if (id == R.id.nav_share) {
 
-        } else if (id == R.id.nav_send) {
+        } else if (id == R.id.nav_feedback) {
 
+        } else if (id == R.id.nav_logout) {
+            Log.d("Click", "log out");
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+
+    /**
+     * Instantiates the DatabesManager and opens a connection
+     *
+     */
+    private void openDb() {
+
+        try {
+
+            if (db == null) {
+                db = new DbManager(this);
+            }
+
+            db.open();
+
+        } catch (SQLException e) {
+
+            e.printStackTrace();
+        }
+    }
+
+
+    @Override
+    protected void onDestroy() {
+
+        super.onDestroy();
+
+        db.close();
+    }
+
+
+    @Override
+    public void onFragmentInteraction(Uri uri) {
+
+    }
+
+    @Override
+    public void onListFragmentInteraction(de.uulm.einhoernchen.flashcardsapp.Fragment.dummy.DummyContent.DummyItem item) {
+        Log.d("click", item.content);
+
     }
 }

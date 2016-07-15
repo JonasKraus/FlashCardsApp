@@ -96,7 +96,11 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         // Immediately change to home activity
         if (db.checkIfUserExists()) {
             Log.d("Login", "user bereits vorhanden");
+
+           // startActivity(new Intent(LoginActivity.this, ItemListActivity.class));
             startActivity(new Intent(LoginActivity.this, HomeActivity.class));
+        } else {
+            Log.d("Login", "user noch nicht vorhanden");
         }
 
 
@@ -240,9 +244,10 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                     AsyncGetUser asyncGetUser = new AsyncGetUser(userId, new AsyncGetUser.AsyncResponseUser() {
                         @Override
                         public void processFinish(User user) {
-                            Log.d("hier kommt er ", user.toString());
+
                             user.setPassword(password);
                             db.createUser(user);
+                            startActivity(new Intent(LoginActivity.this, HomeActivity.class));
                         }
                     });
                     asyncGetUser.execute();
@@ -503,7 +508,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             showProgress(false);
 
             if (id != null) {
-                startActivity(new Intent(LoginActivity.this, HomeActivity.class));
                 delegate.processFinish(id);
                 //finish();
             } else {

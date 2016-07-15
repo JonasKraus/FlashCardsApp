@@ -13,4 +13,18 @@
     tools:showIn="@layout/app_bar_home"
     tools:context="de.uulm.einhoernchen.flashcardsapp.Activity.HomeActivity">
 
+    <ListView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@android:id/list"
+        android:longClickable="true"
+        android:clickable="true"
+        android:animateLayoutChanges="false"
+        android:divider="@color/colorPrimary"
+        android:dividerHeight="1px"
+        android:layout_weight="1"
+        tools:listitem="@layout/list_single">
+    </ListView>
+
+
 </RelativeLayout>

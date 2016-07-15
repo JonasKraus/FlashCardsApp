@@ -92,7 +92,7 @@ public class DbManager {
      *
      * @return User | null
      */
-    private User getUser() {
+    public User getUser() {
 
         Cursor cursor = database.query(MySQLiteHelper.TABLE_USER,allUsersColumns, null, null, null, null, null);
         User user = null;

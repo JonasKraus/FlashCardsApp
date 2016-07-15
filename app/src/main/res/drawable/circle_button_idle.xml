@@ -1,0 +1,10 @@
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:drawable="@drawable/circle_button_pressed" />
+
+    <item android:bottom="@dimen/layer_padding">
+        <shape android:shape="oval">
+            <corners android:radius="30dp" />
+            <solid android:color="@color/colorPrimary" />
+        </shape>
+    </item>
+</layer-list>

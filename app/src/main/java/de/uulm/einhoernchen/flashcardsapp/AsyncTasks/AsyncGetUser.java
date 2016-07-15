@@ -47,18 +47,12 @@ public class AsyncGetUser extends AsyncTask<Long, Void, User>{
 
             urlConnection = (HttpURLConnection) url.openConnection();
 
-            urlConnection.setDoOutput(false);
-            //urlConnection.setChunkedStreamingMode(0);
+            urlConnection.setDoOutput(false); // Important for get request
             urlConnection.setRequestProperty("Accept", "application/json");
             urlConnection.setRequestProperty("Content-Type", "application/json");
             urlConnection.setRequestMethod("GET");
 
-
-
             urlConnection.connect();
-            Log.d("Hier noch", urlConnection.getInputStream().toString());
-
-            Log.d("reesponse..->", urlConnection.getRequestMethod()+" "+ urlConnection.getResponseCode()+" "+  urlConnection.getContent());
 
             BufferedReader in = new BufferedReader(
                     new InputStreamReader(
@@ -76,11 +70,9 @@ public class AsyncGetUser extends AsyncTask<Long, Void, User>{
 
                     ObjectMapper mapper = new ObjectMapper();
                     JsonNode root = mapper.readTree(decodedString);
-                    String name = root.get("name").asText();
-                    Log.d("response json name", name +" ");
 
                     user = new User(id, root.get("name").asText(), root.get("email").asText(), root.get("rating").asInt(), root.get("group").asLong(100), root.get("created").asText());
-
+                    Log.d("user instanz", user.toString());
                     return user;
 
                 } else {
