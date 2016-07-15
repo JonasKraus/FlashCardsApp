@@ -98,7 +98,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             Log.d("Login", "user bereits vorhanden");
 
            // startActivity(new Intent(LoginActivity.this, ItemListActivity.class));
-            startActivity(new Intent(LoginActivity.this, HomeActivity.class));
+            startActivity(new Intent(LoginActivity.this, MainActivity.class));
         } else {
             Log.d("Login", "user noch nicht vorhanden");
         }
@@ -247,7 +247,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
                             user.setPassword(password);
                             db.createUser(user);
-                            startActivity(new Intent(LoginActivity.this, HomeActivity.class));
+                            startActivity(new Intent(LoginActivity.this, MainActivity.class));
                         }
                     });
                     asyncGetUser.execute();

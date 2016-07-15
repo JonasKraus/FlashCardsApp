@@ -38,7 +38,7 @@ import de.uulm.einhoernchen.flashcardsapp.R;
 import de.uulm.einhoernchen.flashcardsapp.Util.ImageProcessor;
 import de.uulm.einhoernchen.flashcardsapp.Util.PermissionManager;
 
-public class HomeActivity extends AppCompatActivity
+public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, HomeFragment.OnFragmentInteractionListener, ItemFragment.OnListFragmentInteractionListener {
 
 
