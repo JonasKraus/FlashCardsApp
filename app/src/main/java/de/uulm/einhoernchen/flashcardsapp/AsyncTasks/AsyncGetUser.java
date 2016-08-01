@@ -70,8 +70,7 @@ public class AsyncGetUser extends AsyncTask<Long, Void, User>{
 
                     ObjectMapper mapper = new ObjectMapper();
                     JsonNode root = mapper.readTree(decodedString);
-
-                    user = new User(id, root.get("name").asText(), root.get("email").asText(), root.get("rating").asInt(), root.get("group").asLong(100), root.get("created").asText());
+                    user = new User(id,root.get("avatar").asText(), root.get("name").asText(), "", root.get("email").asText(), root.get("rating").asInt(), root.get("created").asText(), root.get("lastLogin").asText());
                     Log.d("user instanz", user.toString());
                     return user;
 

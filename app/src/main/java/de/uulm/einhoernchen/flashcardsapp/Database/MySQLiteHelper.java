@@ -12,80 +12,81 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
 
     // Strings for table user
     public static final String TABLE_USER = "user";
-    public static final String COLUMN_USER_ID = "userId";
-    public static final String COLUMN_USER_AVATAR = "avatar";
-    public static final String COLUMN_USER_NAME = "name";
-    public static final String COLUMN_USER_PASSWORD = "password";
-    public static final String COLUMN_USER_EMAIL = "email";
-    public static final String COLUMN_USER_RATING = "rating";
-    public static final String COLUMN_USER_GROUP_ID = "groupId";
-    public static final String COLUMN_USER_CREATED= "created";
-    public static final String COLUMN_USER_LAST_LOGIN= "lastLogin";
+    public static final String COLUMN_USER_ID = "userId";                               //0
+    public static final String COLUMN_USER_AVATAR = "avatar";                           //1
+    public static final String COLUMN_USER_NAME = "name";                               //2
+    public static final String COLUMN_USER_PASSWORD = "password";                       //3
+    public static final String COLUMN_USER_EMAIL = "email";                             //4
+    public static final String COLUMN_USER_RATING = "rating";                           //5
+    public static final String COLUMN_USER_GROUP_ID = "groupId";                        //6
+    public static final String COLUMN_USER_CREATED= "created";                          //7
+    public static final String COLUMN_USER_LAST_LOGIN= "lastLogin";                     //8
+    // @TODO Auth Token
 
     // Strings for table flashcard
     public static final String TABLE_FLASHCARD = "flash_card";
-    public static final String COLUMN_FLASHCARD_ID = "flashcardId";
-    public static final String COLUMN_FLASHCARD_RATING = "rating";
-    public static final String COLUMN_FLASHCARD_QUESTION_ID = "questionId";
-    public static final String COLUMN_FLASHCARD_MULTIPLE_CHOICE = "multipleChoice";
-    public static final String COLUMN_FLASHCARD_CREATED = "created";
-    public static final String COLUMN_FLASHCARD_LAST_UPDATED = "lastUpdated";
+    public static final String COLUMN_FLASHCARD_ID = "flashcardId";                     //0
+    public static final String COLUMN_FLASHCARD_RATING = "rating";                      //1
+    public static final String COLUMN_FLASHCARD_QUESTION_ID = "questionId";             //2
+    public static final String COLUMN_FLASHCARD_MULTIPLE_CHOICE = "multipleChoice";     //3
+    public static final String COLUMN_FLASHCARD_CREATED = "created";                    //4
+    public static final String COLUMN_FLASHCARD_LAST_UPDATED = "lastUpdated";           //5
 
     // Strings for table question
     public static final String TABLE_QUESTION = "question";
-    public static final String COLUMN_QUESTION_ID = "questionId";
-    public static final String COLUMN_QUESTION_TEXT = "questionText";
-    public static final String COLUMN_QUESTION_MEDIA_URI = "mediaURI";
-    public static final String COLUMN_QUESTION_AUTHOR_ID = "authorId";
+    public static final String COLUMN_QUESTION_ID = "questionId";                       //0
+    public static final String COLUMN_QUESTION_TEXT = "questionText";                   //1
+    public static final String COLUMN_QUESTION_MEDIA_URI = "mediaURI";                  //2
+    public static final String COLUMN_QUESTION_AUTHOR_ID = "authorId";                  //3
 
     // Strings for table answer
     public static final String TABLE_ANSWER = "answer";
-    public static final String COLUMN_ANSWER_ID = "answerId";
-    public static final String COLUMN_ANSWER_TEXT = "answerText";
-    public static final String COLUMN_ANSWER_HINT = "answerHint";
-    public static final String COLUMN_ANSWER_MEDIA_URI = "mediaURI";
-    public static final String COLUMN_ANSWER_USER_ID = "userId";
-    public static final String COLUMN_ANSWER_PARENT_CARD_ID = "parentCardId";
-    public static final String COLUMN_ANSWER_RATING = "rating";
-    public static final String COLUMN_ANSWER_CORRECT = "answerCorrect";
-    public static final String COLUMN_ANSWER_CREATED = "created";
-    public static final String COLUMN_ANSWER_LAST_UPDATED = "lastUpdated";
+    public static final String COLUMN_ANSWER_ID = "answerId";                           //0
+    public static final String COLUMN_ANSWER_TEXT = "answerText";                       //1
+    public static final String COLUMN_ANSWER_HINT = "answerHint";                       //2
+    public static final String COLUMN_ANSWER_MEDIA_URI = "mediaURI";                    //3
+    public static final String COLUMN_ANSWER_USER_ID = "userId";                        //4
+    public static final String COLUMN_ANSWER_PARENT_CARD_ID = "parentCardId";           //5
+    public static final String COLUMN_ANSWER_RATING = "rating";                         //6
+    public static final String COLUMN_ANSWER_CORRECT = "answerCorrect";                 //7
+    public static final String COLUMN_ANSWER_CREATED = "created";                       //8
+    public static final String COLUMN_ANSWER_LAST_UPDATED = "lastUpdated";              //9
 
     // Strings for table linking tables card-tag
     public static final String TABLE_CARD_TAG = "card_tag";
-    public static final String COLUMN_CARD_TAG_FLASHCARD_ID = "tagId";
-    public static final String COLUMN_CARD_TAG_TAG_ID = "tagId";
+    public static final String COLUMN_CARD_TAG_FLASHCARD_ID = "flashcardId";            //0
+    public static final String COLUMN_CARD_TAG_TAG_ID = "tagId";                        //1
 
     // Strings for table tag
     public static final String TABLE_TAG = "tag";
-    public static final String COLUMN_TAG_ID = "tagId";
-    public static final String COLUMN_TAG_NAME = "name";
+    public static final String COLUMN_TAG_ID = "tagId";                                 //0
+    public static final String COLUMN_TAG_NAME = "name";                                //1
 
     // Strings for table user group
     public static final String TABLE_USER_GROUP = "user_group";
-    public static final String COLUMN_GROUP_ID = "groupId";
-    public static final String COLUMN_GROUP_NAME = "name";
-    public static final String COLUMN_GROUP_DESCRIPTION = "description";
+    public static final String COLUMN_GROUP_ID = "groupId";                             //0
+    public static final String COLUMN_GROUP_NAME = "name";                              //1
+    public static final String COLUMN_GROUP_DESCRIPTION = "description";                //2
 
     // Strings for table rating
     public static final String TABLE_RATING = "rating";
-    public static final String COLUMN_RATING_ID = "ratingId";
-    public static final String COLUMN_RATING_TYPE = "ratingType";
-    public static final String COLUMN_RATING_USER_ID = "userId";
-    public static final String COLUMN_RATING_MODIFIER = "ratingModifier";
-    public static final String COLUMN_RATING_FLASHCARD_ID = "flashcardId";
-    public static final String COLUMN_RATING_ANSWER_ID = "answerId";
+    public static final String COLUMN_RATING_ID = "ratingId";                           //0
+    public static final String COLUMN_RATING_TYPE = "ratingType";                       //1
+    public static final String COLUMN_RATING_USER_ID = "userId";                        //2
+    public static final String COLUMN_RATING_MODIFIER = "ratingModifier";               //3
+    public static final String COLUMN_RATING_FLASHCARD_ID = "flashcardId";              //4
+    public static final String COLUMN_RATING_ANSWER_ID = "answerId";                    //5
 
     // Strings for table auth_token
     public static final String TABLE_AUTH_TOKEN = "auth_token";
-    public static final String COLUMN_AUTH_TOKEN_ID = "tokenId";
-    public static final String COLUMN_AUTH_TOKEN_USER_ID = "userId";
-    public static final String COLUMN_AUTH_TOKEN_TOKEN = "token";
-    public static final String COLUMN_AUTH_TOKEN_CREATED = "created";
+    public static final String COLUMN_AUTH_TOKEN_ID = "tokenId";                        //0
+    public static final String COLUMN_AUTH_TOKEN_USER_ID = "userId";                    //1
+    public static final String COLUMN_AUTH_TOKEN_TOKEN = "token";                       //2
+    public static final String COLUMN_AUTH_TOKEN_CREATED = "created";                   //3
 
     // Database name and version - increase when existing table is altered
     private static final String DATABASE_NAME = "flashcardsDb.db";
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 7; // @TODO revert version before first release
 
 
     /**
@@ -124,10 +125,8 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
             + " integer, "
             + COLUMN_FLASHCARD_MULTIPLE_CHOICE
             + " integer DEFAULT 0, "
-            + COLUMN_USER_RATING
-            + " integer DEFAULT 0, "
             + COLUMN_FLASHCARD_CREATED
-            + " not null DEFAULT time('now'), "
+            + " text not null, "
             + COLUMN_FLASHCARD_LAST_UPDATED
             + " text "
             + ");";
@@ -163,7 +162,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
             + COLUMN_ANSWER_CORRECT
             + " integer DEFAULT 1, "
             + COLUMN_ANSWER_CREATED
-            + " not null DEFAULT time('now'), "
+            + " text not null, "
             + COLUMN_ANSWER_LAST_UPDATED
             + " text "
             + ");";
@@ -171,9 +170,9 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
     private static final String CARD_TAG_CREATE = "create table "
             + TABLE_CARD_TAG + "("
             + COLUMN_CARD_TAG_FLASHCARD_ID
-            + " integer primary not null, "
+            + " integer not null, "
             + COLUMN_CARD_TAG_TAG_ID
-            + " integer primary not null "
+            + " integer not null "
             + ");";
 
     private static final String TAG_CREATE = "create table "
@@ -187,7 +186,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
     private static final String USER_GROUP_CREATE = "create table "
             + TABLE_USER_GROUP + "("
             + COLUMN_GROUP_ID
-            + " integer primary key not null, "
+            + " integer primary key, "
             + COLUMN_GROUP_NAME
             + " text not null, "
             + COLUMN_GROUP_DESCRIPTION
@@ -213,13 +212,13 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
     private static final String AUTH_TOKEN_CREATE = "create table "
             + TABLE_AUTH_TOKEN + "("
             + COLUMN_AUTH_TOKEN_ID
-            + " integer primary key not null, "
+            + " integer primary key, "
             + COLUMN_AUTH_TOKEN_USER_ID
             + " integer not null, "
             + COLUMN_AUTH_TOKEN_TOKEN
             + " text not null, "
             + COLUMN_AUTH_TOKEN_CREATED
-            + " DEFAULT time('now') "
+            + " text not null "
             + ");";
 
     /**

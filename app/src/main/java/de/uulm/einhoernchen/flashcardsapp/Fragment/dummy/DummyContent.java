@@ -51,7 +51,7 @@ public class DummyContent {
     }
 
     private static FlashCard createDummyFlashCard(int position) {
-        User author = new User((long)position,"User "+position,"","user"+position+"@flashcards.de",(int)Math.random()*10, 0l, "");
+        User author = new User((long)position,"avatar","User "+position,"","user"+position+"@flashcards.de",(int)Math.random()*10, new Date().toString(), new Date().toString());
         Question question = new Question("Item Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam ", author);
         Answer answer = new Answer("consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam ","hint ....."+position, author);
         List<String> tags = new ArrayList<>();

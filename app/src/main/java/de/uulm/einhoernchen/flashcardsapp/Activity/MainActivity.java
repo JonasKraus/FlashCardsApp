@@ -167,7 +167,7 @@ public class MainActivity extends AppCompatActivity
 
         if (success) {
 
-            File image = new File(sd+"/flashcards", user.getUserId()+"_flashcards_profile.png");
+            File image = new File(sd+"/flashcards", user.getId()+"_flashcards_profile.png");
 
             if (image.exists()) {
                 BitmapFactory.Options bmOptions = new BitmapFactory.Options();
@@ -196,7 +196,7 @@ public class MainActivity extends AppCompatActivity
         if (resultCode == RESULT_OK && data.getData() == null && requestCode != MY_INTENT_CLICK) {
 
             Bitmap bitmap = (Bitmap) data.getExtras().get("data");
-            ImageProcessor.savebitmap(bitmap, user.getUserId());
+            ImageProcessor.savebitmap(bitmap, user.getId());
             setProfileImage();
 
         }
@@ -215,7 +215,7 @@ public class MainActivity extends AppCompatActivity
             BitmapFactory.Options bmOptions = new BitmapFactory.Options();
 
             Bitmap bitmap = BitmapFactory.decodeFile(selectedImagePath, bmOptions);
-            ImageProcessor.savebitmap(bitmap, user.getUserId());
+            ImageProcessor.savebitmap(bitmap, user.getId());
             setProfileImage();
         }
 

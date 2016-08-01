@@ -11,6 +11,7 @@ import de.uulm.einhoernchen.flashcardsapp.Models.Answer;
 import de.uulm.einhoernchen.flashcardsapp.Models.FlashCard;
 import de.uulm.einhoernchen.flashcardsapp.Models.Question;
 import de.uulm.einhoernchen.flashcardsapp.Models.User;
+import de.uulm.einhoernchen.flashcardsapp.Models.UserGroup;
 
 /**
  * Helper class for providing sample content for user interfaces created by
@@ -46,7 +47,7 @@ public class DummyContentCard {
 
     private static FlashCard createDummyFlashCard(int position) {
         Random rand = new Random();
-        User author = new User((long)position,"User "+position,"","user"+position+"@flashcards.de",rand.nextInt(100), 0l, "");
+        User author = new User((long)position,"avatar","User "+position,"pwd","user"+position+"@flashcards.de",rand.nextInt(100), new Date().toString(), new Date().toString());
         Question question = new Question("Item Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam ", author);
         Answer answer = new Answer("consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam ","hint ....."+position, author);
         List<String> tags = new ArrayList<>();

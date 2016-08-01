@@ -1,8 +1,11 @@
 package de.uulm.einhoernchen.flashcardsapp.Models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.List;
+
+import de.uulm.einhoernchen.flashcardsapp.Util.JsonKeys;
 
 /**
  * @author Jonas Kraus
@@ -11,10 +14,17 @@ import java.util.List;
  */
 public class Tag {
 
+    @JsonProperty(JsonKeys.TAG_ID)
     private long id;
+
+    @JsonProperty(JsonKeys.TAG_NAME)
     private String name;
     //this cascade from the "tag" to "join_cards_tag" - e.g. tag.delete -> delete evey entry with tag.id
+
+    @JsonProperty(JsonKeys.TAG_CARDS)
+    @JsonIgnore
     private List<FlashCard> cards;
+
 
     public Tag(String name) {
         this.name = name;
@@ -24,6 +34,7 @@ public class Tag {
         this.name = name;
         this.cards = cards;
     }
+
 
     public long getId() {
         return id;
@@ -41,6 +52,7 @@ public class Tag {
         this.name = name;
     }
 
+    @JsonIgnore
     public List<FlashCard> getCards() {
         return cards;
     }
@@ -52,6 +64,7 @@ public class Tag {
     public void addFlashCard(FlashCard flashCard){
         if(!cards.contains(flashCard)){
             cards.add(flashCard);
+            this.update();
             flashCard.addTag(this);
         }
     }
@@ -63,6 +76,7 @@ public class Tag {
     public void removeFlashCard(FlashCard flashCard){
         if (cards.contains( flashCard)){
             cards.remove(flashCard);
+            this.update();
         }
     }
     @Override
@@ -73,4 +87,13 @@ public class Tag {
                 ", cards=" + cards +
                 '}';
     }
+
+    public static void update() {
+        // @TODO to be implemented
+    }
+
+    public void save() {
+        //@TODO to be implemented
+    }
 }
+

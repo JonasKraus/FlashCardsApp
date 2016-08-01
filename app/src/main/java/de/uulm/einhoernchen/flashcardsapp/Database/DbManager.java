@@ -138,13 +138,15 @@ public class DbManager {
     public void createUser(User user) {
 
         ContentValues values = new ContentValues();
-        values.put(MySQLiteHelper.COLUMN_USER_ID, user.getUserId());
+        values.put(MySQLiteHelper.COLUMN_USER_ID, user.getId());
+        values.put(MySQLiteHelper.COLUMN_USER_AVATAR, user.getAvatar());
         values.put(MySQLiteHelper.COLUMN_USER_NAME, user.getName());
         values.put(MySQLiteHelper.COLUMN_USER_PASSWORD, user.getPassword());
         values.put(MySQLiteHelper.COLUMN_USER_EMAIL, user.getEmail());
         values.put(MySQLiteHelper.COLUMN_USER_RATING, user.getRating());
-        values.put(MySQLiteHelper.COLUMN_USER_GROUP_ID, user.getGroup_id());
-        values.put(MySQLiteHelper.COLUMN_USER_CREATED, user.getCreated());
+        //@TODO GroupID ??? values.put(MySQLiteHelper.COLUMN_USER_GROUP_ID, user.getGroup().getId());
+        values.put(MySQLiteHelper.COLUMN_USER_CREATED, user.getCreated().toString()); // @TODO check correct date
+        values.put(MySQLiteHelper.COLUMN_USER_LAST_LOGIN, user.getLastLogin().toString()); // @TODO check correct date
 
         // Executes the query
         database.insert(MySQLiteHelper.TABLE_USER, null, values);
@@ -164,13 +166,14 @@ public class DbManager {
         if (cursor.moveToFirst()) {
             user = new User(
                     cursor.getLong(0),
-                    // @TODO add avatar
+                    cursor.getString(1),
                     cursor.getString(2),
                     cursor.getString(3),
                     cursor.getString(4),
                     cursor.getInt(5),
-                    cursor.getLong(6),
-                    cursor.getString(7)
+                    //cursor.getLong(6),
+                    cursor.getString(7),
+                    cursor.getString(8)
                     // @TODO add last login
             );
         }
