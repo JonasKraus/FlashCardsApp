@@ -24,15 +24,13 @@ import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.amulyakhare.textdrawable.TextDrawable;
-import com.amulyakhare.textdrawable.util.ColorGenerator;
-
 import java.io.File;
 import java.sql.SQLException;
 
 import de.uulm.einhoernchen.flashcardsapp.Database.DbManager;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.HomeFragment;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.ItemFragment;
+import de.uulm.einhoernchen.flashcardsapp.Models.FlashCard;
 import de.uulm.einhoernchen.flashcardsapp.Models.User;
 import de.uulm.einhoernchen.flashcardsapp.R;
 import de.uulm.einhoernchen.flashcardsapp.Util.ImageProcessor;
@@ -336,8 +334,8 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void onListFragmentInteraction(de.uulm.einhoernchen.flashcardsapp.Fragment.dummy.DummyContent.DummyItem item) {
-        Log.d("click", item.content);
+    public void onListFragmentInteraction(FlashCard item) {
+        Log.d("click", item.toString());
 
     }
 }
