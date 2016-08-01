@@ -22,16 +22,80 @@ public class DbManager {
     /**
      * All Columns of an user
      */
-    private String[] allUsersColumns = {
-            MySQLiteHelper.COLUMN_USER_USER_ID,     //0
-            MySQLiteHelper.COLUMN_USER_NAME,        //1
-            MySQLiteHelper.COLUMN_USER_PASSWORD,    //2
-            MySQLiteHelper.COLUMN_USER_EMAIL,       //3
-            MySQLiteHelper.COLUMN_USER_RATING,      //4
-            MySQLiteHelper.COLUMN_USER_GROUP_ID,    //5
-            MySQLiteHelper.COLUMN_USER_CREATED,     //6
+    private String[] allUserColumns = {
+            MySQLiteHelper.COLUMN_USER_ID,                  //0
+            MySQLiteHelper.COLUMN_USER_AVATAR,              //1
+            MySQLiteHelper.COLUMN_USER_NAME,                //2
+            MySQLiteHelper.COLUMN_USER_PASSWORD,            //3
+            MySQLiteHelper.COLUMN_USER_EMAIL,               //4
+            MySQLiteHelper.COLUMN_USER_RATING,              //5
+            MySQLiteHelper.COLUMN_USER_GROUP_ID,            //6
+            MySQLiteHelper.COLUMN_USER_CREATED,             //7
+            MySQLiteHelper.COLUMN_USER_LAST_LOGIN           //8
     };
 
+    private String[] allFlashCardColumns = {
+            MySQLiteHelper.COLUMN_FLASHCARD_ID,             //0
+            MySQLiteHelper.COLUMN_FLASHCARD_ID,             //1
+            MySQLiteHelper.COLUMN_FLASHCARD_RATING,         //2
+            MySQLiteHelper.COLUMN_FLASHCARD_QUESTION_ID,    //3
+            MySQLiteHelper.COLUMN_FLASHCARD_MULTIPLE_CHOICE,//4
+            MySQLiteHelper.COLUMN_FLASHCARD_CREATED,        //5
+            MySQLiteHelper.COLUMN_FLASHCARD_LAST_UPDATED    //6
+    };
+
+    private String[] allQuestionColumns = {
+            MySQLiteHelper.COLUMN_QUESTION_ID,              //0
+            MySQLiteHelper.COLUMN_QUESTION_TEXT,            //1
+            MySQLiteHelper.COLUMN_QUESTION_MEDIA_URI,       //2
+            MySQLiteHelper.COLUMN_QUESTION_AUTHOR_ID,       //3
+    };
+
+    private String[] allAnswerColumns = {
+            MySQLiteHelper.COLUMN_ANSWER_ID,                //0
+            MySQLiteHelper.COLUMN_ANSWER_TEXT,              //1
+            MySQLiteHelper.COLUMN_ANSWER_HINT,              //2
+            MySQLiteHelper.COLUMN_ANSWER_MEDIA_URI,         //3
+            MySQLiteHelper.COLUMN_ANSWER_USER_ID,           //4
+            MySQLiteHelper.COLUMN_ANSWER_PARENT_CARD_ID,    //5
+            MySQLiteHelper.COLUMN_ANSWER_RATING,            //6
+            MySQLiteHelper.COLUMN_ANSWER_CORRECT,           //7
+            MySQLiteHelper.COLUMN_ANSWER_CREATED,           //8
+            MySQLiteHelper.COLUMN_ANSWER_LAST_UPDATED       //9
+    };
+
+    private String[] allCardTagColumns = {
+            MySQLiteHelper.COLUMN_CARD_TAG_FLASHCARD_ID,    //0
+            MySQLiteHelper.COLUMN_CARD_TAG_TAG_ID,          //1
+    };
+
+    private String[] allTagColumns = {
+            MySQLiteHelper.COLUMN_TAG_ID,                   //0
+            MySQLiteHelper.COLUMN_TAG_NAME,                 //1
+    };
+
+    private String[] allGroupColumns = {
+            MySQLiteHelper.COLUMN_GROUP_ID,                 //0
+            MySQLiteHelper.COLUMN_GROUP_NAME,               //1
+            MySQLiteHelper.COLUMN_GROUP_DESCRIPTION,        //2
+    };
+
+    private String[] allRatingColumns = {
+            MySQLiteHelper.COLUMN_RATING_ID,                //0
+            MySQLiteHelper.COLUMN_RATING_TYPE,              //1
+            MySQLiteHelper.COLUMN_RATING_USER_ID,           //2
+            MySQLiteHelper.COLUMN_RATING_MODIFIER,          //3
+            MySQLiteHelper.COLUMN_RATING_FLASHCARD_ID,      //4
+            MySQLiteHelper.COLUMN_RATING_ANSWER_ID,         //5
+    };
+
+    private String[] allAuthTokenColumns = {
+            MySQLiteHelper.COLUMN_RATING_ID,                //0
+            MySQLiteHelper.COLUMN_AUTH_TOKEN_ID,            //1
+            MySQLiteHelper.COLUMN_AUTH_TOKEN_USER_ID,       //2
+            MySQLiteHelper.COLUMN_AUTH_TOKEN_TOKEN,         //3
+            MySQLiteHelper.COLUMN_AUTH_TOKEN_CREATED,       //4
+    };
 
     /**
      * Constructor
@@ -74,7 +138,7 @@ public class DbManager {
     public void createUser(User user) {
 
         ContentValues values = new ContentValues();
-        values.put(MySQLiteHelper.COLUMN_USER_USER_ID, user.getUserId());
+        values.put(MySQLiteHelper.COLUMN_USER_ID, user.getUserId());
         values.put(MySQLiteHelper.COLUMN_USER_NAME, user.getName());
         values.put(MySQLiteHelper.COLUMN_USER_PASSWORD, user.getPassword());
         values.put(MySQLiteHelper.COLUMN_USER_EMAIL, user.getEmail());
@@ -94,18 +158,20 @@ public class DbManager {
      */
     public User getUser() {
 
-        Cursor cursor = database.query(MySQLiteHelper.TABLE_USER,allUsersColumns, null, null, null, null, null);
+        Cursor cursor = database.query(MySQLiteHelper.TABLE_USER, allUserColumns, null, null, null, null, null);
         User user = null;
 
         if (cursor.moveToFirst()) {
             user = new User(
                     cursor.getLong(0),
-                    cursor.getString(1),
+                    // @TODO add avatar
                     cursor.getString(2),
                     cursor.getString(3),
-                    cursor.getInt(4),
-                    cursor.getLong(5),
-                    cursor.getString(6)
+                    cursor.getString(4),
+                    cursor.getInt(5),
+                    cursor.getLong(6),
+                    cursor.getString(7)
+                    // @TODO add last login
             );
         }
         cursor.close();
@@ -121,7 +187,7 @@ public class DbManager {
      */
     public boolean checkIfUserExists() {
 
-        Cursor cursor = database.query(MySQLiteHelper.TABLE_USER,allUsersColumns, null, null, null, null, null);
+        Cursor cursor = database.query(MySQLiteHelper.TABLE_USER, allUserColumns, null, null, null, null, null);
 
         boolean exists = cursor.getCount() > 0;
 
