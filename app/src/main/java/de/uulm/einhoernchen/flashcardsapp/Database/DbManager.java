@@ -97,6 +97,12 @@ public class DbManager {
             MySQLiteHelper.COLUMN_AUTH_TOKEN_CREATED,       //4
     };
 
+    private String[] allCardDeckColumns = {
+            MySQLiteHelper.COLUMN_CARD_DECK_ID,             //0
+            MySQLiteHelper.COLUMN_CARD_DECK_NAME,           //1
+            MySQLiteHelper.COLUMN_CARD_DECK_DESCRIPTION,    //2
+    };
+
     /**
      * Constructor
      *

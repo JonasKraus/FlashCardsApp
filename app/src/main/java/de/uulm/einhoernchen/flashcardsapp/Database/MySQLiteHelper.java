@@ -24,7 +24,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
     // @TODO Auth Token
 
     // Strings for table flashcard
-    public static final String TABLE_FLASHCARD = "flash_card";
+    public static final String TABLE_FLASHCARD = "flashcard";
     public static final String COLUMN_FLASHCARD_ID = "flashcardId";                     //0
     public static final String COLUMN_FLASHCARD_RATING = "rating";                      //1
     public static final String COLUMN_FLASHCARD_QUESTION_ID = "questionId";             //2
@@ -53,7 +53,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
     public static final String COLUMN_ANSWER_LAST_UPDATED = "lastUpdated";              //9
 
     // Strings for table linking tables card-tag
-    public static final String TABLE_CARD_TAG = "card_tag";
+    public static final String TABLE_CARD_TAG = "cardtagjointable";
     public static final String COLUMN_CARD_TAG_FLASHCARD_ID = "flashcardId";            //0
     public static final String COLUMN_CARD_TAG_TAG_ID = "tagId";                        //1
 
@@ -63,7 +63,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
     public static final String COLUMN_TAG_NAME = "name";                                //1
 
     // Strings for table user group
-    public static final String TABLE_USER_GROUP = "user_group";
+    public static final String TABLE_USER_GROUP = "usergroup";
     public static final String COLUMN_GROUP_ID = "groupId";                             //0
     public static final String COLUMN_GROUP_NAME = "name";                              //1
     public static final String COLUMN_GROUP_DESCRIPTION = "description";                //2
@@ -74,19 +74,25 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
     public static final String COLUMN_RATING_TYPE = "ratingType";                       //1
     public static final String COLUMN_RATING_USER_ID = "userId";                        //2
     public static final String COLUMN_RATING_MODIFIER = "ratingModifier";               //3
-    public static final String COLUMN_RATING_FLASHCARD_ID = "flashcardId";              //4
-    public static final String COLUMN_RATING_ANSWER_ID = "answerId";                    //5
+    public static final String COLUMN_RATING_ANSWER_ID = "answerId";                    //4
+    public static final String COLUMN_RATING_FLASHCARD_ID = "flashcardId";              //5
 
     // Strings for table auth_token
-    public static final String TABLE_AUTH_TOKEN = "auth_token";
+    public static final String TABLE_AUTH_TOKEN = "authtoken";
     public static final String COLUMN_AUTH_TOKEN_ID = "tokenId";                        //0
     public static final String COLUMN_AUTH_TOKEN_USER_ID = "userId";                    //1
     public static final String COLUMN_AUTH_TOKEN_TOKEN = "token";                       //2
     public static final String COLUMN_AUTH_TOKEN_CREATED = "created";                   //3
 
+    // Strings for table auth_token
+    public static final String TABLE_CARD_DECK = "carddeck";
+    public static final String COLUMN_CARD_DECK_ID = "cardDeckId";                        //0
+    public static final String COLUMN_CARD_DECK_NAME = "cardDeckName";               //1
+    public static final String COLUMN_CARD_DECK_DESCRIPTION = "description";              //2
+
     // Database name and version - increase when existing table is altered
     private static final String DATABASE_NAME = "flashcardsDb.db";
-    private static final int DATABASE_VERSION = 7; // @TODO revert version before first release
+    private static final int DATABASE_VERSION = 8; // @TODO revert version before first release
 
 
     /**
@@ -221,6 +227,16 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
             + " text not null "
             + ");";
 
+    private static final String CARD_DECK_CREATE = "create table "
+            + TABLE_CARD_DECK + "("
+            + COLUMN_CARD_DECK_ID
+            + " integer primary key, "
+            + COLUMN_CARD_DECK_NAME
+            + " text not null, "
+            + COLUMN_CARD_DECK_DESCRIPTION
+            + " text "
+            + ");";
+
     /**
      * Constructor
      *
@@ -241,6 +257,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
         db.execSQL(USER_GROUP_CREATE);
         db.execSQL(RATING_CREATE);
         db.execSQL(AUTH_TOKEN_CREATE);
+        db.execSQL(CARD_DECK_CREATE);
     }
 
     @Override
@@ -259,6 +276,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_USER_GROUP);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_RATING);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_AUTH_TOKEN);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_CARD_DECK);
 
         onCreate(db);
     }
