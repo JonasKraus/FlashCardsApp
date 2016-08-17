@@ -1,5 +1,7 @@
 package de.uulm.einhoernchen.flashcardsapp.Fragment.dummy;
 
+import android.util.Log;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -43,6 +45,23 @@ public class DummyContentCard {
     private static void addItem(FlashCard item) {
         ITEMS.add(item);
         ITEM_MAP.put(item.getId()+"", item);
+    }
+
+    public static FlashCard collectItemsFromServer(int parentId) {
+        Random rand = new Random();
+        int position = 0;
+        User author = new User((long)position,"avatar","User "+position,"pwd","user"+position+"@flashcards.de",rand.nextInt(100), new Date().toString(), new Date().toString());
+        Question question = new Question("Item Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam ", author);
+        Answer answer = new Answer("consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam ","hint ....."+position, author);
+        List<String> tags = new ArrayList<>();
+        for (int i = 0; i <= position; i++) {
+            tags.add("tag"+i);
+        }
+        List<Answer>answers = new ArrayList<>();
+        answers.add(answer);
+        FlashCard flashCard = new FlashCard(new Date(), question, answers, author,false);
+
+        return flashCard;
     }
 
     private static FlashCard createDummyFlashCard(int position) {

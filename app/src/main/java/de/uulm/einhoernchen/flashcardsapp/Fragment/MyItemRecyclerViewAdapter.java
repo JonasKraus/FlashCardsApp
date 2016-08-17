@@ -6,7 +6,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -27,11 +26,11 @@ import java.util.List;
  */
 public class MyItemRecyclerViewAdapter extends RecyclerView.Adapter<MyItemRecyclerViewAdapter.ViewHolder> {
 
-    private final List<FlashCard> mValues;
+    private final List<FlashCard> flashCards;
     private final OnListFragmentInteractionListener mListener;
 
     public MyItemRecyclerViewAdapter(List<FlashCard> items, OnListFragmentInteractionListener listener) {
-        mValues = items;
+        flashCards = items;
         mListener = listener;
     }
 
@@ -44,9 +43,10 @@ public class MyItemRecyclerViewAdapter extends RecyclerView.Adapter<MyItemRecycl
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        holder.mItem = mValues.get(position);
-        holder.mIdView.setText(mValues.get(position).getId()+"");
-        holder.mContentView.setText(mValues.get(position).getAnswers().get(0).getAnswerText());
+        holder.mItem = flashCards.get(position);
+        holder.mIdView.setText(flashCards.get(position).getId()+"");
+        holder.mContentView.setText(flashCards.get(position).getQuestion().getQuestionText());
+        holder.mAuthorView.setText(flashCards.get(position).getAuthor().getName());
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -60,12 +60,11 @@ public class MyItemRecyclerViewAdapter extends RecyclerView.Adapter<MyItemRecycl
         });
 
         //get first letter of each String item
-        final String firstLetter = String.valueOf(mValues.get(position).getQuestion().getQuestionText().charAt(0)); // hier wird der buchstabe gesetzt
+        final String firstLetter = String.valueOf(flashCards.get(position).getQuestion().getQuestionText().charAt(0)); // hier wird der buchstabe gesetzt
 
         ColorGenerator generator = ColorGenerator.MATERIAL; // or use DEFAULT
         // generate random color
-        final int color = generator.getColor(mValues.get(position).getAuthor().getRating());
-        Log.d("rating", mValues.get(position).getAuthor().getRating()+"");
+        final int color = generator.getColor(flashCards.get(position).getAuthor().getRating());
         //int color = generator.getRandomColor();
 
         TextDrawable drawable = TextDrawable.builder()
@@ -102,13 +101,14 @@ public class MyItemRecyclerViewAdapter extends RecyclerView.Adapter<MyItemRecycl
 
     @Override
     public int getItemCount() {
-        return mValues.size();
+        return flashCards.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         public final View mView;
         public final TextView mIdView;
         public final TextView mContentView;
+        public final TextView mAuthorView;
         public final ImageView imageView; // Text icon
         public FlashCard mItem;
 
@@ -117,6 +117,7 @@ public class MyItemRecyclerViewAdapter extends RecyclerView.Adapter<MyItemRecycl
             mView = view;
             mIdView = (TextView) view.findViewById(R.id.id);
             mContentView = (TextView) view.findViewById(R.id.content);
+            mAuthorView = (TextView) view.findViewById(R.id.textView_listItem_author);
             imageView = (ImageView) view.findViewById(R.id.image_view);
         }
 

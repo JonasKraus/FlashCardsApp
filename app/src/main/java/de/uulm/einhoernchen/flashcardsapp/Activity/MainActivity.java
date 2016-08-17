@@ -336,6 +336,5 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onListFragmentInteraction(FlashCard item) {
         Log.d("click", item.toString());
-
     }
 }
