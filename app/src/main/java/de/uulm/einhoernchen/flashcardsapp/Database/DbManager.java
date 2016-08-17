@@ -177,7 +177,7 @@ public class DbManager {
                     cursor.getString(3),
                     cursor.getString(4),
                     cursor.getInt(5),
-                    //cursor.getLong(6),
+                    //cursor.getLong(6), // @TODO
                     cursor.getString(7),
                     cursor.getString(8)
                     // @TODO add last login
