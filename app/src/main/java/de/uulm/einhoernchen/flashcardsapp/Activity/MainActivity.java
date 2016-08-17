@@ -29,10 +29,10 @@ import java.sql.SQLException;
 
 import de.uulm.einhoernchen.flashcardsapp.Database.DbManager;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.HomeFragment;
-import de.uulm.einhoernchen.flashcardsapp.Fragment.ItemFragmentCarddeck;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.ItemFragmentCategory;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.ItemFragmentCategory.OnCategoryListFragmentInteractionListener;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.ItemFragmentFlashcard;
+import de.uulm.einhoernchen.flashcardsapp.Fragment.dummy.DummyContentCarddeck;
 import de.uulm.einhoernchen.flashcardsapp.Models.CardDeck;
 import de.uulm.einhoernchen.flashcardsapp.Models.Categroy;
 import de.uulm.einhoernchen.flashcardsapp.Models.FlashCard;
@@ -42,7 +42,7 @@ import de.uulm.einhoernchen.flashcardsapp.Util.ImageProcessor;
 import de.uulm.einhoernchen.flashcardsapp.Util.PermissionManager;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, HomeFragment.OnFragmentInteractionListener, ItemFragmentFlashcard.OnFlashcardListFragmentInteractionListener, OnCategoryListFragmentInteractionListener, ItemFragmentCarddeck.OnCarddeckListFragmentInteractionListener {
+        implements NavigationView.OnNavigationItemSelectedListener, HomeFragment.OnFragmentInteractionListener, ItemFragmentFlashcard.OnFlashcardListFragmentInteractionListener, OnCategoryListFragmentInteractionListener, DummyContentCarddeck.OnCarddeckListFragmentInteractionListener {
 
 
     private DbManager db;
@@ -371,14 +371,10 @@ public class MainActivity extends AppCompatActivity
 
     private void setCarddeckList() {
         Log.d("hier", "");
-        ItemFragmentCarddeck fragment = new ItemFragmentCarddeck();
-        Bundle args = new Bundle();
-        args.putLong(ItemFragmentFlashcard.ARG_PARENT_ID, this.parentId);
-        fragment.setArguments(args);
-        android.support.v4.app.FragmentTransaction fragmentTransaction =
-                getSupportFragmentManager().beginTransaction();
-        fragmentTransaction.replace(R.id.fragment_container_home, fragment);
-        fragmentTransaction.commit();
+        new DummyContentCarddeck().collectItemsFromServer(this.parentId, getSupportFragmentManager());
+
+
+        //fragment.setAdapter(cardDecks);
     }
 
     private void setCategoryList() {

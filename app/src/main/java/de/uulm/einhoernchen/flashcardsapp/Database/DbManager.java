@@ -133,7 +133,7 @@ public class DbManager {
     public void close() {
 
         dbHelper.close();
-        Log.d("import db", "closed");
+        Log.d("db", "closed");
     }
 
 

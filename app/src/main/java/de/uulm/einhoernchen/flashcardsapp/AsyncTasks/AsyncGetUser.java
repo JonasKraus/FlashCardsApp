@@ -19,6 +19,9 @@ import de.uulm.einhoernchen.flashcardsapp.Models.User;
  */
 public class AsyncGetUser extends AsyncTask<Long, Void, User>{
 
+    /**
+     * Interface to receive the user in the activity that called this async task
+     */
     public interface AsyncResponseUser {
         void processFinish(User user);
     }
