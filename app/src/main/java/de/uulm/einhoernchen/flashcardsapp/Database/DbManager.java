@@ -36,7 +36,7 @@ public class DbManager {
 
     private String[] allFlashCardColumns = {
             MySQLiteHelper.COLUMN_FLASHCARD_ID,             //0
-            MySQLiteHelper.COLUMN_FLASHCARD_ID,             //1
+            MySQLiteHelper.COLUMN_FLASHCARD_CARDDECK_ID,    //1
             MySQLiteHelper.COLUMN_FLASHCARD_RATING,         //2
             MySQLiteHelper.COLUMN_FLASHCARD_QUESTION_ID,    //3
             MySQLiteHelper.COLUMN_FLASHCARD_MULTIPLE_CHOICE,//4

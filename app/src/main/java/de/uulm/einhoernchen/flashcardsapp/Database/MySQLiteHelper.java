@@ -26,11 +26,12 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
     // Strings for table flashcard
     public static final String TABLE_FLASHCARD = "flashcard";
     public static final String COLUMN_FLASHCARD_ID = "flashcardId";                     //0
-    public static final String COLUMN_FLASHCARD_RATING = "rating";                      //1
-    public static final String COLUMN_FLASHCARD_QUESTION_ID = "questionId";             //2
-    public static final String COLUMN_FLASHCARD_MULTIPLE_CHOICE = "multipleChoice";     //3
-    public static final String COLUMN_FLASHCARD_CREATED = "created";                    //4
-    public static final String COLUMN_FLASHCARD_LAST_UPDATED = "lastUpdated";           //5
+    public static final String COLUMN_FLASHCARD_CARDDECK_ID = "cardDeckId";             //1
+    public static final String COLUMN_FLASHCARD_RATING = "rating";                      //2
+    public static final String COLUMN_FLASHCARD_QUESTION_ID = "questionId";             //3
+    public static final String COLUMN_FLASHCARD_MULTIPLE_CHOICE = "multipleChoice";     //4
+    public static final String COLUMN_FLASHCARD_CREATED = "created";                    //5
+    public static final String COLUMN_FLASHCARD_LAST_UPDATED = "lastUpdated";           //6
 
     // Strings for table question
     public static final String TABLE_QUESTION = "question";
@@ -124,7 +125,9 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
     private static final String FLASHCARD_CREATE = "create table "
             + TABLE_FLASHCARD + "("
             + COLUMN_FLASHCARD_ID
-            + " integer primary key autoincrement, "
+            + " integer primary key not null, "
+            + COLUMN_FLASHCARD_CARDDECK_ID
+            + " integer not null, "
             + COLUMN_FLASHCARD_RATING
             + " integer DEFAULT 0, "
             + COLUMN_FLASHCARD_QUESTION_ID

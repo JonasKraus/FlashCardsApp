@@ -48,6 +48,8 @@ public class DummyContentCard {
     }
 
     public static FlashCard collectItemsFromServer(int parentId) {
+
+        Log.d("parent id", parentId+"");
         Random rand = new Random();
         int position = 0;
         User author = new User((long)position,"avatar","User "+position,"pwd","user"+position+"@flashcards.de",rand.nextInt(100), new Date().toString(), new Date().toString());
