@@ -29,7 +29,12 @@ import java.sql.SQLException;
 
 import de.uulm.einhoernchen.flashcardsapp.Database.DbManager;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.HomeFragment;
-import de.uulm.einhoernchen.flashcardsapp.Fragment.ItemFragment;
+import de.uulm.einhoernchen.flashcardsapp.Fragment.ItemFragmentCarddeck;
+import de.uulm.einhoernchen.flashcardsapp.Fragment.ItemFragmentCategory;
+import de.uulm.einhoernchen.flashcardsapp.Fragment.ItemFragmentCategory.OnCategoryListFragmentInteractionListener;
+import de.uulm.einhoernchen.flashcardsapp.Fragment.ItemFragmentFlashcard;
+import de.uulm.einhoernchen.flashcardsapp.Models.CardDeck;
+import de.uulm.einhoernchen.flashcardsapp.Models.Categroy;
 import de.uulm.einhoernchen.flashcardsapp.Models.FlashCard;
 import de.uulm.einhoernchen.flashcardsapp.Models.User;
 import de.uulm.einhoernchen.flashcardsapp.R;
@@ -37,7 +42,7 @@ import de.uulm.einhoernchen.flashcardsapp.Util.ImageProcessor;
 import de.uulm.einhoernchen.flashcardsapp.Util.PermissionManager;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, HomeFragment.OnFragmentInteractionListener, ItemFragment.OnListFragmentInteractionListener {
+        implements NavigationView.OnNavigationItemSelectedListener, HomeFragment.OnFragmentInteractionListener, ItemFragmentFlashcard.OnFlashcardListFragmentInteractionListener, OnCategoryListFragmentInteractionListener, ItemFragmentCarddeck.OnCarddeckListFragmentInteractionListener {
 
 
     private DbManager db;
@@ -46,6 +51,7 @@ public class MainActivity extends AppCompatActivity
     private ImageView profileImage;
     private NavigationView navigationView;
     private Toolbar toolbar;
+    private long parentId = -100;
 
 
 
@@ -270,11 +276,7 @@ public class MainActivity extends AppCompatActivity
 
         } else if (id == R.id.nav_catalogue) {
 
-            ItemFragment fragment = new ItemFragment();
-            android.support.v4.app.FragmentTransaction fragmentTransaction =
-                    getSupportFragmentManager().beginTransaction();
-            fragmentTransaction.replace(R.id.fragment_container_home, fragment);
-            fragmentTransaction.commit();
+            setCategoryList();
 
         } else if (id == R.id.nav_profile) {
 
@@ -333,8 +335,60 @@ public class MainActivity extends AppCompatActivity
 
     }
 
+
+
     @Override
-    public void onListFragmentInteraction(FlashCard item) {
+    public void onCategoryListFragmentInteraction(Categroy item) {
+        Log.d("click category", item.toString());
+        setCarddeckList();
+    }
+
+    @Override
+    public void onCarddeckListFragmentInteraction(CardDeck item) {
+        Log.d("click carddeck", item.toString());
+        setFlashcardList();
+    }
+
+
+    @Override
+    public void onFlashcardListFragmentInteraction(FlashCard item) {
         Log.d("click", item.toString());
+        parentId = item.getId(); // TODO
+        setFlashcardList();
+
+    }
+
+    private void setFlashcardList() {
+        ItemFragmentFlashcard fragment = new ItemFragmentFlashcard();
+        Bundle args = new Bundle();
+        args.putLong(ItemFragmentFlashcard.ARG_PARENT_ID, this.parentId);
+        fragment.setArguments(args);
+        android.support.v4.app.FragmentTransaction fragmentTransaction =
+                getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.replace(R.id.fragment_container_home, fragment);
+        fragmentTransaction.commit();
+    }
+
+    private void setCarddeckList() {
+        Log.d("hier", "");
+        ItemFragmentCarddeck fragment = new ItemFragmentCarddeck();
+        Bundle args = new Bundle();
+        args.putLong(ItemFragmentFlashcard.ARG_PARENT_ID, this.parentId);
+        fragment.setArguments(args);
+        android.support.v4.app.FragmentTransaction fragmentTransaction =
+                getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.replace(R.id.fragment_container_home, fragment);
+        fragmentTransaction.commit();
+    }
+
+    private void setCategoryList() {
+        ItemFragmentCategory fragment = new ItemFragmentCategory();
+        Bundle args = new Bundle();
+        args.putLong(ItemFragmentFlashcard.ARG_PARENT_ID, this.parentId);
+        fragment.setArguments(args);
+        android.support.v4.app.FragmentTransaction fragmentTransaction =
+                getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.replace(R.id.fragment_container_home, fragment);
+        fragmentTransaction.commit();
     }
 }

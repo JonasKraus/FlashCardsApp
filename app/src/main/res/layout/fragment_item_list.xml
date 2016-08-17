@@ -10,7 +10,7 @@
     android:layout_marginLeft="16dp"
     android:layout_marginRight="16dp"
     app:layoutManager="LinearLayoutManager"
-    tools:context="de.uulm.einhoernchen.flashcardsapp.Fragment.ItemFragment"
+    tools:context=".Fragment.ItemFragmentFlashcard"
     tools:listitem="@layout/fragment_item"
     android:paddingBottom="@dimen/padding_list_bottom"
     android:clipToPadding="false"

@@ -47,23 +47,29 @@ public class DummyContentCard {
         ITEM_MAP.put(item.getId()+"", item);
     }
 
-    public static FlashCard collectItemsFromServer(int parentId) {
+    public static List<FlashCard> collectItemsFromServer(long parentId) {
 
-        Log.d("parent id", parentId+"");
-        Random rand = new Random();
-        int position = 0;
-        User author = new User((long)position,"avatar","User "+position,"pwd","user"+position+"@flashcards.de",rand.nextInt(100), new Date().toString(), new Date().toString());
-        Question question = new Question("Item Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam ", author);
-        Answer answer = new Answer("consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam ","hint ....."+position, author);
-        List<String> tags = new ArrayList<>();
-        for (int i = 0; i <= position; i++) {
-            tags.add("tag"+i);
+
+        List<FlashCard> cards = new ArrayList<>();
+
+        for (int position = 0; position < 100; position++) {
+            Log.d("parent id", parentId + "");
+            Random rand = new Random();
+
+            User author = new User((long) position, "avatar", "Author: User " + position, "pwd", "user" + position + "@flashcards.de", rand.nextInt(100), new Date().toString(), new Date().toString());
+            Question question = new Question("Item Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam ", author);
+            Answer answer = new Answer("consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam ", "hint ....." + position, author);
+            List<String> tags = new ArrayList<>();
+            for (int i = 0; i <= position; i++) {
+                tags.add("tag" + i);
+            }
+            List<Answer> answers = new ArrayList<>();
+            answers.add(answer);
+            FlashCard flashCard = new FlashCard(new Date(), question, answers, author, false);
+
+            cards.add(position, flashCard);
         }
-        List<Answer>answers = new ArrayList<>();
-        answers.add(answer);
-        FlashCard flashCard = new FlashCard(new Date(), question, answers, author,false);
-
-        return flashCard;
+        return cards;
     }
 
     private static FlashCard createDummyFlashCard(int position) {

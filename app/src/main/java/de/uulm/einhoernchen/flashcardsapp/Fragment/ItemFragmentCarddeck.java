@@ -10,41 +10,43 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import de.uulm.einhoernchen.flashcardsapp.Fragment.dummy.DummyContentCard;
+import de.uulm.einhoernchen.flashcardsapp.Fragment.dummy.DummyContentCarddeck;
+import de.uulm.einhoernchen.flashcardsapp.Models.CardDeck;
 import de.uulm.einhoernchen.flashcardsapp.Models.FlashCard;
 import de.uulm.einhoernchen.flashcardsapp.R;
-import de.uulm.einhoernchen.flashcardsapp.Fragment.dummy.DummyContent;
-import de.uulm.einhoernchen.flashcardsapp.Fragment.dummy.DummyContent.DummyItem;
-
-import java.util.List;
 
 /**
  * A fragment representing a list of Items.
  * <p/>
- * Activities containing this fragment MUST implement the {@link OnListFragmentInteractionListener}
+ * Activities containing this fragment MUST implement the {@link OnCarddeckListFragmentInteractionListener}
  * interface.
  */
-public class ItemFragment extends Fragment {
+public class ItemFragmentCarddeck extends Fragment {
 
     // TODO: Customize parameter argument names
     private static final String ARG_COLUMN_COUNT = "column-count";
+    public static final String ARG_PARENT_ID = "parentId";
     // TODO: Customize parameters
     private int mColumnCount = 1;
-    private OnListFragmentInteractionListener mListener;
+    private OnCarddeckListFragmentInteractionListener mListener;
+
+    private long parentId = -1;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
      */
-    public ItemFragment() {
+    public ItemFragmentCarddeck() {
     }
+
 
     // TODO: Customize parameter initialization
     @SuppressWarnings("unused")
-    public static ItemFragment newInstance(int columnCount) {
-        ItemFragment fragment = new ItemFragment();
+    public static ItemFragmentCarddeck newInstance(int columnCount, long parentId) {
+        ItemFragmentCarddeck fragment = new ItemFragmentCarddeck();
         Bundle args = new Bundle();
         args.putInt(ARG_COLUMN_COUNT, columnCount);
+        args.putLong(ARG_PARENT_ID, parentId);
         fragment.setArguments(args);
         return fragment;
     }
@@ -55,6 +57,7 @@ public class ItemFragment extends Fragment {
 
         if (getArguments() != null) {
             mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
+            parentId = getArguments().getLong(ARG_PARENT_ID);
         }
     }
 
@@ -73,7 +76,8 @@ public class ItemFragment extends Fragment {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
 
-            recyclerView.setAdapter(new MyItemRecyclerViewAdapter(DummyContentCard.ITEMS, mListener));
+            //recyclerView.setAdapter(new FlashcardRecyclerViewAdapter(DummyContentCard.ITEMS, mListener));
+            recyclerView.setAdapter(new CarddeckRecyclerViewAdapter(DummyContentCarddeck.collectItemsFromServer(parentId), mListener));
         }
         return view;
     }
@@ -82,8 +86,8 @@ public class ItemFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnListFragmentInteractionListener) {
-            mListener = (OnListFragmentInteractionListener) context;
+        if (context instanceof OnCarddeckListFragmentInteractionListener) {
+            mListener = (OnCarddeckListFragmentInteractionListener) context;
         } else {
             throw new RuntimeException(context.toString()
                     + " must implement OnListFragmentInteractionListener");
@@ -106,8 +110,8 @@ public class ItemFragment extends Fragment {
      * "http://developer.android.com/training/basics/fragments/communicating.html"
      * >Communicating with Other Fragments</a> for more information.
      */
-    public interface OnListFragmentInteractionListener {
+    public interface OnCarddeckListFragmentInteractionListener {
         // TODO: Update argument type and name
-        void onListFragmentInteraction(FlashCard item);
+        void onCarddeckListFragmentInteraction(CardDeck item);
     }
 }

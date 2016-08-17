@@ -2,7 +2,6 @@ package de.uulm.einhoernchen.flashcardsapp.Fragment;
 
 import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,25 +11,25 @@ import android.widget.TextView;
 import com.amulyakhare.textdrawable.TextDrawable;
 import com.amulyakhare.textdrawable.util.ColorGenerator;
 
-import de.uulm.einhoernchen.flashcardsapp.Fragment.ItemFragment.OnListFragmentInteractionListener;
+import java.util.List;
+
 import de.uulm.einhoernchen.flashcardsapp.Fragment.dummy.DummyContent.DummyItem;
+import de.uulm.einhoernchen.flashcardsapp.Models.CardDeck;
 import de.uulm.einhoernchen.flashcardsapp.Models.FlashCard;
 import de.uulm.einhoernchen.flashcardsapp.R;
 
-import java.util.List;
-
 /**
  * {@link RecyclerView.Adapter} that can display a {@link DummyItem} and makes a call to the
- * specified {@link OnListFragmentInteractionListener}.
+ * specified {@link ItemFragmentCarddeck.OnCarddeckListFragmentInteractionListener}.
  * TODO: Replace the implementation with code for your data type.
  */
-public class MyItemRecyclerViewAdapter extends RecyclerView.Adapter<MyItemRecyclerViewAdapter.ViewHolder> {
+public class CarddeckRecyclerViewAdapter extends RecyclerView.Adapter<CarddeckRecyclerViewAdapter.ViewHolder> {
 
-    private final List<FlashCard> flashCards;
-    private final OnListFragmentInteractionListener mListener;
+    private final List<CardDeck> cardDecks;
+    private final ItemFragmentCarddeck.OnCarddeckListFragmentInteractionListener mListener;
 
-    public MyItemRecyclerViewAdapter(List<FlashCard> items, OnListFragmentInteractionListener listener) {
-        flashCards = items;
+    public CarddeckRecyclerViewAdapter(List<CardDeck> items, ItemFragmentCarddeck.OnCarddeckListFragmentInteractionListener listener) {
+        cardDecks = items;
         mListener = listener;
     }
 
@@ -43,10 +42,8 @@ public class MyItemRecyclerViewAdapter extends RecyclerView.Adapter<MyItemRecycl
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        holder.mItem = flashCards.get(position);
-        holder.mIdView.setText(flashCards.get(position).getId()+"");
-        holder.mContentView.setText(flashCards.get(position).getQuestion().getQuestionText());
-        holder.mAuthorView.setText(flashCards.get(position).getAuthor().getName());
+        holder.mItem = cardDecks.get(position);
+        holder.mIdView.setText(cardDecks.get(position).getId()+" Carddeck");
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -54,17 +51,17 @@ public class MyItemRecyclerViewAdapter extends RecyclerView.Adapter<MyItemRecycl
                 if (null != mListener) {
                     // Notify the active callbacks interface (the activity, if the
                     // fragment is attached to one) that an item has been selected.
-                    mListener.onListFragmentInteraction(holder.mItem);
+                    mListener.onCarddeckListFragmentInteraction(holder.mItem);
                 }
             }
         });
 
         //get first letter of each String item
-        final String firstLetter = String.valueOf(flashCards.get(position).getQuestion().getQuestionText().charAt(0)); // hier wird der buchstabe gesetzt
+        final String firstLetter = String.valueOf(cardDecks.get(position).getName().charAt(0)); // hier wird der buchstabe gesetzt
 
         ColorGenerator generator = ColorGenerator.MATERIAL; // or use DEFAULT
         // generate random color
-        final int color = generator.getColor(flashCards.get(position).getAuthor().getRating());
+        final int color = generator.getColor(cardDecks.get(position).getId()); // TODO
         //int color = generator.getRandomColor();
 
         TextDrawable drawable = TextDrawable.builder()
@@ -101,7 +98,7 @@ public class MyItemRecyclerViewAdapter extends RecyclerView.Adapter<MyItemRecycl
 
     @Override
     public int getItemCount() {
-        return flashCards.size();
+        return cardDecks.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
@@ -110,7 +107,7 @@ public class MyItemRecyclerViewAdapter extends RecyclerView.Adapter<MyItemRecycl
         public final TextView mContentView;
         public final TextView mAuthorView;
         public final ImageView imageView; // Text icon
-        public FlashCard mItem;
+        public CardDeck mItem;
 
         public ViewHolder(View view) {
             super(view);
