@@ -1,9 +1,10 @@
+package de.uulm.einhoernchen.flashcardsapp.Models;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.List;
 
-import de.uulm.einhoernchen.flashcardsapp.Models.FlashCard;
 import de.uulm.einhoernchen.flashcardsapp.Util.JsonKeys;
 
 /**
