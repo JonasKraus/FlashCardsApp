@@ -51,7 +51,7 @@ public class User {
     // @TODO check correct Date private Date lastLogin;
     private String lastLogin;
 
-    @JsonProperty(JsonKeys.USER_GROUP)
+    @JsonProperty(JsonKeys.USER_GROUPS)
     private UserGroup group;
 
     @JsonIgnore	// to prevent endless recursion.

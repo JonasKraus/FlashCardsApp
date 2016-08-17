@@ -47,6 +47,9 @@ public class FlashCard {
     @JsonProperty(JsonKeys.AUTHOR)
     private User author;
 
+    @JsonIgnore
+    private CardDeck deck;
+
     @JsonProperty(JsonKeys.FLASHCARD_MULTIPLE_CHOICE)
     private boolean multipleChoice;
 
@@ -179,6 +182,14 @@ public class FlashCard {
     public void setAnswers(List<Answer> answers) {
         this.answers = answers;
 
+    }
+
+    public CardDeck getDeck() {
+        return deck;
+    }
+
+    public void setDeck(CardDeck deck) {
+        this.deck = deck;
     }
 
     public User getAuthor() {

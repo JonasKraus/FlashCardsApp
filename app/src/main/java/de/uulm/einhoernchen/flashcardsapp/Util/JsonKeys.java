@@ -9,6 +9,8 @@ package de.uulm.einhoernchen.flashcardsapp.Util;
  */
 public class JsonKeys {
 
+    public static final boolean debugging=false;
+
     //General
     public static final String RATING = "rating";
     public static final String DATE_CREATED = "created";
@@ -17,8 +19,19 @@ public class JsonKeys {
     public static final String AUTHOR = "author";
     public static final String URI = "mediaURI";
     public static final String TOKEN = "token";
-    public static final String STATUS_CODE = "statuscode";
+    public static final String STATUS_CODE = "statusCode";
     public static final String DESCRIPTION = "description";
+
+    //table names, for camelcase Classes
+    public static final String USER_GROUP_TABLE_NAME="userGroup";
+    public static final String FLASH_CARD_TABLE_NAME="flashCard";
+    public static final String AUTH_TOKEN_TABLE_NAME="authToken";
+    public static final String CARDDECK_TABLE_NAME="cardDeck";
+
+
+    //Jointable names
+    public static final String CARD_TAG_JOIN_TABLE="cardTagJoinTable";
+    public static final String USER_GROUP_JOIN_TABLE="userGroupJoinTable";
 
 
     //Flashcard
@@ -28,6 +41,7 @@ public class JsonKeys {
     public static final String FLASHCARD_ANSWERS = "answers";
     public static final String FLASHCARD_TAGS = "tags";
     public static final String FLASHCARD_MULTIPLE_CHOICE = "multipleChoice";
+    public static final String FLASHCARD_PARENT_ID="cardDeckId";
     public static final String FLASHCARD_JSON_ELEMENTS = RATING + ", " + FLASHCARD_ANSWERS + ", " + FLASHCARD_QUESTION + ", " + AUTHOR + ", " + FLASHCARD_MULTIPLE_CHOICE + ", " + FLASHCARD_TAGS;
 
     //User
@@ -36,13 +50,12 @@ public class JsonKeys {
     public static final String USER_NAME = "name";
     public static final String USER_PASSWORD = "password";
     public static final String USER_EMAIL = "email";
-    public static final String USER_GROUP = "group";
-    public static final String USER_JSON_ELEMENTS = USER_NAME + ", " + USER_EMAIL + ", " + USER_PASSWORD + ", " + USER_GROUP;
+    public static final String USER_GROUPS = "groups";
+    public static final String USER_JSON_ELEMENTS = USER_NAME + ", " + USER_EMAIL + ", " + USER_PASSWORD + ", " + USER_GROUPS;
     //Tag
     public static final String TAG_ID = "tagId";
     public static final String TAG_NAME = "tagName";
     public static final String TAG_CARDS = "cads";
-
 
     //Group
     public static final String GROUP_ID = "groupId";
@@ -56,7 +69,7 @@ public class JsonKeys {
     public static final String ANSWER_ID = "answerId";
     public static final String ANSWER_TEXT = "answerText";
     public static final String ANSWER_HINT = "answerHint";
-    public static final String ANSWER_RATERS = "answerRaters";
+    public static final String ANSWER_CARD_ID = "cardId";
     public static final String ANSWER_CORRECT = "answerCorrect";
     public static final String ANSWER_JSON_ELEMENTS = ANSWER_TEXT + ", " + ANSWER_HINT + ", " + URI + ", " + AUTHOR+", "+ANSWER_CORRECT;
 
@@ -75,5 +88,11 @@ public class JsonKeys {
     public static final String RATING_TYPE="ratingType";
     public static final String RATING_JSON_ELEMENTS = AUTHOR+" (userID), "+FLASHCARD+" (flashcardID) OR "+ANSWER+" (answerId), "+RATING_MODIFIER;
 
+    //CardDeck
+    public static final String CARDDECK_ID = "cardDeckId";
+    public static final String CARDDECK_NAME = "cardDeckName";
+    public static final String CARDDECK_DESCRIPTION ="cardDeckDescpription";
+    public static final String CARDDECK_CARDS="cards";
+    public static final String CARDDECK_JSON_ELEMENTS = CARDDECK_NAME+", "+CARDDECK_DESCRIPTION+", "+CARDDECK_CARDS+" (child: list containing flashcardIDs)";
 
 }
