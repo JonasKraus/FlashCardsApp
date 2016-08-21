@@ -151,8 +151,10 @@ public class DbManager {
         values.put(MySQLiteHelper.COLUMN_USER_EMAIL, user.getEmail());
         values.put(MySQLiteHelper.COLUMN_USER_RATING, user.getRating());
         //@TODO GroupID ??? values.put(MySQLiteHelper.COLUMN_USER_GROUP_ID, user.getGroup().getId());
-        values.put(MySQLiteHelper.COLUMN_USER_CREATED, user.getCreated().toString()); // @TODO check correct date
-        values.put(MySQLiteHelper.COLUMN_USER_LAST_LOGIN, user.getLastLogin().toString()); // @TODO check correct date
+        String created = user.getCreated() != null ? user.getCreated().toString() : "";
+        String lastLogin = user.getLastLogin() != null ? user.getLastLogin().toString() : "";
+        values.put(MySQLiteHelper.COLUMN_USER_CREATED, created); // @TODO check correct date
+        values.put(MySQLiteHelper.COLUMN_USER_LAST_LOGIN, lastLogin); // @TODO check correct date
 
         // Executes the query
         database.insert(MySQLiteHelper.TABLE_USER, null, values);

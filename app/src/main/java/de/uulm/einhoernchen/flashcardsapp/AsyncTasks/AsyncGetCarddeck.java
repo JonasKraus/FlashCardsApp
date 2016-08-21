@@ -15,6 +15,7 @@ import java.util.List;
 
 import de.uulm.einhoernchen.flashcardsapp.Models.CardDeck;
 import de.uulm.einhoernchen.flashcardsapp.Models.User;
+import de.uulm.einhoernchen.flashcardsapp.Util.JsonParser;
 
 /**
  * Created by jonas-uni on 17.08.2016.
@@ -39,8 +40,6 @@ public class AsyncGetCarddeck extends AsyncTask<Long, Long, List<CardDeck>> {
     @Override
     protected List<CardDeck> doInBackground(Long... params) {
 
-        List<CardDeck> cardDecks = new ArrayList<>();
-
         Log.d("Beginn get Carddecks", "parent id " + this.parentId);
 
         String urlString = "http://192.168.0.8:9000/cardDecks"; // URL to call TODO nach parentId wählen
@@ -60,35 +59,12 @@ public class AsyncGetCarddeck extends AsyncTask<Long, Long, List<CardDeck>> {
 
             urlConnection.connect();
 
-            BufferedReader in = new BufferedReader(
-                    new InputStreamReader(
-                            urlConnection.getInputStream()));
-
-            String decodedString;
-
-            while ((decodedString = in.readLine()) != null) {
-                Log.d("response", decodedString);
-
-                int response = urlConnection.getResponseCode();
-
-                if (response >= 200 && response <=399){
-
-                    ObjectMapper mapper = new ObjectMapper();
-                    JsonNode root = mapper.readTree(decodedString);
-                    //user = new User(id,root.get("avatar").asText(), root.get("name").asText(), "", root.get("email").asText(), root.get("rating").asInt(), root.get("created").asText(), root.get("lastLogin").asText());
-                    Log.d("response root", root.toString());
-                   // return user;
-                    return cardDecks;
-
-                } else {
-
-                }
-            }
-            in.close();
+            JsonParser jsonParser = new JsonParser();
+            return jsonParser.readCardDecks(urlConnection.getInputStream());
 
         } catch (Exception e) {
 
-            Log.e("fehler", e.toString());
+            Log.e("doInBackground Fehler", e.toString());
             System.out.println(e.getMessage());
 
         }

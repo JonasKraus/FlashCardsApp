@@ -40,7 +40,7 @@ public class AsyncGetUser extends AsyncTask<Long, Void, User>{
 
         User user;
 
-        String urlString = "http://192.168.0.8:9000/users/"+id; // URL to call
+        String urlString = "http://192.168.0.8:9000/users/" + id; // URL to call
 
         HttpURLConnection urlConnection = null;
         //InputStream in = null;
@@ -58,25 +58,17 @@ public class AsyncGetUser extends AsyncTask<Long, Void, User>{
 
             urlConnection.connect();
 
-            BufferedReader in =
-                    new BufferedReader(
-                            new InputStreamReader(
-                                    urlConnection.getInputStream()
-                            )
-                    );
-
             int response = urlConnection.getResponseCode();
 
             if (response >= 200 && response <=399){
-                user = JsonParser.parseUser(in, id);
+                JsonParser jsonParser = new JsonParser();
+                user = jsonParser.parseUser(urlConnection.getInputStream());
                 return user;
             }
 
-            in.close();
-
         } catch (Exception e) {
 
-            Log.e("fehler", e.toString());
+            Log.e("Async getUser Fehler", e.toString());
             System.out.println(e.getMessage());
 
         }

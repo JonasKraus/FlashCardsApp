@@ -1,6 +1,7 @@
 package de.uulm.einhoernchen.flashcardsapp.Util;
 
 import android.util.JsonReader;
+import android.util.JsonToken;
 import android.util.Log;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -29,6 +30,7 @@ import de.uulm.einhoernchen.flashcardsapp.Models.UserGroup;
  */
 public class JsonParser {
 
+    // this should be public
     public List<CardDeck> readCardDecks(InputStream in) throws IOException {
         JsonReader reader = new JsonReader(new InputStreamReader(in, "UTF-8"));
         try {
@@ -38,20 +40,31 @@ public class JsonParser {
         }
     }
 
+    // this should be public
+    public User parseUser(InputStream in) throws IOException {
+        JsonReader reader = new JsonReader(new InputStreamReader(in, "UTF-8"));
+        try {
+            return readUser(reader);
+        } finally {
+            reader.close();
+        }
+    }
+
     public List<CardDeck> readCardDeckArray(JsonReader reader) {
 
-        List<CardDeck> cardDeckLis = new ArrayList<CardDeck>();
+        List<CardDeck> cardDeckList = new ArrayList<CardDeck>();
 
         try {
             reader.beginArray();
             while (reader.hasNext()) {
-                cardDeckLis.add(readCarddeck(reader));
+                cardDeckList.add(readCarddeck(reader));
             }
             reader.endArray();
         } catch (IOException e) {
+            Log.d("Parser Error", "readCardDeckArray");
             e.printStackTrace();
         }
-        return cardDeckLis;
+        return cardDeckList;
     }
 
     public CardDeck readCarddeck(JsonReader reader) {
@@ -61,7 +74,7 @@ public class JsonParser {
         UserGroup userGroup = null;
         String name = "Group not found";
         String description = "No description";
-        List<FlashCard> cards = null;
+        List<FlashCard> cards = new ArrayList<>();
 
         try {
             reader.beginObject();
@@ -84,12 +97,12 @@ public class JsonParser {
                 } else {
                     reader.skipValue();
                 }
-
             }
             reader.endObject();
         } catch (IOException e) {
             e.printStackTrace();
         }
+
         return new CardDeck(id, visible, userGroup, name, description, cards);
     }
 
@@ -110,12 +123,12 @@ public class JsonParser {
 
     public FlashCard readCard(JsonReader reader) {
         long id = -1;
-        List<Tag> tags = null;
+        List<Tag> tags = new ArrayList<>();
         int rating = 0;
         Date created = null;
         Date lastUpdated = null;
         Question question = null;
-        List<Answer> answers = null;
+        List<Answer> answers = new ArrayList<>();
         User author = null; // TODO wird hier eine id oder der name oder Objekt mitgegeben?
         boolean multipleChoice = false;
 
@@ -233,7 +246,7 @@ public class JsonParser {
         int rating = 0;
         Date created = null;
         Date lastLogin = null;
-        List<UserGroup> groups = null;
+        List<UserGroup> groups = new ArrayList<>();
 
         try {
             reader.beginObject();
@@ -244,7 +257,14 @@ public class JsonParser {
                 if (stringName.equals(JsonKeys.USER_ID)) {
                     id = reader.nextLong();
                 } else if (stringName.equals(JsonKeys.USER_AVATAR)) {
-                    avatar = reader.nextString();
+                    JsonToken check = reader.peek();
+
+                    if (check != JsonToken.NULL) {
+                        avatar = reader.nextString();
+                    } else {
+                        reader.nextNull();
+                    }
+
                 } else if (stringName.equals(JsonKeys.USER_NAME)) {
                     name = reader.nextString();
                 } else if (stringName.equals(JsonKeys.USER_EMAIL)) {
@@ -266,7 +286,7 @@ public class JsonParser {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return new User(id,avatar, name, email, rating, created, lastLogin, groups);
+        return new User(id, avatar, name, email, rating, created, lastLogin, groups);
     }
 
     public List<UserGroup> readUserGroupArray(JsonReader reader) {
@@ -394,6 +414,8 @@ public class JsonParser {
 
 
     /**
+     *
+     * @deprecated use {@link #parseUser(InputStream)}  instead.
      * Takes an Buffered reader and Parses a user
      *
      * @param in
@@ -427,7 +449,7 @@ public class JsonParser {
             }
         } catch (IOException e) {
             e.printStackTrace();
-            Log.e("fehler", e.toString());
+            Log.e("parseUser Fehler", e.toString());
             System.out.println(e.getMessage());
         }
 

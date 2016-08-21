@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import de.uulm.einhoernchen.flashcardsapp.Util.JsonKeys;
@@ -158,6 +159,10 @@ public class UserGroup {
 	}
 
 	public void addDeck(CardDeck cardDeck) {
+        // TODO wo soll decks initialisiert werden?
+        if (decks == null) {
+            decks = new ArrayList<>();
+        }
 		decks.add(cardDeck);
 		// update(); TODO to be implemented
 	}
