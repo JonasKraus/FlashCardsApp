@@ -13,6 +13,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
 
+import de.uulm.einhoernchen.flashcardsapp.Util.DateProcessor;
 import de.uulm.einhoernchen.flashcardsapp.Util.JsonKeys;
 
 /**
@@ -82,7 +83,7 @@ public class User {
         this.password = password;
         this.email = email;
         this.rating = rating;
-        this.created = stringToDate(created);
+        this.created = DateProcessor.stringToDate(created);
     }
 
     public User(Long id, String avatar, String name, String password, String email, int rating, String created, String lastLogin) {
@@ -92,21 +93,8 @@ public class User {
         this.password = password;
         this.email = email;
         this.rating = rating;
-        this.created = stringToDate(created);
-        this.lastLogin = stringToDate(lastLogin);
-    }
-
-    private Date stringToDate(String dateString) {
-        DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        Date date = null;
-        try {
-            date = sdf.parse(dateString);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
-
-        return date;
+        this.created = DateProcessor.stringToDate(created);
+        this.lastLogin = DateProcessor.stringToDate(lastLogin);
     }
 
 
