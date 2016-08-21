@@ -5,13 +5,14 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 
-import de.uulm.einhoernchen.flashcardsapp.Models.Answer;
-import de.uulm.einhoernchen.flashcardsapp.Models.FlashCard;
-import de.uulm.einhoernchen.flashcardsapp.Models.Question;
 import de.uulm.einhoernchen.flashcardsapp.Util.JsonKeys;
 
 /**
@@ -19,6 +20,7 @@ import de.uulm.einhoernchen.flashcardsapp.Util.JsonKeys;
  * @author Fabian Widmann
  *         on 13/06/16.
  */
+
 @JsonPropertyOrder({ JsonKeys.USER_ID})
 public class User {
 
@@ -41,18 +43,16 @@ public class User {
     @JsonProperty(JsonKeys.RATING)
     private int rating;
 
-    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss z")
+    @JsonFormat(shape= JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss z")
     @JsonProperty(JsonKeys.DATE_CREATED)
-    // @TODO check correct Date private Date created;
-    private String created;
+    private Date created;
 
     @JsonFormat(shape=JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss z")
     @JsonProperty(JsonKeys.DATE_LAST_LOGIN)
-    // @TODO check correct Date private Date lastLogin;
-    private String lastLogin;
+    private Date lastLogin;
 
     @JsonProperty(JsonKeys.USER_GROUPS)
-    private UserGroup group;
+    private List<UserGroup> userGroups;
 
     @JsonIgnore	// to prevent endless recursion.
     private List<AuthToken> authTokenList;
@@ -67,6 +67,14 @@ public class User {
         authTokenList=new ArrayList<>();
     }
 
+    public User(User u) {
+        super();
+        this.name = u.getName();
+        this.email = u.getEmail();
+        this.password = u.getPassword();
+        this.rating = u.getRating();
+        authTokenList = new ArrayList<>();
+    }
 
     public User(Long userId, String name, String password, String email, int rating, String created) {
         this.id = userId;
@@ -74,7 +82,7 @@ public class User {
         this.password = password;
         this.email = email;
         this.rating = rating;
-        this.created = created;
+        this.created = stringToDate(created);
     }
 
     public User(Long id, String avatar, String name, String password, String email, int rating, String created, String lastLogin) {
@@ -84,8 +92,21 @@ public class User {
         this.password = password;
         this.email = email;
         this.rating = rating;
-        this.created = created;
-        this.lastLogin = lastLogin;
+        this.created = stringToDate(created);
+        this.lastLogin = stringToDate(lastLogin);
+    }
+
+    private Date stringToDate(String dateString) {
+        DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Date date = null;
+        try {
+            date = sdf.parse(dateString);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
+
+        return date;
     }
 
 
@@ -136,32 +157,25 @@ public class User {
     public String toString() {
         return "User [id=" + id + ", name=" + name + ", password=" + password
                 + ", email=" + email + ", rating=" + rating + ", created="
-                + created + ", group=" + group + "]";
+                + created + ", userGroups=" + userGroups + "]";
     }
 
-    public String toJsonString() {
-        return "[{\"userId\":" + id + ", \"name\":\"" + name + "\", \"password\":\"" + password
-                + "\", \"email\":\"" + email + "\", \"rating\":" + rating + ", \"created\":\""
-                + created + "\", \"group\":" + group + "}]";
-    }
-
-
-    public String getCreated() {
+    public Date getCreated() {
         return created;
     }
 
-    public UserGroup getGroup() {
-        return group;
+    public List<UserGroup> getUserGroups() {
+        return userGroups;
     }
 
-    public void setGroup(UserGroup group) {
-//        System.out.println(">> setting usergroup from "+this.getGroup()+" to "+group);
-        this.group = group;
-        //update group definition as well.
-        if (group!=null && !group.getUsers().contains(this)) {
-            group.addUser(this);
-        }
-        this.update();
+    public void setUserGroups(List<UserGroup> userGroups) {
+//        System.out.println(">> setting usergroup from "+this.getUserGroups()+" to "+userGroups);
+        this.userGroups = userGroups;
+        //update userGroups definition as well.
+/*		if (userGroups !=null && !userGroups.getUsers().contains(this)) {
+			userGroups.addUser(this);
+		}*/
+        // this.update(); TODO to be implemented
     }
 
     public List<AuthToken> getAuthTokenList() {
@@ -179,7 +193,7 @@ public class User {
     public void addAuthToken(AuthToken token){
         if(!authTokenList.contains(token)){
             authTokenList.add(token);
-            this.update();
+            // this.update();  TODO to be implemented
         }
     }
 
@@ -191,7 +205,7 @@ public class User {
             authTokenList.get(i).delete();
         }
         authTokenList=new ArrayList<>();
-        this.update();
+        //this.update(); TODO to be implemented
     }
 
     public void deleteToken(AuthToken authToken){
@@ -204,15 +218,14 @@ public class User {
     }
 
     public void setAvatar(String avatar) {
-        avatar = avatar == null ? "" : avatar;
         this.avatar = avatar;
     }
 
-    public String getLastLogin() {
+    public Date getLastLogin() {
         return lastLogin;
     }
 
-    public void setLastLogin(String lastLogin) {
+    public void setLastLogin(Date lastLogin) {
         this.lastLogin = lastLogin;
     }
     /**
@@ -222,12 +235,13 @@ public class User {
     public void updateRating(int ratingModifier){
         System.out.println(new Date()+ " Modifying rating from="+rating+" by modifier="+ratingModifier+" to="+(rating+ratingModifier));
         this.rating+=ratingModifier;
-        this.update();
+        //this.update(); TODO to be implemented
     }
 
     public void delete(){
         //Get all tags and unlink them from this card. Tag still exists to this point.
-        List<Answer> givenAnswers = null; // @TODO to be implemented
+        /*  TODO to be implemented
+        List<Answer> givenAnswers = Answer.find.where().eq(JsonKeys.USER_ID, id).findList();
         System.out.println("Answers from the user has size=" + givenAnswers.size());
 
         for (Answer a : givenAnswers) {
@@ -237,7 +251,7 @@ public class User {
         }
 
 
-        List<FlashCard> cards = null; // @TODO to be implemented
+        List<FlashCard> cards = FlashCard.find.where().eq(JsonKeys.USER_ID, id).findList();
         System.out.println("Created cards list has size=" + cards.size());
 
         for (FlashCard c : cards) {
@@ -247,18 +261,21 @@ public class User {
         }
 
 
-        List<Question> questions = null; // @TODO to be implemented
+        List<Question> questions = Question.find.where().eq(JsonKeys.USER_ID, id).findList();
         System.out.println("Questions from the user has size=" + questions.size());
         for (Question q : questions) {
             System.out.println(">> Trying to null author on question q=" + q + " where author was: " + q.getAuthor());
             q.setAuthor(null);
             q.update();
         }
-        // @TODO to be implemented
-        //super.delete();
+        super.delete();
+        */
     }
 
-    public static void update() {
-        // @TODO to be implemented
+    public void removeGroup(UserGroup userGroup) {
+        if (userGroups.contains( userGroup)){
+            userGroups.remove(userGroup);
+            //this.update(); TODO to be implemented
+        }
     }
 }

@@ -14,21 +14,24 @@ import de.uulm.einhoernchen.flashcardsapp.Util.JsonKeys;
  * @author Fabian Widmann
  *         on 13/06/16.
  */
+
 @JsonPropertyOrder({ JsonKeys.GROUP_ID}) //ensure that groupID is the first element in json.
 public class UserGroup {
 
 	@JsonProperty(JsonKeys.GROUP_ID)
 	private Long id;
 
-    @JsonProperty(JsonKeys.GROUP_NAME)
-    private String name;
+	@JsonProperty(JsonKeys.GROUP_NAME)
+	private String name;
 
-    //TODO: Delete this attribute
-    @JsonProperty(JsonKeys.GROUP_DESCRIPTION)
-    private String description;
+	@JsonProperty(JsonKeys.GROUP_DESCRIPTION)
+	private String description;
 
-    @JsonIgnore    // to prevent endless recursion.
+	@JsonIgnore    // to prevent endless recursion.
 	private List<User> users;
+
+	@JsonIgnore	// to prevent endless recursion.
+	private List<CardDeck> decks;
 
 
 	public UserGroup(String name, String description, List<User> users) {
@@ -36,6 +39,7 @@ public class UserGroup {
 		this.name = name;
 		this.description = description;
 		this.users = users;
+
 	}
 
 	public UserGroup(UserGroup requestGroup) {
@@ -43,10 +47,10 @@ public class UserGroup {
 		this.name=requestGroup.getName();
 		this.description=requestGroup.getDescription();
 		this.users=requestGroup.getUsers();
-		for(User u:users){
+/*		for(User u:users){
 //            System.out.println(">> updating user: "+u);
-			u.setGroup(this);
-		}
+			u.setUserGroups(this);
+		}*/
 	}
 
 	public Long getId() {
@@ -80,24 +84,20 @@ public class UserGroup {
 	/**
 	 * Replaces the current users with the given users.
 	 * @param users
-     */
+	 */
 	public void setUsers(List<User> users) {
 		this.users = users;
-		for(User u: users){
-			u.setGroup(this);
-		}
 	}
 
 	/**
 	 * Adds one user to this group, updates the user's group as well.
 	 * @param user
-     */
+	 */
 	public void addUser(User user) {
 		if (!users.contains(user)) {
 			users.add(user);
-			user.setGroup(this);
-			// @TODO to be implemented
-			//this.save();
+//			user.setUserGroups(this);
+			//this.save(); TODO to be implemented
 		}
 	}
 
@@ -107,15 +107,44 @@ public class UserGroup {
 				+ description+"]";
 	}
 
-    /**
-     * Removes a specific user from the users of this group.
-     * @param user
-     */
-    public void removeUser(User user) {
-        if(users.contains(user)){
-            users.remove(user);
-			// @TODO to be implemented
-			//this.update();
-        }
-    }
+	/**
+	 * Removes a specific user from the users of this group.
+	 * @param user
+	 */
+	public void removeUser(User user) {
+		if(users.contains(user)){
+			users.remove(user);
+			//this.update(); TODO to be implemented
+		}
+	}
+
+	public void delete(){
+		//Get all tags and unlink them from this card. Tag still exists to this point.
+		for (User user : users) {
+			user.removeGroup(this);
+			if (getUsers().size() == 0) {
+				// TODO: 08/08/16 do we want to delete if no reference to the user exists?
+			}
+			System.out.println("Removing link to tag=" + user);
+		}
+		//super.delete(); TODO to be implemented
+	}
+
+	public List<CardDeck> getDecks() {
+		return decks;
+	}
+
+	public void setDecks(List<CardDeck> decks) {
+		this.decks = decks;
+	}
+
+	public void deleteDeck(CardDeck cardDeck) {
+		decks.remove(cardDeck);
+		//update(); TODO to be implemented
+	}
+
+	public void addDeck(CardDeck cardDeck) {
+		decks.add(cardDeck);
+		// update(); TODO to be implemented
+	}
 }

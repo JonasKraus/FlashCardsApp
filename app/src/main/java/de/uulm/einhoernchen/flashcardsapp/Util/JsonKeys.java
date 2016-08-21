@@ -9,7 +9,7 @@ package de.uulm.einhoernchen.flashcardsapp.Util;
  */
 public class JsonKeys {
 
-    public static final boolean debugging=false;
+    public static final boolean debugging=true;
 
     //General
     public static final String RATING = "rating";
@@ -93,6 +93,7 @@ public class JsonKeys {
     public static final String CARDDECK_NAME = "cardDeckName";
     public static final String CARDDECK_DESCRIPTION ="cardDeckDescpription";
     public static final String CARDDECK_CARDS="cards";
+    public static final String CARDDECK_VISIBLE="visible";
+    public static final String CARDDECK_GROUP="userGroup";
     public static final String CARDDECK_JSON_ELEMENTS = CARDDECK_NAME+", "+CARDDECK_DESCRIPTION+", "+CARDDECK_CARDS+" (child: list containing flashcardIDs)";
-
 }
