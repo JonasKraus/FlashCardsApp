@@ -99,6 +99,30 @@ public class User {
         authTokenList=new ArrayList<>();
     }
 
+    /**
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     *
+     * @param id
+     * @param avatar
+     * @param name
+     * @param email
+     * @param rating
+     * @param created
+     * @param lastLogin
+     * @param groups
+     */
+    public User(long id, String avatar, String name, String email, int rating, Date created, Date lastLogin, List<UserGroup> groups) {
+        this.id = id;
+        this.avatar = avatar;
+        this.name = name;
+        this.email = email;
+        this.rating = rating;
+        // this.created = DateProcessor.stringToDate(created); TODO passendes Format
+        // this.lastLogin = DateProcessor.stringToDate(lastLogin); TODO passendes Format
+        this.userGroups = groups;
+        authTokenList=new ArrayList<>();
+    }
+
 
     public Long getId() {
         return id;

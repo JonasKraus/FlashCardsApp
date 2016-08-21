@@ -56,6 +56,33 @@ public class Answer {
         this.author = author;
     }
 
+    /**
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     *
+     * @param id
+     * @param correct
+     * @param text
+     * @param hint
+     * @param uri
+     * @param author
+     * @param created
+     * @param lastUpdated
+     * @param rating
+     * @param answerCorrect
+     */
+    public Answer(long id, boolean correct, String text, String hint, URI uri, User author, java.util.Date created, java.util.Date lastUpdated, int rating, boolean answerCorrect) {
+        this.id = id;
+        this.isCorrect = correct; // TODO redundant??
+        this.answerText = text;
+        this.hintText = hint;
+        this.uri = uri;
+        this.author = author;
+        // this.created = created; TODO Welches Date und welches Format
+        // this.lastUpdated = lastUpdated;
+        this.rating = rating;
+        this.isCorrect = answerCorrect;
+    }
+
     @Override
     public String toString() {
         return "Answer{" +

@@ -53,7 +53,21 @@ public class UserGroup {
 		}*/
 	}
 
-	public Long getId() {
+    /**
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     * @param id
+     * @param name
+     * @param description
+     */
+    public UserGroup(long id, String name, String description) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        // List<User> users = null; TODO wie wird das aufgelöst -> Async Task?
+        // List<CardDeck> decks = null; TODO ???
+    }
+
+    public Long getId() {
 		return id;
 	}
 

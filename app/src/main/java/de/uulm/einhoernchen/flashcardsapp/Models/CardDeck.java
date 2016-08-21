@@ -58,6 +58,26 @@ public class CardDeck {
         this.visible=otherDeck.isVisible();
     }
 
+    /**
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     *
+     * @param id
+     * @param visible
+     * @param userGroup
+     * @param name
+     * @param description
+     * @param cards
+     */
+    public CardDeck(long id, boolean visible, UserGroup userGroup, String name, String description, List<FlashCard> cards) {
+        this.id = id;
+        this.visible = visible;
+        this.userGroup = userGroup;
+        this.name = name;
+        this.description = description;
+        this.cards = cards;
+        userGroup.addDeck(this);
+    }
+
 
     public long getId() {
         return id;

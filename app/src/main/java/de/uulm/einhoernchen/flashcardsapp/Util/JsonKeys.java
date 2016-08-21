@@ -67,6 +67,7 @@ public class JsonKeys {
     //Answer
     public static final String ANSWER = "answer" ;
     public static final String ANSWER_ID = "answerId";
+    public static final String ANSWER_IS_CORRECT = "correct";  // @author Jonas Kraus TODO umbenennen
     public static final String ANSWER_TEXT = "answerText";
     public static final String ANSWER_HINT = "answerHint";
     public static final String ANSWER_CARD_ID = "cardId";
@@ -96,4 +97,5 @@ public class JsonKeys {
     public static final String CARDDECK_VISIBLE="visible";
     public static final String CARDDECK_GROUP="userGroup";
     public static final String CARDDECK_JSON_ELEMENTS = CARDDECK_NAME+", "+CARDDECK_DESCRIPTION+", "+CARDDECK_CARDS+" (child: list containing flashcardIDs)";
+
 }

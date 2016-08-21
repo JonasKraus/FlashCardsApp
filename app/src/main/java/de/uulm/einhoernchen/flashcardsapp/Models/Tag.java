@@ -35,6 +35,16 @@ public class Tag {
         this.cards = cards;
     }
 
+    /**
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     * @param id
+     * @param name
+     */
+    public Tag(long id, String name) {
+        this.id = id;
+        this.name = name;
+    }
+
 
     public long getId() {
         return id;

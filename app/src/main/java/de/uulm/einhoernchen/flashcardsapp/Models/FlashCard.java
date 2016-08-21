@@ -106,6 +106,31 @@ public class FlashCard {
     }
 
     /**
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     *
+     * @param id
+     * @param tags
+     * @param rating
+     * @param created
+     * @param lastUpdated
+     * @param question
+     * @param answers
+     * @param author
+     * @param multipleChoice
+     */
+    public FlashCard(long id, List<Tag> tags, int rating, Date created, Date lastUpdated, Question question, List<Answer> answers, User author, boolean multipleChoice) {
+        this.id = id;
+        this.tags = tags;
+        this.rating = rating;
+        this.created = created;
+        this.lastUpdated = lastUpdated;
+        this.question = question;
+        this.answers = answers;
+        this.author = author;
+        this.multipleChoice = multipleChoice;
+    }
+
+    /**
      * Adds one answer to this specific flashcard, updates the flashcards in the DB.
      * @param answer
      */

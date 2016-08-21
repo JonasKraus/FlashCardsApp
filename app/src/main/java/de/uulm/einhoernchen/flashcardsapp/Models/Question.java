@@ -38,6 +38,20 @@ public class Question {
     }
 
     /**
+     * @author Jonas Kraus jonas.kraus@uni-ulm.dea
+     * @param id
+     * @param questionText
+     * @param uri
+     * @param author
+     */
+    public Question(long id, String questionText, URI uri, User author) {
+        this.id = id;
+        this.questionText = questionText;
+        this.uri = uri;
+        this.author = author;
+    }
+
+    /**
      * Parses a question from the given JsonNode node.
      * @param node the json node to parse
      * @return a question object containing the information
