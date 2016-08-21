@@ -30,6 +30,8 @@ import de.uulm.einhoernchen.flashcardsapp.Models.UserGroup;
  */
 public class JsonParser {
 
+    private static final boolean DEBUG = false;
+
     // this should be public
     public List<CardDeck> readCardDecks(InputStream in) throws IOException {
         JsonReader reader = new JsonReader(new InputStreamReader(in, "UTF-8"));
@@ -51,7 +53,7 @@ public class JsonParser {
     }
 
     public List<CardDeck> readCardDeckArray(JsonReader reader) {
-
+        if (DEBUG) Log.d("parser Method", "readCardDeckArray");
         List<CardDeck> cardDeckList = new ArrayList<CardDeck>();
 
         try {
@@ -61,14 +63,14 @@ public class JsonParser {
             }
             reader.endArray();
         } catch (IOException e) {
-            Log.d("Parser Error", "readCardDeckArray");
+            if (DEBUG) Log.d("Parser Error", "readCardDeckArray");
             e.printStackTrace();
         }
         return cardDeckList;
     }
 
     public CardDeck readCarddeck(JsonReader reader) {
-
+        if (DEBUG) Log.d("parser Method", "readCarddeck");
         long id = -1;
         boolean visible = false;
         UserGroup userGroup = null;
@@ -82,17 +84,24 @@ public class JsonParser {
 
                 String stringName = reader.nextName();
 
-                if (stringName.equals("visible")) {
+                if (stringName.equals(JsonKeys.CARDDECK_VISIBLE)) {
                     visible = reader.nextBoolean();
-                } else if (stringName.equals("cardDeckId")) {
+                } else if (stringName.equals(JsonKeys.CARDDECK_ID)) {
                     id = reader.nextLong();
-                } else if (stringName.equals("userGroup")) {
+                } else if (stringName.equals(JsonKeys.CARDDECK_GROUP)) {
                     userGroup = readUserGroup(reader);
-                } else if (reader.equals("cardDeckName")) {
+                } else if (stringName.equals(JsonKeys.CARDDECK_NAME)) {
                     name = reader.nextString();
-                } else if (reader.equals("cardDeckDescpription")) {
-                    description = reader.nextString();
-                } else if (reader.equals("cards")) {
+                } else if (stringName.equals(JsonKeys.CARDDECK_DESCRIPTION)) {
+                    JsonToken check = reader.peek();
+
+                    if (check != JsonToken.NULL) {
+                        description = reader.nextString();
+                    } else {
+                        reader.nextNull();
+                    }
+
+                } else if (stringName.equals(JsonKeys.CARDDECK_CARDS)) {
                     cards = readCardArray(reader);
                 } else {
                     reader.skipValue();
@@ -107,6 +116,7 @@ public class JsonParser {
     }
 
     public List<FlashCard> readCardArray(JsonReader reader) {
+        if (DEBUG) Log.d("parser Method", "readCardArray");
         List<FlashCard> cards = new ArrayList<FlashCard>();
 
         try {
@@ -122,6 +132,7 @@ public class JsonParser {
     }
 
     public FlashCard readCard(JsonReader reader) {
+        if (DEBUG) Log.d("parser Method", "readCard");
         long id = -1;
         List<Tag> tags = new ArrayList<>();
         int rating = 0;
@@ -141,8 +152,15 @@ public class JsonParser {
                 if (stringName.equals(JsonKeys.FLASHCARD_ID)) {
                     id = reader.nextLong();
                 } else if (stringName.equals(JsonKeys.FLASHCARD_TAGS)) {
-                    tags = readTagArray(reader);
-                } else if (reader.equals(JsonKeys.RATING)) {
+                    JsonToken check = reader.peek();
+
+                    if (check != JsonToken.NULL) {
+                        tags = readTagArray(reader);
+                    } else {
+                        reader.nextNull();
+                    }
+
+                } else if (stringName.equals(JsonKeys.RATING)) {
                     rating = reader.nextInt();
                 } else if (stringName.equals(created)) {
                     created = DateProcessor.stringToDate(reader.nextString());
@@ -151,9 +169,23 @@ public class JsonParser {
                 } else if (stringName.equals(JsonKeys.FLASHCARD_QUESTION)) {
                     question = readQuestion(reader);
                 } else if (stringName.equals(JsonKeys.FLASHCARD_ANSWERS)) {
-                    answers = readAnswerArray(reader);
+                    JsonToken check = reader.peek();
+
+                    if (check != JsonToken.NULL) {
+                        answers = readAnswerArray(reader);
+                    } else {
+                        reader.nextNull();
+                    }
+
                 } else if (stringName.equals(JsonKeys.AUTHOR)) {
-                    author = readUser(reader);
+                    JsonToken check = reader.peek();
+
+                    if (check != JsonToken.NULL) {
+                        author = readUser(reader);
+                    } else {
+                        reader.nextNull();
+                    }
+
                 } else if (stringName.equals(JsonKeys.FLASHCARD_MULTIPLE_CHOICE)) {
                     multipleChoice = reader.nextBoolean();
                 } else {
@@ -169,6 +201,7 @@ public class JsonParser {
     }
 
     public List<Answer> readAnswerArray(JsonReader reader) {
+        if (DEBUG) Log.d("parser Method", "readAnswerArray");
 
         List<Answer> answers = new ArrayList<Answer>();
 
@@ -185,6 +218,8 @@ public class JsonParser {
     }
 
     public Answer readAnswer(JsonReader reader) {
+        if (DEBUG) Log.d("parser Method", "readAnswer");
+
         long id = -1;
         boolean correct = true;
         String text = "No answer text found";
@@ -210,12 +245,33 @@ public class JsonParser {
                 } else if (stringName.equals(JsonKeys.ANSWER_TEXT)) {
                     text = reader.nextString();
                 } else if (stringName.equals(JsonKeys.ANSWER_HINT)) {
-                    hint = reader.nextString();
+                    JsonToken check = reader.peek();
+
+                    if (check != JsonToken.NULL) {
+                        hint = reader.nextString();
+                    } else {
+                        reader.nextNull();
+                    }
+
                 } else if (stringName.equals(JsonKeys.URI)) {
-                    uriString = reader.nextString();
+                    JsonToken check = reader.peek();
+
+                    if (check != JsonToken.NULL) {
+                        uriString = reader.nextString();
+                    } else {
+                        reader.nextNull();
+                    }
+
                     uri = new URI(uriString); // TODO check what happens when string is empty
                 } else if (stringName.equals(JsonKeys.AUTHOR)) {
-                    author = readUser(reader);
+                    JsonToken check = reader.peek();
+
+                    if (check != JsonToken.NULL) {
+                        author = readUser(reader);
+                    } else {
+                        reader.nextNull();
+                    }
+
                 } else if (stringName.equals(JsonKeys.DATE_CREATED)) {
                     created = DateProcessor.stringToDate(reader.nextString());
                 } else if (stringName.equals(JsonKeys.DATE_UPDATED)) {
@@ -239,6 +295,8 @@ public class JsonParser {
     }
 
     public User readUser(JsonReader reader) {
+        if (DEBUG) Log.d("parser Method", "readUser");
+
         long id = -1;
         String avatar = "";
         String name = "";
@@ -276,7 +334,14 @@ public class JsonParser {
                 } else if (stringName.equals(JsonKeys.DATE_LAST_LOGIN)) {
                     lastLogin = DateProcessor.stringToDate(reader.nextString());
                 } else if (stringName.equals(JsonKeys.USER_GROUPS)) {
-                    groups = readUserGroupArray(reader);
+                    JsonToken check = reader.peek();
+
+                    if (check != JsonToken.NULL) {
+                        groups = readUserGroupArray(reader);
+                    } else {
+                        reader.nextNull();
+                    }
+
                 } else {
                     reader.skipValue();
                 }
@@ -290,6 +355,7 @@ public class JsonParser {
     }
 
     public List<UserGroup> readUserGroupArray(JsonReader reader) {
+        if (DEBUG) Log.d("parser Method", "readUserGroupArray");
 
         List<UserGroup> groups = new ArrayList<UserGroup>();
 
@@ -306,6 +372,8 @@ public class JsonParser {
     }
 
     public Question readQuestion(JsonReader reader) {
+        if (DEBUG) Log.d("parser Method", "readQuestion");
+
         long id = -1;
         String text = "";
         String uriString = "";
@@ -323,10 +391,24 @@ public class JsonParser {
                 } else if (stringName.equals(JsonKeys.QUESTION_TEXT)) {
                     text = reader.nextString();
                 }else if (stringName.equals(JsonKeys.URI)) {
-                    uriString = reader.nextString();
+                    JsonToken check = reader.peek();
+
+                    if (check != JsonToken.NULL) {
+                        uriString = reader.nextString();
+                    } else {
+                        reader.nextNull();
+                    }
+
                     uri = new URI(uriString); // TODO check what happens when string is empty
                 }else if (stringName.equals(JsonKeys.AUTHOR)) {
-                    author = readUser(reader);
+                    JsonToken check = reader.peek();
+
+                    if (check != JsonToken.NULL) {
+                        author = readUser(reader);
+                    } else {
+                        reader.nextNull();
+                    }
+
                 } else {
                     reader.skipValue();
                 }
@@ -342,6 +424,8 @@ public class JsonParser {
     }
 
     public List<Tag> readTagArray(JsonReader reader) {
+        if (DEBUG) Log.d("parser Method", "readTagArray");
+
         List<Tag> tags = new ArrayList<Tag>();
 
         try {
@@ -357,6 +441,8 @@ public class JsonParser {
     }
 
     public Tag readTag(JsonReader reader) {
+        if (DEBUG) Log.d("parser Method", "readTag");
+
         long id = -1;
         String name = "";
 
@@ -384,6 +470,8 @@ public class JsonParser {
     }
 
     public UserGroup readUserGroup(JsonReader reader) {
+        if (DEBUG) Log.d("parser Method", "readUserGroup");
+
         long id = -1;
         String name = "No Group name found";
         String description = "";
@@ -397,9 +485,23 @@ public class JsonParser {
                 if (stringName.equals(JsonKeys.GROUP_ID)) {
                     id = reader.nextLong();
                 } else if (stringName.equals(JsonKeys.GROUP_NAME)) {
-                    name = reader.nextString();
-                } else if (reader.equals(JsonKeys.GROUP_DESCRIPTION)) {
-                    description = reader.nextString();
+                    JsonToken check = reader.peek();
+
+                    if (check != JsonToken.NULL) {
+                        name = reader.nextString();
+                    } else {
+                        reader.nextNull();
+                    }
+
+                } else if (stringName.equals(JsonKeys.GROUP_DESCRIPTION)) {
+                    JsonToken check = reader.peek();
+
+                    if (check != JsonToken.NULL) {
+                        description = reader.nextString();
+                    } else {
+                        reader.nextNull();
+                    }
+
                 } else {
                     reader.skipValue();
                 }
@@ -429,7 +531,7 @@ public class JsonParser {
 
         try {
             while ((decodedString = in.readLine()) != null) {
-                Log.d("response", decodedString);
+                if (DEBUG) Log.d("response", decodedString);
 
                 ObjectMapper mapper = new ObjectMapper();
                 JsonNode root = mapper.readTree(decodedString);
@@ -443,7 +545,7 @@ public class JsonParser {
                         root.get("created").asText(),
                         root.get("lastLogin").asText()
                 );
-                Log.d("user instanz", user.toString());
+                if (DEBUG) Log.d("user instanz", user.toString());
                 return user;
 
             }

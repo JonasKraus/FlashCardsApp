@@ -370,10 +370,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void setCarddeckList() {
-        Log.d("hier", "");
         new DummyContentCarddeck().collectItemsFromServer(this.parentId, getSupportFragmentManager());
-
-
         //fragment.setAdapter(cardDecks);
     }
 

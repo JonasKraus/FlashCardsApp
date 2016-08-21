@@ -114,7 +114,6 @@ public class DummyContentCarddeck {
         @Override
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
-            Log.d("onCreate", "yes");
             if (getArguments() != null) {
                 mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
                 parentId = getArguments().getLong(ARG_PARENT_ID);
@@ -126,7 +125,6 @@ public class DummyContentCarddeck {
                                  Bundle savedInstanceState) {
             View view = inflater.inflate(R.layout.fragment_item_list, container, false);
 
-            Log.d("onCreateView", "jetzt");
             // Set the adapter
             if (view instanceof RecyclerView) {
                 Context context = view.getContext();

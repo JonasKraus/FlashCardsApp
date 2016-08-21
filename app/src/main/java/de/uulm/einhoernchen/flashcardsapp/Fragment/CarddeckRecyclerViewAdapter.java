@@ -2,6 +2,7 @@ package de.uulm.einhoernchen.flashcardsapp.Fragment;
 
 import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,7 +23,7 @@ import de.uulm.einhoernchen.flashcardsapp.R;
 
 /**
  * {@link RecyclerView.Adapter} that can display a {@link DummyItem} and makes a call to the
- * specified {@link ItemFragmentCarddeck.OnCarddeckListFragmentInteractionListener}.
+ * specified {@link DummyContentCarddeck.OnCarddeckListFragmentInteractionListener}.
  * TODO: Replace the implementation with code for your data type.
  */
 public class CarddeckRecyclerViewAdapter extends RecyclerView.Adapter<CarddeckRecyclerViewAdapter.ViewHolder> {
@@ -47,6 +48,11 @@ public class CarddeckRecyclerViewAdapter extends RecyclerView.Adapter<CarddeckRe
         holder.mItem = cardDecks.get(position);
         holder.mIdView.setText(cardDecks.get(position).getId()+" Carddeck");
 
+
+        Log.d("carddeck", cardDecks.get(position).toString());
+
+        Log.d("carddeck idView", cardDecks.get(position).getId()+" Carddeck");
+
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -60,6 +66,8 @@ public class CarddeckRecyclerViewAdapter extends RecyclerView.Adapter<CarddeckRe
 
         //get first letter of each String item
         final String firstLetter = String.valueOf(cardDecks.get(position).getName().charAt(0)); // hier wird der buchstabe gesetzt
+
+        Log.d("carddeck firstLetter", firstLetter);
 
         ColorGenerator generator = ColorGenerator.MATERIAL; // or use DEFAULT
         // generate random color
