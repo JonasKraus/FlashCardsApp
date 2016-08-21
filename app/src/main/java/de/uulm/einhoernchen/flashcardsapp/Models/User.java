@@ -84,6 +84,7 @@ public class User {
         this.email = email;
         this.rating = rating;
         this.created = DateProcessor.stringToDate(created);
+        authTokenList=new ArrayList<>();
     }
 
     public User(Long id, String avatar, String name, String password, String email, int rating, String created, String lastLogin) {
@@ -95,8 +96,8 @@ public class User {
         this.rating = rating;
         this.created = DateProcessor.stringToDate(created);
         this.lastLogin = DateProcessor.stringToDate(lastLogin);
+        authTokenList=new ArrayList<>();
     }
-
 
 
     public Long getId() {

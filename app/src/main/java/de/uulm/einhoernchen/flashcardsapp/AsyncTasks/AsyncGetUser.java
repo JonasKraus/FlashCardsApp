@@ -13,6 +13,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 import de.uulm.einhoernchen.flashcardsapp.Models.User;
+import de.uulm.einhoernchen.flashcardsapp.Util.JsonParser;
 
 /**
  * Created by jonas-uni on 04.07.2016.
@@ -57,30 +58,20 @@ public class AsyncGetUser extends AsyncTask<Long, Void, User>{
 
             urlConnection.connect();
 
-            BufferedReader in = new BufferedReader(
-                    new InputStreamReader(
-                            urlConnection.getInputStream()));
-            String decodedString;
+            BufferedReader in =
+                    new BufferedReader(
+                            new InputStreamReader(
+                                    urlConnection.getInputStream()
+                            )
+                    );
 
+            int response = urlConnection.getResponseCode();
 
-
-            while ((decodedString = in.readLine()) != null) {
-                Log.d("response", decodedString);
-
-                int response = urlConnection.getResponseCode();
-
-                if (response >= 200 && response <=399){
-
-                    ObjectMapper mapper = new ObjectMapper();
-                    JsonNode root = mapper.readTree(decodedString);
-                    user = new User(id,root.get("avatar").asText(), root.get("name").asText(), "", root.get("email").asText(), root.get("rating").asInt(), root.get("created").asText(), root.get("lastLogin").asText());
-                    Log.d("user instanz", user.toString());
-                    return user;
-
-                } else {
-
-                }
+            if (response >= 200 && response <=399){
+                user = JsonParser.parseUser(in, id);
+                return user;
             }
+
             in.close();
 
         } catch (Exception e) {
