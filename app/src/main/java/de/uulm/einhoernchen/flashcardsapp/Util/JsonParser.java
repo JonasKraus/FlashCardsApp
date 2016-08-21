@@ -59,7 +59,10 @@ public class JsonParser {
         try {
             reader.beginArray();
             while (reader.hasNext()) {
-                cardDeckList.add(readCarddeck(reader));
+                CardDeck cardDeck = readCarddeck(reader);
+                if (cardDeck.isVisible()) {
+                    cardDeckList.add(cardDeck);
+                }
             }
             reader.endArray();
         } catch (IOException e) {

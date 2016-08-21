@@ -46,12 +46,9 @@ public class CarddeckRecyclerViewAdapter extends RecyclerView.Adapter<CarddeckRe
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.mItem = cardDecks.get(position);
-        holder.mIdView.setText(cardDecks.get(position).getId()+" Carddeck");
-
-
-        Log.d("carddeck", cardDecks.get(position).toString());
-
-        Log.d("carddeck idView", cardDecks.get(position).getId()+" Carddeck");
+        holder.mIdView.setText(cardDecks.get(position).getId() + "");
+        holder.mContentView.setText(cardDecks.get(position).getName() + "");
+        holder.mAuthorView.setText(cardDecks.get(position).getUserGroup().getName() + "");
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -67,8 +64,6 @@ public class CarddeckRecyclerViewAdapter extends RecyclerView.Adapter<CarddeckRe
         //get first letter of each String item
         final String firstLetter = String.valueOf(cardDecks.get(position).getName().charAt(0)); // hier wird der buchstabe gesetzt
 
-        Log.d("carddeck firstLetter", firstLetter);
-
         ColorGenerator generator = ColorGenerator.MATERIAL; // or use DEFAULT
         // generate random color
         final int color = generator.getColor(cardDecks.get(position).getId()); // TODO
@@ -79,7 +74,6 @@ public class CarddeckRecyclerViewAdapter extends RecyclerView.Adapter<CarddeckRe
 
         holder.imageView.setImageDrawable(drawable);
         holder.imageView.setTag(false);
-
 
         holder.imageView.setOnClickListener(new View.OnClickListener(){
 
