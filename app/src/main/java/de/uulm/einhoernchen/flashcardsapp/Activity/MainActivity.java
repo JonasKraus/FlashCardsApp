@@ -38,6 +38,7 @@ import de.uulm.einhoernchen.flashcardsapp.Models.Categroy;
 import de.uulm.einhoernchen.flashcardsapp.Models.FlashCard;
 import de.uulm.einhoernchen.flashcardsapp.Models.User;
 import de.uulm.einhoernchen.flashcardsapp.R;
+import de.uulm.einhoernchen.flashcardsapp.Util.Constants;
 import de.uulm.einhoernchen.flashcardsapp.Util.ImageProcessor;
 import de.uulm.einhoernchen.flashcardsapp.Util.PermissionManager;
 
@@ -51,9 +52,9 @@ public class MainActivity extends AppCompatActivity
     private ImageView profileImage;
     private NavigationView navigationView;
     private Toolbar toolbar;
-    private long parentId = -100;
-
-
+    private TextView toolbarTextViewTitle;
+    private long parentId = -100; // TODO update
+    private Constants catalogueState = Constants.CATEGORY;
 
     private static final int MY_INTENT_CLICK=302;
 
@@ -105,6 +106,8 @@ public class MainActivity extends AppCompatActivity
 
         TextView profileName = (TextView) header.findViewById(R.id.textViewProfileName);
         TextView profileEmail = (TextView) header.findViewById(R.id.textViewProfileEmail);
+
+        toolbarTextViewTitle = (TextView ) findViewById(R.id.toolbar_text_view_title);
 
         profileName.setText(user.getName());
         profileEmail.setText(user.getEmail());
@@ -276,7 +279,20 @@ public class MainActivity extends AppCompatActivity
 
         } else if (id == R.id.nav_catalogue) {
 
-            setCategoryList();
+            switch (catalogueState) {
+                case CATEGORY:
+                    setCategoryList();
+                    break;
+                case CARD_DECK:
+                    setCarddeckList();
+                    break;
+                case FLASH_CARD:
+                    setFlashcardList();
+                    break;
+                default:
+                    setCategoryList();
+                    break;
+            }
 
         } else if (id == R.id.nav_profile) {
 
@@ -340,12 +356,14 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onCategoryListFragmentInteraction(Categroy item) {
         Log.d("click category", item.toString());
+        toolbarTextViewTitle.setText(item.getName());
         setCarddeckList();
     }
 
     @Override
     public void onCarddeckListFragmentInteraction(CardDeck item) {
         Log.d("click carddeck", item.toString());
+        toolbarTextViewTitle.setText(item.getName());
         setFlashcardList();
     }
 
@@ -360,10 +378,12 @@ public class MainActivity extends AppCompatActivity
 
     private void setFlashcardList() {
         new DummyContentCard().collectItemsFromServer(this.parentId, getSupportFragmentManager());
+        catalogueState = Constants.FLASH_CARD;
     }
 
     private void setCarddeckList() {
         new DummyContentCarddeck().collectItemsFromServer(this.parentId, getSupportFragmentManager());
+        catalogueState = Constants.CARD_DECK;
     }
 
     private void setCategoryList() {
@@ -376,4 +396,5 @@ public class MainActivity extends AppCompatActivity
         fragmentTransaction.replace(R.id.fragment_container_home, fragment);
         fragmentTransaction.commit();
     }
+
 }
