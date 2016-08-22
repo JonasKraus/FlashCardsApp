@@ -61,8 +61,7 @@ public class AsyncGetUser extends AsyncTask<Long, Void, User>{
             int response = urlConnection.getResponseCode();
 
             if (response >= 200 && response <=399){
-                JsonParser jsonParser = new JsonParser();
-                user = jsonParser.parseUser(urlConnection.getInputStream());
+                user = JsonParser.parseUser(urlConnection.getInputStream());
                 return user;
             }
 

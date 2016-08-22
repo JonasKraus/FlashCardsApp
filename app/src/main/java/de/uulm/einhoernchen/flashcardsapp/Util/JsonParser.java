@@ -33,7 +33,7 @@ public class JsonParser {
     private static final boolean DEBUG = false;
 
     // this should be public
-    public List<CardDeck> readCardDecks(InputStream in) throws IOException {
+    public static List<CardDeck> readCardDecks(InputStream in) throws IOException {
         JsonReader reader = new JsonReader(new InputStreamReader(in, "UTF-8"));
         try {
             return readCardDeckArray(reader);
@@ -43,7 +43,7 @@ public class JsonParser {
     }
 
     // this should be public
-    public User parseUser(InputStream in) throws IOException {
+    public static User parseUser(InputStream in) throws IOException {
         JsonReader reader = new JsonReader(new InputStreamReader(in, "UTF-8"));
         try {
             return readUser(reader);
@@ -52,13 +52,15 @@ public class JsonParser {
         }
     }
 
-    public List<CardDeck> readCardDeckArray(JsonReader reader) {
+    private static List<CardDeck> readCardDeckArray(JsonReader reader) {
         if (DEBUG) Log.d("parser Method", "readCardDeckArray");
         List<CardDeck> cardDeckList = new ArrayList<CardDeck>();
 
         try {
             reader.beginArray();
             while (reader.hasNext()) {
+
+                // TODO is this the right place to disable invisible Carddecks
                 CardDeck cardDeck = readCarddeck(reader);
                 if (cardDeck.isVisible()) {
                     cardDeckList.add(cardDeck);
@@ -72,7 +74,7 @@ public class JsonParser {
         return cardDeckList;
     }
 
-    public CardDeck readCarddeck(JsonReader reader) {
+    private static CardDeck readCarddeck(JsonReader reader) {
         if (DEBUG) Log.d("parser Method", "readCarddeck");
         long id = -1;
         boolean visible = false;
@@ -118,7 +120,7 @@ public class JsonParser {
         return new CardDeck(id, visible, userGroup, name, description, cards);
     }
 
-    public List<FlashCard> readCardArray(JsonReader reader) {
+    private static List<FlashCard> readCardArray(JsonReader reader) {
         if (DEBUG) Log.d("parser Method", "readCardArray");
         List<FlashCard> cards = new ArrayList<FlashCard>();
 
@@ -134,7 +136,7 @@ public class JsonParser {
         return cards;
     }
 
-    public FlashCard readCard(JsonReader reader) {
+    private static FlashCard readCard(JsonReader reader) {
         if (DEBUG) Log.d("parser Method", "readCard");
         long id = -1;
         List<Tag> tags = new ArrayList<>();
@@ -203,7 +205,7 @@ public class JsonParser {
         return new FlashCard(id, tags, rating, created, lastUpdated, question, answers, author, multipleChoice);
     }
 
-    public List<Answer> readAnswerArray(JsonReader reader) {
+    private static List<Answer> readAnswerArray(JsonReader reader) {
         if (DEBUG) Log.d("parser Method", "readAnswerArray");
 
         List<Answer> answers = new ArrayList<Answer>();
@@ -220,7 +222,7 @@ public class JsonParser {
         return answers;
     }
 
-    public Answer readAnswer(JsonReader reader) {
+    private static Answer readAnswer(JsonReader reader) {
         if (DEBUG) Log.d("parser Method", "readAnswer");
 
         long id = -1;
@@ -297,7 +299,7 @@ public class JsonParser {
         return new Answer(id, correct, text, hint, uri, author, created, lastUpdated, rating, answerCorrect);
     }
 
-    public User readUser(JsonReader reader) {
+    private static User readUser(JsonReader reader) {
         if (DEBUG) Log.d("parser Method", "readUser");
 
         long id = -1;
@@ -357,7 +359,7 @@ public class JsonParser {
         return new User(id, avatar, name, email, rating, created, lastLogin, groups);
     }
 
-    public List<UserGroup> readUserGroupArray(JsonReader reader) {
+    private static List<UserGroup> readUserGroupArray(JsonReader reader) {
         if (DEBUG) Log.d("parser Method", "readUserGroupArray");
 
         List<UserGroup> groups = new ArrayList<UserGroup>();
@@ -374,7 +376,7 @@ public class JsonParser {
         return groups;
     }
 
-    public Question readQuestion(JsonReader reader) {
+    private static Question readQuestion(JsonReader reader) {
         if (DEBUG) Log.d("parser Method", "readQuestion");
 
         long id = -1;
@@ -426,7 +428,7 @@ public class JsonParser {
         return new Question(id, text, uri, author);
     }
 
-    public List<Tag> readTagArray(JsonReader reader) {
+    private static List<Tag> readTagArray(JsonReader reader) {
         if (DEBUG) Log.d("parser Method", "readTagArray");
 
         List<Tag> tags = new ArrayList<Tag>();
@@ -443,7 +445,7 @@ public class JsonParser {
         return tags;
     }
 
-    public Tag readTag(JsonReader reader) {
+    private static Tag readTag(JsonReader reader) {
         if (DEBUG) Log.d("parser Method", "readTag");
 
         long id = -1;
@@ -472,7 +474,7 @@ public class JsonParser {
         return new Tag(id, name);
     }
 
-    public UserGroup readUserGroup(JsonReader reader) {
+    private static UserGroup readUserGroup(JsonReader reader) {
         if (DEBUG) Log.d("parser Method", "readUserGroup");
 
         long id = -1;

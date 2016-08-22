@@ -59,8 +59,7 @@ public class AsyncGetCarddeck extends AsyncTask<Long, Long, List<CardDeck>> {
 
             urlConnection.connect();
 
-            JsonParser jsonParser = new JsonParser();
-            return jsonParser.readCardDecks(urlConnection.getInputStream());
+            return JsonParser.readCardDecks(urlConnection.getInputStream());
 
         } catch (Exception e) {
 
