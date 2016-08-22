@@ -77,7 +77,7 @@ public class ItemFragmentCategory extends Fragment {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
 
-            //recyclerView.setAdapter(new FlashcardRecyclerViewAdapter(DummyContentCard.ITEMS, mListener));
+            //recyclerView.setAdapter(new FlashcardRecyclerViewAdapter(DummyContentCard.flashCards, mListener));
             recyclerView.setAdapter(new CategoryRecyclerViewAdapter(DummyContentCategory.collectItemsFromServer(parentId), mListener));
         }
         return view;

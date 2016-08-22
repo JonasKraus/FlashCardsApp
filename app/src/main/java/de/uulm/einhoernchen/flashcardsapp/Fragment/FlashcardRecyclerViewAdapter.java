@@ -11,7 +11,8 @@ import android.widget.TextView;
 import com.amulyakhare.textdrawable.TextDrawable;
 import com.amulyakhare.textdrawable.util.ColorGenerator;
 
-import de.uulm.einhoernchen.flashcardsapp.Fragment.ItemFragmentFlashcard.OnFlashcardListFragmentInteractionListener;
+import de.uulm.einhoernchen.flashcardsapp.Fragment.dummy.DummyContentCard;
+import de.uulm.einhoernchen.flashcardsapp.Fragment.dummy.DummyContentCard.ItemFragmentFlashcard.OnFlashcardListFragmentInteractionListener;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.dummy.DummyContent.DummyItem;
 import de.uulm.einhoernchen.flashcardsapp.Models.FlashCard;
 import de.uulm.einhoernchen.flashcardsapp.R;
@@ -20,15 +21,15 @@ import java.util.List;
 
 /**
  * {@link RecyclerView.Adapter} that can display a {@link DummyItem} and makes a call to the
- * specified {@link ItemFragmentFlashcard.OnFlashcardListFragmentInteractionListener}.
+ * specified {@link DummyContentCard.ItemFragmentFlashcard.OnFlashcardListFragmentInteractionListener}.
  * TODO: Replace the implementation with code for your data type.
  */
 public class FlashcardRecyclerViewAdapter extends RecyclerView.Adapter<FlashcardRecyclerViewAdapter.ViewHolder> {
 
     private final List<FlashCard> flashCards;
-    private final ItemFragmentFlashcard.OnFlashcardListFragmentInteractionListener mListener;
+    private final OnFlashcardListFragmentInteractionListener mListener;
 
-    public FlashcardRecyclerViewAdapter(List<FlashCard> items, ItemFragmentFlashcard.OnFlashcardListFragmentInteractionListener listener) {
+    public FlashcardRecyclerViewAdapter(List<FlashCard> items, OnFlashcardListFragmentInteractionListener listener) {
         flashCards = items;
         mListener = listener;
     }
@@ -45,7 +46,8 @@ public class FlashcardRecyclerViewAdapter extends RecyclerView.Adapter<Flashcard
         holder.mItem = flashCards.get(position);
         holder.mIdView.setText(flashCards.get(position).getId()+"");
         holder.mContentView.setText(flashCards.get(position).getQuestion().getQuestionText());
-        holder.mAuthorView.setText(flashCards.get(position).getAuthor().getName());
+        String authorName = flashCards.get(position).getAuthor() != null ? flashCards.get(position).getAuthor().getName() : "No Author";
+        holder.mAuthorView.setText(authorName);
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -63,7 +65,8 @@ public class FlashcardRecyclerViewAdapter extends RecyclerView.Adapter<Flashcard
 
         ColorGenerator generator = ColorGenerator.MATERIAL; // or use DEFAULT
         // generate random color
-        final int color = generator.getColor(flashCards.get(position).getAuthor().getRating());
+        int authorRanking = flashCards.get(position).getAuthor() != null ? flashCards.get(position).getAuthor().getRating() : 0;
+        final int color = generator.getColor(authorRanking);
         //int color = generator.getRandomColor();
 
         TextDrawable drawable = TextDrawable.builder()

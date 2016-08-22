@@ -71,6 +71,25 @@ public class JsonParser {
         }
     }
 
+    /**
+     * Takes an inputstream and parses flashCards
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     * @since 2016.08.22
+     *
+     * @param in
+     * @return
+     * @throws IOException
+     */
+    public static List<FlashCard> readFlashCards(InputStream in)  throws IOException  {
+        JsonReader reader = new JsonReader(new InputStreamReader(in, "UTF-8"));
+        try {
+            return readFlashCardArray(reader);
+        } finally {
+            reader.close();
+        }
+    }
+
     private static List<CardDeck> readCardDeckArray(JsonReader reader) {
         if (DEBUG) Log.d("parser Method", "readCardDeckArray");
         List<CardDeck> cardDeckList = new ArrayList<CardDeck>();
@@ -126,7 +145,7 @@ public class JsonParser {
                     }
 
                 } else if (stringName.equals(JsonKeys.CARDDECK_CARDS)) {
-                    cards = readCardArray(reader);
+                    cards = readFlashCardArray(reader);
                 } else {
                     reader.skipValue();
                 }
@@ -139,14 +158,14 @@ public class JsonParser {
         return new CardDeck(id, visible, userGroup, name, description, cards);
     }
 
-    private static List<FlashCard> readCardArray(JsonReader reader) {
-        if (DEBUG) Log.d("parser Method", "readCardArray");
+    private static List<FlashCard> readFlashCardArray(JsonReader reader) {
+        if (DEBUG) Log.d("parser Method", "readFlashCardArray");
         List<FlashCard> cards = new ArrayList<FlashCard>();
 
         try {
             reader.beginArray();
             while (reader.hasNext()) {
-                cards.add(readCard(reader));
+                cards.add(readFlashCard(reader));
             }
             reader.endArray();
         } catch (IOException e) {
@@ -155,8 +174,8 @@ public class JsonParser {
         return cards;
     }
 
-    private static FlashCard readCard(JsonReader reader) {
-        if (DEBUG) Log.d("parser Method", "readCard");
+    private static FlashCard readFlashCard(JsonReader reader) {
+        if (DEBUG) Log.d("parser Method", "readFlashCard");
         long id = -1;
         List<Tag> tags = new ArrayList<>();
         int rating = 0;
@@ -581,4 +600,5 @@ public class JsonParser {
 
         return user;
     }
+
 }

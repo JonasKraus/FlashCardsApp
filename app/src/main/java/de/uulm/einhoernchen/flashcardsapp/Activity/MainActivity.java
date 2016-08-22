@@ -31,7 +31,7 @@ import de.uulm.einhoernchen.flashcardsapp.Database.DbManager;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.HomeFragment;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.ItemFragmentCategory;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.ItemFragmentCategory.OnCategoryListFragmentInteractionListener;
-import de.uulm.einhoernchen.flashcardsapp.Fragment.ItemFragmentFlashcard;
+import de.uulm.einhoernchen.flashcardsapp.Fragment.dummy.DummyContentCard;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.dummy.DummyContentCarddeck;
 import de.uulm.einhoernchen.flashcardsapp.Models.CardDeck;
 import de.uulm.einhoernchen.flashcardsapp.Models.Categroy;
@@ -42,7 +42,7 @@ import de.uulm.einhoernchen.flashcardsapp.Util.ImageProcessor;
 import de.uulm.einhoernchen.flashcardsapp.Util.PermissionManager;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, HomeFragment.OnFragmentInteractionListener, ItemFragmentFlashcard.OnFlashcardListFragmentInteractionListener, OnCategoryListFragmentInteractionListener, DummyContentCarddeck.OnCarddeckListFragmentInteractionListener {
+        implements NavigationView.OnNavigationItemSelectedListener, HomeFragment.OnFragmentInteractionListener, DummyContentCard.ItemFragmentFlashcard.OnFlashcardListFragmentInteractionListener, OnCategoryListFragmentInteractionListener, DummyContentCarddeck.OnCarddeckListFragmentInteractionListener {
 
 
     private DbManager db;
@@ -352,21 +352,14 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onFlashcardListFragmentInteraction(FlashCard item) {
-        Log.d("click", item.toString());
+        Log.d("click card", item.toString());
         parentId = item.getId(); // TODO
         setFlashcardList();
 
     }
 
     private void setFlashcardList() {
-        ItemFragmentFlashcard fragment = new ItemFragmentFlashcard();
-        Bundle args = new Bundle();
-        args.putLong(ItemFragmentFlashcard.ARG_PARENT_ID, this.parentId);
-        fragment.setArguments(args);
-        android.support.v4.app.FragmentTransaction fragmentTransaction =
-                getSupportFragmentManager().beginTransaction();
-        fragmentTransaction.replace(R.id.fragment_container_home, fragment);
-        fragmentTransaction.commit();
+        new DummyContentCard().collectItemsFromServer(this.parentId, getSupportFragmentManager());
     }
 
     private void setCarddeckList() {
@@ -376,7 +369,7 @@ public class MainActivity extends AppCompatActivity
     private void setCategoryList() {
         ItemFragmentCategory fragment = new ItemFragmentCategory();
         Bundle args = new Bundle();
-        args.putLong(ItemFragmentFlashcard.ARG_PARENT_ID, this.parentId);
+        args.putLong(ItemFragmentCategory.ARG_PARENT_ID, this.parentId);
         fragment.setArguments(args);
         android.support.v4.app.FragmentTransaction fragmentTransaction =
                 getSupportFragmentManager().beginTransaction();

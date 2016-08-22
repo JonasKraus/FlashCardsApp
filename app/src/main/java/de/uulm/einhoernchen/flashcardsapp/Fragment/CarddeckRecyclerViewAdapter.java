@@ -17,8 +17,8 @@ import java.util.List;
 
 import de.uulm.einhoernchen.flashcardsapp.Fragment.dummy.DummyContent.DummyItem;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.dummy.DummyContentCarddeck;
+import de.uulm.einhoernchen.flashcardsapp.Fragment.dummy.DummyContentCarddeck.OnCarddeckListFragmentInteractionListener;
 import de.uulm.einhoernchen.flashcardsapp.Models.CardDeck;
-import de.uulm.einhoernchen.flashcardsapp.Models.FlashCard;
 import de.uulm.einhoernchen.flashcardsapp.R;
 
 /**
@@ -28,9 +28,9 @@ import de.uulm.einhoernchen.flashcardsapp.R;
 public class CarddeckRecyclerViewAdapter extends RecyclerView.Adapter<CarddeckRecyclerViewAdapter.ViewHolder> {
 
     private final List<CardDeck> cardDecks;
-    private final DummyContentCarddeck.OnCarddeckListFragmentInteractionListener mListener;
+    private final OnCarddeckListFragmentInteractionListener mListener;
 
-    public CarddeckRecyclerViewAdapter(List<CardDeck> items, DummyContentCarddeck.OnCarddeckListFragmentInteractionListener listener) {
+    public CarddeckRecyclerViewAdapter(List<CardDeck> items, OnCarddeckListFragmentInteractionListener listener) {
         cardDecks = items;
         mListener = listener;
     }

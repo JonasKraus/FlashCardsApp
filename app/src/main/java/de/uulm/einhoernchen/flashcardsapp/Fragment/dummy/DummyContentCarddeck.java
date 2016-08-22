@@ -1,6 +1,5 @@
 package de.uulm.einhoernchen.flashcardsapp.Fragment.dummy;
 
-import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -19,7 +18,6 @@ import java.util.List;
 import de.uulm.einhoernchen.flashcardsapp.AsyncTasks.AsyncGetCarddeck;
 
 import de.uulm.einhoernchen.flashcardsapp.Fragment.CarddeckRecyclerViewAdapter;
-import de.uulm.einhoernchen.flashcardsapp.Fragment.ItemFragmentFlashcard;
 import de.uulm.einhoernchen.flashcardsapp.Models.CardDeck;
 import de.uulm.einhoernchen.flashcardsapp.R;
 
@@ -50,7 +48,7 @@ public class DummyContentCarddeck {
                 DummyContentCarddeck.ItemFragmentCarddeck fragment = new DummyContentCarddeck.ItemFragmentCarddeck();
 
                 Bundle args = new Bundle();
-                args.putLong(ItemFragmentFlashcard.ARG_PARENT_ID, parentId);
+                args.putLong(ItemFragmentCarddeck.ARG_PARENT_ID, parentId);
                 fragment.setArguments(args);
 
                 android.support.v4.app.FragmentTransaction fragmentTransaction =
@@ -75,6 +73,7 @@ public class DummyContentCarddeck {
     public static class ItemFragmentCarddeck extends Fragment {
 
         private static final String ARG_COLUMN_COUNT = "column-count";
+        public static final String ARG_PARENT_ID = "parentId";
         private int mColumnCount = 1;
         private OnCarddeckListFragmentInteractionListener mListener;
 
