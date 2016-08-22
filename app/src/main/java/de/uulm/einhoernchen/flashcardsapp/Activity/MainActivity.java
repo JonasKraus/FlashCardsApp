@@ -371,7 +371,6 @@ public class MainActivity extends AppCompatActivity
 
     private void setCarddeckList() {
         new DummyContentCarddeck().collectItemsFromServer(this.parentId, getSupportFragmentManager());
-        //fragment.setAdapter(cardDecks);
     }
 
     private void setCategoryList() {

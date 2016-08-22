@@ -63,7 +63,7 @@ public class AsyncGetCarddeck extends AsyncTask<Long, Long, List<CardDeck>> {
 
         } catch (Exception e) {
 
-            Log.e("doInBackground Fehler", e.toString());
+            Log.e("doInBackground Error", e.toString());
             System.out.println(e.getMessage());
 
         }
@@ -74,20 +74,17 @@ public class AsyncGetCarddeck extends AsyncTask<Long, Long, List<CardDeck>> {
     @Override
     protected void onPostExecute(List<CardDeck> cardDecks) {
         super.onPostExecute(cardDecks);
-        if (cardDecks != null && cardDecks.size() > 0) {
+        if (cardDecks == null || cardDecks.size() == 0) {
 
-            delegate.processFinish(cardDecks);
-
-        } else {
-            // TODO just for testing purpose
+            // TODO just for testing purpose change to data from sqlite
             cardDecks = new ArrayList<>();
             for (int i = 0; i < 100; i ++) {
                 cardDecks.add(i, new CardDeck("deck "+ i, "beschreibung " + i));
             }
 
-            Log.d("onPostExecute num:", cardDecks.size() + "");
-            delegate.processFinish(cardDecks);
         }
+
+        delegate.processFinish(cardDecks);
 
     }
 
