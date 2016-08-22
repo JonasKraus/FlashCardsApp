@@ -26,7 +26,7 @@ public class AsyncGetCarddeck extends AsyncTask<Long, Long, List<CardDeck>> {
      * Interface to receive the carddecks in the activity that called this async task
      */
     public interface AsyncResponseCarddeck {
-        List<CardDeck> processFinish(List<CardDeck> cardDecks);
+        void processFinish(List<CardDeck> cardDecks);
     }
 
     public AsyncResponseCarddeck delegate = null;

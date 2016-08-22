@@ -26,13 +26,23 @@ import de.uulm.einhoernchen.flashcardsapp.Models.User;
 import de.uulm.einhoernchen.flashcardsapp.Models.UserGroup;
 
 /**
- * Created by jonas-uni on 21.08.2016.
+ * @author Jonas Kraus jonas.kraus@uni-ulm.de
+ * @since 2016.08.21
  */
 public class JsonParser {
 
     private static final boolean DEBUG = false;
 
-    // this should be public
+    /**
+     * Takes an inputstream and parses carddecks
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     * @since 2016.08.21
+     *
+     * @param in
+     * @return
+     * @throws IOException
+     */
     public static List<CardDeck> readCardDecks(InputStream in) throws IOException {
         JsonReader reader = new JsonReader(new InputStreamReader(in, "UTF-8"));
         try {
@@ -42,7 +52,16 @@ public class JsonParser {
         }
     }
 
-    // this should be public
+    /**
+     * Takes an inputstream and parses one user
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     * @since 2016.08.21
+     *
+     * @param in
+     * @return
+     * @throws IOException
+     */
     public static User parseUser(InputStream in) throws IOException {
         JsonReader reader = new JsonReader(new InputStreamReader(in, "UTF-8"));
         try {
