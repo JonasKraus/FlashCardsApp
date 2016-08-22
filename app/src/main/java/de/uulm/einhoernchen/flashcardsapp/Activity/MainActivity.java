@@ -109,6 +109,7 @@ public class MainActivity extends AppCompatActivity
 
         TextView profileName = (TextView) header.findViewById(R.id.textViewProfileName);
         TextView profileEmail = (TextView) header.findViewById(R.id.textViewProfileEmail);
+        TextView profileRating = (TextView) header.findViewById(R.id.textViewProfileRating);
 
         toolbarTextViewTitle = (TextView ) findViewById(R.id.toolbar_text_view_title);
         breadCrumps = new ArrayList<String>();
@@ -116,6 +117,8 @@ public class MainActivity extends AppCompatActivity
 
         profileName.setText(user.getName());
         profileEmail.setText(user.getEmail());
+        profileRating.setText(user.getRating()+"");
+        Log.d("ratung", user.getRating()+"");
 
         /**
          * Adds clicklistener to the profile image

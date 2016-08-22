@@ -65,13 +65,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     private static final int REQUEST_READ_CONTACTS = 0;
 
     /**
-     * A dummy authentication store containing known user names and passwords.
-     * TODO: remove after connecting to a real authentication system.
-     */
-    private static final String[] DUMMY_CREDENTIALS = new String[]{
-            "foo@example.com:hello", "bar@example.com:world"
-    };
-    /**
      * Keep track of the login task to ensure we can cancel it if requested.
      */
     private UserLoginTask mAuthTask = null;
@@ -261,18 +254,15 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     }
 
     private boolean isEmailValid(String email) {
-        //TODO: Replace this with your own logic
         return email.contains("@");
     }
 
     private boolean isPasswordValid(String password) {
-        //TODO: Replace this with your own logic
         return password.length() > 4;
     }
 
 
     private boolean isUserNameValid(String userName) {
-
         return userName.length() > 4;
     }
 
@@ -456,7 +446,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 cred.put("email", mEmail);
                 cred.put("name", mUserName);
                 cred.put("password", mPassword);
-                //urlConnection.addRequestProperty("data", "{\"name:\"\""+mUserName+"\", \"email:\"\""+mEmail+"\", \"password:\"\""+mPassword+"\"");
 
                 urlConnection.connect();
 
@@ -481,8 +470,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                         JsonNode root = mapper.readTree(decodedString);
                         long id = root.get("id").asLong();
 
-                        //Log.d("response json id", id + " ");
-
                         return id;
                     } else {
 
@@ -491,11 +478,9 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 }
                 in.close();
 
-
             } catch (Exception e) {
 
                 System.out.println(e.getMessage());
-
 
             }
             return null;
