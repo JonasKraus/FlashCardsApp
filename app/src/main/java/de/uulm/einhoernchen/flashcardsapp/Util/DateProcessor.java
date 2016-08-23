@@ -18,7 +18,7 @@ public class DateProcessor {
      * @return
      */
     public static Date stringToDate(String dateString) {
-        DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss z");
         Date date = null;
         try {
             date = sdf.parse(dateString);

@@ -13,6 +13,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.uulm.einhoernchen.flashcardsapp.Consts.Routes;
 import de.uulm.einhoernchen.flashcardsapp.Models.CardDeck;
 import de.uulm.einhoernchen.flashcardsapp.Models.User;
 import de.uulm.einhoernchen.flashcardsapp.Util.JsonParser;
@@ -42,7 +43,9 @@ public class AsyncGetCarddeck extends AsyncTask<Long, Long, List<CardDeck>> {
 
         Log.d("Beginn get Carddecks", "parent id " + this.parentId);
 
-        String urlString = "http://192.168.0.8:9000/cardDecks"; // URL to call TODO nach parentId wählen
+
+        String urlString = Routes.URL + Routes.SLASH + Routes.CARD_DECKS; // URL to call
+        Log.d("url", urlString);
 
         HttpURLConnection urlConnection = null;
 

@@ -10,6 +10,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
+import de.uulm.einhoernchen.flashcardsapp.Consts.Routes;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.dummy.DummyContentCard;
 import de.uulm.einhoernchen.flashcardsapp.Models.Answer;
 import de.uulm.einhoernchen.flashcardsapp.Models.CardDeck;
@@ -43,7 +44,8 @@ public class AsyncGetFlashCard extends AsyncTask<Long, Long, List<FlashCard>> {
 
         Log.d("Beginn get FlashCard", "parent id " + this.parentId);
 
-        String urlString = "http://192.168.0.8:9000/cards"; // URL to call TODO nach parentId wählen
+
+        String urlString = Routes.URL + Routes.SLASH + Routes.FLASH_CARDS; // TODO id URL to call
 
         HttpURLConnection urlConnection = null;
 

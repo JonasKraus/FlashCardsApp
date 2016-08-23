@@ -45,6 +45,7 @@ import java.util.List;
 import java.lang.*;
 
 import de.uulm.einhoernchen.flashcardsapp.AsyncTasks.AsyncGetUser;
+import de.uulm.einhoernchen.flashcardsapp.Consts.Routes;
 import de.uulm.einhoernchen.flashcardsapp.Database.DbManager;
 import de.uulm.einhoernchen.flashcardsapp.Models.User;
 import de.uulm.einhoernchen.flashcardsapp.R;
@@ -425,7 +426,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         protected Long doInBackground(Void... params) {
             // TODO: attempt authentication against a network service.
 
-            String urlString = "http://192.168.0.8:9000/users"; // URL to call
+            String urlString = Routes.URL + Routes.SLASH + Routes.USERS; // URL to call
 
             HttpURLConnection urlConnection = null;
             //InputStream in = null;

@@ -12,6 +12,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+import de.uulm.einhoernchen.flashcardsapp.Consts.Routes;
 import de.uulm.einhoernchen.flashcardsapp.Models.User;
 import de.uulm.einhoernchen.flashcardsapp.Util.JsonParser;
 
@@ -40,10 +41,10 @@ public class AsyncGetUser extends AsyncTask<Long, Void, User>{
 
         User user;
 
-        String urlString = "http://192.168.0.8:9000/users/" + id; // URL to call
+
+        String urlString = Routes.URL + Routes.SLASH + Routes.USERS + Routes.SLASH + id; // URL to call
 
         HttpURLConnection urlConnection = null;
-        //InputStream in = null;
 
         try {
 

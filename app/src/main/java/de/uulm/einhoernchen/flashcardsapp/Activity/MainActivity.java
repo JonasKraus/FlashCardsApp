@@ -41,7 +41,7 @@ import de.uulm.einhoernchen.flashcardsapp.Models.Categroy;
 import de.uulm.einhoernchen.flashcardsapp.Models.FlashCard;
 import de.uulm.einhoernchen.flashcardsapp.Models.User;
 import de.uulm.einhoernchen.flashcardsapp.R;
-import de.uulm.einhoernchen.flashcardsapp.Util.Constants;
+import de.uulm.einhoernchen.flashcardsapp.Consts.Constants;
 import de.uulm.einhoernchen.flashcardsapp.Util.ImageProcessor;
 import de.uulm.einhoernchen.flashcardsapp.Util.PermissionManager;
 

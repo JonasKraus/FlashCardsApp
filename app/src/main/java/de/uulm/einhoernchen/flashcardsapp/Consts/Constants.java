@@ -1,4 +1,4 @@
-package de.uulm.einhoernchen.flashcardsapp.Util;
+package de.uulm.einhoernchen.flashcardsapp.Consts;
 
 /**
  * @author Jonas Kraus jonas.kraus@uni-ulm.de

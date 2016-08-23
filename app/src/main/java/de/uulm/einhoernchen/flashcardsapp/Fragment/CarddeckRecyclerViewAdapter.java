@@ -47,7 +47,8 @@ public class CarddeckRecyclerViewAdapter extends RecyclerView.Adapter<CarddeckRe
         holder.mItem = cardDecks.get(position);
         holder.mIdView.setText(cardDecks.get(position).getId() + "");
         holder.mContentView.setText(cardDecks.get(position).getName() + "");
-        holder.mAuthorView.setText(cardDecks.get(position).getUserGroup().getName() + "");
+        String userGroupName = cardDecks.get(position).getUserGroup() != null ? cardDecks.get(position).getUserGroup().getName() : "";
+        holder.mAuthorView.setText(userGroupName);
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
