@@ -404,6 +404,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onCategoryListFragmentInteraction(Categroy item) {
         Log.d("click category", item.toString());
+        this.parentId = item.getId();
         breadCrumps.add(item.getName());
         toolbarTextViewTitle.setText(breadCrumps.get(breadCrumps.size() - 1));
         setCarddeckList();
@@ -414,6 +415,7 @@ public class MainActivity extends AppCompatActivity
         Log.d("click carddeck", item.toString());
         breadCrumps.add(item.getName());
         toolbarTextViewTitle.setText(breadCrumps.get(breadCrumps.size() - 1));
+        this.parentId = item.getId();
         setFlashcardList();
     }
 
@@ -421,9 +423,8 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onFlashcardListFragmentInteraction(FlashCard item) {
         Log.d("click card", item.toString());
-        parentId = item.getId(); // TODO
+        this.parentId = item.getId(); // TODO
         setFlashcardList();
-
     }
 
     private void setFlashcardList() {

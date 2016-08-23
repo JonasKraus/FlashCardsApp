@@ -41,10 +41,8 @@ public class DummyContentCard {
 
     public static void collectItemsFromServer(final long parentId, final FragmentManager fragmentManager) {
 
-        /*
 
-        */
-
+        Log.d("parent id Dummy", parentId + "");
         AsyncGetFlashCard asyncGetFlashCard = new AsyncGetFlashCard(parentId, new AsyncGetFlashCard.AsyncResponseFlashCard() {
 
             @Override
