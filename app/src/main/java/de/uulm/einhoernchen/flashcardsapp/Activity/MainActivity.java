@@ -1,5 +1,6 @@
 package de.uulm.einhoernchen.flashcardsapp.Activity;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -127,6 +128,8 @@ public class MainActivity extends AppCompatActivity
         profileImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //MEDIA GALLERY
+                PermissionManager.verifyStoragePermissionsWrite((Activity) context);
 
                 DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
                     @Override
@@ -226,8 +229,6 @@ public class MainActivity extends AppCompatActivity
             String selectedImagePath;
             Uri selectedImageUri = data.getData();
 
-            //MEDIA GALLERY
-            PermissionManager.verifyStoragePermissionsWrite(this);
             selectedImagePath = ImageProcessor.getPath(getApplicationContext(), selectedImageUri);
             BitmapFactory.Options bmOptions = new BitmapFactory.Options();
 
