@@ -38,7 +38,7 @@ public class DummyContentCarddeck {
      * @param parentId given by the main activity
      * @param fragmentManager given by main activity
      */
-    public void collectItemsFromServer(final long parentId, final FragmentManager fragmentManager, ProgressBar progressBarMain) {
+    public void collectItemsFromServer(final long parentId, final FragmentManager fragmentManager, ProgressBar progressBarMain, final boolean backPressed) {
 
         AsyncGetCarddeck asyncGetCarddeck = new AsyncGetCarddeck(parentId, new AsyncGetCarddeck.AsyncResponseCarddeck() {
 
@@ -54,6 +54,13 @@ public class DummyContentCarddeck {
 
                 android.support.v4.app.FragmentTransaction fragmentTransaction =
                         fragmentManager.beginTransaction();
+
+                if (backPressed) {
+                    fragmentTransaction.setCustomAnimations(R.anim.enter_from_left, R.anim.exit_to_right);
+                } else {
+                    fragmentTransaction.setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left);
+                }
+
                 fragmentTransaction.replace(R.id.fragment_container_home, fragment);
                 fragmentTransaction.commit();
 

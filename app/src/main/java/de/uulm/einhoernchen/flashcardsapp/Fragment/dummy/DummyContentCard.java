@@ -47,7 +47,7 @@ public class DummyContentCard {
      * @param fragmentManager
      * @param progressBarMain
      */
-    public static void collectItemsFromServer(final long parentId, final FragmentManager fragmentManager, ProgressBar progressBarMain) {
+    public static void collectItemsFromServer(final long parentId, final FragmentManager fragmentManager, ProgressBar progressBarMain, final boolean backPressed) {
 
         AsyncGetFlashCard asyncGetFlashCard = new AsyncGetFlashCard(parentId, new AsyncGetFlashCard.AsyncResponseFlashCard() {
 
@@ -63,6 +63,13 @@ public class DummyContentCard {
 
                 android.support.v4.app.FragmentTransaction fragmentTransaction =
                         fragmentManager.beginTransaction();
+
+                if (backPressed) {
+                    fragmentTransaction.setCustomAnimations(R.anim.enter_from_left, R.anim.exit_to_right);
+                } else {
+                    fragmentTransaction.setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left);
+                }
+
                 fragmentTransaction.replace(R.id.fragment_container_home, fragment);
                 fragmentTransaction.commit();
 
