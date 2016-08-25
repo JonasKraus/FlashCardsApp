@@ -23,20 +23,12 @@
         app:headerLayout="@layout/nav_header_home"
         app:menu="@menu/activity_home_drawer" />
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:paddingTop="@dimen/app_bar_height">
-        <ProgressBar
-            style="?android:attr/progressBarStyleLarge"
-            android:layout_gravity="center_horizontal"
-            android:layout_weight="1"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:id="@+id/progressBarMain"
-            android:visibility="gone"/>
-    </LinearLayout>
-
+    <ProgressBar
+        style="?android:attr/progressBarStyleSmall"
+        android:layout_width="10dp"
+        android:layout_height="10dp"
+        android:id="@+id/progressBarMain"
+        android:visibility="gone"/>
 
 
 </android.support.v4.widget.DrawerLayout>
