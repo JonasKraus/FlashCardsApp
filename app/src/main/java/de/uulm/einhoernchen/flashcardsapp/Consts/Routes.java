@@ -16,7 +16,7 @@ public class Routes {
     public static final String BASE_URL_LOCAL_IP_WELCOME = BASE_PROTOCOL + "134.60.132.230" + BASE_PORT;
     public static final String BASE_URL_LOCAL_DOMAIN = BASE_PROTOCOL + "dev-flashcards.de" + BASE_PORT;
 
-    public static final String URL = BASE_URL_LOCAL_IP_WELCOME;
+    public static final String URL = BASE_URL_LOCAL_IP_HOME;
 
     public static final String FLASH_CARDS = "cards";
     public static final String CARD_DECKS = "cardDecks";

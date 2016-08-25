@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -39,10 +40,9 @@ public class DummyContentCard {
     private static List<FlashCard> flashCards = new ArrayList<FlashCard>();
 
 
-    public static void collectItemsFromServer(final long parentId, final FragmentManager fragmentManager) {
 
+    public static void collectItemsFromServer(final long parentId, final FragmentManager fragmentManager, ProgressBar progressBarMain) {
 
-        Log.d("parent id Dummy", parentId + "");
         AsyncGetFlashCard asyncGetFlashCard = new AsyncGetFlashCard(parentId, new AsyncGetFlashCard.AsyncResponseFlashCard() {
 
             @Override
@@ -63,6 +63,8 @@ public class DummyContentCard {
             }
 
         });
+
+        asyncGetFlashCard.setProgressbar(progressBarMain);
         asyncGetFlashCard.execute();
 
     }

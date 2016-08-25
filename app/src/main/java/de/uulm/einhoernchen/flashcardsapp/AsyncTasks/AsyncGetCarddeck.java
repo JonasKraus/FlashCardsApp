@@ -1,7 +1,9 @@
 package de.uulm.einhoernchen.flashcardsapp.AsyncTasks;
 
+import android.app.Activity;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.view.Window;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;

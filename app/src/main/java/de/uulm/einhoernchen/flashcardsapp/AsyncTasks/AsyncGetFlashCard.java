@@ -2,6 +2,8 @@ package de.uulm.einhoernchen.flashcardsapp.AsyncTasks;
 
 import android.os.AsyncTask;
 import android.util.Log;
+import android.view.View;
+import android.widget.ProgressBar;
 
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -23,6 +25,18 @@ import de.uulm.einhoernchen.flashcardsapp.Util.JsonParser;
  * Created by jonas-uni on 17.08.2016.
  */
 public class AsyncGetFlashCard extends AsyncTask<Long, Long, List<FlashCard>> {
+
+    private ProgressBar progressBar;
+
+    public void setProgressbar(ProgressBar progressBar) {
+        this.progressBar = progressBar;
+    }
+
+    @Override
+    protected void onPreExecute() {
+        super.onPreExecute();
+        progressBar.setVisibility(View.VISIBLE);
+    }
 
     /**
      * Interface to receive the carddecks in the activity that called this async task
@@ -105,6 +119,7 @@ public class AsyncGetFlashCard extends AsyncTask<Long, Long, List<FlashCard>> {
 
         }
 
+        progressBar.setVisibility(View.GONE);
         delegate.processFinish(flashCards);
 
     }

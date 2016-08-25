@@ -23,6 +23,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import java.io.File;
@@ -69,6 +70,7 @@ public class MainActivity extends AppCompatActivity
         this.context = this;
 
         setContentView(R.layout.activity_home);
+
 
         HomeFragment fragment = new HomeFragment();
         android.support.v4.app.FragmentTransaction fragmentTransaction =
@@ -403,32 +405,39 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onCategoryListFragmentInteraction(Categroy item) {
+
         Log.d("click category", item.toString());
         this.parentId = item.getId();
         breadCrumps.add(item.getName());
         toolbarTextViewTitle.setText(breadCrumps.get(breadCrumps.size() - 1));
         setCarddeckList();
+
     }
 
     @Override
     public void onCarddeckListFragmentInteraction(CardDeck item) {
+
         Log.d("click carddeck", item.toString());
         breadCrumps.add(item.getName());
         toolbarTextViewTitle.setText(breadCrumps.get(breadCrumps.size() - 1));
         this.parentId = item.getId();
         setFlashcardList();
+
     }
 
 
     @Override
     public void onFlashcardListFragmentInteraction(FlashCard item) {
+
         Log.d("click card", item.toString());
         this.parentId = item.getId(); // TODO
         setFlashcardList();
+
     }
 
     private void setFlashcardList() {
-        new DummyContentCard().collectItemsFromServer(this.parentId, getSupportFragmentManager());
+        ProgressBar progressBar = (ProgressBar) findViewById(R.id.progressBarMain);
+        new DummyContentCard().collectItemsFromServer(this.parentId, getSupportFragmentManager(), progressBar);
         catalogueState = Constants.FLASH_CARD;
     }
 
