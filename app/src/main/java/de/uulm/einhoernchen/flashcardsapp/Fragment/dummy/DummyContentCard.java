@@ -39,8 +39,14 @@ public class DummyContentCard {
 
     private static List<FlashCard> flashCards = new ArrayList<FlashCard>();
 
-
-
+    /**
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     * @since 2016.08.25
+     *
+     * @param parentId
+     * @param fragmentManager
+     * @param progressBarMain
+     */
     public static void collectItemsFromServer(final long parentId, final FragmentManager fragmentManager, ProgressBar progressBarMain) {
 
         AsyncGetFlashCard asyncGetFlashCard = new AsyncGetFlashCard(parentId, new AsyncGetFlashCard.AsyncResponseFlashCard() {

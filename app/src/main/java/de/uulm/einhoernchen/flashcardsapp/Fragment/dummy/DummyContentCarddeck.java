@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,7 +38,7 @@ public class DummyContentCarddeck {
      * @param parentId given by the main activity
      * @param fragmentManager given by main activity
      */
-    public void collectItemsFromServer(final long parentId, final FragmentManager fragmentManager) {
+    public void collectItemsFromServer(final long parentId, final FragmentManager fragmentManager, ProgressBar progressBarMain) {
 
         AsyncGetCarddeck asyncGetCarddeck = new AsyncGetCarddeck(parentId, new AsyncGetCarddeck.AsyncResponseCarddeck() {
 
@@ -59,6 +60,8 @@ public class DummyContentCarddeck {
             }
 
         });
+
+        asyncGetCarddeck.setProgressbar(progressBarMain);
         asyncGetCarddeck.execute();
 
     }

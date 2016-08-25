@@ -60,6 +60,7 @@ public class MainActivity extends AppCompatActivity
     private long parentId = -100; // TODO update
     private Constants catalogueState = Constants.CATEGORY;
     private List<String> breadCrumps;
+    private ProgressBar progressBar;
 
     private static final int MY_INTENT_CLICK=302;
 
@@ -71,6 +72,7 @@ public class MainActivity extends AppCompatActivity
 
         setContentView(R.layout.activity_home);
 
+        progressBar = (ProgressBar) findViewById(R.id.progressBarMain);
 
         HomeFragment fragment = new HomeFragment();
         android.support.v4.app.FragmentTransaction fragmentTransaction =
@@ -436,13 +438,13 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void setFlashcardList() {
-        ProgressBar progressBar = (ProgressBar) findViewById(R.id.progressBarMain);
+
         new DummyContentCard().collectItemsFromServer(this.parentId, getSupportFragmentManager(), progressBar);
         catalogueState = Constants.FLASH_CARD;
     }
 
     private void setCarddeckList() {
-        new DummyContentCarddeck().collectItemsFromServer(this.parentId, getSupportFragmentManager());
+        new DummyContentCarddeck().collectItemsFromServer(this.parentId, getSupportFragmentManager(), progressBar);
         catalogueState = Constants.CARD_DECK;
     }
 

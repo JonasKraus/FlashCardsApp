@@ -3,7 +3,9 @@ package de.uulm.einhoernchen.flashcardsapp.AsyncTasks;
 import android.app.Activity;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.view.View;
 import android.view.Window;
+import android.widget.ProgressBar;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -24,6 +26,18 @@ import de.uulm.einhoernchen.flashcardsapp.Util.JsonParser;
  * Created by jonas-uni on 17.08.2016.
  */
 public class AsyncGetCarddeck extends AsyncTask<Long, Long, List<CardDeck>> {
+
+    private ProgressBar progressBar;
+
+    public void setProgressbar(ProgressBar progressBar) {
+        this.progressBar = progressBar;
+    }
+
+    @Override
+    protected void onPreExecute() {
+        super.onPreExecute();
+        progressBar.setVisibility(View.VISIBLE);
+    }
 
     /**
      * Interface to receive the carddecks in the activity that called this async task
@@ -89,6 +103,7 @@ public class AsyncGetCarddeck extends AsyncTask<Long, Long, List<CardDeck>> {
 
         }
 
+        progressBar.setVisibility(View.GONE);
         delegate.processFinish(cardDecks);
 
     }
