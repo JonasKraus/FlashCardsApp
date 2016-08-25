@@ -61,7 +61,6 @@ public class AsyncGetCarddeck extends AsyncTask<Long, Long, List<CardDeck>> {
 
 
         String urlString = Routes.URL + Routes.SLASH + Routes.CARD_DECKS; // URL to call
-        Log.d("url", urlString);
 
         HttpURLConnection urlConnection = null;
 
