@@ -45,7 +45,7 @@ public class CategoryRecyclerViewAdapter extends RecyclerView.Adapter<CategoryRe
         // holder.mIdView.setText(categroys.get(position).getId()+""); TODO Wird das benötigt?
         holder.mContentView.setText(categroys.get(position).getName());
         holder.mAuthorView.setVisibility(View.INVISIBLE);
-        holder.mGroupRatingView.setVisibility(View.INVISIBLE);
+        // holder.mGroupRatingView.setVisibility(View.INVISIBLE);
         holder.mCardRatingView.setVisibility(View.INVISIBLE);
         holder.mDateView.setVisibility(View.INVISIBLE);
         holder.mBookmarkView.setVisibility(View.INVISIBLE);
@@ -86,7 +86,7 @@ public class CategoryRecyclerViewAdapter extends RecyclerView.Adapter<CategoryRe
         public final TextView mIdView;
         public final TextView mContentView;
         public final TextView mAuthorView;
-        public final TextView mGroupRatingView;
+        // public final TextView mGroupRatingView;
         public final TextView mCardRatingView;
         public final TextView mDateView;
         public final ImageView mBookmarkView;
@@ -101,7 +101,7 @@ public class CategoryRecyclerViewAdapter extends RecyclerView.Adapter<CategoryRe
             mContentView = (TextView) view.findViewById(R.id.content);
             mAuthorView = (TextView) view.findViewById(R.id.textView_listItem_author);
 
-            mGroupRatingView = (TextView) view.findViewById(R.id.text_view_listItem_group_rating);
+            // mGroupRatingView = (TextView) view.findViewById(R.id.text_view_listItem_group_rating);
             mCardRatingView = (TextView) view.findViewById(R.id.text_view_listItem_card_rating);
             mDateView = (TextView) view.findViewById(R.id.text_view_listItem_date);
             mBookmarkView = (ImageView) view.findViewById(R.id.image_view_bookmark);

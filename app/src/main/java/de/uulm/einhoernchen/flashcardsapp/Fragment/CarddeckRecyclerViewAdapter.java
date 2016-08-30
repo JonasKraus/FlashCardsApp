@@ -47,7 +47,7 @@ public class CarddeckRecyclerViewAdapter extends RecyclerView.Adapter<CarddeckRe
         holder.mContentView.setText(cardDecks.get(position).getName() + "");
         String userGroupName = cardDecks.get(position).getUserGroup() != null ? cardDecks.get(position).getUserGroup().getName() : "No Author";
         holder.mAuthorView.setText(userGroupName);
-        holder.mGroupRatingView.setVisibility(View.INVISIBLE);
+        // holder.mGroupRatingView.setVisibility(View.INVISIBLE);
         holder.mCardRatingView.setText(cardDecks.get(position).getRatingForView());
         holder.mDateView.setText(cardDecks.get(position).getLastUpdated());
         holder.mBookmarkView.setVisibility(View.INVISIBLE);
@@ -112,7 +112,7 @@ public class CarddeckRecyclerViewAdapter extends RecyclerView.Adapter<CarddeckRe
         public final TextView mIdView;
         public final TextView mContentView;
         public final TextView mAuthorView;
-        public final TextView mGroupRatingView;
+        // public final TextView mGroupRatingView;
         public final TextView mCardRatingView;
         public final TextView mDateView;
         public final ImageView mBookmarkView;
@@ -127,7 +127,7 @@ public class CarddeckRecyclerViewAdapter extends RecyclerView.Adapter<CarddeckRe
             mContentView = (TextView) view.findViewById(R.id.content);
             mAuthorView = (TextView) view.findViewById(R.id.textView_listItem_author);
 
-            mGroupRatingView = (TextView) view.findViewById(R.id.text_view_listItem_group_rating);
+            // mGroupRatingView = (TextView) view.findViewById(R.id.text_view_listItem_group_rating);
             mCardRatingView = (TextView) view.findViewById(R.id.text_view_listItem_card_rating);
             mDateView = (TextView) view.findViewById(R.id.text_view_listItem_date);
             mBookmarkView = (ImageView) view.findViewById(R.id.image_view_bookmark);
