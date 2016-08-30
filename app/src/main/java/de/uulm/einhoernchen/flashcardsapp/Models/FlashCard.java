@@ -9,6 +9,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -25,7 +27,7 @@ public class FlashCard {
     private long id;
 
     @JsonProperty(JsonKeys.RATING)
-    private int rating;
+    private int rating = 0;
 
     @JsonFormat(shape=JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss z")
     @JsonProperty(JsonKeys.DATE_CREATED)
@@ -188,8 +190,12 @@ public class FlashCard {
         this.created = created;
     }
 
-    public Date getLastUpdated() {
-        return lastUpdated;
+    public String getLastUpdated() {
+        // TODO to be implemented
+        if (this.lastUpdated == null) {
+            return new SimpleDateFormat("dd.MM.yyyy").format(Calendar.getInstance().getTime());
+        }
+        return lastUpdated.toString();
     }
 
     public void setLastUpdated(Date lastUpdated) {
@@ -294,6 +300,19 @@ public class FlashCard {
 
     public static void update() {
         // @TODO to be implemented
+    }
+
+    /**
+     * Generates rating string for view usage
+     *
+     * @return
+     */
+    public String getForViewRating() {
+        if (this.getRating() >= 0) {
+            return "+" + this.getRating();
+        } else {
+            return "-" + this.getRating();
+        }
     }
 }
 

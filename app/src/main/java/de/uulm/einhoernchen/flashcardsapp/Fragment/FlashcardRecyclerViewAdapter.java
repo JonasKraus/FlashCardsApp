@@ -37,17 +37,22 @@ public class FlashcardRecyclerViewAdapter extends RecyclerView.Adapter<Flashcard
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.fragment_item, parent, false);
+                .inflate(R.layout.list_item, parent, false);
         return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.mItem = flashCards.get(position);
-        holder.mIdView.setText(flashCards.get(position).getId()+"");
+        // holder.mIdView.setText(flashCards.get(position).getId()+""); TODO Wird das benötigt?
         holder.mContentView.setText(flashCards.get(position).getQuestion().getQuestionText());
         String authorName = flashCards.get(position).getAuthor() != null ? flashCards.get(position).getAuthor().getName() : "No Author";
         holder.mAuthorView.setText(authorName);
+        holder.mGroupRatingView.setVisibility(View.INVISIBLE);
+        holder.mCardRatingView.setText(flashCards.get(position).getForViewRating());
+        holder.mDateView.setText(flashCards.get(position).getLastUpdated());
+        holder.mBookmarkView.setVisibility(View.VISIBLE);
+        // holder.mBookmarkView.setImageDrawable(// TODO set if maked);
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -111,6 +116,11 @@ public class FlashcardRecyclerViewAdapter extends RecyclerView.Adapter<Flashcard
         public final TextView mIdView;
         public final TextView mContentView;
         public final TextView mAuthorView;
+        public final TextView mGroupRatingView;
+        public final TextView mCardRatingView;
+        public final TextView mDateView;
+        public final ImageView mBookmarkView;
+        public final ImageView mLocalView;
         public final ImageView imageView; // Text icon
         public FlashCard mItem;
 
@@ -120,7 +130,14 @@ public class FlashcardRecyclerViewAdapter extends RecyclerView.Adapter<Flashcard
             mIdView = (TextView) view.findViewById(R.id.id);
             mContentView = (TextView) view.findViewById(R.id.content);
             mAuthorView = (TextView) view.findViewById(R.id.textView_listItem_author);
-            imageView = (ImageView) view.findViewById(R.id.image_view);
+
+            mGroupRatingView = (TextView) view.findViewById(R.id.text_view_listItem_group_rating);
+            mCardRatingView = (TextView) view.findViewById(R.id.text_view_listItem_card_rating);
+            mDateView = (TextView) view.findViewById(R.id.text_view_listItem_date);
+            mBookmarkView = (ImageView) view.findViewById(R.id.image_view_bookmark);
+            mLocalView = (ImageView) view.findViewById(R.id.image_view_offline);
+
+            imageView = (ImageView) view.findViewById(R.id.image_view_round_icon);
         }
 
         @Override

@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:layout_marginTop="@dimen/activity_horizontal_margin"
+    android:clipToPadding="false">
+
+    <TextView
+        android:id="@+id/id"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:textAppearance="?attr/textAppearanceListItem" />
+
+    <ImageView
+        android:id="@+id/image_view_round_icon"
+        android:layout_width="@dimen/icon_round_random"
+        android:layout_height="@dimen/icon_round_random"
+        android:contentDescription="@string/app_name"
+        android:layout_gravity="center_vertical"/>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight=".50"
+        android:layout_marginLeft="@dimen/text_margin"
+        android:orientation="vertical">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/textView_listItem_author"
+            android:textSize="@dimen/item_small_text_size"
+            android:text="Author"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/text_view_listItem_group_rating"
+            android:textSize="@dimen/item_small_text_size"
+            android:text="+666"/>
+        <TextView
+            android:id="@+id/content"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:lines="2"
+            android:textAppearance="?attr/textAppearanceListItem" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/text_view_listItem_card_rating"
+            android:textSize="@dimen/item_small_text_size"
+            android:text="+666"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:id="@+id/ll_listItem_right">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/text_view_listItem_date"
+            android:layout_gravity="right"
+            android:textSize="@dimen/item_small_text_size"
+            android:text="23.04.2016"/>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="47dp"
+            android:src="@drawable/ic_bookmark_border"
+            android:id="@+id/image_view_bookmark"
+            android:layout_marginRight="-4.5dp"
+            android:layout_gravity="right"/>
+
+        <ImageView
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:id="@+id/image_view_offline"
+            android:src="@drawable/ic_offline_pin"
+            android:layout_gravity="right"
+
+            android:alpha=".3"/>
+    </LinearLayout>
+
+
+
+
+<!--
+    <ImageView
+        android:id="@+id/checkBox"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:padding="6dp"
+        android:gravity="right"
+        android:layout_marginLeft="5dp"
+        android:tag="false"/>
+        -->
+</LinearLayout>
+
+

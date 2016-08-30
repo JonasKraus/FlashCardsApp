@@ -2,18 +2,15 @@ package de.uulm.einhoernchen.flashcardsapp.Fragment;
 
 import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.amulyakhare.textdrawable.TextDrawable;
 import com.amulyakhare.textdrawable.util.ColorGenerator;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import de.uulm.einhoernchen.flashcardsapp.Fragment.dummy.DummyContent.DummyItem;
@@ -39,17 +36,21 @@ public class CarddeckRecyclerViewAdapter extends RecyclerView.Adapter<CarddeckRe
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.fragment_item, parent, false);
+                .inflate(R.layout.list_item, parent, false);
         return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.mItem = cardDecks.get(position);
-        holder.mIdView.setText(cardDecks.get(position).getId() + "");
+        // holder.mIdView.setText(cardDecks.get(position).getId() + ""); TODO Wird das benötigt?
         holder.mContentView.setText(cardDecks.get(position).getName() + "");
-        String userGroupName = cardDecks.get(position).getUserGroup() != null ? cardDecks.get(position).getUserGroup().getName() : "";
+        String userGroupName = cardDecks.get(position).getUserGroup() != null ? cardDecks.get(position).getUserGroup().getName() : "No Author";
         holder.mAuthorView.setText(userGroupName);
+        holder.mGroupRatingView.setVisibility(View.INVISIBLE);
+        holder.mCardRatingView.setText(cardDecks.get(position).getRatingForView());
+        holder.mDateView.setText(cardDecks.get(position).getLastUpdated());
+        holder.mBookmarkView.setVisibility(View.INVISIBLE);
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -111,6 +112,11 @@ public class CarddeckRecyclerViewAdapter extends RecyclerView.Adapter<CarddeckRe
         public final TextView mIdView;
         public final TextView mContentView;
         public final TextView mAuthorView;
+        public final TextView mGroupRatingView;
+        public final TextView mCardRatingView;
+        public final TextView mDateView;
+        public final ImageView mBookmarkView;
+        public final ImageView mLocalView;
         public final ImageView imageView; // Text icon
         public CardDeck mItem;
 
@@ -120,7 +126,14 @@ public class CarddeckRecyclerViewAdapter extends RecyclerView.Adapter<CarddeckRe
             mIdView = (TextView) view.findViewById(R.id.id);
             mContentView = (TextView) view.findViewById(R.id.content);
             mAuthorView = (TextView) view.findViewById(R.id.textView_listItem_author);
-            imageView = (ImageView) view.findViewById(R.id.image_view);
+
+            mGroupRatingView = (TextView) view.findViewById(R.id.text_view_listItem_group_rating);
+            mCardRatingView = (TextView) view.findViewById(R.id.text_view_listItem_card_rating);
+            mDateView = (TextView) view.findViewById(R.id.text_view_listItem_date);
+            mBookmarkView = (ImageView) view.findViewById(R.id.image_view_bookmark);
+            mLocalView = (ImageView) view.findViewById(R.id.image_view_offline);
+
+            imageView = (ImageView) view.findViewById(R.id.image_view_round_icon);
         }
 
         @Override

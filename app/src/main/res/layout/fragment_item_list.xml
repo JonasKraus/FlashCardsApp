@@ -24,6 +24,6 @@
         <!--
         tools:context=".Fragment.ItemFragmentFlashcard"
 
-        tools:listitem="@layout/fragment_item"
+        tools:listitem="@layout/list_item"
         />
         -->

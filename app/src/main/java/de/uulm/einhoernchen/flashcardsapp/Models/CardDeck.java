@@ -3,6 +3,9 @@ package de.uulm.einhoernchen.flashcardsapp.Models;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.sql.Date;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.List;
 
 import de.uulm.einhoernchen.flashcardsapp.Util.JsonKeys;
@@ -33,6 +36,7 @@ public class CardDeck {
     @JsonProperty(JsonKeys.CARDDECK_CARDS)
     private List<FlashCard> cards;
 
+    private Date lastUpdated;
 
     public CardDeck(String name) {
         this.name = name;
@@ -57,6 +61,8 @@ public class CardDeck {
         userGroup.addDeck(this);
         this.visible=otherDeck.isVisible();
     }
+
+    private int rating = 0;
 
     /**
      * @author Jonas Kraus jonas.kraus@uni-ulm.de
@@ -157,5 +163,31 @@ public class CardDeck {
                 ", description='" + description + '\'' +
                 ", cards=" + cards +
                 '}';
+    }
+
+    public String getLastUpdated() {
+        // TODO to be implemented
+        if (this.lastUpdated == null) {
+            return new SimpleDateFormat("dd.MM.yyyy").format(Calendar.getInstance().getTime());
+        }
+        return lastUpdated.toString();
+    }
+
+    public int getRating() {
+        // TODO to be implemented
+        return rating;
+    }
+
+    /**
+     * Method to show rating in a textView
+     *
+     * @return
+     */
+    public String getRatingForView() {
+        if (this.getRating() >= 0) {
+            return "+" + this.getRating();
+        } else {
+            return "-" + this.getRating();
+        }
     }
 }

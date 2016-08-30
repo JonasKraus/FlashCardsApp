@@ -15,7 +15,6 @@ import java.util.List;
 
 import de.uulm.einhoernchen.flashcardsapp.Fragment.dummy.DummyContent.DummyItem;
 import de.uulm.einhoernchen.flashcardsapp.Models.Categroy;
-import de.uulm.einhoernchen.flashcardsapp.Models.FlashCard;
 import de.uulm.einhoernchen.flashcardsapp.R;
 
 /**
@@ -36,16 +35,20 @@ public class CategoryRecyclerViewAdapter extends RecyclerView.Adapter<CategoryRe
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.fragment_item, parent, false);
+                .inflate(R.layout.list_item, parent, false);
         return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.mItem = categroys.get(position);
-        holder.mIdView.setText(categroys.get(position).getId()+"");
+        // holder.mIdView.setText(categroys.get(position).getId()+""); TODO Wird das benötigt?
         holder.mContentView.setText(categroys.get(position).getName());
-        holder.mAuthorView.setText(categroys.get(position).getDescription());
+        holder.mAuthorView.setVisibility(View.INVISIBLE);
+        holder.mGroupRatingView.setVisibility(View.INVISIBLE);
+        holder.mCardRatingView.setVisibility(View.INVISIBLE);
+        holder.mDateView.setVisibility(View.INVISIBLE);
+        holder.mBookmarkView.setVisibility(View.INVISIBLE);
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -70,32 +73,7 @@ public class CategoryRecyclerViewAdapter extends RecyclerView.Adapter<CategoryRe
                 .buildRound(firstLetter, color); // radius in px
 
         holder.imageView.setImageDrawable(drawable);
-        holder.imageView.setTag(false);
 
-
-        holder.imageView.setOnClickListener(new View.OnClickListener(){
-
-            @Override
-            public void onClick(View v) {
-                //v.startAnimation(AnimationUtils.loadAnimation(v.getContext(), R.anim.card_flip_left_out));
-                
-                TextDrawable drawable;
-
-                // @TODO Set card as checked
-                if (holder.imageView.getTag().equals(true)) {
-                    drawable = TextDrawable.builder()
-                            .buildRound(firstLetter, color); // radius in px
-                    holder.imageView.setTag(false);
-                } else {
-                    String firstLetter = String.valueOf("✓"); // hier wird der buchstabe gesetzt
-                    drawable = TextDrawable.builder()
-                            .buildRound(firstLetter, Color.GRAY); // radius in px
-                    holder.imageView.setTag(true);
-                }
-
-                holder.imageView.setImageDrawable(drawable);
-            }
-        });
     }
 
     @Override
@@ -108,6 +86,11 @@ public class CategoryRecyclerViewAdapter extends RecyclerView.Adapter<CategoryRe
         public final TextView mIdView;
         public final TextView mContentView;
         public final TextView mAuthorView;
+        public final TextView mGroupRatingView;
+        public final TextView mCardRatingView;
+        public final TextView mDateView;
+        public final ImageView mBookmarkView;
+        public final ImageView mLocalView;
         public final ImageView imageView; // Text icon
         public Categroy mItem;
 
@@ -117,7 +100,14 @@ public class CategoryRecyclerViewAdapter extends RecyclerView.Adapter<CategoryRe
             mIdView = (TextView) view.findViewById(R.id.id);
             mContentView = (TextView) view.findViewById(R.id.content);
             mAuthorView = (TextView) view.findViewById(R.id.textView_listItem_author);
-            imageView = (ImageView) view.findViewById(R.id.image_view);
+
+            mGroupRatingView = (TextView) view.findViewById(R.id.text_view_listItem_group_rating);
+            mCardRatingView = (TextView) view.findViewById(R.id.text_view_listItem_card_rating);
+            mDateView = (TextView) view.findViewById(R.id.text_view_listItem_date);
+            mBookmarkView = (ImageView) view.findViewById(R.id.image_view_bookmark);
+            mLocalView = (ImageView) view.findViewById(R.id.image_view_offline);
+
+            imageView = (ImageView) view.findViewById(R.id.image_view_round_icon);
         }
 
         @Override
