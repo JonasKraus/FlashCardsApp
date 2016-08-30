@@ -56,8 +56,6 @@ public class AsyncGetFlashCard extends AsyncTask<Long, Long, List<FlashCard>> {
     @Override
     protected List<FlashCard> doInBackground(Long... params) {
 
-        Log.d("Beginn get FlashCard", "parent id " + this.parentId);
-
 
         String urlString = Routes.URL + Routes.SLASH + Routes.CARD_DECKS + Routes.SLASH
                 + parentId + Routes.SLASH + Routes.FLASH_CARDS;

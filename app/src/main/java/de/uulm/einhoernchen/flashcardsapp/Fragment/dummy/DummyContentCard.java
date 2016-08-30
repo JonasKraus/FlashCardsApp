@@ -15,17 +15,15 @@ import android.widget.ProgressBar;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Random;
 
-import de.uulm.einhoernchen.flashcardsapp.AsyncTasks.AsyncGetCarddeck;
 import de.uulm.einhoernchen.flashcardsapp.AsyncTasks.AsyncGetFlashCard;
+import de.uulm.einhoernchen.flashcardsapp.AsyncTasks.AsyncGetFlashCardLocal;
+import de.uulm.einhoernchen.flashcardsapp.AsyncTasks.AsyncSaveFlashCardLocal;
 import de.uulm.einhoernchen.flashcardsapp.Database.DbManager;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.FlashcardRecyclerViewAdapter;
 import de.uulm.einhoernchen.flashcardsapp.Models.Answer;
-import de.uulm.einhoernchen.flashcardsapp.Models.CardDeck;
 import de.uulm.einhoernchen.flashcardsapp.Models.FlashCard;
 import de.uulm.einhoernchen.flashcardsapp.Models.Question;
 import de.uulm.einhoernchen.flashcardsapp.Models.User;
@@ -39,6 +37,8 @@ import de.uulm.einhoernchen.flashcardsapp.R;
 public class DummyContentCard {
 
     private static List<FlashCard> flashCards = new ArrayList<FlashCard>();
+
+    public static DummyContentCard.ItemFragmentFlashcard fragment;
 
     /**
      * @author Jonas Kraus jonas.kraus@uni-ulm.de
@@ -55,7 +55,6 @@ public class DummyContentCard {
             @Override
             public void processFinish(List<FlashCard> flashCards) {
 
-
                 // real dummy content generation
                 if (flashCards == null || flashCards.size() == 0) {
                     flashCards = new ArrayList<>();
@@ -64,9 +63,10 @@ public class DummyContentCard {
                     }
                 }
 
-                db.saveFlashCards(flashCards, parentId);
-
-                //TODO save to db
+                AsyncSaveFlashCardLocal asyncSaveFlashCardLocal = new AsyncSaveFlashCardLocal(parentId);
+                asyncSaveFlashCardLocal.setDbManager(db);
+                asyncSaveFlashCardLocal.setFlashCards(flashCards);
+                asyncSaveFlashCardLocal.execute();
 
                 DummyContentCard.flashCards = flashCards;
                 DummyContentCard.ItemFragmentFlashcard fragment = new DummyContentCard.ItemFragmentFlashcard();
@@ -78,15 +78,20 @@ public class DummyContentCard {
                 android.support.v4.app.FragmentTransaction fragmentTransaction =
                         fragmentManager.beginTransaction();
 
+                // TODO delete if always loaded from local db
+                /*
                 if (backPressed) {
                     fragmentTransaction.setCustomAnimations(R.anim.enter_from_left, R.anim.exit_to_right);
-                } else {
+                } else if (!fragmentAnimated) {
                     fragmentTransaction.setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left);
+                    fragmentAnimated = true;
                 }
+                */
 
                 fragmentTransaction.replace(R.id.fragment_container_home, fragment);
                 fragmentTransaction.commit();
 
+                Log.d("async load", "online");
             }
 
         });
@@ -110,6 +115,50 @@ public class DummyContentCard {
         FlashCard flashCard = new FlashCard(new Date(), question, answers, author,false);
 
         return flashCard;
+    }
+
+    public void collectItemsFromDb(final long parentId, final FragmentManager supportFragmentManager, final ProgressBar progressBar, final boolean backPressed, final DbManager db) {
+
+        AsyncGetFlashCardLocal asyncGetFlashCardLocal = new AsyncGetFlashCardLocal(parentId, new AsyncGetFlashCardLocal.AsyncResponseFlashCardLocal() {
+
+            @Override
+            public void processFinish(List<FlashCard> flashCards) {
+
+                DummyContentCard.flashCards = flashCards;
+
+                DummyContentCard.flashCards = flashCards;
+                DummyContentCard.ItemFragmentFlashcard fragment = new DummyContentCard.ItemFragmentFlashcard();
+
+                Bundle args = new Bundle();
+                args.putLong(ItemFragmentFlashcard.ARG_PARENT_ID, parentId);
+                fragment.setArguments(args);
+
+                android.support.v4.app.FragmentTransaction fragmentTransaction =
+                        supportFragmentManager.beginTransaction();
+
+                // TODO delete if always loaded from local db
+                /*
+                if (backPressed) {
+                    fragmentTransaction.setCustomAnimations(R.anim.enter_from_left, R.anim.exit_to_right);
+                } else if (!fragmentAnimated) {
+                    fragmentTransaction.setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left);
+                    fragmentAnimated = true;
+                }
+                */
+
+                fragmentTransaction.replace(R.id.fragment_container_home, fragment);
+                fragmentTransaction.commit();
+
+                collectItemsFromServer(parentId, supportFragmentManager, progressBar, backPressed, db);
+
+            }
+
+        });
+
+        asyncGetFlashCardLocal.setProgressbar(progressBar);
+        asyncGetFlashCardLocal.setDbManager(db);
+        asyncGetFlashCardLocal.execute();
+
     }
 
     /**

@@ -57,8 +57,6 @@ public class AsyncGetCarddeck extends AsyncTask<Long, Long, List<CardDeck>> {
     @Override
     protected List<CardDeck> doInBackground(Long... params) {
 
-        Log.d("Beginn get Carddecks", "parent id " + this.parentId);
-
 
         String urlString = Routes.URL + Routes.SLASH + Routes.CARD_DECKS; // URL to call
 

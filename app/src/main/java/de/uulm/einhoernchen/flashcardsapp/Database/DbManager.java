@@ -275,7 +275,7 @@ public class DbManager {
                 Question question = getQuestion(questionId);
                 List<Answer> answers = getAnswers(cardId);
 
-                flashCards.add(new FlashCard(cardId, tags, rating, DateProcessor.stringToDate(created), DateProcessor.stringToDate(lastUpdated), question, answers, author, multipleChoice));
+                flashCards.add(new FlashCard(cardId, tags, rating, created, lastUpdated, question, answers, author, multipleChoice));
             } while (cursor.moveToNext());
         }
         cursor.close();

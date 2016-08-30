@@ -440,10 +440,8 @@ public class MainActivity extends AppCompatActivity
 
     private void setFlashcardList(boolean backPressed) {
 
-        List<FlashCard> cardsDB = db.getFlashCards(parentId);
-        Log.d("db cards", cardsDB.size() + " " + cardsDB.toString());
-
-        new DummyContentCard().collectItemsFromServer(this.parentId, getSupportFragmentManager(), progressBar, backPressed, this.db);
+        DummyContentCard dummyContentCard = new DummyContentCard();
+        dummyContentCard.collectItemsFromDb(this.parentId, getSupportFragmentManager(), progressBar, backPressed, db);
         catalogueState = Constants.FLASH_CARD;
     }
 

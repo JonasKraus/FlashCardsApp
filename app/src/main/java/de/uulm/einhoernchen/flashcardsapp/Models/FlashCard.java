@@ -110,6 +110,32 @@ public class FlashCard {
     /**
      * @author Jonas Kraus jonas.kraus@uni-ulm.de
      *
+     * for loacal db
+     *@param id
+     * @param tags
+     * @param rating
+     * @param created
+     * @param lastUpdated
+     * @param question
+     * @param answers
+     * @param author
+     * @param multipleChoice
+     */
+    public FlashCard(long id, List<Tag> tags, int rating, String created, String lastUpdated, Question question, List<Answer> answers, User author, boolean multipleChoice) {
+        this.id = id;
+        this.tags = tags;
+        this.rating = rating;
+        //this.created = created; // TODO add Date
+        //this.lastUpdated = lastUpdated;  // TODO add Date
+        this.question = question;
+        this.answers = answers;
+        this.author = author;
+        this.multipleChoice = multipleChoice;
+    }
+
+    /**
+     * For json parser
+     *
      * @param id
      * @param tags
      * @param rating

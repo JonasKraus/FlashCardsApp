@@ -83,7 +83,7 @@ public class User {
         this.password = password;
         this.email = email;
         this.rating = rating;
-        this.created = DateProcessor.stringToDate(created);
+        //this.created = DateProcessor.stringToDate(created); TODO add Date
         authTokenList=new ArrayList<>();
     }
 
@@ -94,7 +94,7 @@ public class User {
         this.password = password;
         this.email = email;
         this.rating = rating;
-        this.created = DateProcessor.stringToDate(created);
+        // this.created = DateProcessor.stringToDate(created); // TODO add Date
 
         SimpleDateFormat sdf = new SimpleDateFormat("dd-M-yyyy hh:mm:ss");
         String dateInString = "31-08-1982 10:20:56";
