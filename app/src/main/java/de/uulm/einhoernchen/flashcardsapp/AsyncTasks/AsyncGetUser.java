@@ -68,7 +68,7 @@ public class AsyncGetUser extends AsyncTask<Long, Void, User>{
 
         } catch (Exception e) {
 
-            Log.e("Async getUser Fehler", e.toString());
+            Log.e("Async getLocalAccountUser Fehler", e.toString());
             System.out.println(e.getMessage());
 
         }

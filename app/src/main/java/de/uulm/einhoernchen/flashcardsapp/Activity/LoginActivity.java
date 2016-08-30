@@ -88,7 +88,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         openDb();
 
         // Immediately change to home activity
-        if (db.checkIfUserExists()) {
+        if (db.checkIfLocalAccountUserExists()) {
             Log.d("Login", "user bereits vorhanden");
 
            // startActivity(new Intent(LoginActivity.this, ItemListActivity.class));
@@ -240,7 +240,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                         public void processFinish(User user) {
 
                             user.setPassword(password);
-                            db.createUser(user);
+                            db.saveUser(user, true);
                             startActivity(new Intent(LoginActivity.this, MainActivity.class));
                         }
                     });

@@ -307,7 +307,7 @@ public class FlashCard {
      *
      * @return
      */
-    public String getForViewRating() {
+    public String getRatingForView() {
         if (this.getRating() >= 0) {
             return "+" + this.getRating();
         } else {

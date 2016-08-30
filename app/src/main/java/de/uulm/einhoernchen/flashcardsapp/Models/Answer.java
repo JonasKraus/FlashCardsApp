@@ -1,12 +1,15 @@
 package de.uulm.einhoernchen.flashcardsapp.Models;
 
 
+import android.util.Log;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.sql.Date;
 
 import de.uulm.einhoernchen.flashcardsapp.Util.JsonKeys;
@@ -83,6 +86,38 @@ public class Answer {
         this.isCorrect = answerCorrect;
     }
 
+    /**
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     *
+     * @param answerId
+     * @param correct
+     * @param answerText
+     * @param answerHint
+     * @param mediaURI
+     * @param author
+     * @param created
+     * @param lastupdated
+     * @param rating
+     * @param correct1
+     */
+    public Answer(long answerId, boolean correct, String answerText, String answerHint, String mediaURI, User author, String created, String lastupdated, int rating, boolean correct1) {
+        this.id = answerId;
+        this.isCorrect = correct; // TODO redundant??
+        this.answerText = answerText;
+        this.hintText = answerHint;
+        try {
+            this.uri = new URI(mediaURI);
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+            Log.d("construct Answer", "faild to generate uri from string");
+        }
+        this.author = author;
+        // this.created = created; TODO Welches Date und welches Format
+        // this.lastUpdated = lastUpdated;
+        this.rating = rating;
+        this.isCorrect = correct1;
+    }
+
     @Override
     public String toString() {
         return "Answer{" +
@@ -153,9 +188,12 @@ public class Answer {
         return created;
     }
 
-
     public boolean isCorrect() {
         return isCorrect;
+    }
+
+    public Date getLastUpdated() {
+        return this.lastUpdated;
     }
 
     public void setCorrect(boolean correct) {
@@ -182,4 +220,5 @@ public class Answer {
     public static void update() {
         // @TODO to be implemented
     }
+
 }

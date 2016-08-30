@@ -1,5 +1,7 @@
 package de.uulm.einhoernchen.flashcardsapp.Models;
 
+import android.util.Log;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -38,7 +40,7 @@ public class Question {
     }
 
     /**
-     * @author Jonas Kraus jonas.kraus@uni-ulm.dea
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
      * @param id
      * @param questionText
      * @param uri
@@ -48,6 +50,26 @@ public class Question {
         this.id = id;
         this.questionText = questionText;
         this.uri = uri;
+        this.author = author;
+    }
+
+    /**
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     *
+     * @param questionId
+     * @param questionText
+     * @param mediaURI
+     * @param author
+     */
+    public Question(long questionId, String questionText, String mediaURI, User author) {
+        this.id = questionId;
+        this.questionText = questionText;
+        try {
+            this.uri = new URI(mediaURI);
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+            Log.d("construct Question", "faild to generate uri from string");
+        }
         this.author = author;
     }
 

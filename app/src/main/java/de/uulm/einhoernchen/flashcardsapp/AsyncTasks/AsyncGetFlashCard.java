@@ -60,7 +60,7 @@ public class AsyncGetFlashCard extends AsyncTask<Long, Long, List<FlashCard>> {
 
 
         String urlString = Routes.URL + Routes.SLASH + Routes.CARD_DECKS + Routes.SLASH
-                + parentId + Routes.SLASH + Routes.FLASH_CARDS; // TODO id URL to call
+                + parentId + Routes.SLASH + Routes.FLASH_CARDS;
 
         HttpURLConnection urlConnection = null;
 

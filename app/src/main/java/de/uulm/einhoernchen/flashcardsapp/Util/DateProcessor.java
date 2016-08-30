@@ -21,6 +21,9 @@ public class DateProcessor {
         DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss z");
         Date date = null;
         try {
+            if (dateString == null || dateString == "") {
+                dateString = "2016-08-21 13:42:30 UTC";
+            }
             date = sdf.parse(dateString);
         } catch (ParseException e) {
             e.printStackTrace();

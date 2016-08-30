@@ -107,7 +107,7 @@ public class MainActivity extends AppCompatActivity
 
         openDb();
 
-        user = db.getUser(); Log.d("user--->", user.toString());
+        user = db.getLocalAccountUser(); Log.d("user--->", user.toString());
 
         profileImage = (ImageView) header.findViewById(R.id.imageViewProfilePhoto);
         setProfileImage();
@@ -440,7 +440,10 @@ public class MainActivity extends AppCompatActivity
 
     private void setFlashcardList(boolean backPressed) {
 
-        new DummyContentCard().collectItemsFromServer(this.parentId, getSupportFragmentManager(), progressBar, backPressed);
+        List<FlashCard> cardsDB = db.getFlashCards(parentId);
+        Log.d("db cards", cardsDB.size() + " " + cardsDB.toString());
+
+        new DummyContentCard().collectItemsFromServer(this.parentId, getSupportFragmentManager(), progressBar, backPressed, this.db);
         catalogueState = Constants.FLASH_CARD;
     }
 

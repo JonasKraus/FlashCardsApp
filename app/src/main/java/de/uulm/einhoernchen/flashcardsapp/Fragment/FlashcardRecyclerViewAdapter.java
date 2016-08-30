@@ -49,7 +49,7 @@ public class FlashcardRecyclerViewAdapter extends RecyclerView.Adapter<Flashcard
         String authorName = flashCards.get(position).getAuthor() != null ? flashCards.get(position).getAuthor().getName() : "No Author";
         holder.mAuthorView.setText(authorName);
         // holder.mGroupRatingView.setVisibility(View.INVISIBLE);
-        holder.mCardRatingView.setText(flashCards.get(position).getForViewRating());
+        holder.mCardRatingView.setText(flashCards.get(position).getRatingForView());
         holder.mDateView.setText(flashCards.get(position).getLastUpdated());
         holder.mBookmarkView.setVisibility(View.VISIBLE);
         // holder.mBookmarkView.setImageDrawable(// TODO set if maked);

@@ -22,6 +22,7 @@ import java.util.Random;
 
 import de.uulm.einhoernchen.flashcardsapp.AsyncTasks.AsyncGetCarddeck;
 import de.uulm.einhoernchen.flashcardsapp.AsyncTasks.AsyncGetFlashCard;
+import de.uulm.einhoernchen.flashcardsapp.Database.DbManager;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.FlashcardRecyclerViewAdapter;
 import de.uulm.einhoernchen.flashcardsapp.Models.Answer;
 import de.uulm.einhoernchen.flashcardsapp.Models.CardDeck;
@@ -47,12 +48,25 @@ public class DummyContentCard {
      * @param fragmentManager
      * @param progressBarMain
      */
-    public static void collectItemsFromServer(final long parentId, final FragmentManager fragmentManager, ProgressBar progressBarMain, final boolean backPressed) {
+    public static void collectItemsFromServer(final long parentId, final FragmentManager fragmentManager, ProgressBar progressBarMain, final boolean backPressed, final DbManager db) {
 
         AsyncGetFlashCard asyncGetFlashCard = new AsyncGetFlashCard(parentId, new AsyncGetFlashCard.AsyncResponseFlashCard() {
 
             @Override
             public void processFinish(List<FlashCard> flashCards) {
+
+
+                // real dummy content generation
+                if (flashCards == null || flashCards.size() == 0) {
+                    flashCards = new ArrayList<>();
+                    for (int i = 0; i < 100; i++) {
+                        flashCards.add(createDummyFlashCard(i));
+                    }
+                }
+
+                db.saveFlashCards(flashCards, parentId);
+
+                //TODO save to db
 
                 DummyContentCard.flashCards = flashCards;
                 DummyContentCard.ItemFragmentFlashcard fragment = new DummyContentCard.ItemFragmentFlashcard();

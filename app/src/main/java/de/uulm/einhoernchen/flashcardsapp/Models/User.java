@@ -95,7 +95,17 @@ public class User {
         this.email = email;
         this.rating = rating;
         this.created = DateProcessor.stringToDate(created);
-        this.lastLogin = DateProcessor.stringToDate(lastLogin);
+
+        SimpleDateFormat sdf = new SimpleDateFormat("dd-M-yyyy hh:mm:ss");
+        String dateInString = "31-08-1982 10:20:56";
+        Date date = null;
+        try {
+            date = sdf.parse(dateInString);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        this.lastLogin = date;
         authTokenList=new ArrayList<>();
     }
 
@@ -258,7 +268,7 @@ public class User {
         System.out.println("Answers from the user has size=" + givenAnswers.size());
 
         for (Answer a : givenAnswers) {
-            System.out.println(">> Trying to null author on answer a=" + a + " where author was: " + a.getAuthor());
+            System.out.println(">> Trying to null author on answer a=" + a + " where author was: " + a.getUser());
             a.setAuthor(null);
             a.update();
         }
@@ -268,7 +278,7 @@ public class User {
         System.out.println("Created cards list has size=" + cards.size());
 
         for (FlashCard c : cards) {
-            System.out.println(">> Trying to null author on card c=" + c + " where author was: " + c.getAuthor());
+            System.out.println(">> Trying to null author on card c=" + c + " where author was: " + c.getUser());
             c.setAuthor(null);
             c.update();
         }
@@ -277,7 +287,7 @@ public class User {
         List<Question> questions = Question.find.where().eq(JsonKeys.USER_ID, id).findList();
         System.out.println("Questions from the user has size=" + questions.size());
         for (Question q : questions) {
-            System.out.println(">> Trying to null author on question q=" + q + " where author was: " + q.getAuthor());
+            System.out.println(">> Trying to null author on question q=" + q + " where author was: " + q.getUser());
             q.setAuthor(null);
             q.update();
         }

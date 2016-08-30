@@ -13,14 +13,15 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
     // Strings for table user
     public static final String TABLE_USER = "user";
     public static final String COLUMN_USER_ID = "userId";                               //0
-    public static final String COLUMN_USER_AVATAR = "avatar";                           //1
-    public static final String COLUMN_USER_NAME = "name";                               //2
+    public static final String COLUMN_USER_NAME = "name";                               //1
+    public static final String COLUMN_USER_AVATAR = "avatar";                           //2
     public static final String COLUMN_USER_PASSWORD = "password";                       //3
     public static final String COLUMN_USER_EMAIL = "email";                             //4
     public static final String COLUMN_USER_RATING = "rating";                           //5
     public static final String COLUMN_USER_GROUP_ID = "groupId";                        //6
     public static final String COLUMN_USER_CREATED= "created";                          //7
     public static final String COLUMN_USER_LAST_LOGIN= "lastLogin";                     //8
+    public static final String COLUMN_USER_LOCAL_ACCOUNT= "localAccount";               //9
     // @TODO Auth Token
 
     // Strings for table flashcard
@@ -32,6 +33,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
     public static final String COLUMN_FLASHCARD_MULTIPLE_CHOICE = "multipleChoice";     //4
     public static final String COLUMN_FLASHCARD_CREATED = "created";                    //5
     public static final String COLUMN_FLASHCARD_LAST_UPDATED = "lastUpdated";           //6
+    public static final String COLUMN_FLASHCARD_USER_ID = "userId";                     //7
 
     // Strings for table question
     public static final String TABLE_QUESTION = "question";
@@ -87,14 +89,13 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
 
     // Strings for table auth_token
     public static final String TABLE_CARD_DECK = "carddeck";
-    public static final String COLUMN_CARD_DECK_ID = "cardDeckId";                        //0
-    public static final String COLUMN_CARD_DECK_NAME = "cardDeckName";               //1
-    public static final String COLUMN_CARD_DECK_DESCRIPTION = "description";              //2
+    public static final String COLUMN_CARD_DECK_ID = "cardDeckId";                      //0
+    public static final String COLUMN_CARD_DECK_NAME = "cardDeckName";                  //1
+    public static final String COLUMN_CARD_DECK_DESCRIPTION = "description";            //2
 
     // Database name and version - increase when existing table is altered
     private static final String DATABASE_NAME = "flashcardsDb.db";
-    private static final int DATABASE_VERSION = 8; // @TODO revert version before first release
-
+    private static final int DATABASE_VERSION = 1; // @TODO revert version before first release
 
     /**
      * Database creation sql statement for table user
@@ -103,13 +104,13 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
     private static final String USER_CREATE = "create table "
             + TABLE_USER + "("
             + COLUMN_USER_ID
-            + " integer primary key autoincrement, "
+            + " integer primary key, "
             + COLUMN_USER_NAME
             + " text not null, "
             + COLUMN_USER_AVATAR
             + " blob, "
             + COLUMN_USER_PASSWORD
-            + " text not null, "
+            + " text, "
             + COLUMN_USER_EMAIL
             + " text not null, "
             + COLUMN_USER_RATING
@@ -117,9 +118,11 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
             + COLUMN_USER_GROUP_ID
             + " integer, "
             + COLUMN_USER_CREATED
-            + " text not null, "
+            + " text, " // TODO should be not null
             + COLUMN_USER_LAST_LOGIN
-            + " text "
+            + " text, "  // TODO should be not null
+            + COLUMN_USER_LOCAL_ACCOUNT
+            + " integer default 0"
             + ");";
 
     private static final String FLASHCARD_CREATE = "create table "
@@ -135,9 +138,11 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
             + COLUMN_FLASHCARD_MULTIPLE_CHOICE
             + " integer DEFAULT 0, "
             + COLUMN_FLASHCARD_CREATED
-            + " text not null, "
+            + " text, "  // TODO should be not null
             + COLUMN_FLASHCARD_LAST_UPDATED
-            + " text "
+            + " text, "  // TODO should be not null
+            + COLUMN_FLASHCARD_USER_ID
+            + " integer " // TODO maybe should be not null ??
             + ");";
 
     private static final String QUESTION_CREATE = "create table "
@@ -171,9 +176,9 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
             + COLUMN_ANSWER_CORRECT
             + " integer DEFAULT 1, "
             + COLUMN_ANSWER_CREATED
-            + " text not null, "
+            + " text, "  // TODO should be not null
             + COLUMN_ANSWER_LAST_UPDATED
-            + " text "
+            + " text "  // TODO should be not null
             + ");";
 
     private static final String CARD_TAG_CREATE = "create table "
