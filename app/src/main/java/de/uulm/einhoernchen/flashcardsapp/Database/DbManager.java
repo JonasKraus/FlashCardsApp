@@ -158,6 +158,7 @@ public class DbManager {
      */
     public void saveUser(User user, boolean localAccount) {
 
+        Log.d("save user", user.toString());
         // For updating delete user
         softDeleteUser(user.getId());
 
@@ -176,7 +177,8 @@ public class DbManager {
         values.put(MySQLiteHelper.COLUMN_USER_LOCAL_ACCOUNT, localAccount);
 
         // Executes the query
-        database.insert(MySQLiteHelper.TABLE_USER, null, values);
+        Long id = database.insert(MySQLiteHelper.TABLE_USER, null, values);
+        Log.d("local user created", id+" "+ localAccount);
     }
 
     /**
@@ -188,6 +190,7 @@ public class DbManager {
      * @param id
      */
     private void softDeleteUser(long id) {
+        Log.d("delete user", id+"");
         database.delete(MySQLiteHelper.TABLE_USER, MySQLiteHelper.COLUMN_USER_ID + "=" + id, null);
     }
 
@@ -467,7 +470,7 @@ public class DbManager {
         saveUser(card.getAuthor(), false);
 
         // A card doesn't has to have tags
-        if (card.getTags() != null || card.getTags().size() == 0) {
+        if (card.getTags() != null && card.getTags().size() > 0) {
             saveTags(card.getTags(), card.getId());
         }
 
@@ -529,7 +532,7 @@ public class DbManager {
         values.put(MySQLiteHelper.COLUMN_ANSWER_ID, answer.getId());
         values.put(MySQLiteHelper.COLUMN_ANSWER_TEXT, answer.getAnswerText());
         values.put(MySQLiteHelper.COLUMN_ANSWER_HINT, answer.getHintText());
-        values.put(MySQLiteHelper.COLUMN_ANSWER_MEDIA_URI, answer.getUri().toString());
+        values.put(MySQLiteHelper.COLUMN_ANSWER_MEDIA_URI, answer.getUri() != null ? answer.getUri().toString() : null);
         values.put(MySQLiteHelper.COLUMN_ANSWER_USER_ID, answer.getAuthor().getId());
         values.put(MySQLiteHelper.COLUMN_ANSWER_PARENT_CARD_ID, cardId);
         values.put(MySQLiteHelper.COLUMN_ANSWER_RATING, answer.getRating());
@@ -574,7 +577,7 @@ public class DbManager {
         ContentValues values = new ContentValues();
         values.put(MySQLiteHelper.COLUMN_QUESTION_ID, question.getId());
         values.put(MySQLiteHelper.COLUMN_QUESTION_TEXT, question.getQuestionText());
-        values.put(MySQLiteHelper.COLUMN_QUESTION_MEDIA_URI, question.getUri().toString());
+        values.put(MySQLiteHelper.COLUMN_QUESTION_MEDIA_URI, question.getUri() != null ? question.getUri().toString() : null);
         values.put(MySQLiteHelper.COLUMN_QUESTION_AUTHOR_ID, question.getAuthor().getId());
 
         database.insert(MySQLiteHelper.TABLE_QUESTION, null, values);

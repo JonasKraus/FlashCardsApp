@@ -62,6 +62,8 @@ public class MainActivity extends AppCompatActivity
     private Constants catalogueState = Constants.CATEGORY_LIST;
     private List<String> breadCrumps;
     private ProgressBar progressBar;
+    // the Flashcard that was loaded last in details fragment
+    private FlashCard currentFlashCard;
 
     private static final int MY_INTENT_CLICK=302;
 
@@ -295,7 +297,7 @@ public class MainActivity extends AppCompatActivity
             HomeFragment fragment = new HomeFragment();
             android.support.v4.app.FragmentTransaction fragmentTransaction =
                     getSupportFragmentManager().beginTransaction();
-            fragmentTransaction.setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left);
+            //fragmentTransaction.setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left);
             fragmentTransaction.replace(R.id.fragment_container_main, fragment);
             fragmentTransaction.commit();
 
@@ -338,16 +340,18 @@ public class MainActivity extends AppCompatActivity
                 setFlashcardList(true);
                 break;
             case FLASH_CARD_DETAIL:
-                setFlashcardList(true);
+                createFragmentFlashCard(this.currentFlashCard);
+                break;
             default:
-                setCategoryList(true);
+                //setCategoryList(true);
                 break;
         }
         toolbarTextViewTitle.setText(breadCrumps.get(breadCrumps.size() - 1));
     }
 
     private void moveBackwardsInCatalogue() {
-        switch (catalogueState) {
+
+        switch (this.catalogueState) {
             case CATEGORY_LIST:
                 setCategoryList(true);
                 break;
@@ -438,21 +442,12 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onFlashcardListFragmentInteraction(FlashCard item) {
 
-        Log.d("click card", item.toString());
-        this.parentId = item.getId(); // TODO
 
         breadCrumps.add("Flascard #" + item.getId());
         toolbarTextViewTitle.setText(breadCrumps.get(breadCrumps.size() - 1));
 
-        catalogueState = Constants.FLASH_CARD_LIST;
-
-        FragmentFlashCard fragment = new FragmentFlashCard();
-        fragment.setFlashCard(item);
-        android.support.v4.app.FragmentTransaction fragmentTransaction =
-                getSupportFragmentManager().beginTransaction();
-        fragmentTransaction.setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left);
-        fragmentTransaction.replace(R.id.fragment_container_main, fragment);
-        fragmentTransaction.commit();
+        Log.d("click card", item.toString());
+        createFragmentFlashCard(item);
 
 
     }
@@ -483,4 +478,17 @@ public class MainActivity extends AppCompatActivity
     }
 
 
+    private void createFragmentFlashCard (FlashCard flashCard) {
+        this.parentId = flashCard.getId(); // TODO
+        this.currentFlashCard = flashCard;
+        this.catalogueState = Constants.FLASH_CARD_DETAIL;
+
+        FragmentFlashCard fragment = new FragmentFlashCard();
+        fragment.setFlashCard(flashCard);
+        android.support.v4.app.FragmentTransaction fragmentTransaction =
+                getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left);
+        fragmentTransaction.replace(R.id.fragment_container_main, fragment);
+        fragmentTransaction.commit();
+    }
 }

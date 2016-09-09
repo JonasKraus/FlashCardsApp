@@ -98,7 +98,7 @@ public class AsyncGetFlashCard extends AsyncTask<Long, Long, List<FlashCard>> {
             List<FlashCard> cards = new ArrayList<>();
 
             for (int position = 0; position < 100; position++) {
-                Log.d("parent id", parentId + "");
+
                 Random rand = new Random();
 
                 User author = new User((long) position, "avatar", "Author: User " + position, "pwd", "user" + position + "@flashcards.de", rand.nextInt(100), new Date().toString(), new Date().toString());

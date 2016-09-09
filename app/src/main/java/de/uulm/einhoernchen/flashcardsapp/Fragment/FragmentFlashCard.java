@@ -84,8 +84,7 @@ public class FragmentFlashCard extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-
-        Log.d("hier",this.flashCard.toString());
+        // TODO Jonas hier kommt der code
     }
 
     // TODO: Rename method, update argument and hook method into UI event
