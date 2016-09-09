@@ -32,6 +32,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.uulm.einhoernchen.flashcardsapp.Database.DbManager;
+import de.uulm.einhoernchen.flashcardsapp.Fragment.FragmentFlashCard;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.HomeFragment;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.ItemFragmentCategory;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.ItemFragmentCategory.OnCategoryListFragmentInteractionListener;
@@ -47,7 +48,7 @@ import de.uulm.einhoernchen.flashcardsapp.Util.ImageProcessor;
 import de.uulm.einhoernchen.flashcardsapp.Util.PermissionManager;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, HomeFragment.OnFragmentInteractionListener, DummyContentCard.ItemFragmentFlashcard.OnFlashcardListFragmentInteractionListener, OnCategoryListFragmentInteractionListener, DummyContentCarddeck.OnCarddeckListFragmentInteractionListener {
+        implements NavigationView.OnNavigationItemSelectedListener, HomeFragment.OnFragmentInteractionListener, DummyContentCard.ItemFragmentFlashcard.OnFlashcardListFragmentInteractionListener, OnCategoryListFragmentInteractionListener, DummyContentCarddeck.OnCarddeckListFragmentInteractionListener, FragmentFlashCard.OnFlashCardFragmentInteractionListener {
 
 
     private DbManager db;
@@ -58,7 +59,7 @@ public class MainActivity extends AppCompatActivity
     private Toolbar toolbar;
     private TextView toolbarTextViewTitle;
     private long parentId = -100; // TODO update
-    private Constants catalogueState = Constants.CATEGORY;
+    private Constants catalogueState = Constants.CATEGORY_LIST;
     private List<String> breadCrumps;
     private ProgressBar progressBar;
 
@@ -77,7 +78,7 @@ public class MainActivity extends AppCompatActivity
         HomeFragment fragment = new HomeFragment();
         android.support.v4.app.FragmentTransaction fragmentTransaction =
                 getSupportFragmentManager().beginTransaction();
-        fragmentTransaction.add(R.id.fragment_container_home, fragment);
+        fragmentTransaction.add(R.id.fragment_container_main, fragment);
         fragmentTransaction.commit();
 
         // Set the fragment initially
@@ -295,7 +296,7 @@ public class MainActivity extends AppCompatActivity
             android.support.v4.app.FragmentTransaction fragmentTransaction =
                     getSupportFragmentManager().beginTransaction();
             fragmentTransaction.setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left);
-            fragmentTransaction.replace(R.id.fragment_container_home, fragment);
+            fragmentTransaction.replace(R.id.fragment_container_main, fragment);
             fragmentTransaction.commit();
 
             toolbarTextViewTitle.setText(R.string.app_name);
@@ -327,15 +328,17 @@ public class MainActivity extends AppCompatActivity
 
     private void moveToLastCatalogueState() {
         switch (catalogueState) {
-            case CATEGORY:
+            case CATEGORY_LIST:
                 setCategoryList(true);
                 break;
-            case CARD_DECK:
+            case CARD_DECK_LIST:
                 setCarddeckList(true);
                 break;
-            case FLASH_CARD:
+            case FLASH_CARD_LIST:
                 setFlashcardList(true);
                 break;
+            case FLASH_CARD_DETAIL:
+                setFlashcardList(true);
             default:
                 setCategoryList(true);
                 break;
@@ -345,14 +348,17 @@ public class MainActivity extends AppCompatActivity
 
     private void moveBackwardsInCatalogue() {
         switch (catalogueState) {
-            case CATEGORY:
+            case CATEGORY_LIST:
                 setCategoryList(true);
                 break;
-            case CARD_DECK:
+            case CARD_DECK_LIST:
                 setCategoryList(true);
                 break;
-            case FLASH_CARD:
+            case FLASH_CARD_LIST:
                 setCarddeckList(true);
+                break;
+            case FLASH_CARD_DETAIL:
+                setFlashcardList(true);
                 break;
             default:
                 setCategoryList(true);
@@ -434,7 +440,20 @@ public class MainActivity extends AppCompatActivity
 
         Log.d("click card", item.toString());
         this.parentId = item.getId(); // TODO
-        setFlashcardList(false);
+
+        breadCrumps.add("Flascard #" + item.getId());
+        toolbarTextViewTitle.setText(breadCrumps.get(breadCrumps.size() - 1));
+
+        catalogueState = Constants.FLASH_CARD_LIST;
+
+        FragmentFlashCard fragment = new FragmentFlashCard();
+        fragment.setFlashCard(item);
+        android.support.v4.app.FragmentTransaction fragmentTransaction =
+                getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left);
+        fragmentTransaction.replace(R.id.fragment_container_main, fragment);
+        fragmentTransaction.commit();
+
 
     }
 
@@ -442,16 +461,16 @@ public class MainActivity extends AppCompatActivity
 
         DummyContentCard dummyContentCard = new DummyContentCard();
         dummyContentCard.collectItemsFromDb(this.parentId, getSupportFragmentManager(), progressBar, backPressed, db);
-        catalogueState = Constants.FLASH_CARD;
+        catalogueState = Constants.FLASH_CARD_LIST;
     }
 
     private void setCarddeckList(boolean backPressed) {
         new DummyContentCarddeck().collectItemsFromServer(this.parentId, getSupportFragmentManager(), progressBar, backPressed);
-        catalogueState = Constants.CARD_DECK;
+        catalogueState = Constants.CARD_DECK_LIST;
     }
 
     private void setCategoryList(boolean backPressed) {
-        catalogueState = Constants.CATEGORY;
+        catalogueState = Constants.CATEGORY_LIST;
 
         ItemFragmentCategory fragment = new ItemFragmentCategory();
         Bundle args = new Bundle();
@@ -459,7 +478,7 @@ public class MainActivity extends AppCompatActivity
         fragment.setArguments(args);
         android.support.v4.app.FragmentTransaction fragmentTransaction =
                 getSupportFragmentManager().beginTransaction();
-        fragmentTransaction.replace(R.id.fragment_container_home, fragment);
+        fragmentTransaction.replace(R.id.fragment_container_main, fragment);
         fragmentTransaction.commit();
     }
 

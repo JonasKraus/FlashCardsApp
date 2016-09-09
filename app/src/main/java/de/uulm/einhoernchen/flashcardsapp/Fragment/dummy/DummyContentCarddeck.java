@@ -7,7 +7,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -61,7 +60,7 @@ public class DummyContentCarddeck {
                     fragmentTransaction.setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left);
                 }
 
-                fragmentTransaction.replace(R.id.fragment_container_home, fragment);
+                fragmentTransaction.replace(R.id.fragment_container_main, fragment);
                 fragmentTransaction.commit();
 
             }

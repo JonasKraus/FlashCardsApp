@@ -88,7 +88,7 @@ public class DummyContentCard {
                 }
                 */
 
-                fragmentTransaction.replace(R.id.fragment_container_home, fragment);
+                fragmentTransaction.replace(R.id.fragment_container_main, fragment);
                 fragmentTransaction.commit();
 
                 Log.d("async load", "online");
@@ -146,7 +146,7 @@ public class DummyContentCard {
                 }
                 */
 
-                fragmentTransaction.replace(R.id.fragment_container_home, fragment);
+                fragmentTransaction.replace(R.id.fragment_container_main, fragment);
                 fragmentTransaction.commit();
 
                 collectItemsFromServer(parentId, supportFragmentManager, progressBar, backPressed, db);

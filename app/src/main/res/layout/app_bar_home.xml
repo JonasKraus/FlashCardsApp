@@ -48,8 +48,11 @@
     <include layout="@layout/content_home"/>
     -->
 
+    <!--
+    this Framelayout holds all the fragments of the main activity
+    -->
     <FrameLayout
-        android:id="@+id/fragment_container_home"
+        android:id="@+id/fragment_container_main"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
