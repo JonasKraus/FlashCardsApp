@@ -428,6 +428,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
             String urlString = Routes.URL + Routes.SLASH + Routes.USERS; // URL to call
 
+            Log.d("start do in back", urlString);
+
             HttpURLConnection urlConnection = null;
             //InputStream in = null;
 
