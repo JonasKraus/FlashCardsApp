@@ -57,10 +57,8 @@ public class DummyContentCard {
 
                 // real dummy content generation
                 if (flashCards == null || flashCards.size() == 0) {
-                    flashCards = new ArrayList<>();
-                    for (int i = 0; i < 100; i++) {
-                        flashCards.add(createDummyFlashCard(i));
-                    }
+
+                    //Log.d("DummyContentCard", "no flashcards");
                 }
 
                 AsyncSaveFlashCardLocal asyncSaveFlashCardLocal = new AsyncSaveFlashCardLocal(parentId);
@@ -91,7 +89,7 @@ public class DummyContentCard {
                 fragmentTransaction.replace(R.id.fragment_container_main, fragment);
                 fragmentTransaction.commit();
 
-                Log.d("async load", "online");
+                //Log.d("async load", "online");
             }
 
         });

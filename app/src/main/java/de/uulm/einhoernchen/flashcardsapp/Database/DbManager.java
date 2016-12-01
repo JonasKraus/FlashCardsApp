@@ -24,6 +24,8 @@ import de.uulm.einhoernchen.flashcardsapp.Util.DateProcessor;
  */
 public class DbManager {
 
+    private static final boolean DEBUG = false;
+
     private SQLiteDatabase database;
     private MySQLiteHelper dbHelper;
     private Context context;
@@ -144,7 +146,7 @@ public class DbManager {
     public void close() {
 
         dbHelper.close();
-        Log.d("db", "closed");
+         if (DEBUG) Log.d("db", "closed");
     }
 
 
@@ -158,7 +160,7 @@ public class DbManager {
      */
     public void saveUser(User user, boolean localAccount) {
 
-        Log.d("save user", user.toString());
+         if (DEBUG) Log.d("save user", user.toString());
         // For updating delete user
         softDeleteUser(user.getId());
 
@@ -178,7 +180,7 @@ public class DbManager {
 
         // Executes the query
         Long id = database.insert(MySQLiteHelper.TABLE_USER, null, values);
-        Log.d("local user created", id+" "+ localAccount);
+         if (DEBUG) Log.d("local user created", id+" "+ localAccount);
     }
 
     /**
@@ -190,7 +192,7 @@ public class DbManager {
      * @param id
      */
     private void softDeleteUser(long id) {
-        Log.d("delete user", id+"");
+         if (DEBUG) Log.d("delete user", id+"");
         database.delete(MySQLiteHelper.TABLE_USER, MySQLiteHelper.COLUMN_USER_ID + "=" + id, null);
     }
 

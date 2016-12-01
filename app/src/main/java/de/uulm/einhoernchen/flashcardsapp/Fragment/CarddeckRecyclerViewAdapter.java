@@ -104,7 +104,11 @@ public class CarddeckRecyclerViewAdapter extends RecyclerView.Adapter<CarddeckRe
 
     @Override
     public int getItemCount() {
-        return cardDecks.size();
+        if (cardDecks != null) {
+            return cardDecks.size();
+
+        }
+        return 0;
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {

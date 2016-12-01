@@ -19,6 +19,7 @@ import java.util.List;
 
 import de.uulm.einhoernchen.flashcardsapp.Models.Answer;
 import de.uulm.einhoernchen.flashcardsapp.Models.CardDeck;
+import de.uulm.einhoernchen.flashcardsapp.Models.Category;
 import de.uulm.einhoernchen.flashcardsapp.Models.FlashCard;
 import de.uulm.einhoernchen.flashcardsapp.Models.Question;
 import de.uulm.einhoernchen.flashcardsapp.Models.Tag;
@@ -32,6 +33,15 @@ import de.uulm.einhoernchen.flashcardsapp.Models.UserGroup;
 public class JsonParser {
 
     private static final boolean DEBUG = false;
+
+    public static List<Category> readCategroies(InputStream in) throws IOException {
+        JsonReader reader = new JsonReader(new InputStreamReader(in, "UTF-8"));
+        try {
+            return readCategoryArray(reader);
+        } finally {
+            reader.close();
+        }
+    }
 
     /**
      * Takes an inputstream and parses carddecks
@@ -90,12 +100,33 @@ public class JsonParser {
         }
     }
 
+    private static List<Category> readCategoryArray(JsonReader reader) {
+        if (DEBUG) Log.d("parser Method", "readCategoryArray");
+        List<Category> categoryList = new ArrayList<Category>();
+
+        try {
+            reader.beginArray();
+            while (reader.hasNext()) {
+
+                categoryList.add(readCategory(reader));
+
+            }
+            reader.endArray();
+        } catch (IOException e) {
+            if (DEBUG) Log.d("Parser Error", "readCategoryArray");
+            e.printStackTrace();
+        }
+        return categoryList;
+    }
+
     private static List<CardDeck> readCardDeckArray(JsonReader reader) {
         if (DEBUG) Log.d("parser Method", "readCardDeckArray");
         List<CardDeck> cardDeckList = new ArrayList<CardDeck>();
 
         try {
+
             reader.beginArray();
+
             while (reader.hasNext()) {
 
                 // TODO is this the right place to disable invisible Carddecks
@@ -110,6 +141,60 @@ public class JsonParser {
             e.printStackTrace();
         }
         return cardDeckList;
+    }
+
+    private static Category readCategory(JsonReader reader) {
+        if (DEBUG) Log.d("parser Method", "readCategory");
+        long id = -1;
+        String name = "";
+        List<CardDeck> cardDecks = new ArrayList<>();
+        long parent = -1;
+
+        try {
+            reader.beginObject();
+            while (reader.hasNext()) {
+
+                String stringName = reader.nextName();
+
+                if (stringName.equals(JsonKeys.CATEGORY_ID)) {
+                    id = reader.nextLong();
+                } else if (stringName.equals(JsonKeys.CATEGORY_NAME)) {
+                    name = reader.nextString();
+                } /*else if (stringName.equals(JsonKeys.CATEGORY_CARDDECKS)) {
+
+                    JsonToken check = reader.peek();
+                    Log.d("chck", check.toString());
+
+                    if (check != JsonToken.NULL) {
+                        // TODO wird hier nicht gebraucht - dekcs erst bei klich abholen
+                        //cardDecks = readCardDeckArray(reader);
+                        reader.beginArray();
+
+                        if (DEBUG) Log.d("parser Method", "readCategory readCardDecks " + reader.toString());
+                    } else {
+                        reader.nextNull();
+                    }
+                }*/ else if (stringName.equals(JsonKeys.CATEGORY_PARENT)) {
+
+                    JsonToken check = reader.peek();
+                    if (DEBUG) Log.d("parser Method", "readCategory readCardDecks " + reader.toString());
+
+                    if (check != JsonToken.NULL) {
+                        parent = readCategory(reader).getId();
+                    } else {
+                        reader.nextNull();
+                    }
+
+                } else {
+                    reader.skipValue();
+                }
+            }
+            reader.endObject();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return new Category(id,parent, name);
     }
 
     private static CardDeck readCarddeck(JsonReader reader) {
@@ -132,7 +217,15 @@ public class JsonParser {
                 } else if (stringName.equals(JsonKeys.CARDDECK_ID)) {
                     id = reader.nextLong();
                 } else if (stringName.equals(JsonKeys.CARDDECK_GROUP)) {
-                    userGroup = readUserGroup(reader);
+                    JsonToken check = reader.peek();
+
+
+                    if (check != JsonToken.NULL) {
+                        userGroup = readUserGroup(reader);
+                    } else {
+                        reader.nextNull();
+                    }
+
                 } else if (stringName.equals(JsonKeys.CARDDECK_NAME)) {
                     name = reader.nextString();
                 } else if (stringName.equals(JsonKeys.CARDDECK_DESCRIPTION)) {
@@ -144,8 +237,8 @@ public class JsonParser {
                         reader.nextNull();
                     }
 
-                } else if (stringName.equals(JsonKeys.CARDDECK_CARDS)) {
-                    cards = readFlashCardArray(reader);
+                /*} else if (stringName.equals(JsonKeys.CARDDECK_CARDS)) {
+                    cards = readFlashCardArray(reader);*/
                 } else {
                     reader.skipValue();
                 }
@@ -155,7 +248,7 @@ public class JsonParser {
             e.printStackTrace();
         }
 
-        return new CardDeck(id, visible, userGroup, name, description, cards);
+        return new CardDeck(id, visible, userGroup, name, description);
     }
 
     private static List<FlashCard> readFlashCardArray(JsonReader reader) {
@@ -404,7 +497,9 @@ public class JsonParser {
 
         try {
             reader.beginArray();
+
             while (reader.hasNext()) {
+
                 groups.add(readUserGroup(reader));
             }
             reader.endArray();

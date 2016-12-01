@@ -163,7 +163,10 @@ public class UserGroup {
         if (decks == null) {
             decks = new ArrayList<>();
         }
-		decks.add(cardDeck);
+		if (cardDeck != null) {
+			decks.add(cardDeck);
+		}
+
 		// update(); TODO to be implemented
 	}
 

@@ -30,16 +30,16 @@ import java.io.File;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import de.uulm.einhoernchen.flashcardsapp.Database.DbManager;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.FragmentFlashCard;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.HomeFragment;
-import de.uulm.einhoernchen.flashcardsapp.Fragment.ItemFragmentCategory;
-import de.uulm.einhoernchen.flashcardsapp.Fragment.ItemFragmentCategory.OnCategoryListFragmentInteractionListener;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.dummy.DummyContentCard;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.dummy.DummyContentCarddeck;
+import de.uulm.einhoernchen.flashcardsapp.Fragment.dummy.DummyContentCategory;
 import de.uulm.einhoernchen.flashcardsapp.Models.CardDeck;
-import de.uulm.einhoernchen.flashcardsapp.Models.Categroy;
+import de.uulm.einhoernchen.flashcardsapp.Models.Category;
 import de.uulm.einhoernchen.flashcardsapp.Models.FlashCard;
 import de.uulm.einhoernchen.flashcardsapp.Models.User;
 import de.uulm.einhoernchen.flashcardsapp.R;
@@ -48,7 +48,7 @@ import de.uulm.einhoernchen.flashcardsapp.Util.ImageProcessor;
 import de.uulm.einhoernchen.flashcardsapp.Util.PermissionManager;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, HomeFragment.OnFragmentInteractionListener, DummyContentCard.ItemFragmentFlashcard.OnFlashcardListFragmentInteractionListener, OnCategoryListFragmentInteractionListener, DummyContentCarddeck.OnCarddeckListFragmentInteractionListener, FragmentFlashCard.OnFlashCardFragmentInteractionListener {
+        implements NavigationView.OnNavigationItemSelectedListener, HomeFragment.OnFragmentInteractionListener, DummyContentCard.ItemFragmentFlashcard.OnFlashcardListFragmentInteractionListener, DummyContentCategory.OnCategoryListFragmentInteractionListener, DummyContentCarddeck.OnCarddeckListFragmentInteractionListener, FragmentFlashCard.OnFlashCardFragmentInteractionListener {
 
 
     private DbManager db;
@@ -58,7 +58,10 @@ public class MainActivity extends AppCompatActivity
     private NavigationView navigationView;
     private Toolbar toolbar;
     private TextView toolbarTextViewTitle;
-    private long parentId = -100; // TODO update
+    private long childrenId = -1; // TODO update
+    private List<Long> parentIds; // TODO update
+    private boolean isRoot = true;
+    private int categoryLevel = 0;
     private Constants catalogueState = Constants.CATEGORY_LIST;
     private List<String> breadCrumps;
     private ProgressBar progressBar;
@@ -122,11 +125,12 @@ public class MainActivity extends AppCompatActivity
         toolbarTextViewTitle = (TextView ) findViewById(R.id.toolbar_text_view_title);
         breadCrumps = new ArrayList<String>();
         breadCrumps.add("");
+        parentIds = new ArrayList<Long>();
+        //parentIds.add(new Long(-1));
 
         profileName.setText(user.getName());
         profileEmail.setText(user.getEmail());
         profileRating.setText(user.getRating()+"");
-        Log.d("ratung", user.getRating()+"");
 
         /**
          * Adds clicklistener to the profile image
@@ -183,6 +187,7 @@ public class MainActivity extends AppCompatActivity
      */
     private void setProfileImage() {
 
+        PermissionManager.verifyStoragePermissionsWrite((Activity) context);
         File sd =  Environment.getExternalStorageDirectory();
 
         File folder = new File(sd + "/flashcards");
@@ -249,16 +254,28 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onBackPressed() {
+
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
+
         } else {
+
             int count = getFragmentManager().getBackStackEntryCount();
 
             if (count == 0) {
                 //super.onBackPressed();
-                moveBackwardsInCatalogue();
+
+                if (categoryLevel > 0) {
+
+                    moveBackwardsInCatalogue();
+                }
+
+
             } else {
+
+                drawer.openDrawer(GravityCompat.START);
                 getFragmentManager().popBackStack();
             }
         }
@@ -328,54 +345,96 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
+
+    /**
+     * When returning to the catalog drawer then set the last state
+     */
     private void moveToLastCatalogueState() {
+
         switch (catalogueState) {
+
             case CATEGORY_LIST:
-                setCategoryList(true);
+
+                setCategoryList(false);
+
+                // immediately increase because root will be loaded
+                if (categoryLevel == 0) {
+                    //categoryLevel++;
+                }
+
                 break;
+
             case CARD_DECK_LIST:
                 setCarddeckList(true);
                 break;
+
             case FLASH_CARD_LIST:
                 setFlashcardList(true);
                 break;
+
             case FLASH_CARD_DETAIL:
                 createFragmentFlashCard(this.currentFlashCard);
                 break;
+
             default:
                 //setCategoryList(true);
                 break;
         }
         toolbarTextViewTitle.setText(breadCrumps.get(breadCrumps.size() - 1));
+        //this.childrenId = parentIds.get(parentIds.size() - 1);
+
     }
 
     private void moveBackwardsInCatalogue() {
 
+        this.childrenId = parentIds.get(parentIds.size() - 1);
+
+        Log.d("state", this.catalogueState.toString());
+
         switch (this.catalogueState) {
+
             case CATEGORY_LIST:
+
+                categoryLevel--;
+
                 setCategoryList(true);
                 break;
+
             case CARD_DECK_LIST:
+
+                categoryLevel--;
                 setCategoryList(true);
                 break;
+
             case FLASH_CARD_LIST:
+
                 setCarddeckList(true);
                 break;
+
             case FLASH_CARD_DETAIL:
+
                 setFlashcardList(true);
                 break;
+
             default:
                 setCategoryList(true);
                 break;
         }
-
         /**
          * Sets the toolbars title
          */
         if (breadCrumps.size() > 1) {
-            breadCrumps.remove(breadCrumps.get(breadCrumps.size() - 1));
+            breadCrumps.remove(breadCrumps.size() - 1);
             toolbarTextViewTitle.setText(breadCrumps.get(breadCrumps.size() - 1));
         }
+        if (parentIds.size() > 0) {
+
+            Log.d("remove parent", "stelle " +(parentIds.size() - 1) + " value " + (parentIds.get(parentIds.size() - 1)));
+            parentIds.remove(parentIds.size() - 1);
+            Log.d("after remove", parentIds+"");
+            //this.childrenId = parentIds.get(parentIds.size() - 1);
+        }
+
     }
 
 
@@ -417,23 +476,43 @@ public class MainActivity extends AppCompatActivity
 
 
     @Override
-    public void onCategoryListFragmentInteraction(Categroy item) {
+    public void onCategoryListFragmentInteraction(Category item) {
 
-        Log.d("click category", item.toString());
-        this.parentId = item.getId();
+        categoryLevel++;
+
+        this.childrenId = item.getId();
+        this.parentIds.add(item.getParentId());
+
+        /*
+        if (item.getParentId() != -1) {
+
+        }
+        */
+
         breadCrumps.add(item.getName());
         toolbarTextViewTitle.setText(breadCrumps.get(breadCrumps.size() - 1));
-        setCarddeckList(false);
+
+        // 4 is the maximal depth of categories
+        if (categoryLevel < 4) {
+            setCategoryList(false);
+
+
+        } else {
+            //categoryLevel++;
+            setCarddeckList(false);
+        }
 
     }
 
     @Override
     public void onCarddeckListFragmentInteraction(CardDeck item) {
 
-        Log.d("click carddeck", item.toString());
         breadCrumps.add(item.getName());
+
         toolbarTextViewTitle.setText(breadCrumps.get(breadCrumps.size() - 1));
-        this.parentId = item.getId();
+        this.parentIds.add(this.childrenId);
+        this.childrenId = item.getId();
+
         setFlashcardList(false);
 
     }
@@ -442,11 +521,11 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onFlashcardListFragmentInteraction(FlashCard item) {
 
-
-        breadCrumps.add("Flascard #" + item.getId());
+        breadCrumps.add("Flashcard #" + item.getId());
         toolbarTextViewTitle.setText(breadCrumps.get(breadCrumps.size() - 1));
+        this.parentIds.add(this.childrenId);
+        this.childrenId = item.getId();
 
-        Log.d("click card", item.toString());
         createFragmentFlashCard(item);
 
 
@@ -454,32 +533,44 @@ public class MainActivity extends AppCompatActivity
 
     private void setFlashcardList(boolean backPressed) {
 
+        Log.d("move parentid", parentIds + " level " + categoryLevel + " childid "  + childrenId + " back " + backPressed);
+
         DummyContentCard dummyContentCard = new DummyContentCard();
-        dummyContentCard.collectItemsFromDb(this.parentId, getSupportFragmentManager(), progressBar, backPressed, db);
+        dummyContentCard.collectItemsFromDb(this.childrenId, getSupportFragmentManager(), progressBar, backPressed, db);
         catalogueState = Constants.FLASH_CARD_LIST;
     }
 
     private void setCarddeckList(boolean backPressed) {
-        new DummyContentCarddeck().collectItemsFromServer(this.parentId, getSupportFragmentManager(), progressBar, backPressed);
+
+        Log.d("move parentid", parentIds + " level " + categoryLevel + " childid "  + childrenId + " back " + backPressed);
+
+        new DummyContentCarddeck().collectItemsFromServer(this.childrenId, getSupportFragmentManager(), progressBar, backPressed);
         catalogueState = Constants.CARD_DECK_LIST;
     }
 
     private void setCategoryList(boolean backPressed) {
+
+        Log.d("move parentid", parentIds + " level " + categoryLevel + " childid "  + childrenId + " back " + backPressed);
+
+        new DummyContentCategory().collectItemsFromServer(this.categoryLevel, this.childrenId, getSupportFragmentManager(), progressBar, backPressed);
         catalogueState = Constants.CATEGORY_LIST;
 
-        ItemFragmentCategory fragment = new ItemFragmentCategory();
+        /*
+        DummyContentCategory.ItemFragmentCategory fragment = new DummyContentCategory.ItemFragmentCategory();
         Bundle args = new Bundle();
-        args.putLong(ItemFragmentCategory.ARG_PARENT_ID, this.parentId);
+        args.putLong(DummyContentCategory.ItemFragmentCategory.ARG_PARENT_ID, this.childrenId);
         fragment.setArguments(args);
         android.support.v4.app.FragmentTransaction fragmentTransaction =
                 getSupportFragmentManager().beginTransaction();
         fragmentTransaction.replace(R.id.fragment_container_main, fragment);
         fragmentTransaction.commit();
+        */
     }
 
 
     private void createFragmentFlashCard (FlashCard flashCard) {
-        this.parentId = flashCard.getId(); // TODO
+        //this.parentIds.add(this.childrenId);
+        //this.childrenId = flashCard.getId();
         this.currentFlashCard = flashCard;
         this.catalogueState = Constants.FLASH_CARD_DETAIL;
 

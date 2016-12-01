@@ -59,7 +59,7 @@ public class AsyncGetFlashCard extends AsyncTask<Long, Long, List<FlashCard>> {
 
         String urlString = Routes.URL + Routes.SLASH + Routes.CARD_DECKS + Routes.SLASH
                 + parentId + Routes.SLASH + Routes.FLASH_CARDS;
-
+        Log.d("back call to ", urlString);
         HttpURLConnection urlConnection = null;
 
         try {
@@ -79,7 +79,7 @@ public class AsyncGetFlashCard extends AsyncTask<Long, Long, List<FlashCard>> {
 
         } catch (Exception e) {
 
-            Log.e("doInBackground Error", e.toString());
+            Log.e("doInBackground Card", e.toString());
             System.out.println(e.getMessage());
 
         }
@@ -95,25 +95,7 @@ public class AsyncGetFlashCard extends AsyncTask<Long, Long, List<FlashCard>> {
         // Should collect data from db
         if (flashCards == null || flashCards.size() == 0) {
 
-            List<FlashCard> cards = new ArrayList<>();
-
-            for (int position = 0; position < 100; position++) {
-
-                Random rand = new Random();
-
-                User author = new User((long) position, "avatar", "Author: User " + position, "pwd", "user" + position + "@flashcards.de", rand.nextInt(100), new Date().toString(), new Date().toString());
-                Question question = new Question("Item Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam ", author);
-                Answer answer = new Answer("consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam ", "hint ....." + position, author);
-                List<String> tags = new ArrayList<>();
-                for (int i = 0; i <= position; i++) {
-                    tags.add("tag" + i);
-                }
-                List<Answer> answers = new ArrayList<>();
-                answers.add(answer);
-                FlashCard flashCard = new FlashCard(new Date(), question, answers, author, false);
-
-                cards.add(position, flashCard);
-            }
+            Log.d("AsyncGetFlashCard", "no flashcards");
 
         }
 

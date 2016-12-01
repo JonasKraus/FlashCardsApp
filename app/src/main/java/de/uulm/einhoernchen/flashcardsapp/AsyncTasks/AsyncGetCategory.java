@@ -1,31 +1,23 @@
 package de.uulm.einhoernchen.flashcardsapp.AsyncTasks;
 
-import android.app.Activity;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.view.View;
-import android.view.Window;
 import android.widget.ProgressBar;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
 import de.uulm.einhoernchen.flashcardsapp.Consts.Routes;
-import de.uulm.einhoernchen.flashcardsapp.Models.CardDeck;
-import de.uulm.einhoernchen.flashcardsapp.Models.User;
+import de.uulm.einhoernchen.flashcardsapp.Models.Category;
 import de.uulm.einhoernchen.flashcardsapp.Util.JsonParser;
 
 /**
- * Created by jonas-uni on 17.08.2016.
+ * Created by jonas-uni on 26.11.2016.
  */
-public class AsyncGetCarddeck extends AsyncTask<Long, Long, List<CardDeck>> {
+public class AsyncGetCategory extends AsyncTask<Long, Long, List<Category>> {
 
     private ProgressBar progressBar;
 
@@ -40,26 +32,46 @@ public class AsyncGetCarddeck extends AsyncTask<Long, Long, List<CardDeck>> {
     }
 
     /**
-     * Interface to receive the carddecks in the activity that called this async task
+     * Interface to receive the categories in the activity that called this async task
      */
-    public interface AsyncResponseCarddeck {
-        void processFinish(List<CardDeck> cardDecks);
+    public interface AsyncResponseCategory {
+        void processFinish(List<Category> categories);
     }
 
-    public AsyncResponseCarddeck delegate = null;
+    public AsyncResponseCategory delegate = null;
     private final Long parentId;
+    private final int categoryLevel;
 
-    public AsyncGetCarddeck(Long parentId, AsyncResponseCarddeck delegate) {
+    public AsyncGetCategory(int categoryLevel, Long parentId, AsyncResponseCategory delegate) {
         this.parentId = parentId;
+        this.categoryLevel = categoryLevel;
         this.delegate = delegate;
     }
 
     @Override
-    protected List<CardDeck> doInBackground(Long... params) {
+    protected List<Category> doInBackground(Long... params) {
 
 
-        String urlString = Routes.URL + Routes.SLASH + Routes.CATEGORIES + Routes.SLASH + parentId + Routes.SLASH + Routes.DECKS; // URL to call
+        String urlString = Routes.URL + Routes.SLASH + Routes.CATEGORIES; // URL to call TODO parentId anhängen
+
+        if (categoryLevel == 0) {
+
+            urlString += Routes.QUESTION_MARK + Routes.ROOT + Routes.EQUAL + Routes.BOOL_TRUE;
+        } else if (categoryLevel == 1) {
+
+            urlString += Routes.SLASH + parentId + Routes.SLASH + Routes.CHILDREN;
+        } else if (categoryLevel == 2) {
+
+            urlString += Routes.SLASH + parentId + Routes.SLASH + Routes.CHILDREN;
+        } else {
+
+            urlString += Routes.SLASH + parentId + Routes.SLASH + Routes.CHILDREN;
+        }
+
         Log.d("back call to ", urlString);
+        Log.d("call parent ", parentId+"");
+        Log.d("call level ", categoryLevel+"");
+
         HttpURLConnection urlConnection = null;
 
         try {
@@ -75,11 +87,11 @@ public class AsyncGetCarddeck extends AsyncTask<Long, Long, List<CardDeck>> {
 
             urlConnection.connect();
 
-            return JsonParser.readCardDecks(urlConnection.getInputStream());
+            return JsonParser.readCategroies(urlConnection.getInputStream());
 
         } catch (Exception e) {
 
-            Log.e("doInBackground Carddeck", e.toString());
+            Log.e("doInBackground Categ", e.toString());
             System.out.println(e.getMessage());
 
         }
@@ -88,17 +100,17 @@ public class AsyncGetCarddeck extends AsyncTask<Long, Long, List<CardDeck>> {
     }
 
     @Override
-    protected void onPostExecute(List<CardDeck> cardDecks) {
-        super.onPostExecute(cardDecks);
-        if (cardDecks == null || cardDecks.size() == 0) {
+    protected void onPostExecute(List<Category> categories) {
+        super.onPostExecute(categories);
+        if (categories == null || categories.size() == 0) {
 
             // TODO just for testing purpose change to data from sqlite
-            Log.d("carddeck", "nothing found");
+            Log.d("category", "nothing found");
 
         }
 
         progressBar.setVisibility(View.GONE);
-        delegate.processFinish(cardDecks);
+        delegate.processFinish(categories);
 
     }
 

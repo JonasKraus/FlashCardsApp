@@ -1,6 +1,5 @@
 package de.uulm.einhoernchen.flashcardsapp.Fragment;
 
-import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,21 +13,21 @@ import com.amulyakhare.textdrawable.util.ColorGenerator;
 import java.util.List;
 
 import de.uulm.einhoernchen.flashcardsapp.Fragment.dummy.DummyContent.DummyItem;
-import de.uulm.einhoernchen.flashcardsapp.Models.Categroy;
+import de.uulm.einhoernchen.flashcardsapp.Fragment.dummy.DummyContentCategory;
+import de.uulm.einhoernchen.flashcardsapp.Models.Category;
 import de.uulm.einhoernchen.flashcardsapp.R;
 
 /**
  * {@link RecyclerView.Adapter} that can display a {@link DummyItem} and makes a call to the
- * specified {@link de.uulm.einhoernchen.flashcardsapp.Fragment.ItemFragmentCategory.OnCategoryListFragmentInteractionListener}.
  * TODO: Replace the implementation with code for your data type.
  */
 public class CategoryRecyclerViewAdapter extends RecyclerView.Adapter<CategoryRecyclerViewAdapter.ViewHolder> {
 
-    private final List<Categroy> categroys;
-    private final ItemFragmentCategory.OnCategoryListFragmentInteractionListener mListener;
+    private final List<Category> categories;
+    private final DummyContentCategory.OnCategoryListFragmentInteractionListener mListener;
 
-    public CategoryRecyclerViewAdapter(List<Categroy> items, ItemFragmentCategory.OnCategoryListFragmentInteractionListener listener) {
-        categroys = items;
+    public CategoryRecyclerViewAdapter(List<Category> items, DummyContentCategory.OnCategoryListFragmentInteractionListener listener) {
+        categories = items;
         mListener = listener;
     }
 
@@ -41,9 +40,9 @@ public class CategoryRecyclerViewAdapter extends RecyclerView.Adapter<CategoryRe
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        holder.mItem = categroys.get(position);
-        // holder.mIdView.setText(categroys.get(position).getId()+""); TODO Wird das benötigt?
-        holder.mContentView.setText(categroys.get(position).getName());
+        holder.mItem = categories.get(position);
+        // holder.mIdView.setText(categories.get(position).getId()+""); TODO Wird das benötigt?
+        holder.mContentView.setText(categories.get(position).getName());
         holder.mAuthorView.setVisibility(View.INVISIBLE);
         // holder.mGroupRatingView.setVisibility(View.INVISIBLE);
         holder.mCardRatingView.setVisibility(View.INVISIBLE);
@@ -62,11 +61,11 @@ public class CategoryRecyclerViewAdapter extends RecyclerView.Adapter<CategoryRe
         });
 
         //get first letter of each String item
-        final String firstLetter = String.valueOf(categroys.get(position).getName().charAt(0)); // hier wird der buchstabe gesetzt
+        final String firstLetter = String.valueOf(categories.get(position).getName().charAt(0)); // hier wird der buchstabe gesetzt
 
         ColorGenerator generator = ColorGenerator.MATERIAL; // or use DEFAULT
         // generate random color
-        final int color = generator.getColor(categroys.get(position).getId()); // TODO
+        final int color = generator.getColor(categories.get(position).getId()); // TODO
         //int color = generator.getRandomColor();
 
         TextDrawable drawable = TextDrawable.builder()
@@ -78,7 +77,10 @@ public class CategoryRecyclerViewAdapter extends RecyclerView.Adapter<CategoryRe
 
     @Override
     public int getItemCount() {
-        return categroys.size();
+        if (categories != null) {
+            return categories.size();
+        }
+        return 0;
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
@@ -92,7 +94,7 @@ public class CategoryRecyclerViewAdapter extends RecyclerView.Adapter<CategoryRe
         public final ImageView mBookmarkView;
         public final ImageView mLocalView;
         public final ImageView imageView; // Text icon
-        public Categroy mItem;
+        public Category mItem;
 
         public ViewHolder(View view) {
             super(view);

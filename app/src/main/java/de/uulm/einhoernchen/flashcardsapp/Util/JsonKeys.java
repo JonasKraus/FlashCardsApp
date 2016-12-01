@@ -98,4 +98,9 @@ public class JsonKeys {
     public static final String CARDDECK_GROUP="userGroup";
     public static final String CARDDECK_JSON_ELEMENTS = CARDDECK_NAME+", "+CARDDECK_DESCRIPTION+", "+CARDDECK_CARDS+" (child: list containing flashcardIDs)";
 
+    // Category
+    public static final String CATEGORY_ID = "categoryId";
+    public static final String CATEGORY_NAME = "categoryName";
+    public static final String CATEGORY_CARDDECKS = "cardDecks";
+    public static final String CATEGORY_PARENT = "parent";
 }

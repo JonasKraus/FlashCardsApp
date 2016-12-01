@@ -84,6 +84,25 @@ public class CardDeck {
         userGroup.addDeck(this);
     }
 
+    /**
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     * @since 2016-12-01
+     *
+     * @param id
+     * @param visible
+     * @param userGroup
+     * @param name
+     * @param description
+     */
+    public CardDeck(long id, boolean visible, UserGroup userGroup, String name, String description) {
+        this.id = id;
+        this.visible = visible;
+        this.userGroup = userGroup;
+        this.name = name;
+        this.description = description;
+    }
+
 
     public long getId() {
         return id;
