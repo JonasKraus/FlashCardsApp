@@ -4,10 +4,13 @@
 package de.uulm.einhoernchen.flashcardsapp.Models;
 
 
+import android.util.Log;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -156,6 +159,8 @@ public class FlashCard {
         this.answers = answers;
         this.author = author;
         this.multipleChoice = multipleChoice;
+        Log.d("construct", (lastUpdated==null) + "");
+
     }
 
     /**
@@ -219,9 +224,10 @@ public class FlashCard {
     public String getLastUpdated() {
         // TODO to be implemented
         if (this.lastUpdated == null) {
-            return new SimpleDateFormat("dd.MM.yyyy").format(Calendar.getInstance().getTime());
+
+            return new SimpleDateFormat("dd.MM.yyyy hh:mm:ss").format(Calendar.getInstance().getTime());
         }
-        return lastUpdated.toString();
+        return new SimpleDateFormat("dd.MM.yyyy hh:mm:ss").format( lastUpdated.getTime());
     }
 
     public void setLastUpdated(Date lastUpdated) {

@@ -30,7 +30,6 @@ import java.io.File;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 import de.uulm.einhoernchen.flashcardsapp.Database.DbManager;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.FragmentFlashCard;
@@ -58,12 +57,11 @@ public class MainActivity extends AppCompatActivity
     private NavigationView navigationView;
     private Toolbar toolbar;
     private TextView toolbarTextViewTitle;
-    private long childrenId = -1; // TODO update
-    private List<Long> parentIds; // TODO update
-    private boolean isRoot = true;
+    private long childrenId = -1;
+    private List<Long> parentIds;
     private int categoryLevel = 0;
     private Constants catalogueState = Constants.CATEGORY_LIST;
-    private List<String> breadCrumps;
+    private List<String> breadCrumbs;
     private ProgressBar progressBar;
     // the Flashcard that was loaded last in details fragment
     private FlashCard currentFlashCard;
@@ -123,10 +121,9 @@ public class MainActivity extends AppCompatActivity
         TextView profileRating = (TextView) header.findViewById(R.id.textViewProfileRating);
 
         toolbarTextViewTitle = (TextView ) findViewById(R.id.toolbar_text_view_title);
-        breadCrumps = new ArrayList<String>();
-        breadCrumps.add("");
+        breadCrumbs = new ArrayList<String>();
+        breadCrumbs.add("");
         parentIds = new ArrayList<Long>();
-        //parentIds.add(new Long(-1));
 
         profileName.setText(user.getName());
         profileEmail.setText(user.getEmail());
@@ -169,7 +166,7 @@ public class MainActivity extends AppCompatActivity
                     }
                 };
                 AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                builder.setMessage(R.string.prompt_choose_profile)
+                builder.setMessage(R.string.prompt_choose_profile) //TODO set in constans strings
                         .setPositiveButton(R.string.prompt_choose_camera, dialogClickListener)
                         .setNegativeButton(R.string.prompt_choose_gallery, dialogClickListener)
                         .setNeutralButton(R.string.prompt_cancel, dialogClickListener).show();
@@ -270,13 +267,15 @@ public class MainActivity extends AppCompatActivity
                 if (categoryLevel > 0) {
 
                     moveBackwardsInCatalogue();
+                } else {
+
+                    drawer.openDrawer(GravityCompat.START);
+                    getFragmentManager().popBackStack();
                 }
 
 
             } else {
 
-                drawer.openDrawer(GravityCompat.START);
-                getFragmentManager().popBackStack();
             }
         }
     }
@@ -354,14 +353,7 @@ public class MainActivity extends AppCompatActivity
         switch (catalogueState) {
 
             case CATEGORY_LIST:
-
                 setCategoryList(false);
-
-                // immediately increase because root will be loaded
-                if (categoryLevel == 0) {
-                    //categoryLevel++;
-                }
-
                 break;
 
             case CARD_DECK_LIST:
@@ -377,19 +369,17 @@ public class MainActivity extends AppCompatActivity
                 break;
 
             default:
-                //setCategoryList(true);
+                //setCategoryList(true); TODO
                 break;
         }
-        toolbarTextViewTitle.setText(breadCrumps.get(breadCrumps.size() - 1));
-        //this.childrenId = parentIds.get(parentIds.size() - 1);
+
+        toolbarTextViewTitle.setText(breadCrumbs.get(breadCrumbs.size() - 1));
 
     }
 
     private void moveBackwardsInCatalogue() {
 
         this.childrenId = parentIds.get(parentIds.size() - 1);
-
-        Log.d("state", this.catalogueState.toString());
 
         switch (this.catalogueState) {
 
@@ -420,19 +410,17 @@ public class MainActivity extends AppCompatActivity
                 setCategoryList(true);
                 break;
         }
-        /**
-         * Sets the toolbars title
-         */
-        if (breadCrumps.size() > 1) {
-            breadCrumps.remove(breadCrumps.size() - 1);
-            toolbarTextViewTitle.setText(breadCrumps.get(breadCrumps.size() - 1));
+
+
+        if (breadCrumbs.size() > 1) {
+
+            breadCrumbs.remove(breadCrumbs.size() - 1);
+            toolbarTextViewTitle.setText(breadCrumbs.get(breadCrumbs.size() - 1));
         }
+
         if (parentIds.size() > 0) {
 
-            Log.d("remove parent", "stelle " +(parentIds.size() - 1) + " value " + (parentIds.get(parentIds.size() - 1)));
             parentIds.remove(parentIds.size() - 1);
-            Log.d("after remove", parentIds+"");
-            //this.childrenId = parentIds.get(parentIds.size() - 1);
         }
 
     }
@@ -478,27 +466,25 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onCategoryListFragmentInteraction(Category item) {
 
+        // Increment because its a click on a catgory
         categoryLevel++;
 
+        // Get new items id to get children
         this.childrenId = item.getId();
+        // Add parent id to go back in catalogue
         this.parentIds.add(item.getParentId());
 
-        /*
-        if (item.getParentId() != -1) {
-
-        }
-        */
-
-        breadCrumps.add(item.getName());
-        toolbarTextViewTitle.setText(breadCrumps.get(breadCrumps.size() - 1));
+        // add text to breadcrump list and display it
+        breadCrumbs.add(item.getName());
+        toolbarTextViewTitle.setText(breadCrumbs.get(breadCrumbs.size() - 1));
 
         // 4 is the maximal depth of categories
+        // check if go deeper in categories or to load carddecks
         if (categoryLevel < 4) {
             setCategoryList(false);
 
-
         } else {
-            //categoryLevel++;
+
             setCarddeckList(false);
         }
 
@@ -507,9 +493,9 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onCarddeckListFragmentInteraction(CardDeck item) {
 
-        breadCrumps.add(item.getName());
+        breadCrumbs.add(item.getName());
+        toolbarTextViewTitle.setText(breadCrumbs.get(breadCrumbs.size() - 1));
 
-        toolbarTextViewTitle.setText(breadCrumps.get(breadCrumps.size() - 1));
         this.parentIds.add(this.childrenId);
         this.childrenId = item.getId();
 
@@ -521,28 +507,23 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onFlashcardListFragmentInteraction(FlashCard item) {
 
-        breadCrumps.add("Flashcard #" + item.getId());
-        toolbarTextViewTitle.setText(breadCrumps.get(breadCrumps.size() - 1));
+        breadCrumbs.add("Flashcard #" + item.getId());
+        toolbarTextViewTitle.setText(breadCrumbs.get(breadCrumbs.size() - 1));
+
         this.parentIds.add(this.childrenId);
         this.childrenId = item.getId();
 
         createFragmentFlashCard(item);
 
-
     }
 
     private void setFlashcardList(boolean backPressed) {
 
-        Log.d("move parentid", parentIds + " level " + categoryLevel + " childid "  + childrenId + " back " + backPressed);
-
-        DummyContentCard dummyContentCard = new DummyContentCard();
-        dummyContentCard.collectItemsFromDb(this.childrenId, getSupportFragmentManager(), progressBar, backPressed, db);
+        new DummyContentCard().collectItemsFromDb(this.childrenId, getSupportFragmentManager(), progressBar, backPressed, db);
         catalogueState = Constants.FLASH_CARD_LIST;
     }
 
     private void setCarddeckList(boolean backPressed) {
-
-        Log.d("move parentid", parentIds + " level " + categoryLevel + " childid "  + childrenId + " back " + backPressed);
 
         new DummyContentCarddeck().collectItemsFromServer(this.childrenId, getSupportFragmentManager(), progressBar, backPressed);
         catalogueState = Constants.CARD_DECK_LIST;
@@ -550,27 +531,14 @@ public class MainActivity extends AppCompatActivity
 
     private void setCategoryList(boolean backPressed) {
 
-        Log.d("move parentid", parentIds + " level " + categoryLevel + " childid "  + childrenId + " back " + backPressed);
-
         new DummyContentCategory().collectItemsFromServer(this.categoryLevel, this.childrenId, getSupportFragmentManager(), progressBar, backPressed);
         catalogueState = Constants.CATEGORY_LIST;
 
-        /*
-        DummyContentCategory.ItemFragmentCategory fragment = new DummyContentCategory.ItemFragmentCategory();
-        Bundle args = new Bundle();
-        args.putLong(DummyContentCategory.ItemFragmentCategory.ARG_PARENT_ID, this.childrenId);
-        fragment.setArguments(args);
-        android.support.v4.app.FragmentTransaction fragmentTransaction =
-                getSupportFragmentManager().beginTransaction();
-        fragmentTransaction.replace(R.id.fragment_container_main, fragment);
-        fragmentTransaction.commit();
-        */
     }
 
 
     private void createFragmentFlashCard (FlashCard flashCard) {
-        //this.parentIds.add(this.childrenId);
-        //this.childrenId = flashCard.getId();
+
         this.currentFlashCard = flashCard;
         this.catalogueState = Constants.FLASH_CARD_DETAIL;
 

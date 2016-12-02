@@ -1,5 +1,6 @@
 package de.uulm.einhoernchen.flashcardsapp.Util;
 
+import android.support.annotation.Nullable;
 import android.util.JsonReader;
 import android.util.JsonToken;
 import android.util.Log;
@@ -13,9 +14,13 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import de.uulm.einhoernchen.flashcardsapp.Models.Answer;
 import de.uulm.einhoernchen.flashcardsapp.Models.CardDeck;
@@ -298,10 +303,13 @@ public class JsonParser {
 
                 } else if (stringName.equals(JsonKeys.RATING)) {
                     rating = reader.nextInt();
-                } else if (stringName.equals(created)) {
-                    created = DateProcessor.stringToDate(reader.nextString());
-                } else if (stringName.equals(lastUpdated)) {
-                    lastUpdated = DateProcessor.stringToDate(reader.nextString());
+                } else if (stringName.equals(JsonKeys.DATE_CREATED)) {
+                    created = stringToDate(reader.nextString());
+                    Log.d("after parse construct", (lastUpdated==null) + "");
+                } else if (stringName.equals(JsonKeys.DATE_UPDATED)) {
+
+                    lastUpdated = stringToDate(reader.nextString());
+                    Log.d("after parse construct", (lastUpdated==null) + "");
                 } else if (stringName.equals(JsonKeys.FLASHCARD_QUESTION)) {
                     question = readQuestion(reader);
                 } else if (stringName.equals(JsonKeys.FLASHCARD_ANSWERS)) {
@@ -333,6 +341,7 @@ public class JsonParser {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        Log.d("bevor construct", (lastUpdated==null) + "");
         return new FlashCard(id, tags, rating, created, lastUpdated, question, answers, author, multipleChoice);
     }
 
@@ -409,9 +418,9 @@ public class JsonParser {
                     }
 
                 } else if (stringName.equals(JsonKeys.DATE_CREATED)) {
-                    created = DateProcessor.stringToDate(reader.nextString());
+                    created = stringToDate(reader.nextString());
                 } else if (stringName.equals(JsonKeys.DATE_UPDATED)) {
-                    lastUpdated = DateProcessor.stringToDate(reader.nextString());
+                    lastUpdated = stringToDate(reader.nextString());
                 } else if (stringName.equals(JsonKeys.RATING)) {
                     rating = reader.nextInt();
                 } else if (stringName.equals(JsonKeys.ANSWER_CORRECT)) {
@@ -466,9 +475,9 @@ public class JsonParser {
                 } else if (stringName.equals(JsonKeys.RATING)) {
                     rating = reader.nextInt();
                 } else if (stringName.equals(JsonKeys.DATE_CREATED)) {
-                    created = DateProcessor.stringToDate(reader.nextString());
+                    created = stringToDate(reader.nextString());
                 } else if (stringName.equals(JsonKeys.DATE_LAST_LOGIN)) {
-                    lastLogin = DateProcessor.stringToDate(reader.nextString());
+                    lastLogin = stringToDate(reader.nextString());
                 } else if (stringName.equals(JsonKeys.USER_GROUPS)) {
                     JsonToken check = reader.peek();
 
@@ -694,6 +703,24 @@ public class JsonParser {
         }
 
         return user;
+    }
+
+    @Nullable
+    public static Date stringToDate(String dateString) {
+
+        DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss z", Locale.ENGLISH);
+        try {
+            Date date = formatter.parse(dateString);
+            Log.d("date parse to string", date.toString());
+            Log.d("date parse check null", ""+(date==null));
+            return date;
+        } catch (ParseException e) {
+            e.printStackTrace();
+            Log.d("Error", e.toString());
+        }
+
+
+        return null;
     }
 
 }

@@ -49,7 +49,7 @@ public class CarddeckRecyclerViewAdapter extends RecyclerView.Adapter<CarddeckRe
         holder.mAuthorView.setText(userGroupName);
         // holder.mGroupRatingView.setVisibility(View.INVISIBLE);
         holder.mCardRatingView.setText(cardDecks.get(position).getRatingForView());
-        holder.mDateView.setText(cardDecks.get(position).getLastUpdated());
+        // holder.mDateView.setText(cardDecks.get(position).getLastUpdated());
         holder.mBookmarkView.setVisibility(View.INVISIBLE);
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
@@ -118,7 +118,7 @@ public class CarddeckRecyclerViewAdapter extends RecyclerView.Adapter<CarddeckRe
         public final TextView mAuthorView;
         // public final TextView mGroupRatingView;
         public final TextView mCardRatingView;
-        public final TextView mDateView;
+        //public final TextView mDateView;
         public final ImageView mBookmarkView;
         public final ImageView mLocalView;
         public final ImageView imageView; // Text icon
@@ -133,7 +133,7 @@ public class CarddeckRecyclerViewAdapter extends RecyclerView.Adapter<CarddeckRe
 
             // mGroupRatingView = (TextView) view.findViewById(R.id.text_view_listItem_group_rating);
             mCardRatingView = (TextView) view.findViewById(R.id.text_view_listItem_card_rating);
-            mDateView = (TextView) view.findViewById(R.id.text_view_listItem_date);
+            //mDateView = (TextView) view.findViewById(R.id.text_view_listItem_date);
             mBookmarkView = (ImageView) view.findViewById(R.id.image_view_bookmark);
             mLocalView = (ImageView) view.findViewById(R.id.image_view_offline);
 
