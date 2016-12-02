@@ -7,7 +7,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,9 +17,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
-import de.uulm.einhoernchen.flashcardsapp.AsyncTasks.AsyncGetFlashCard;
-import de.uulm.einhoernchen.flashcardsapp.AsyncTasks.AsyncGetFlashCardLocal;
-import de.uulm.einhoernchen.flashcardsapp.AsyncTasks.AsyncSaveFlashCardLocal;
+import de.uulm.einhoernchen.flashcardsapp.AsyncTasks.AsyncGetRemoteFlashCard;
+import de.uulm.einhoernchen.flashcardsapp.AsyncTasks.AsyncGetLocalFlashCard;
+import de.uulm.einhoernchen.flashcardsapp.AsyncTasks.AsyncSaveLocalFlashCard;
 import de.uulm.einhoernchen.flashcardsapp.Database.DbManager;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.FlashcardRecyclerViewAdapter;
 import de.uulm.einhoernchen.flashcardsapp.Models.Answer;
@@ -50,7 +49,7 @@ public class DummyContentCard {
      */
     public static void collectItemsFromServer(final long parentId, final FragmentManager fragmentManager, ProgressBar progressBarMain, final boolean backPressed, final DbManager db) {
 
-        AsyncGetFlashCard asyncGetFlashCard = new AsyncGetFlashCard(parentId, new AsyncGetFlashCard.AsyncResponseFlashCard() {
+        AsyncGetRemoteFlashCard asyncGetFlashCard = new AsyncGetRemoteFlashCard(parentId, new AsyncGetRemoteFlashCard.AsyncResponseFlashCard() {
 
             @Override
             public void processFinish(List<FlashCard> flashCards) {
@@ -61,7 +60,7 @@ public class DummyContentCard {
                     //Log.d("DummyContentCard", "no flashcards");
                 }
 
-                AsyncSaveFlashCardLocal asyncSaveFlashCardLocal = new AsyncSaveFlashCardLocal(parentId);
+                AsyncSaveLocalFlashCard asyncSaveFlashCardLocal = new AsyncSaveLocalFlashCard(parentId);
                 asyncSaveFlashCardLocal.setDbManager(db);
                 asyncSaveFlashCardLocal.setFlashCards(flashCards);
                 asyncSaveFlashCardLocal.execute();
@@ -117,7 +116,7 @@ public class DummyContentCard {
 
     public void collectItemsFromDb(final long parentId, final FragmentManager supportFragmentManager, final ProgressBar progressBar, final boolean backPressed, final DbManager db) {
 
-        AsyncGetFlashCardLocal asyncGetFlashCardLocal = new AsyncGetFlashCardLocal(parentId, new AsyncGetFlashCardLocal.AsyncResponseFlashCardLocal() {
+        AsyncGetLocalFlashCard asyncGetFlashCardLocal = new AsyncGetLocalFlashCard(parentId, new AsyncGetLocalFlashCard.AsyncResponseFlashCardLocal() {
 
             @Override
             public void processFinish(List<FlashCard> flashCards) {

@@ -93,9 +93,15 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
     public static final String COLUMN_CARD_DECK_NAME = "cardDeckName";                  //1
     public static final String COLUMN_CARD_DECK_DESCRIPTION = "description";            //2
 
+
+    public static final String TABLE_CATEGORY = "category";
+    public static final String COLUMN_CATEGORY_ID = "categoryId";                       //0
+    public static final String COLUMN_CATEGORY_NAME = "categoryName";                   //1
+    public static final String COLUMN_CATEGORY_PARENT = "parentId";                     //2
+
     // Database name and version - increase when existing table is altered
     private static final String DATABASE_NAME = "flashcardsDb.db";
-    private static final int DATABASE_VERSION = 1; // @TODO revert version before first release
+    private static final int DATABASE_VERSION = 2; // @TODO revert version before first release
 
     /**
      * Database creation sql statement for table user
@@ -245,6 +251,16 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
             + " text "
             + ");";
 
+    private static final String CATEGORY_CREATE = "create table "
+            + TABLE_CATEGORY + "("
+            + COLUMN_CATEGORY_ID
+            + " integer primary key, "
+            + COLUMN_CATEGORY_NAME
+            + " text not null, "
+            + COLUMN_CATEGORY_PARENT
+            + " integer "
+            + ");";
+
     /**
      * Constructor
      *
@@ -266,6 +282,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
         db.execSQL(RATING_CREATE);
         db.execSQL(AUTH_TOKEN_CREATE);
         db.execSQL(CARD_DECK_CREATE);
+        db.execSQL(CATEGORY_CREATE);
     }
 
     @Override
@@ -285,6 +302,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_RATING);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_AUTH_TOKEN);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_CARD_DECK);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_CATEGORY);
 
         onCreate(db);
     }

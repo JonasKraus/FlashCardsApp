@@ -7,6 +7,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -531,7 +533,13 @@ public class MainActivity extends AppCompatActivity
 
     private void setCategoryList(boolean backPressed) {
 
-        new DummyContentCategory().collectItemsFromServer(this.categoryLevel, this.childrenId, getSupportFragmentManager(), progressBar, backPressed);
+        new DummyContentCategory().collectItemsFromDb(this.categoryLevel, this.childrenId, getSupportFragmentManager(), progressBar, backPressed, db);
+
+        if (isNetworkAvailable()) {
+            new DummyContentCategory().collectItemsFromServer(this.categoryLevel, this.childrenId, getSupportFragmentManager(), progressBar, backPressed, db);
+
+        }
+
         catalogueState = Constants.CATEGORY_LIST;
 
     }
@@ -549,5 +557,12 @@ public class MainActivity extends AppCompatActivity
         fragmentTransaction.setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left);
         fragmentTransaction.replace(R.id.fragment_container_main, fragment);
         fragmentTransaction.commit();
+    }
+
+    private boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 }

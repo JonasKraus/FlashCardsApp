@@ -15,12 +15,15 @@ import android.widget.ProgressBar;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.uulm.einhoernchen.flashcardsapp.AsyncTasks.AsyncGetCarddeck;
-import de.uulm.einhoernchen.flashcardsapp.AsyncTasks.AsyncGetCategory;
-import de.uulm.einhoernchen.flashcardsapp.Fragment.CarddeckRecyclerViewAdapter;
+import de.uulm.einhoernchen.flashcardsapp.AsyncTasks.AsyncGetLocalCategory;
+import de.uulm.einhoernchen.flashcardsapp.AsyncTasks.AsyncGetLocalFlashCard;
+import de.uulm.einhoernchen.flashcardsapp.AsyncTasks.AsyncGetRemoteCategory;
+import de.uulm.einhoernchen.flashcardsapp.AsyncTasks.AsyncSaveLocalCategory;
+import de.uulm.einhoernchen.flashcardsapp.AsyncTasks.AsyncSaveLocalFlashCard;
+import de.uulm.einhoernchen.flashcardsapp.Database.DbManager;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.CategoryRecyclerViewAdapter;
-import de.uulm.einhoernchen.flashcardsapp.Models.CardDeck;
 import de.uulm.einhoernchen.flashcardsapp.Models.Category;
+import de.uulm.einhoernchen.flashcardsapp.Models.FlashCard;
 import de.uulm.einhoernchen.flashcardsapp.R;
 
 /**
@@ -33,12 +36,18 @@ public class DummyContentCategory {
 
     private static List<Category> categories = new ArrayList<>();
 
-    public void collectItemsFromServer(final int categoryLevel, final long parentId, final FragmentManager fragmentManager, ProgressBar progressBarMain, final boolean backPressed) {
+    public void collectItemsFromServer(final int categoryLevel, final long parentId, final FragmentManager fragmentManager, ProgressBar progressBarMain, final boolean backPressed, final DbManager db) {
 
-        AsyncGetCategory asyncGetCategory = new AsyncGetCategory(categoryLevel, parentId, new AsyncGetCategory.AsyncResponseCategory() {
+        AsyncGetRemoteCategory asyncGetCategory = new AsyncGetRemoteCategory(categoryLevel, parentId, new AsyncGetRemoteCategory.AsyncResponseCategory() {
 
             @Override
             public void processFinish(List<Category> categories) {
+
+                // Saving the collected categories localy
+                AsyncSaveLocalCategory asyncSaveLocalCategory = new AsyncSaveLocalCategory(parentId);
+                asyncSaveLocalCategory.setDbManager(db);
+                asyncSaveLocalCategory.setCategories(categories);
+                asyncSaveLocalCategory.execute();
 
                 DummyContentCategory.categories = categories;
                 DummyContentCategory.ItemFragmentCategory fragment = new DummyContentCategory.ItemFragmentCategory();
@@ -65,6 +74,47 @@ public class DummyContentCategory {
 
         asyncGetCategory.setProgressbar(progressBarMain);
         asyncGetCategory.execute();
+
+    }
+
+    public void collectItemsFromDb(final int categoryLevel, final long parentId, final FragmentManager supportFragmentManager, final ProgressBar progressBar, final boolean backPressed, final DbManager db) {
+
+        AsyncGetLocalCategory asyncGetLocalCategory = new AsyncGetLocalCategory(parentId, new AsyncGetLocalCategory.AsyncResponseCategoryLocal() {
+
+            @Override
+            public void processFinish(List<Category> categories) {
+
+                DummyContentCategory.categories = categories;
+
+                DummyContentCategory.ItemFragmentCategory fragment = new DummyContentCategory.ItemFragmentCategory();
+
+                Bundle args = new Bundle();
+                args.putLong(DummyContentCategory.ItemFragmentCategory.ARG_PARENT_ID, parentId);
+                fragment.setArguments(args);
+
+                android.support.v4.app.FragmentTransaction fragmentTransaction =
+                        supportFragmentManager.beginTransaction();
+
+                // TODO delete if always loaded from local db
+                /*
+                if (backPressed) {
+                    fragmentTransaction.setCustomAnimations(R.anim.enter_from_left, R.anim.exit_to_right);
+                } else if (!fragmentAnimated) {
+                    fragmentTransaction.setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left);
+                    fragmentAnimated = true;
+                }
+                */
+
+                fragmentTransaction.replace(R.id.fragment_container_main, fragment);
+                fragmentTransaction.commit();
+
+            }
+
+        });
+
+        asyncGetLocalCategory.setProgressbar(progressBar);
+        asyncGetLocalCategory.setDbManager(db);
+        asyncGetLocalCategory.execute();
 
     }
 

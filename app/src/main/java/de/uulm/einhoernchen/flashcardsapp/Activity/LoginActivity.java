@@ -44,7 +44,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.lang.*;
 
-import de.uulm.einhoernchen.flashcardsapp.AsyncTasks.AsyncGetUser;
+import de.uulm.einhoernchen.flashcardsapp.AsyncTasks.AsyncGetRemoteUser;
 import de.uulm.einhoernchen.flashcardsapp.Consts.Routes;
 import de.uulm.einhoernchen.flashcardsapp.Database.DbManager;
 import de.uulm.einhoernchen.flashcardsapp.Models.User;
@@ -235,7 +235,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 @Override
                 public void processFinish(Long userId) {
 
-                    AsyncGetUser asyncGetUser = new AsyncGetUser(userId, new AsyncGetUser.AsyncResponseUser() {
+                    AsyncGetRemoteUser asyncGetUser = new AsyncGetRemoteUser(userId, new AsyncGetRemoteUser.AsyncResponseUser() {
                         @Override
                         public void processFinish(User user) {
 

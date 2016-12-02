@@ -15,7 +15,7 @@ import android.widget.ProgressBar;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.uulm.einhoernchen.flashcardsapp.AsyncTasks.AsyncGetCarddeck;
+import de.uulm.einhoernchen.flashcardsapp.AsyncTasks.AsyncGetRemoteCarddeck;
 
 import de.uulm.einhoernchen.flashcardsapp.Fragment.CarddeckRecyclerViewAdapter;
 import de.uulm.einhoernchen.flashcardsapp.Models.CardDeck;
@@ -39,7 +39,7 @@ public class DummyContentCarddeck {
      */
     public void collectItemsFromServer(final long parentId, final FragmentManager fragmentManager, ProgressBar progressBarMain, final boolean backPressed) {
 
-        AsyncGetCarddeck asyncGetCarddeck = new AsyncGetCarddeck(parentId, new AsyncGetCarddeck.AsyncResponseCarddeck() {
+        AsyncGetRemoteCarddeck asyncGetCarddeck = new AsyncGetRemoteCarddeck(parentId, new AsyncGetRemoteCarddeck.AsyncResponseCarddeck() {
 
             @Override
             public void processFinish(List<CardDeck> cardDecks) {

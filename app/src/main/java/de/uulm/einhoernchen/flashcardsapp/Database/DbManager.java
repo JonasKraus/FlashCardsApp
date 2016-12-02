@@ -13,6 +13,7 @@ import java.util.Date;
 import java.util.List;
 
 import de.uulm.einhoernchen.flashcardsapp.Models.Answer;
+import de.uulm.einhoernchen.flashcardsapp.Models.Category;
 import de.uulm.einhoernchen.flashcardsapp.Models.FlashCard;
 import de.uulm.einhoernchen.flashcardsapp.Models.Question;
 import de.uulm.einhoernchen.flashcardsapp.Models.Tag;
@@ -114,6 +115,12 @@ public class DbManager {
             MySQLiteHelper.COLUMN_CARD_DECK_ID,             //0
             MySQLiteHelper.COLUMN_CARD_DECK_NAME,           //1
             MySQLiteHelper.COLUMN_CARD_DECK_DESCRIPTION,    //2
+    };
+
+    private String[] allCategoryColumns = {
+            MySQLiteHelper.COLUMN_CATEGORY_ID,             //0
+            MySQLiteHelper.COLUMN_CATEGORY_NAME,           //1
+            MySQLiteHelper.COLUMN_CATEGORY_PARENT,         //2
     };
 
     /**
@@ -499,6 +506,70 @@ public class DbManager {
         database.insert(MySQLiteHelper.TABLE_FLASHCARD, null, values);
     }
 
+
+    /**
+     * Takes a list of Categories and saves them
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     * @since 2016-12-02
+     *
+     * @param categories
+     */
+    public void saveCategories(List<Category> categories) {
+
+        for (Category category : categories) {
+            saveCategory(category);
+        }
+    }
+
+
+    /**
+     * Tries to insert or update Category
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     * @since 2016-12-02
+     *
+     * @param category
+     */
+    public void saveCategory (Category category) {
+
+        ContentValues values = new ContentValues();
+        values.put(MySQLiteHelper.COLUMN_CATEGORY_ID, category.getId());
+        values.put(MySQLiteHelper.COLUMN_CATEGORY_NAME, category.getName());
+        values.put(MySQLiteHelper.COLUMN_CATEGORY_PARENT, category.getParentId());
+        database.insertWithOnConflict(MySQLiteHelper.TABLE_CATEGORY, null, values, SQLiteDatabase.CONFLICT_REPLACE);
+
+    }
+
+
+    /**
+     * Gets the categories which are children of parentId
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     * @since 2016-12-02
+     *
+     * @param parentId
+     * @return
+     */
+    public List<Category> getCategories(Long parentId) {
+
+        List<Category> categories = new ArrayList<Category>();
+
+        Cursor cursor = database.query(MySQLiteHelper.TABLE_CATEGORY, allCategoryColumns, MySQLiteHelper.COLUMN_CATEGORY_PARENT + " = " + parentId, null, null, null, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                long categoryId = cursor.getLong(0);
+                String categoryName = cursor.getString(1);
+                long categoryParentId = cursor.getLong(2);
+
+                categories.add(new Category(categoryId,categoryParentId,categoryName));
+            } while (cursor.moveToNext());
+        }
+        return categories;
+    }
+
+
     /**
      * Saves a list of answers and its dependencies
      *
@@ -711,4 +782,6 @@ public class DbManager {
         database.delete(MySQLiteHelper.TABLE_CARD_TAG, MySQLiteHelper.COLUMN_CARD_TAG_TAG_ID + "=" + tagId
                 + " AND " + MySQLiteHelper.COLUMN_CARD_TAG_FLASHCARD_ID + "=" + cardId, null);
     }
+
+
 }

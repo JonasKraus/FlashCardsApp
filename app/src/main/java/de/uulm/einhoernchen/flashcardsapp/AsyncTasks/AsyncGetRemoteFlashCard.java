@@ -24,7 +24,7 @@ import de.uulm.einhoernchen.flashcardsapp.Util.JsonParser;
 /**
  * Created by jonas-uni on 17.08.2016.
  */
-public class AsyncGetFlashCard extends AsyncTask<Long, Long, List<FlashCard>> {
+public class AsyncGetRemoteFlashCard extends AsyncTask<Long, Long, List<FlashCard>> {
 
     private ProgressBar progressBar;
 
@@ -48,7 +48,7 @@ public class AsyncGetFlashCard extends AsyncTask<Long, Long, List<FlashCard>> {
     public AsyncResponseFlashCard delegate = null;
     private final Long parentId;
 
-    public AsyncGetFlashCard(Long parentId, AsyncResponseFlashCard delegate) {
+    public AsyncGetRemoteFlashCard(Long parentId, AsyncResponseFlashCard delegate) {
         this.parentId = parentId;
         this.delegate = delegate;
     }
@@ -95,7 +95,7 @@ public class AsyncGetFlashCard extends AsyncTask<Long, Long, List<FlashCard>> {
         // Should collect data from db
         if (flashCards == null || flashCards.size() == 0) {
 
-            Log.d("AsyncGetFlashCard", "no flashcards");
+            Log.d("AsyncGetRemoteFlashCard", "no flashcards");
 
         }
 
