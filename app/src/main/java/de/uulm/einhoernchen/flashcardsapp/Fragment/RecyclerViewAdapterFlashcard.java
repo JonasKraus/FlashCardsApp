@@ -28,10 +28,12 @@ public class RecyclerViewAdapterFlashcard extends RecyclerView.Adapter<RecyclerV
 
     private final List<FlashCard> flashCards;
     private final OnFlashcardListFragmentInteractionListener mListener;
+    private final boolean isUpToDate;
 
-    public RecyclerViewAdapterFlashcard(List<FlashCard> items, OnFlashcardListFragmentInteractionListener listener) {
+    public RecyclerViewAdapterFlashcard(List<FlashCard> items, OnFlashcardListFragmentInteractionListener listener, boolean isUpToDate) {
         flashCards = items;
         mListener = listener;
+        this.isUpToDate = isUpToDate;
     }
 
     @Override
@@ -55,6 +57,15 @@ public class RecyclerViewAdapterFlashcard extends RecyclerView.Adapter<RecyclerV
         holder.mDateView.setText(flashCards.get(position).getLastUpdatedString());
         holder.mBookmarkView.setVisibility(View.VISIBLE);
         // holder.mBookmarkView.setImageDrawable(// TODO set if marked);
+
+
+        if (!isUpToDate) {
+
+            holder.mLocalView.setVisibility(View.INVISIBLE);
+        } else {
+
+            holder.mLocalView.setVisibility(View.VISIBLE);
+        }
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override

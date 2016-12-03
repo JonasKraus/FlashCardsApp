@@ -25,10 +25,12 @@ public class RecyclerViewAdapterCategory extends RecyclerView.Adapter<RecyclerVi
 
     private final List<Category> categories;
     private final ContentCategory.OnCategoryListFragmentInteractionListener mListener;
+    private final boolean isUpToDate;
 
-    public RecyclerViewAdapterCategory(List<Category> items, ContentCategory.OnCategoryListFragmentInteractionListener listener) {
+    public RecyclerViewAdapterCategory(List<Category> items, ContentCategory.OnCategoryListFragmentInteractionListener listener, boolean isUpToDate) {
         categories = items;
         mListener = listener;
+        this.isUpToDate = isUpToDate;
     }
 
     @Override
@@ -48,6 +50,14 @@ public class RecyclerViewAdapterCategory extends RecyclerView.Adapter<RecyclerVi
         holder.mCardRatingView.setVisibility(View.INVISIBLE);
         holder.mDateView.setVisibility(View.INVISIBLE);
         holder.mBookmarkView.setVisibility(View.INVISIBLE);
+
+        if (!isUpToDate) {
+
+            holder.mLocalView.setVisibility(View.INVISIBLE);
+        } else {
+
+            holder.mLocalView.setVisibility(View.VISIBLE);
+        }
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -34,6 +34,9 @@ public class ContentCard {
 
     public static ContentCard.ItemFragmentFlashcard fragment;
 
+    private static boolean isUpToDate = false;
+
+
     /**
      * @author Jonas Kraus jonas.kraus@uni-ulm.de
      * @since 2016.08.25
@@ -79,6 +82,8 @@ public class ContentCard {
                     fragmentAnimated = true;
                 }
                 */
+
+                isUpToDate = true;
 
                 fragmentTransaction.replace(R.id.fragment_container_main, fragment);
                 fragmentTransaction.commit();
@@ -134,6 +139,8 @@ public class ContentCard {
                     fragmentAnimated = true;
                 }
                 */
+
+                isUpToDate = false;
 
                 fragmentTransaction.replace(R.id.fragment_container_main, fragment);
                 fragmentTransaction.commit();
@@ -210,7 +217,7 @@ public class ContentCard {
                 }
 
                 // Set the view with the data
-                recyclerView.setAdapter(new RecyclerViewAdapterFlashcard(flashCards, mListener));
+                recyclerView.setAdapter(new RecyclerViewAdapterFlashcard(flashCards, mListener, isUpToDate));
             }
             return view;
         }

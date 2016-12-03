@@ -32,6 +32,7 @@ import de.uulm.einhoernchen.flashcardsapp.R;
 public class ContentCategory {
 
     private static List<Category> categories = new ArrayList<>();
+    private static boolean isUpToDate = false;
 
     public void collectItemsFromServer(final int categoryLevel, final long parentId, final FragmentManager fragmentManager, ProgressBar progressBarMain, final boolean backPressed, final DbManager db) {
 
@@ -64,6 +65,7 @@ public class ContentCategory {
                 }
                 */
 
+                isUpToDate = true;
                 fragmentTransaction.replace(R.id.fragment_container_main, fragment);
                 fragmentTransaction.commit();
 
@@ -104,6 +106,7 @@ public class ContentCategory {
                 }
                 */
 
+                isUpToDate = false;
                 fragmentTransaction.replace(R.id.fragment_container_main, fragment);
                 fragmentTransaction.commit();
 
@@ -176,7 +179,7 @@ public class ContentCategory {
                     recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
                 }
 
-                recyclerView.setAdapter(new RecyclerViewAdapterCategory(categories, mListener));
+                recyclerView.setAdapter(new RecyclerViewAdapterCategory(categories, mListener, isUpToDate));
             }
             return view;
         }

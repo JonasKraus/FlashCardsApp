@@ -32,6 +32,7 @@ import de.uulm.einhoernchen.flashcardsapp.R;
 public class ContentCarddeck {
 
     private static List<CardDeck> cardDecks = new ArrayList<>();
+    private static boolean isUpToDate = false;
 
     /**
      * @author Jonas Kraus jonas.kraus@uni-ulm.de
@@ -73,6 +74,7 @@ public class ContentCarddeck {
                 }
                 */
 
+                isUpToDate = true;
                 fragmentTransaction.replace(R.id.fragment_container_main, fragment);
                 fragmentTransaction.commit();
 
@@ -126,6 +128,7 @@ public class ContentCarddeck {
                 }
                 */
 
+                isUpToDate = false;
                 fragmentTransaction.replace(R.id.fragment_container_main, fragment);
                 fragmentTransaction.commit();
 
@@ -198,7 +201,7 @@ public class ContentCarddeck {
                     recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
                 }
 
-                recyclerView.setAdapter(new RecyclerViewAdapterCarddeck(cardDecks, mListener));
+                recyclerView.setAdapter(new RecyclerViewAdapterCarddeck(cardDecks, mListener, isUpToDate));
             }
             return view;
         }

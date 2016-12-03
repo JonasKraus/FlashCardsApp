@@ -27,10 +27,12 @@ public class RecyclerViewAdapterCarddeck extends RecyclerView.Adapter<RecyclerVi
 
     private final List<CardDeck> cardDecks;
     private final OnCarddeckListFragmentInteractionListener mListener;
+    private final boolean isUpToDate;
 
-    public RecyclerViewAdapterCarddeck(List<CardDeck> items, OnCarddeckListFragmentInteractionListener listener) {
+    public RecyclerViewAdapterCarddeck(List<CardDeck> items, OnCarddeckListFragmentInteractionListener listener, boolean isUpToDate) {
         cardDecks = items;
         mListener = listener;
+        this.isUpToDate = isUpToDate;
     }
 
     @Override
@@ -52,6 +54,15 @@ public class RecyclerViewAdapterCarddeck extends RecyclerView.Adapter<RecyclerVi
         //holder.mDateView.setText(cardDecks.get(position).getLastUpdatedString());
         holder.mDateView.setVisibility(View.INVISIBLE);
         holder.mBookmarkView.setVisibility(View.INVISIBLE);
+
+        if (!isUpToDate) {
+
+            holder.mLocalView.setVisibility(View.INVISIBLE);
+        } else {
+
+            holder.mLocalView.setVisibility(View.VISIBLE);
+        }
+
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
