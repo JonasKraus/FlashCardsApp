@@ -120,18 +120,10 @@ public class User {
         this.email = email;
         this.rating = rating;
 
-        Log.d("construct",  id + " " +  avatar  + " " +  name  + " " +  email + " " +  rating + " " +  created + " " +  lastLogin);
-        //this.created = ProcessorDate.stringToDate(created);
-        //this.lastLogin = ProcessorDate.stringToDate(lastLogin);
+        this.created = new Date(created);
+        this.lastLogin = new Date(lastLogin);
     }
 
-    public User(long id, String name) {
-
-        this.id = id;
-        this.name = name;
-
-        Log.d("construct",  id + " " +  name);
-    }
 
 
     public Long getId() {

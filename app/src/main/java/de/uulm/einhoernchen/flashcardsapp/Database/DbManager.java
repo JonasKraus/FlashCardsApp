@@ -8,6 +8,7 @@ import android.util.Log;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import de.uulm.einhoernchen.flashcardsapp.Models.Answer;
@@ -280,15 +281,16 @@ public class DbManager {
                 int rating = cursor.getInt(2);
                 long questionId = cursor.getLong(3);
                 boolean multipleChoice = cursor.getInt(4) > 0;
-                String created = cursor.getString(5);
-                String lastUpdated = cursor.getString(6);
+                long created = cursor.getLong(5);
+                long lastUpdated = cursor.getLong(6);
                 long userId = cursor.getLong(7);
                 User author = getUser(userId);
                 List<Tag> tags = getTags(cardId);
                 Question question = getQuestion(questionId);
                 List<Answer> answers = getAnswers(cardId);
 
-                FlashCard flashCard = new FlashCard(cardId, tags, rating, created, lastUpdated, question, answers, author, multipleChoice);
+
+                FlashCard flashCard = new FlashCard(cardId, tags, rating, new Date(created), new Date(lastUpdated), question, answers, author, multipleChoice);
 
                 flashCards.add(flashCard);
             } while (cursor.moveToNext());
@@ -509,11 +511,12 @@ public class DbManager {
         values.put(DbHelper.COLUMN_FLASHCARD_USER_ID , card.getAuthor().getId());
 
         if (card.getCreated() != null) {
-            values.put(DbHelper.COLUMN_FLASHCARD_CREATED, card.getCreated().toString());
+            values.put(DbHelper.COLUMN_FLASHCARD_CREATED, card.getCreated().getTime());
+            Log.d("created", card.getCreated().toString());
         }
 
-        if (card.getLastUpdated() != null) {
-            values.put(DbHelper.COLUMN_FLASHCARD_LAST_UPDATED , card.getLastUpdated().toString());
+        if (card.getLastUpdatedString() != null) {
+            values.put(DbHelper.COLUMN_FLASHCARD_LAST_UPDATED , card.getLastUpdated().getTime());
         }
 
         database.insertWithOnConflict(DbHelper.TABLE_FLASHCARD, null, values, SQLiteDatabase.CONFLICT_REPLACE);

@@ -48,4 +48,20 @@ public class ProcessorDate {
         Log.d("dateFormatted", myString);
         return  myString;
     }
+
+    @Nullable
+    public static Date stringToDateDb(String dateString) {
+
+        DateFormat formatter = new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy", Locale.ENGLISH);
+        try {
+            Date date = formatter.parse(dateString);
+            return date;
+        } catch (ParseException e) {
+            e.printStackTrace();
+            Log.d("Error", e.toString());
+        }
+
+
+        return null;
+    }
 }

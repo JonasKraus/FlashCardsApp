@@ -2,7 +2,6 @@ package de.uulm.einhoernchen.flashcardsapp.Fragment;
 
 import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -53,7 +52,7 @@ public class RecyclerViewAdapterFlashcard extends RecyclerView.Adapter<RecyclerV
         holder.mAuthorView.setText(flashCards.get(position).getAuthor().getId() + " " +authorName); //TODO delete
         // holder.mGroupRatingView.setVisibility(View.INVISIBLE);
         holder.mCardRatingView.setText(flashCards.get(position).getRatingForView());
-        holder.mDateView.setText(flashCards.get(position).getLastUpdated());
+        holder.mDateView.setText(flashCards.get(position).getLastUpdatedString());
         holder.mBookmarkView.setVisibility(View.VISIBLE);
         // holder.mBookmarkView.setImageDrawable(// TODO set if marked);
 

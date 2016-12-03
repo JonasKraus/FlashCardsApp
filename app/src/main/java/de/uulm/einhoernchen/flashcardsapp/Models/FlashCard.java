@@ -18,6 +18,7 @@ import java.util.Date;
 import java.util.List;
 
 import de.uulm.einhoernchen.flashcardsapp.Util.JsonKeys;
+import de.uulm.einhoernchen.flashcardsapp.Util.ProcessorDate;
 
 /**
  * @author Jonas Kraus
@@ -128,8 +129,9 @@ public class FlashCard {
         this.id = id;
         this.tags = tags;
         this.rating = rating;
-        //this.created = created; // TODO add Date
-        //this.lastUpdated = lastUpdated;  // TODO add Date
+        Log.d("construct", created);
+        if (created != null && created != "") this.created = ProcessorDate.stringToDateDb(created); // TODO add Date
+        if (lastUpdated != null && lastUpdated != "")this.lastUpdated = ProcessorDate.stringToDateDb(lastUpdated);  // TODO add Date
         this.question = question;
         this.answers = answers;
         this.author = author;
@@ -220,13 +222,18 @@ public class FlashCard {
         this.created = created;
     }
 
-    public String getLastUpdated() {
+    public String getLastUpdatedString() {
         // TODO to be implemented
         if (this.lastUpdated == null) {
 
             return new SimpleDateFormat("dd.MM.yyyy hh:mm:ss").format(Calendar.getInstance().getTime());
         }
+
         return new SimpleDateFormat("dd.MM.yyyy hh:mm:ss").format( lastUpdated.getTime());
+    }
+
+    public Date getLastUpdated() {
+        return this.lastUpdated;
     }
 
     public void setLastUpdated(Date lastUpdated) {
