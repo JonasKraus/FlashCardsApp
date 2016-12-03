@@ -1,4 +1,4 @@
-package de.uulm.einhoernchen.flashcardsapp.Fragment.dummy;
+package de.uulm.einhoernchen.flashcardsapp.Fragment.content;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -15,9 +15,12 @@ import android.widget.ProgressBar;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.uulm.einhoernchen.flashcardsapp.AsyncTasks.AsyncGetLocalCardDeck;
 import de.uulm.einhoernchen.flashcardsapp.AsyncTasks.AsyncGetRemoteCarddeck;
 
-import de.uulm.einhoernchen.flashcardsapp.Fragment.CarddeckRecyclerViewAdapter;
+import de.uulm.einhoernchen.flashcardsapp.AsyncTasks.AsyncSaveLocalCardDeck;
+import de.uulm.einhoernchen.flashcardsapp.Database.DbManager;
+import de.uulm.einhoernchen.flashcardsapp.Fragment.RecyclerViewAdapterCarddeck;
 import de.uulm.einhoernchen.flashcardsapp.Models.CardDeck;
 import de.uulm.einhoernchen.flashcardsapp.R;
 
@@ -26,7 +29,7 @@ import de.uulm.einhoernchen.flashcardsapp.R;
  * Android template wizards.
  *
  */
-public class DummyContentCarddeck {
+public class ContentCarddeck {
 
     private static List<CardDeck> cardDecks = new ArrayList<>();
 
@@ -36,16 +39,24 @@ public class DummyContentCarddeck {
      *
      * @param parentId given by the main activity
      * @param fragmentManager given by main activity
+     *
      */
-    public void collectItemsFromServer(final long parentId, final FragmentManager fragmentManager, ProgressBar progressBarMain, final boolean backPressed) {
+    public void collectItemsFromServer(final long parentId, final FragmentManager fragmentManager, ProgressBar progressBarMain, final boolean backPressed, final DbManager db) {
 
         AsyncGetRemoteCarddeck asyncGetCarddeck = new AsyncGetRemoteCarddeck(parentId, new AsyncGetRemoteCarddeck.AsyncResponseCarddeck() {
 
             @Override
             public void processFinish(List<CardDeck> cardDecks) {
 
-                DummyContentCarddeck.cardDecks = cardDecks;
-                DummyContentCarddeck.ItemFragmentCarddeck fragment = new DummyContentCarddeck.ItemFragmentCarddeck();
+                // Saving the collected categories localy
+                AsyncSaveLocalCardDeck asyncSaveLocalCarddeck = new AsyncSaveLocalCardDeck(parentId);
+                asyncSaveLocalCarddeck.setDbManager(db);
+                asyncSaveLocalCarddeck.setCardDecks(cardDecks);
+                asyncSaveLocalCarddeck.execute();
+
+
+                ContentCarddeck.cardDecks = cardDecks;
+                ContentCarddeck.ItemFragmentCarddeck fragment = new ContentCarddeck.ItemFragmentCarddeck();
 
                 Bundle args = new Bundle();
                 args.putLong(ItemFragmentCarddeck.ARG_PARENT_ID, parentId);
@@ -54,11 +65,13 @@ public class DummyContentCarddeck {
                 android.support.v4.app.FragmentTransaction fragmentTransaction =
                         fragmentManager.beginTransaction();
 
+                /*
                 if (backPressed) {
                     fragmentTransaction.setCustomAnimations(R.anim.enter_from_left, R.anim.exit_to_right);
                 } else {
                     fragmentTransaction.setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left);
                 }
+                */
 
                 fragmentTransaction.replace(R.id.fragment_container_main, fragment);
                 fragmentTransaction.commit();
@@ -69,6 +82,60 @@ public class DummyContentCarddeck {
 
         asyncGetCarddeck.setProgressbar(progressBarMain);
         asyncGetCarddeck.execute();
+
+    }
+
+
+    /**
+     * Collects Carddecks from sqLite
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     * @since 2016-12-02
+     *
+     * @param parentId
+     * @param supportFragmentManager
+     * @param progressBar
+     * @param backPressed
+     * @param db
+     */
+    public void collectItemsFromDb(final long parentId, final FragmentManager supportFragmentManager, final ProgressBar progressBar, final boolean backPressed, final DbManager db) {
+
+        AsyncGetLocalCardDeck asyncGetLocalCardDeck = new AsyncGetLocalCardDeck(parentId, new AsyncGetLocalCardDeck.AsyncResponseCardDeckLocal() {
+
+            @Override
+            public void processFinish(List<CardDeck> cardDecks) {
+
+                ContentCarddeck.cardDecks = cardDecks;
+
+                ContentCarddeck.ItemFragmentCarddeck fragment = new ContentCarddeck.ItemFragmentCarddeck();
+
+                Bundle args = new Bundle();
+                args.putLong(ContentCarddeck.ItemFragmentCarddeck.ARG_PARENT_ID, parentId);
+                fragment.setArguments(args);
+
+                android.support.v4.app.FragmentTransaction fragmentTransaction =
+                        supportFragmentManager.beginTransaction();
+
+                // TODO delete if always loaded from local db
+                /*
+                if (backPressed) {
+                    fragmentTransaction.setCustomAnimations(R.anim.enter_from_left, R.anim.exit_to_right);
+                } else if (!fragmentAnimated) {
+                    fragmentTransaction.setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left);
+                    fragmentAnimated = true;
+                }
+                */
+
+                fragmentTransaction.replace(R.id.fragment_container_main, fragment);
+                fragmentTransaction.commit();
+
+            }
+
+        });
+
+        asyncGetLocalCardDeck.setProgressbar(progressBar);
+        asyncGetLocalCardDeck.setDbManager(db);
+        asyncGetLocalCardDeck.execute();
 
     }
 
@@ -131,7 +198,7 @@ public class DummyContentCarddeck {
                     recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
                 }
 
-                recyclerView.setAdapter(new CarddeckRecyclerViewAdapter(cardDecks, mListener));
+                recyclerView.setAdapter(new RecyclerViewAdapterCarddeck(cardDecks, mListener));
             }
             return view;
         }

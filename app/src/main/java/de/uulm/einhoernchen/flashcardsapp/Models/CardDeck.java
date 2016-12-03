@@ -36,8 +36,6 @@ public class CardDeck {
     @JsonProperty(JsonKeys.CARDDECK_CARDS)
     private List<FlashCard> cards;
 
-    private Date lastUpdated;
-
     public CardDeck(String name) {
         this.name = name;
     }
@@ -184,13 +182,6 @@ public class CardDeck {
                 '}';
     }
 
-    public String getLastUpdated() {
-        // TODO to be implemented
-        if (this.lastUpdated == null) {
-            return new SimpleDateFormat("dd.MM.yyyy").format(Calendar.getInstance().getTime());
-        }
-        return lastUpdated.toString();
-    }
 
     public int getRating() {
         // TODO to be implemented

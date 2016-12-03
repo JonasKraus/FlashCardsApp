@@ -7,18 +7,10 @@ import android.widget.ProgressBar;
 
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.Random;
 
 import de.uulm.einhoernchen.flashcardsapp.Consts.Routes;
-import de.uulm.einhoernchen.flashcardsapp.Fragment.dummy.DummyContentCard;
-import de.uulm.einhoernchen.flashcardsapp.Models.Answer;
-import de.uulm.einhoernchen.flashcardsapp.Models.CardDeck;
 import de.uulm.einhoernchen.flashcardsapp.Models.FlashCard;
-import de.uulm.einhoernchen.flashcardsapp.Models.Question;
-import de.uulm.einhoernchen.flashcardsapp.Models.User;
 import de.uulm.einhoernchen.flashcardsapp.Util.JsonParser;
 
 /**

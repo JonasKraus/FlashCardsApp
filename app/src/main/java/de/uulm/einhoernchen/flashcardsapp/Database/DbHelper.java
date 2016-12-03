@@ -8,7 +8,7 @@ import android.util.Log;
 /**
  * Created by Jonas on 02.07.2016.
  */
-public class MySQLiteHelper extends SQLiteOpenHelper {
+public class DbHelper extends SQLiteOpenHelper {
 
     // Strings for table user
     public static final String TABLE_USER = "user";
@@ -18,7 +18,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
     public static final String COLUMN_USER_PASSWORD = "password";                       //3
     public static final String COLUMN_USER_EMAIL = "email";                             //4
     public static final String COLUMN_USER_RATING = "rating";                           //5
-    public static final String COLUMN_USER_GROUP_ID = "groupId";                        //6
+    public static final String COLUMN_USER_GROUP = "groupId";                           //6
     public static final String COLUMN_USER_CREATED= "created";                          //7
     public static final String COLUMN_USER_LAST_LOGIN= "lastLogin";                     //8
     public static final String COLUMN_USER_LOCAL_ACCOUNT= "localAccount";               //9
@@ -92,6 +92,9 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
     public static final String COLUMN_CARD_DECK_ID = "cardDeckId";                      //0
     public static final String COLUMN_CARD_DECK_NAME = "cardDeckName";                  //1
     public static final String COLUMN_CARD_DECK_DESCRIPTION = "description";            //2
+    public static final String COLUMN_CARD_DECK_VISIBLE = "visible";                    //3
+    public static final String COLUMN_CARD_DECK_GROUP = "groupId";                      //4
+    public static final String COLUMN_CARD_DECK_PARENT = "parentId";                    //5
 
 
     public static final String TABLE_CATEGORY = "category";
@@ -101,7 +104,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
 
     // Database name and version - increase when existing table is altered
     private static final String DATABASE_NAME = "flashcardsDb.db";
-    private static final int DATABASE_VERSION = 2; // @TODO revert version before first release
+    private static final int DATABASE_VERSION = 6; // @TODO revert version before first release
 
     /**
      * Database creation sql statement for table user
@@ -121,7 +124,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
             + " text not null, "
             + COLUMN_USER_RATING
             + " integer DEFAULT 0, "
-            + COLUMN_USER_GROUP_ID
+            + COLUMN_USER_GROUP
             + " integer, "
             + COLUMN_USER_CREATED
             + " text, " // TODO should be not null
@@ -248,7 +251,13 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
             + COLUMN_CARD_DECK_NAME
             + " text not null, "
             + COLUMN_CARD_DECK_DESCRIPTION
-            + " text "
+            + " text, "
+            + COLUMN_CARD_DECK_VISIBLE
+            + " integer, "
+            + COLUMN_CARD_DECK_GROUP
+            + " integer, "
+            + COLUMN_CARD_DECK_PARENT
+            + " integer "
             + ");";
 
     private static final String CATEGORY_CREATE = "create table "
@@ -266,7 +275,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
      *
      * @param context
      */
-    public MySQLiteHelper(Context context) {
+    public DbHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
@@ -288,7 +297,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 
-        Log.w(MySQLiteHelper.class.getName(),
+        Log.w(DbHelper.class.getName(),
                 "Upgrading database from version " + oldVersion + " to "
                         + newVersion + ", which will destroy all old data");
 

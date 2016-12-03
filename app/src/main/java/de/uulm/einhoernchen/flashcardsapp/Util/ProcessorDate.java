@@ -1,17 +1,19 @@
 package de.uulm.einhoernchen.flashcardsapp.Util;
 
+import android.support.annotation.Nullable;
 import android.util.Log;
 
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 import java.util.TimeZone;
 
 /**
  * Created by jonas-uni on 21.08.2016.
  */
-public class DateProcessor {
+public class ProcessorDate {
 
     /**
      * Takes a Sting and returns its Date
@@ -20,26 +22,23 @@ public class DateProcessor {
      * @param dateString
      * @return
      */
+    @Nullable
     public static Date stringToDate(String dateString) {
 
-        Log.d("process date", dateString);
-        DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss z");
-        Date date = null;
+        if (dateString == "" || dateString == null) {
+            return null;
+        }
+        DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss z", Locale.ENGLISH);
         try {
-            if (dateString == null || dateString == "") {
-                dateString = "2016-08-21 13:42:30 UTC";
-            }
-            date = sdf.parse(dateString);
-            sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
-
-            Log.d("processed date", date.toString());
+            Date date = formatter.parse(dateString);
             return date;
         } catch (ParseException e) {
             e.printStackTrace();
-
+            Log.e("Error", e.toString());
         }
 
-        return date;
+
+        return null;
     }
 
     public static String formatDate(Date date) {

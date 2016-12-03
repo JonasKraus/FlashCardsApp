@@ -35,21 +35,21 @@ import java.util.List;
 
 import de.uulm.einhoernchen.flashcardsapp.Database.DbManager;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.FragmentFlashCard;
-import de.uulm.einhoernchen.flashcardsapp.Fragment.HomeFragment;
-import de.uulm.einhoernchen.flashcardsapp.Fragment.dummy.DummyContentCard;
-import de.uulm.einhoernchen.flashcardsapp.Fragment.dummy.DummyContentCarddeck;
-import de.uulm.einhoernchen.flashcardsapp.Fragment.dummy.DummyContentCategory;
+import de.uulm.einhoernchen.flashcardsapp.Fragment.FragmentHome;
+import de.uulm.einhoernchen.flashcardsapp.Fragment.content.ContentCard;
+import de.uulm.einhoernchen.flashcardsapp.Fragment.content.ContentCarddeck;
+import de.uulm.einhoernchen.flashcardsapp.Fragment.content.ContentCategory;
 import de.uulm.einhoernchen.flashcardsapp.Models.CardDeck;
 import de.uulm.einhoernchen.flashcardsapp.Models.Category;
 import de.uulm.einhoernchen.flashcardsapp.Models.FlashCard;
 import de.uulm.einhoernchen.flashcardsapp.Models.User;
 import de.uulm.einhoernchen.flashcardsapp.R;
 import de.uulm.einhoernchen.flashcardsapp.Consts.Constants;
-import de.uulm.einhoernchen.flashcardsapp.Util.ImageProcessor;
+import de.uulm.einhoernchen.flashcardsapp.Util.ProcessorImage;
 import de.uulm.einhoernchen.flashcardsapp.Util.PermissionManager;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, HomeFragment.OnFragmentInteractionListener, DummyContentCard.ItemFragmentFlashcard.OnFlashcardListFragmentInteractionListener, DummyContentCategory.OnCategoryListFragmentInteractionListener, DummyContentCarddeck.OnCarddeckListFragmentInteractionListener, FragmentFlashCard.OnFlashCardFragmentInteractionListener {
+        implements NavigationView.OnNavigationItemSelectedListener, FragmentHome.OnFragmentInteractionListener, ContentCard.ItemFragmentFlashcard.OnFlashcardListFragmentInteractionListener, ContentCategory.OnCategoryListFragmentInteractionListener, ContentCarddeck.OnCarddeckListFragmentInteractionListener, FragmentFlashCard.OnFlashCardFragmentInteractionListener {
 
 
     private DbManager db;
@@ -80,7 +80,7 @@ public class MainActivity extends AppCompatActivity
 
         progressBar = (ProgressBar) findViewById(R.id.progressBarMain);
 
-        HomeFragment fragment = new HomeFragment();
+        FragmentHome fragment = new FragmentHome();
         android.support.v4.app.FragmentTransaction fragmentTransaction =
                 getSupportFragmentManager().beginTransaction();
         fragmentTransaction.add(R.id.fragment_container_main, fragment);
@@ -227,7 +227,7 @@ public class MainActivity extends AppCompatActivity
         if (resultCode == RESULT_OK && data.getData() == null && requestCode != MY_INTENT_CLICK) {
 
             Bitmap bitmap = (Bitmap) data.getExtras().get("data");
-            ImageProcessor.savebitmap(bitmap, user.getId());
+            ProcessorImage.savebitmap(bitmap, user.getId());
             setProfileImage();
 
         }
@@ -240,11 +240,11 @@ public class MainActivity extends AppCompatActivity
             String selectedImagePath;
             Uri selectedImageUri = data.getData();
 
-            selectedImagePath = ImageProcessor.getPath(getApplicationContext(), selectedImageUri);
+            selectedImagePath = ProcessorImage.getPath(getApplicationContext(), selectedImageUri);
             BitmapFactory.Options bmOptions = new BitmapFactory.Options();
 
             Bitmap bitmap = BitmapFactory.decodeFile(selectedImagePath, bmOptions);
-            ImageProcessor.savebitmap(bitmap, user.getId());
+            ProcessorImage.savebitmap(bitmap, user.getId());
             setProfileImage();
         }
 
@@ -312,7 +312,7 @@ public class MainActivity extends AppCompatActivity
 
         if (id == R.id.nav_home) {
 
-            HomeFragment fragment = new HomeFragment();
+            FragmentHome fragment = new FragmentHome();
             android.support.v4.app.FragmentTransaction fragmentTransaction =
                     getSupportFragmentManager().beginTransaction();
             //fragmentTransaction.setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left);
@@ -521,22 +521,32 @@ public class MainActivity extends AppCompatActivity
 
     private void setFlashcardList(boolean backPressed) {
 
-        new DummyContentCard().collectItemsFromDb(this.childrenId, getSupportFragmentManager(), progressBar, backPressed, db);
+        new ContentCard().collectItemsFromDb(this.childrenId, getSupportFragmentManager(), progressBar, backPressed, db);
+
+        if (isNetworkAvailable()) {
+            new ContentCard().collectItemsFromServer(this.childrenId, getSupportFragmentManager(), progressBar, backPressed, db);
+        }
+
         catalogueState = Constants.FLASH_CARD_LIST;
     }
 
     private void setCarddeckList(boolean backPressed) {
 
-        new DummyContentCarddeck().collectItemsFromServer(this.childrenId, getSupportFragmentManager(), progressBar, backPressed);
+        new ContentCarddeck().collectItemsFromDb(this.childrenId, getSupportFragmentManager(), progressBar, backPressed, db);
+
+        if (isNetworkAvailable()) {
+            new ContentCarddeck().collectItemsFromServer(this.childrenId, getSupportFragmentManager(), progressBar, backPressed, db);
+        }
+
         catalogueState = Constants.CARD_DECK_LIST;
     }
 
     private void setCategoryList(boolean backPressed) {
 
-        new DummyContentCategory().collectItemsFromDb(this.categoryLevel, this.childrenId, getSupportFragmentManager(), progressBar, backPressed, db);
+        new ContentCategory().collectItemsFromDb(this.categoryLevel, this.childrenId, getSupportFragmentManager(), progressBar, backPressed, db);
 
         if (isNetworkAvailable()) {
-            new DummyContentCategory().collectItemsFromServer(this.categoryLevel, this.childrenId, getSupportFragmentManager(), progressBar, backPressed, db);
+            new ContentCategory().collectItemsFromServer(this.categoryLevel, this.childrenId, getSupportFragmentManager(), progressBar, backPressed, db);
 
         }
 

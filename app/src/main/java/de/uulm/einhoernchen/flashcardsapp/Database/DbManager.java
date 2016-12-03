@@ -6,19 +6,18 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
-import java.net.URI;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import de.uulm.einhoernchen.flashcardsapp.Models.Answer;
+import de.uulm.einhoernchen.flashcardsapp.Models.CardDeck;
 import de.uulm.einhoernchen.flashcardsapp.Models.Category;
 import de.uulm.einhoernchen.flashcardsapp.Models.FlashCard;
 import de.uulm.einhoernchen.flashcardsapp.Models.Question;
 import de.uulm.einhoernchen.flashcardsapp.Models.Tag;
 import de.uulm.einhoernchen.flashcardsapp.Models.User;
-import de.uulm.einhoernchen.flashcardsapp.Util.DateProcessor;
+import de.uulm.einhoernchen.flashcardsapp.Models.UserGroup;
 
 /**
  * Created by Jonas on 02.07.2016.
@@ -28,99 +27,116 @@ public class DbManager {
     private static final boolean DEBUG = false;
 
     private SQLiteDatabase database;
-    private MySQLiteHelper dbHelper;
+    private DbHelper dbHelper;
     private Context context;
 
     /**
      * All Columns of an user
      */
     private String[] allUserColumns = {
-            MySQLiteHelper.COLUMN_USER_ID,                  //0
-            MySQLiteHelper.COLUMN_USER_AVATAR,              //1
-            MySQLiteHelper.COLUMN_USER_NAME,                //2
-            MySQLiteHelper.COLUMN_USER_PASSWORD,            //3
-            MySQLiteHelper.COLUMN_USER_EMAIL,               //4
-            MySQLiteHelper.COLUMN_USER_RATING,              //5
-            MySQLiteHelper.COLUMN_USER_GROUP_ID,            //6
-            MySQLiteHelper.COLUMN_USER_CREATED,             //7
-            MySQLiteHelper.COLUMN_USER_LAST_LOGIN,          //8
-            MySQLiteHelper.COLUMN_USER_LOCAL_ACCOUNT        //9
+            DbHelper.COLUMN_USER_ID,                  //0
+            DbHelper.COLUMN_USER_AVATAR,              //1
+            DbHelper.COLUMN_USER_NAME,                //2
+            DbHelper.COLUMN_USER_PASSWORD,            //3
+            DbHelper.COLUMN_USER_EMAIL,               //4
+            DbHelper.COLUMN_USER_RATING,              //5
+            DbHelper.COLUMN_USER_GROUP,            //6
+            DbHelper.COLUMN_USER_CREATED,             //7
+            DbHelper.COLUMN_USER_LAST_LOGIN,          //8
+            DbHelper.COLUMN_USER_LOCAL_ACCOUNT        //9
     };
 
     private String[] allFlashCardColumns = {
-            MySQLiteHelper.COLUMN_FLASHCARD_ID,             //0
-            MySQLiteHelper.COLUMN_FLASHCARD_CARDDECK_ID,    //1
-            MySQLiteHelper.COLUMN_FLASHCARD_RATING,         //2
-            MySQLiteHelper.COLUMN_FLASHCARD_QUESTION_ID,    //3
-            MySQLiteHelper.COLUMN_FLASHCARD_MULTIPLE_CHOICE,//4
-            MySQLiteHelper.COLUMN_FLASHCARD_CREATED,        //5
-            MySQLiteHelper.COLUMN_FLASHCARD_LAST_UPDATED,   //6
-            MySQLiteHelper.COLUMN_FLASHCARD_USER_ID         //7
+            DbHelper.COLUMN_FLASHCARD_ID,             //0
+            DbHelper.COLUMN_FLASHCARD_CARDDECK_ID,    //1
+            DbHelper.COLUMN_FLASHCARD_RATING,         //2
+            DbHelper.COLUMN_FLASHCARD_QUESTION_ID,    //3
+            DbHelper.COLUMN_FLASHCARD_MULTIPLE_CHOICE,//4
+            DbHelper.COLUMN_FLASHCARD_CREATED,        //5
+            DbHelper.COLUMN_FLASHCARD_LAST_UPDATED,   //6
+            DbHelper.COLUMN_FLASHCARD_USER_ID         //7
     };
 
     private String[] allQuestionColumns = {
-            MySQLiteHelper.COLUMN_QUESTION_ID,              //0
-            MySQLiteHelper.COLUMN_QUESTION_TEXT,            //1
-            MySQLiteHelper.COLUMN_QUESTION_MEDIA_URI,       //2
-            MySQLiteHelper.COLUMN_QUESTION_AUTHOR_ID,       //3
+            DbHelper.COLUMN_QUESTION_ID,              //0
+            DbHelper.COLUMN_QUESTION_TEXT,            //1
+            DbHelper.COLUMN_QUESTION_MEDIA_URI,       //2
+            DbHelper.COLUMN_QUESTION_AUTHOR_ID,       //3
     };
 
     private String[] allAnswerColumns = {
-            MySQLiteHelper.COLUMN_ANSWER_ID,                //0
-            MySQLiteHelper.COLUMN_ANSWER_TEXT,              //1
-            MySQLiteHelper.COLUMN_ANSWER_HINT,              //2
-            MySQLiteHelper.COLUMN_ANSWER_MEDIA_URI,         //3
-            MySQLiteHelper.COLUMN_ANSWER_USER_ID,           //4
-            MySQLiteHelper.COLUMN_ANSWER_PARENT_CARD_ID,    //5
-            MySQLiteHelper.COLUMN_ANSWER_RATING,            //6
-            MySQLiteHelper.COLUMN_ANSWER_CORRECT,           //7
-            MySQLiteHelper.COLUMN_ANSWER_CREATED,           //8
-            MySQLiteHelper.COLUMN_ANSWER_LAST_UPDATED       //9
+            DbHelper.COLUMN_ANSWER_ID,                //0
+            DbHelper.COLUMN_ANSWER_TEXT,              //1
+            DbHelper.COLUMN_ANSWER_HINT,              //2
+            DbHelper.COLUMN_ANSWER_MEDIA_URI,         //3
+            DbHelper.COLUMN_ANSWER_USER_ID,           //4
+            DbHelper.COLUMN_ANSWER_PARENT_CARD_ID,    //5
+            DbHelper.COLUMN_ANSWER_RATING,            //6
+            DbHelper.COLUMN_ANSWER_CORRECT,           //7
+            DbHelper.COLUMN_ANSWER_CREATED,           //8
+            DbHelper.COLUMN_ANSWER_LAST_UPDATED       //9
     };
 
     private String[] allCardTagColumns = {
-            MySQLiteHelper.COLUMN_CARD_TAG_FLASHCARD_ID,    //0
-            MySQLiteHelper.COLUMN_CARD_TAG_TAG_ID,          //1
+            DbHelper.COLUMN_CARD_TAG_FLASHCARD_ID,    //0
+            DbHelper.COLUMN_CARD_TAG_TAG_ID,          //1
     };
 
     private String[] allTagColumns = {
-            MySQLiteHelper.COLUMN_TAG_ID,                   //0
-            MySQLiteHelper.COLUMN_TAG_NAME,                 //1
+            DbHelper.COLUMN_TAG_ID,                   //0
+            DbHelper.COLUMN_TAG_NAME,                 //1
     };
 
     private String[] allGroupColumns = {
-            MySQLiteHelper.COLUMN_GROUP_ID,                 //0
-            MySQLiteHelper.COLUMN_GROUP_NAME,               //1
-            MySQLiteHelper.COLUMN_GROUP_DESCRIPTION,        //2
+            DbHelper.COLUMN_GROUP_ID,                 //0
+            DbHelper.COLUMN_GROUP_NAME,               //1
+            DbHelper.COLUMN_GROUP_DESCRIPTION,        //2
     };
 
     private String[] allRatingColumns = {
-            MySQLiteHelper.COLUMN_RATING_ID,                //0
-            MySQLiteHelper.COLUMN_RATING_TYPE,              //1
-            MySQLiteHelper.COLUMN_RATING_USER_ID,           //2
-            MySQLiteHelper.COLUMN_RATING_MODIFIER,          //3
-            MySQLiteHelper.COLUMN_RATING_FLASHCARD_ID,      //4
-            MySQLiteHelper.COLUMN_RATING_ANSWER_ID,         //5
+            DbHelper.COLUMN_RATING_ID,                //0
+            DbHelper.COLUMN_RATING_TYPE,              //1
+            DbHelper.COLUMN_RATING_USER_ID,           //2
+            DbHelper.COLUMN_RATING_MODIFIER,          //3
+            DbHelper.COLUMN_RATING_FLASHCARD_ID,      //4
+            DbHelper.COLUMN_RATING_ANSWER_ID,         //5
     };
 
     private String[] allAuthTokenColumns = {
-            MySQLiteHelper.COLUMN_RATING_ID,                //0
-            MySQLiteHelper.COLUMN_AUTH_TOKEN_ID,            //1
-            MySQLiteHelper.COLUMN_AUTH_TOKEN_USER_ID,       //2
-            MySQLiteHelper.COLUMN_AUTH_TOKEN_TOKEN,         //3
-            MySQLiteHelper.COLUMN_AUTH_TOKEN_CREATED,       //4
+            DbHelper.COLUMN_RATING_ID,                //0
+            DbHelper.COLUMN_AUTH_TOKEN_ID,            //1
+            DbHelper.COLUMN_AUTH_TOKEN_USER_ID,       //2
+            DbHelper.COLUMN_AUTH_TOKEN_TOKEN,         //3
+            DbHelper.COLUMN_AUTH_TOKEN_CREATED,       //4
+    };
+
+    /*
+    private String[] allCardDeckColumns = {
+            DbHelper.COLUMN_CARD_DECK_ID,             //0
+            DbHelper.COLUMN_CARD_DECK_NAME,           //1
+            DbHelper.COLUMN_CARD_DECK_DESCRIPTION,    //2
+    };
+    */
+
+    private String[] allCategoryColumns = {
+            DbHelper.COLUMN_CATEGORY_ID,             //0
+            DbHelper.COLUMN_CATEGORY_NAME,           //1
+            DbHelper.COLUMN_CATEGORY_PARENT,         //2
+    };
+
+    private String[] allUserGroupColumns = {
+            DbHelper.COLUMN_GROUP_ID,                 //0
+            DbHelper.COLUMN_GROUP_NAME,               //1
+            DbHelper.COLUMN_GROUP_DESCRIPTION,        //2
     };
 
     private String[] allCardDeckColumns = {
-            MySQLiteHelper.COLUMN_CARD_DECK_ID,             //0
-            MySQLiteHelper.COLUMN_CARD_DECK_NAME,           //1
-            MySQLiteHelper.COLUMN_CARD_DECK_DESCRIPTION,    //2
-    };
-
-    private String[] allCategoryColumns = {
-            MySQLiteHelper.COLUMN_CATEGORY_ID,             //0
-            MySQLiteHelper.COLUMN_CATEGORY_NAME,           //1
-            MySQLiteHelper.COLUMN_CATEGORY_PARENT,         //2
+            DbHelper.COLUMN_CARD_DECK_ID,             //0
+            DbHelper.COLUMN_CARD_DECK_NAME,           //1
+            DbHelper.COLUMN_CARD_DECK_DESCRIPTION,    //2
+            DbHelper.COLUMN_CARD_DECK_VISIBLE,        //3
+            DbHelper.COLUMN_CARD_DECK_GROUP,          //4
+            DbHelper.COLUMN_CARD_DECK_PARENT,         //5
     };
 
     /**
@@ -131,7 +147,7 @@ public class DbManager {
     public DbManager(Context context) {
 
         this.context = context;
-        dbHelper = new MySQLiteHelper(context);
+        dbHelper = new DbHelper(context);
     }
 
 
@@ -169,38 +185,24 @@ public class DbManager {
 
          if (DEBUG) Log.d("save user", user.toString());
         // For updating delete user
-        softDeleteUser(user.getId());
 
         ContentValues values = new ContentValues();
-        values.put(MySQLiteHelper.COLUMN_USER_ID, user.getId());
-        values.put(MySQLiteHelper.COLUMN_USER_AVATAR, user.getAvatar());
-        values.put(MySQLiteHelper.COLUMN_USER_NAME, user.getName());
-        values.put(MySQLiteHelper.COLUMN_USER_PASSWORD, user.getPassword());
-        values.put(MySQLiteHelper.COLUMN_USER_EMAIL, user.getEmail());
-        values.put(MySQLiteHelper.COLUMN_USER_RATING, user.getRating());
-        //@TODO GroupID ??? values.put(MySQLiteHelper.COLUMN_USER_GROUP_ID, user.getGroup().getId());
+        values.put(DbHelper.COLUMN_USER_ID, user.getId());
+        values.put(DbHelper.COLUMN_USER_AVATAR, user.getAvatar());
+        values.put(DbHelper.COLUMN_USER_NAME, user.getName());
+        values.put(DbHelper.COLUMN_USER_PASSWORD, user.getPassword());
+        values.put(DbHelper.COLUMN_USER_EMAIL, user.getEmail());
+        values.put(DbHelper.COLUMN_USER_RATING, user.getRating());
+        //@TODO GroupID ??? values.put(DbHelper.COLUMN_USER_GROUP, user.getGroup().getId());
         String created = user.getCreated() != null ? user.getCreated().toString() : "";
         String lastLogin = user.getLastLogin() != null ? user.getLastLogin().toString() : "";
-        values.put(MySQLiteHelper.COLUMN_USER_CREATED, created); // @TODO check correct date
-        values.put(MySQLiteHelper.COLUMN_USER_LAST_LOGIN, lastLogin); // @TODO check correct date
-        values.put(MySQLiteHelper.COLUMN_USER_LOCAL_ACCOUNT, localAccount);
+        values.put(DbHelper.COLUMN_USER_CREATED, created); // @TODO check correct date
+        values.put(DbHelper.COLUMN_USER_LAST_LOGIN, lastLogin); // @TODO check correct date
+        values.put(DbHelper.COLUMN_USER_LOCAL_ACCOUNT, localAccount);
 
         // Executes the query
-        Long id = database.insert(MySQLiteHelper.TABLE_USER, null, values);
+        Long id = database.insertWithOnConflict(DbHelper.TABLE_USER, null, values, SQLiteDatabase.CONFLICT_REPLACE);
          if (DEBUG) Log.d("local user created", id+" "+ localAccount);
-    }
-
-    /**
-     * Deletes a user by its id
-     *
-     * @author Jonas Kraus jonas.kraus@uni-ulm.de
-     * @since 2016.08.30
-     * 
-     * @param id
-     */
-    private void softDeleteUser(long id) {
-         if (DEBUG) Log.d("delete user", id+"");
-        database.delete(MySQLiteHelper.TABLE_USER, MySQLiteHelper.COLUMN_USER_ID + "=" + id, null);
     }
 
 
@@ -214,7 +216,7 @@ public class DbManager {
      */
     public User getLocalAccountUser() {
 
-        Cursor cursor = database.query(MySQLiteHelper.TABLE_USER, allUserColumns, MySQLiteHelper.COLUMN_USER_LOCAL_ACCOUNT + " = " + 1, null, null, null, null);
+        Cursor cursor = database.query(DbHelper.TABLE_USER, allUserColumns, DbHelper.COLUMN_USER_LOCAL_ACCOUNT + " = " + 1, null, null, null, null);
         User user = null;
 
         if (cursor.moveToFirst()) {
@@ -247,7 +249,7 @@ public class DbManager {
      */
     public boolean checkIfLocalAccountUserExists() {
 
-        Cursor cursor = database.query(MySQLiteHelper.TABLE_USER, allUserColumns,  MySQLiteHelper.COLUMN_USER_LOCAL_ACCOUNT + " = " + 1, null, null, null, null);
+        Cursor cursor = database.query(DbHelper.TABLE_USER, allUserColumns,  DbHelper.COLUMN_USER_LOCAL_ACCOUNT + " = " + 1, null, null, null, null);
 
         boolean exists = cursor.getCount() > 0;
 
@@ -268,7 +270,7 @@ public class DbManager {
     public List<FlashCard> getFlashCards(long parentId) {
         List<FlashCard> flashCards = new ArrayList<FlashCard>();
 
-        Cursor cursor = database.query(MySQLiteHelper.TABLE_FLASHCARD, allFlashCardColumns, MySQLiteHelper.COLUMN_FLASHCARD_CARDDECK_ID + " = " + parentId, null, null, null, null);
+        Cursor cursor = database.query(DbHelper.TABLE_FLASHCARD, allFlashCardColumns, DbHelper.COLUMN_FLASHCARD_CARDDECK_ID + " = " + parentId, null, null, null, null);
 
         if (cursor.moveToFirst()) {
             do {
@@ -281,13 +283,14 @@ public class DbManager {
                 String created = cursor.getString(5);
                 String lastUpdated = cursor.getString(6);
                 long userId = cursor.getLong(7);
-
                 User author = getUser(userId);
                 List<Tag> tags = getTags(cardId);
                 Question question = getQuestion(questionId);
                 List<Answer> answers = getAnswers(cardId);
 
-                flashCards.add(new FlashCard(cardId, tags, rating, created, lastUpdated, question, answers, author, multipleChoice));
+                FlashCard flashCard = new FlashCard(cardId, tags, rating, created, lastUpdated, question, answers, author, multipleChoice);
+
+                flashCards.add(flashCard);
             } while (cursor.moveToNext());
         }
         cursor.close();
@@ -308,7 +311,7 @@ public class DbManager {
 
         List<Answer> answers = new ArrayList<Answer>();
 
-        Cursor cursor = database.query(MySQLiteHelper.TABLE_ANSWER, allAnswerColumns, MySQLiteHelper.COLUMN_ANSWER_PARENT_CARD_ID + " = " + parentCardId, null, null, null, null);
+        Cursor cursor = database.query(DbHelper.TABLE_ANSWER, allAnswerColumns, DbHelper.COLUMN_ANSWER_PARENT_CARD_ID + " = " + parentCardId, null, null, null, null);
 
         if (cursor.moveToFirst()) {
             do {
@@ -345,13 +348,14 @@ public class DbManager {
 
         Question question = null;
 
-        Cursor cursor = database.query(MySQLiteHelper.TABLE_QUESTION, allQuestionColumns, MySQLiteHelper.COLUMN_QUESTION_ID + " = " + questionId, null, null, null, null);
+        Cursor cursor = database.query(DbHelper.TABLE_QUESTION, allQuestionColumns, DbHelper.COLUMN_QUESTION_ID + " = " + questionId, null, null, null, null);
 
         if (cursor.moveToFirst()) {
 
             String questionText = cursor.getString(1);
             String mediaURI = cursor.getString(2);
             long authorId = cursor.getLong(3);
+
 
             User author = getUser(authorId);
 
@@ -375,7 +379,7 @@ public class DbManager {
 
         List<Tag> tags = new ArrayList<Tag>();
 
-        Cursor cursor = database.query(MySQLiteHelper.TABLE_CARD_TAG, allCardTagColumns, MySQLiteHelper.COLUMN_CARD_TAG_FLASHCARD_ID + " = " + cardId, null, null, null, null);
+        Cursor cursor = database.query(DbHelper.TABLE_CARD_TAG, allCardTagColumns, DbHelper.COLUMN_CARD_TAG_FLASHCARD_ID + " = " + cardId, null, null, null, null);
 
         if (cursor.moveToFirst()) {
             do {
@@ -402,7 +406,7 @@ public class DbManager {
 
         Tag tag = null;
 
-        Cursor cursor = database.query(MySQLiteHelper.TABLE_TAG, allCardTagColumns, MySQLiteHelper.COLUMN_TAG_ID + " = " + tagId, null, null, null, null);
+        Cursor cursor = database.query(DbHelper.TABLE_TAG, allCardTagColumns, DbHelper.COLUMN_TAG_ID + " = " + tagId, null, null, null, null);
 
         if (cursor.moveToFirst()) {
             String name = cursor.getString(1);
@@ -427,21 +431,31 @@ public class DbManager {
 
         User user = null;
 
-        Cursor cursor = database.query(MySQLiteHelper.TABLE_USER, allUserColumns, MySQLiteHelper.COLUMN_USER_ID+ " = " + userId, null, null, null, null);
+        Cursor cursor = database.query(DbHelper.TABLE_USER, allUserColumns, DbHelper.COLUMN_USER_ID + " = " + userId, null, null, null, null);
+
 
         if (cursor.moveToFirst()) {
 
-            long Id = cursor.getLong(0);
-            String name = cursor.getString(1);
-            String avatar = cursor.getString(2);
-            // no pwd saved
-            String email = cursor.getString(4);
-            int rating = cursor.getInt(5);
-            //long groupId = cursor.getLong(5); not needed here
-            String created = cursor.getString(6);
-            String lastLogin = cursor.getString(7);
+            do {
+            try {
+                long id = cursor.getLong(0);
+                String name = cursor.getString(2);
+                String avatar = cursor.getString(1);
+                // no pwd saved
+                String email = cursor.getString(4);
+                int rating = cursor.getInt(5);
 
-            user = new User(userId, avatar, name, "", email, rating, created, lastLogin);
+                //long groupId = cursor.getLong(5); not needed here
+                String created = cursor.getString(7);
+                String lastLogin = cursor.getString(8);
+
+                user = new User(id, avatar, name, email, rating, created, lastLogin);
+
+            } catch (Exception e) {
+                System.out.print(e.getMessage());
+            }
+            } while (cursor.moveToNext());
+
         }
 
         cursor.close();
@@ -486,24 +500,23 @@ public class DbManager {
         saveQuestion(card.getQuestion());
         saveAnswers(card.getAnswers(), card.getId());
 
-        softDeleteFlashCard(card.getId());
-
         ContentValues values = new ContentValues();
-        values.put(MySQLiteHelper.COLUMN_FLASHCARD_ID, card.getId());
-        values.put(MySQLiteHelper.COLUMN_FLASHCARD_CARDDECK_ID , parentId);
-        values.put(MySQLiteHelper.COLUMN_FLASHCARD_RATING , card.getRating());
-        values.put(MySQLiteHelper.COLUMN_FLASHCARD_QUESTION_ID , card.getQuestion().getId());
-        values.put(MySQLiteHelper.COLUMN_FLASHCARD_MULTIPLE_CHOICE , card.isMultipleChoice());
+        values.put(DbHelper.COLUMN_FLASHCARD_ID, card.getId());
+        values.put(DbHelper.COLUMN_FLASHCARD_CARDDECK_ID , parentId);
+        values.put(DbHelper.COLUMN_FLASHCARD_RATING , card.getRating());
+        values.put(DbHelper.COLUMN_FLASHCARD_QUESTION_ID , card.getQuestion().getId());
+        values.put(DbHelper.COLUMN_FLASHCARD_MULTIPLE_CHOICE , card.isMultipleChoice());
+        values.put(DbHelper.COLUMN_FLASHCARD_USER_ID , card.getAuthor().getId());
 
         if (card.getCreated() != null) {
-            values.put(MySQLiteHelper.COLUMN_FLASHCARD_CREATED, card.getCreated().toString());
+            values.put(DbHelper.COLUMN_FLASHCARD_CREATED, card.getCreated().toString());
         }
 
         if (card.getLastUpdated() != null) {
-            values.put(MySQLiteHelper.COLUMN_FLASHCARD_LAST_UPDATED , card.getLastUpdated().toString());
+            values.put(DbHelper.COLUMN_FLASHCARD_LAST_UPDATED , card.getLastUpdated().toString());
         }
 
-        database.insert(MySQLiteHelper.TABLE_FLASHCARD, null, values);
+        database.insertWithOnConflict(DbHelper.TABLE_FLASHCARD, null, values, SQLiteDatabase.CONFLICT_REPLACE);
     }
 
 
@@ -534,11 +547,75 @@ public class DbManager {
     public void saveCategory (Category category) {
 
         ContentValues values = new ContentValues();
-        values.put(MySQLiteHelper.COLUMN_CATEGORY_ID, category.getId());
-        values.put(MySQLiteHelper.COLUMN_CATEGORY_NAME, category.getName());
-        values.put(MySQLiteHelper.COLUMN_CATEGORY_PARENT, category.getParentId());
-        database.insertWithOnConflict(MySQLiteHelper.TABLE_CATEGORY, null, values, SQLiteDatabase.CONFLICT_REPLACE);
+        values.put(DbHelper.COLUMN_CATEGORY_ID, category.getId());
+        values.put(DbHelper.COLUMN_CATEGORY_NAME, category.getName());
+        values.put(DbHelper.COLUMN_CATEGORY_PARENT, category.getParentId());
+        database.insertWithOnConflict(DbHelper.TABLE_CATEGORY, null, values, SQLiteDatabase.CONFLICT_REPLACE);
 
+    }
+
+
+    /**
+     * saves a carddeck list
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     * @since 2016-12-02
+     *
+     * @param cardDecks
+     * @param parentId
+     */
+    public void saveCardDecks(List<CardDeck> cardDecks, long parentId) {
+
+        for (CardDeck cardDeck: cardDecks) {
+            saveCardDeck(cardDeck, parentId);
+        }
+    }
+
+
+    /**
+     * Inserts or updates a cardDeck
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     * @since 2016-12-02
+     *
+     * @param cardDeck
+     * @param parentId
+     */
+    private void saveCardDeck(CardDeck cardDeck, long parentId) {
+
+        ContentValues values = new ContentValues();
+        values.put(DbHelper.COLUMN_CARD_DECK_ID, cardDeck.getId());
+        values.put(DbHelper.COLUMN_CARD_DECK_NAME, cardDeck.getName());
+        values.put(DbHelper.COLUMN_CARD_DECK_DESCRIPTION, cardDeck.getDescription());
+        values.put(DbHelper.COLUMN_CARD_DECK_VISIBLE, cardDeck.isVisible());
+        values.put(DbHelper.COLUMN_CARD_DECK_PARENT, parentId);
+
+        if (cardDeck.getUserGroup() != null) {
+
+            values.put(DbHelper.COLUMN_CARD_DECK_GROUP, cardDeck.getUserGroup().getId());
+            saveUserGroup(cardDeck.getUserGroup());
+        }
+
+        database.insertWithOnConflict(DbHelper.TABLE_CARD_DECK, null, values, SQLiteDatabase.CONFLICT_REPLACE);
+    }
+
+
+    /**
+     * Inserts or updates a usergroup
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     * @since 2016-12-02
+     *
+     * @param userGroup
+     */
+    private void saveUserGroup(UserGroup userGroup) {
+
+        ContentValues values = new ContentValues();
+        values.put(DbHelper.COLUMN_GROUP_ID, userGroup.getId());
+        values.put(DbHelper.COLUMN_GROUP_NAME, userGroup.getName());
+        values.put(DbHelper.COLUMN_GROUP_DESCRIPTION, userGroup.getDescription());
+
+        database.insertWithOnConflict(DbHelper.TABLE_USER_GROUP, null, values, SQLiteDatabase.CONFLICT_REPLACE);
     }
 
 
@@ -555,7 +632,7 @@ public class DbManager {
 
         List<Category> categories = new ArrayList<Category>();
 
-        Cursor cursor = database.query(MySQLiteHelper.TABLE_CATEGORY, allCategoryColumns, MySQLiteHelper.COLUMN_CATEGORY_PARENT + " = " + parentId, null, null, null, null);
+        Cursor cursor = database.query(DbHelper.TABLE_CATEGORY, allCategoryColumns, DbHelper.COLUMN_CATEGORY_PARENT + " = " + parentId, null, null, null, null);
 
         if (cursor.moveToFirst()) {
             do {
@@ -567,6 +644,48 @@ public class DbManager {
             } while (cursor.moveToNext());
         }
         return categories;
+    }
+
+    public List<CardDeck> getCardDecks(Long parentId) {
+
+        List<CardDeck> cardDecks = new ArrayList<CardDeck>();
+
+        Cursor cursor = database.query(DbHelper.TABLE_CARD_DECK, allCardDeckColumns, DbHelper.COLUMN_CARD_DECK_PARENT + " = " + parentId, null, null, null, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                long cardDeckId = cursor.getLong(0);
+                String cardDeckName = cursor.getString(1);
+                String cardDeckDescription = cursor.getString(2);
+                boolean cardDeckVisible = cursor.getInt(3) > 0;
+                long cardDeckGroupId = cursor.getLong(4);
+                long cardDeckParentId = cursor.getLong(5);
+
+                UserGroup userGroup = getUserGroup(cardDeckGroupId);
+                cardDecks.add(new CardDeck(cardDeckId,cardDeckVisible, userGroup,cardDeckName, cardDeckDescription));
+
+            } while (cursor.moveToNext());
+        }
+        return cardDecks;
+    }
+
+    private UserGroup getUserGroup(long cardDeckGroupId) {
+
+        UserGroup userGroup = null;
+
+        Cursor cursor = database.query(DbHelper.TABLE_USER_GROUP, allUserGroupColumns, DbHelper.COLUMN_GROUP_ID + " = " + cardDeckGroupId, null, null, null, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                long userGroupId = cursor.getLong(0);
+                String userGroupName = cursor.getString(1);
+                String userGroupDecscription = cursor.getString(2);
+                userGroup = new UserGroup(userGroupId, userGroupName, userGroupDecscription);
+            } while (cursor.moveToNext());
+        }
+
+        return userGroup == null ? new UserGroup() : userGroup;
+
     }
 
 
@@ -597,43 +716,29 @@ public class DbManager {
      */
     public void saveAnswer(Answer answer, long cardId) {
 
-        softDeleteAnswer(answer.getId());
-
         saveUser(answer.getAuthor(), false);
 
         ContentValues values = new ContentValues();
-        values.put(MySQLiteHelper.COLUMN_ANSWER_ID, answer.getId());
-        values.put(MySQLiteHelper.COLUMN_ANSWER_TEXT, answer.getAnswerText());
-        values.put(MySQLiteHelper.COLUMN_ANSWER_HINT, answer.getHintText());
-        values.put(MySQLiteHelper.COLUMN_ANSWER_MEDIA_URI, answer.getUri() != null ? answer.getUri().toString() : null);
-        values.put(MySQLiteHelper.COLUMN_ANSWER_USER_ID, answer.getAuthor().getId());
-        values.put(MySQLiteHelper.COLUMN_ANSWER_PARENT_CARD_ID, cardId);
-        values.put(MySQLiteHelper.COLUMN_ANSWER_RATING, answer.getRating());
-        values.put(MySQLiteHelper.COLUMN_ANSWER_CORRECT, answer.isCorrect());
+        values.put(DbHelper.COLUMN_ANSWER_ID, answer.getId());
+        values.put(DbHelper.COLUMN_ANSWER_TEXT, answer.getAnswerText());
+        values.put(DbHelper.COLUMN_ANSWER_HINT, answer.getHintText());
+        values.put(DbHelper.COLUMN_ANSWER_MEDIA_URI, answer.getUri() != null ? answer.getUri().toString() : null);
+        values.put(DbHelper.COLUMN_ANSWER_USER_ID, answer.getAuthor().getId());
+        values.put(DbHelper.COLUMN_ANSWER_PARENT_CARD_ID, cardId);
+        values.put(DbHelper.COLUMN_ANSWER_RATING, answer.getRating());
+        values.put(DbHelper.COLUMN_ANSWER_CORRECT, answer.isCorrect());
 
         if (answer.getCreated() != null) {
-            values.put(MySQLiteHelper.COLUMN_ANSWER_CREATED, answer.getCreated().toString());
+            values.put(DbHelper.COLUMN_ANSWER_CREATED, answer.getCreated().toString());
         }
 
         if (answer.getLastUpdated() != null) {
-            values.put(MySQLiteHelper.COLUMN_ANSWER_LAST_UPDATED, answer.getLastUpdated().toString());
+            values.put(DbHelper.COLUMN_ANSWER_LAST_UPDATED, answer.getLastUpdated().toString());
         }
 
-        database.insert(MySQLiteHelper.TABLE_ANSWER, null, values);
+        database.insertWithOnConflict(DbHelper.TABLE_ANSWER, null, values, SQLiteDatabase.CONFLICT_REPLACE);
     }
 
-    /**
-     * Deletes an answer, but not its dependencies
-     * use this for updates
-     *
-     * @author Jonas Kraus jonas.kraus@uni-ulm.de
-     * @since 2016.08.30
-     *
-     * @param answerId
-     */
-    private void softDeleteAnswer(long answerId) {
-        database.delete(MySQLiteHelper.TABLE_ANSWER, MySQLiteHelper.COLUMN_ANSWER_ID + "=" + answerId, null);
-    }
 
     /**
      * Saves a question to the db
@@ -645,44 +750,15 @@ public class DbManager {
      */
     private void saveQuestion(Question question) {
 
-        softDeleteQuestion(question.getId());
-
         ContentValues values = new ContentValues();
-        values.put(MySQLiteHelper.COLUMN_QUESTION_ID, question.getId());
-        values.put(MySQLiteHelper.COLUMN_QUESTION_TEXT, question.getQuestionText());
-        values.put(MySQLiteHelper.COLUMN_QUESTION_MEDIA_URI, question.getUri() != null ? question.getUri().toString() : null);
-        values.put(MySQLiteHelper.COLUMN_QUESTION_AUTHOR_ID, question.getAuthor().getId());
+        values.put(DbHelper.COLUMN_QUESTION_ID, question.getId());
+        values.put(DbHelper.COLUMN_QUESTION_TEXT, question.getQuestionText());
+        values.put(DbHelper.COLUMN_QUESTION_MEDIA_URI, question.getUri() != null ? question.getUri().toString() : null);
+        values.put(DbHelper.COLUMN_QUESTION_AUTHOR_ID, question.getAuthor().getId());
 
-        database.insert(MySQLiteHelper.TABLE_QUESTION, null, values);
+        database.insertWithOnConflict(DbHelper.TABLE_QUESTION, null, values, SQLiteDatabase.CONFLICT_REPLACE);
     }
 
-    /**
-     * Deletes a question, but not its dependencies
-     * use this for updates
-     *
-     * @author Jonas Kraus jonas.kraus@uni-ulm.de
-     * @since 2016.08.30
-     *
-     * @param questionId
-     */
-    private void softDeleteQuestion(long questionId) {
-        database.delete(MySQLiteHelper.TABLE_QUESTION, MySQLiteHelper.COLUMN_QUESTION_ID + "=" + questionId, null);
-    }
-
-
-    /**
-     * Deletes a flashcard by its id
-     * use this for updates
-     * no dependencies are deleted
-     *
-     * @author Jonas Kraus jonas.kraus@uni-ulm.de
-     * @since 2016.08.30
-     *
-     * @param cardId
-     */
-    private void softDeleteFlashCard(long cardId) {
-        database.delete(MySQLiteHelper.TABLE_FLASHCARD, MySQLiteHelper.COLUMN_FLASHCARD_ID + "=" + cardId, null);
-    }
 
     /**
      * Saves tags
@@ -708,14 +784,12 @@ public class DbManager {
      */
     public void saveTag(Tag tag, long cardId) {
 
-        softDeleteTag(tag);
-
         ContentValues values = new ContentValues();
-        values.put(MySQLiteHelper.COLUMN_TAG_ID, tag.getId());
-        values.put(MySQLiteHelper.COLUMN_TAG_NAME, tag.getName());
+        values.put(DbHelper.COLUMN_TAG_ID, tag.getId());
+        values.put(DbHelper.COLUMN_TAG_NAME, tag.getName());
 
         // Executes the query
-        database.insert(MySQLiteHelper.TABLE_TAG, null, values);
+        database.insertWithOnConflict(DbHelper.TABLE_TAG, null, values, SQLiteDatabase.CONFLICT_REPLACE);
 
         saveCardTag(tag, cardId);
 
@@ -731,22 +805,10 @@ public class DbManager {
      * @param tag
      */
     private void deleteTag(Tag tag) {
-        database.delete(MySQLiteHelper.TABLE_CARD_TAG, MySQLiteHelper.COLUMN_CARD_TAG_TAG_ID + "=" + tag.getId(), null);
-        database.delete(MySQLiteHelper.TABLE_TAG, MySQLiteHelper.COLUMN_TAG_ID + "=" + tag.getId(), null);
+        database.delete(DbHelper.TABLE_CARD_TAG, DbHelper.COLUMN_CARD_TAG_TAG_ID + "=" + tag.getId(), null);
+        database.delete(DbHelper.TABLE_TAG, DbHelper.COLUMN_TAG_ID + "=" + tag.getId(), null);
     }
 
-    /**
-     * deletes a tag but not the link between Card and Tag
-     * use this for updating a tag
-     *
-     * @author Jonas Kraus jonas.kraus@uni-ulm.de
-     * @since 2016.08.30
-     *
-     * @param tag
-     */
-    private void softDeleteTag(Tag tag) {
-        database.delete(MySQLiteHelper.TABLE_CARD_TAG, MySQLiteHelper.COLUMN_CARD_TAG_TAG_ID + "=" + tag.getId(), null);
-    }
 
     /**
      * Saves or updates a tag
@@ -762,11 +824,11 @@ public class DbManager {
         deleteCardTag(tag.getId(), cardId);
 
         ContentValues values = new ContentValues();
-        values.put(MySQLiteHelper.COLUMN_CARD_TAG_TAG_ID, tag.getId());
-        values.put(MySQLiteHelper.COLUMN_CARD_TAG_FLASHCARD_ID, cardId);
+        values.put(DbHelper.COLUMN_CARD_TAG_TAG_ID, tag.getId());
+        values.put(DbHelper.COLUMN_CARD_TAG_FLASHCARD_ID, cardId);
 
         // Executes the query
-        database.insert(MySQLiteHelper.TABLE_CARD_TAG, null, values);
+        database.insert(DbHelper.TABLE_CARD_TAG, null, values);
     }
 
     /**
@@ -779,9 +841,8 @@ public class DbManager {
      * @param cardId
      */
     private void deleteCardTag(long tagId, long cardId) {
-        database.delete(MySQLiteHelper.TABLE_CARD_TAG, MySQLiteHelper.COLUMN_CARD_TAG_TAG_ID + "=" + tagId
-                + " AND " + MySQLiteHelper.COLUMN_CARD_TAG_FLASHCARD_ID + "=" + cardId, null);
+        database.delete(DbHelper.TABLE_CARD_TAG, DbHelper.COLUMN_CARD_TAG_TAG_ID + "=" + tagId
+                + " AND " + DbHelper.COLUMN_CARD_TAG_FLASHCARD_ID + "=" + cardId, null);
     }
-
 
 }

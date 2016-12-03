@@ -305,11 +305,11 @@ public class JsonParser {
                     rating = reader.nextInt();
                 } else if (stringName.equals(JsonKeys.DATE_CREATED)) {
                     created = stringToDate(reader.nextString());
-                    Log.d("after parse construct", (lastUpdated==null) + "");
+
                 } else if (stringName.equals(JsonKeys.DATE_UPDATED)) {
 
                     lastUpdated = stringToDate(reader.nextString());
-                    Log.d("after parse construct", (lastUpdated==null) + "");
+
                 } else if (stringName.equals(JsonKeys.FLASHCARD_QUESTION)) {
                     question = readQuestion(reader);
                 } else if (stringName.equals(JsonKeys.FLASHCARD_ANSWERS)) {
@@ -341,7 +341,7 @@ public class JsonParser {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        Log.d("bevor construct", (lastUpdated==null) + "");
+
         return new FlashCard(id, tags, rating, created, lastUpdated, question, answers, author, multipleChoice);
     }
 
@@ -711,8 +711,6 @@ public class JsonParser {
         DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss z", Locale.ENGLISH);
         try {
             Date date = formatter.parse(dateString);
-            Log.d("date parse to string", date.toString());
-            Log.d("date parse check null", ""+(date==null));
             return date;
         } catch (ParseException e) {
             e.printStackTrace();

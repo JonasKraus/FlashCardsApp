@@ -69,8 +69,6 @@ public class AsyncGetRemoteCategory extends AsyncTask<Long, Long, List<Category>
         }
 
         Log.d("back call to ", urlString);
-        Log.d("call parent ", parentId+"");
-        Log.d("call level ", categoryLevel+"");
 
         HttpURLConnection urlConnection = null;
 

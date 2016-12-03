@@ -1,4 +1,4 @@
-package de.uulm.einhoernchen.flashcardsapp.Fragment.dummy;
+package de.uulm.einhoernchen.flashcardsapp.Fragment.content;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -16,14 +16,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.uulm.einhoernchen.flashcardsapp.AsyncTasks.AsyncGetLocalCategory;
-import de.uulm.einhoernchen.flashcardsapp.AsyncTasks.AsyncGetLocalFlashCard;
 import de.uulm.einhoernchen.flashcardsapp.AsyncTasks.AsyncGetRemoteCategory;
 import de.uulm.einhoernchen.flashcardsapp.AsyncTasks.AsyncSaveLocalCategory;
-import de.uulm.einhoernchen.flashcardsapp.AsyncTasks.AsyncSaveLocalFlashCard;
 import de.uulm.einhoernchen.flashcardsapp.Database.DbManager;
-import de.uulm.einhoernchen.flashcardsapp.Fragment.CategoryRecyclerViewAdapter;
+import de.uulm.einhoernchen.flashcardsapp.Fragment.RecyclerViewAdapterCategory;
 import de.uulm.einhoernchen.flashcardsapp.Models.Category;
-import de.uulm.einhoernchen.flashcardsapp.Models.FlashCard;
 import de.uulm.einhoernchen.flashcardsapp.R;
 
 /**
@@ -32,7 +29,7 @@ import de.uulm.einhoernchen.flashcardsapp.R;
  * <p/>
  * TODO: Replace all uses of this class before publishing your app.
  */
-public class DummyContentCategory {
+public class ContentCategory {
 
     private static List<Category> categories = new ArrayList<>();
 
@@ -49,21 +46,23 @@ public class DummyContentCategory {
                 asyncSaveLocalCategory.setCategories(categories);
                 asyncSaveLocalCategory.execute();
 
-                DummyContentCategory.categories = categories;
-                DummyContentCategory.ItemFragmentCategory fragment = new DummyContentCategory.ItemFragmentCategory();
+                ContentCategory.categories = categories;
+                ContentCategory.ItemFragmentCategory fragment = new ContentCategory.ItemFragmentCategory();
 
                 Bundle args = new Bundle();
-                args.putLong(DummyContentCarddeck.ItemFragmentCarddeck.ARG_PARENT_ID, parentId);
+                args.putLong(ContentCarddeck.ItemFragmentCarddeck.ARG_PARENT_ID, parentId);
                 fragment.setArguments(args);
 
                 android.support.v4.app.FragmentTransaction fragmentTransaction =
                         fragmentManager.beginTransaction();
 
+                /*
                 if (backPressed) {
                     fragmentTransaction.setCustomAnimations(R.anim.enter_from_left, R.anim.exit_to_right);
                 } else {
                     fragmentTransaction.setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left);
                 }
+                */
 
                 fragmentTransaction.replace(R.id.fragment_container_main, fragment);
                 fragmentTransaction.commit();
@@ -84,12 +83,12 @@ public class DummyContentCategory {
             @Override
             public void processFinish(List<Category> categories) {
 
-                DummyContentCategory.categories = categories;
+                ContentCategory.categories = categories;
 
-                DummyContentCategory.ItemFragmentCategory fragment = new DummyContentCategory.ItemFragmentCategory();
+                ContentCategory.ItemFragmentCategory fragment = new ContentCategory.ItemFragmentCategory();
 
                 Bundle args = new Bundle();
-                args.putLong(DummyContentCategory.ItemFragmentCategory.ARG_PARENT_ID, parentId);
+                args.putLong(ContentCategory.ItemFragmentCategory.ARG_PARENT_ID, parentId);
                 fragment.setArguments(args);
 
                 android.support.v4.app.FragmentTransaction fragmentTransaction =
@@ -122,7 +121,7 @@ public class DummyContentCategory {
     /**
      * A fragment representing a list of Category Items.
      * <p/>
-     * Activities containing this fragment MUST implement the {@link DummyContentCategory.OnCategoryListFragmentInteractionListener}
+     * Activities containing this fragment MUST implement the {@link ContentCategory.OnCategoryListFragmentInteractionListener}
      * interface.
      */
     public static class ItemFragmentCategory extends Fragment {
@@ -130,7 +129,7 @@ public class DummyContentCategory {
         private static final String ARG_COLUMN_COUNT = "column-count";
         public static final String ARG_PARENT_ID = "parentId";
         private int mColumnCount = 1;
-        private DummyContentCategory.OnCategoryListFragmentInteractionListener mListener;
+        private ContentCategory.OnCategoryListFragmentInteractionListener mListener;
 
         /**
          * Mandatory empty constructor for the fragment manager to instantiate the
@@ -142,9 +141,9 @@ public class DummyContentCategory {
 
         // TODO: Customize parameter initialization
         @SuppressWarnings("unused")
-        public static DummyContentCategory.ItemFragmentCategory newInstance(int columnCount) {
+        public static ContentCategory.ItemFragmentCategory newInstance(int columnCount) {
 
-            DummyContentCategory.ItemFragmentCategory fragment = new DummyContentCategory.ItemFragmentCategory();
+            ContentCategory.ItemFragmentCategory fragment = new ContentCategory.ItemFragmentCategory();
 
             Bundle args = new Bundle();
             args.putInt(ARG_COLUMN_COUNT, columnCount);
@@ -177,7 +176,7 @@ public class DummyContentCategory {
                     recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
                 }
 
-                recyclerView.setAdapter(new CategoryRecyclerViewAdapter(categories, mListener));
+                recyclerView.setAdapter(new RecyclerViewAdapterCategory(categories, mListener));
             }
             return view;
         }
@@ -185,8 +184,8 @@ public class DummyContentCategory {
         @Override
         public void onAttach(Context context) {
             super.onAttach(context);
-            if (context instanceof DummyContentCategory.OnCategoryListFragmentInteractionListener) {
-                mListener = (DummyContentCategory.OnCategoryListFragmentInteractionListener) context;
+            if (context instanceof ContentCategory.OnCategoryListFragmentInteractionListener) {
+                mListener = (ContentCategory.OnCategoryListFragmentInteractionListener) context;
             } else {
                 throw new RuntimeException(context.toString()
                         + " must implement OnListFragmentInteractionListener");

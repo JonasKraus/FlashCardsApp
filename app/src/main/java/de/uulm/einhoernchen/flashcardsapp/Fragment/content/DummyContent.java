@@ -1,16 +1,9 @@
-package de.uulm.einhoernchen.flashcardsapp.Fragment.dummy;
+package de.uulm.einhoernchen.flashcardsapp.Fragment.content;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import de.uulm.einhoernchen.flashcardsapp.Models.Answer;
-import de.uulm.einhoernchen.flashcardsapp.Models.FlashCard;
-import de.uulm.einhoernchen.flashcardsapp.Models.Question;
-import de.uulm.einhoernchen.flashcardsapp.Models.Tag;
-import de.uulm.einhoernchen.flashcardsapp.Models.User;
 
 /**
  * Helper class for providing sample content for user interfaces created by

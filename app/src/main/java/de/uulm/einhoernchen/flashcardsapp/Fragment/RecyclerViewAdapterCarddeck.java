@@ -13,22 +13,22 @@ import com.amulyakhare.textdrawable.util.ColorGenerator;
 
 import java.util.List;
 
-import de.uulm.einhoernchen.flashcardsapp.Fragment.dummy.DummyContent.DummyItem;
-import de.uulm.einhoernchen.flashcardsapp.Fragment.dummy.DummyContentCarddeck;
-import de.uulm.einhoernchen.flashcardsapp.Fragment.dummy.DummyContentCarddeck.OnCarddeckListFragmentInteractionListener;
+import de.uulm.einhoernchen.flashcardsapp.Fragment.content.DummyContent.DummyItem;
+import de.uulm.einhoernchen.flashcardsapp.Fragment.content.ContentCarddeck;
+import de.uulm.einhoernchen.flashcardsapp.Fragment.content.ContentCarddeck.OnCarddeckListFragmentInteractionListener;
 import de.uulm.einhoernchen.flashcardsapp.Models.CardDeck;
 import de.uulm.einhoernchen.flashcardsapp.R;
 
 /**
  * {@link RecyclerView.Adapter} that can display a {@link DummyItem} and makes a call to the
- * specified {@link DummyContentCarddeck.OnCarddeckListFragmentInteractionListener}.
+ * specified {@link ContentCarddeck.OnCarddeckListFragmentInteractionListener}.
  */
-public class CarddeckRecyclerViewAdapter extends RecyclerView.Adapter<CarddeckRecyclerViewAdapter.ViewHolder> {
+public class RecyclerViewAdapterCarddeck extends RecyclerView.Adapter<RecyclerViewAdapterCarddeck.ViewHolder> {
 
     private final List<CardDeck> cardDecks;
     private final OnCarddeckListFragmentInteractionListener mListener;
 
-    public CarddeckRecyclerViewAdapter(List<CardDeck> items, OnCarddeckListFragmentInteractionListener listener) {
+    public RecyclerViewAdapterCarddeck(List<CardDeck> items, OnCarddeckListFragmentInteractionListener listener) {
         cardDecks = items;
         mListener = listener;
     }

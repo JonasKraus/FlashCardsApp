@@ -159,7 +159,6 @@ public class FlashCard {
         this.answers = answers;
         this.author = author;
         this.multipleChoice = multipleChoice;
-        Log.d("construct", (lastUpdated==null) + "");
 
     }
 
