@@ -512,7 +512,6 @@ public class DbManager {
 
         if (card.getCreated() != null) {
             values.put(DbHelper.COLUMN_FLASHCARD_CREATED, card.getCreated().getTime());
-            Log.d("created", card.getCreated().toString());
         }
 
         if (card.getLastUpdatedString() != null) {

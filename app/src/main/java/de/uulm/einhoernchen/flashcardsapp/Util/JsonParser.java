@@ -722,5 +722,62 @@ public class JsonParser {
     }
 
 
+    /**
+     * read an heartbeat from the server
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     * @since 2016-12-03
+     *
+     * @param inputStream
+     * @return
+     */
+    public static Boolean readHeartbeat(InputStream inputStream)  throws IOException  {
+
+        JsonReader reader = new JsonReader(new InputStreamReader(inputStream, "UTF-8"));
+        try {
+            return readHeartbeat(reader);
+        } finally {
+            reader.close();
+        }
+    }
+
+
+    /**
+     * read an heartbeat from the server
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     * @since 2016-12-03
+     *
+     * @param reader
+     * @return
+     */
+    private static Boolean readHeartbeat(JsonReader reader){
+        if (DEBUG) Log.d("parser Method", "readHeartbeat");
+
+        boolean isAlive = false;
+        String date = "";
+
+        try {
+            reader.beginObject();
+            while (reader.hasNext()) {
+
+                String stringName = reader.nextName();
+
+                if (stringName.equals(JsonKeys.CURRENT_DATE)) {
+                    date = reader.nextString();
+                    isAlive = true;
+
+                } else {
+                    reader.skipValue();
+                }
+
+            }
+            reader.endObject();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return isAlive;
+    }
 
 }

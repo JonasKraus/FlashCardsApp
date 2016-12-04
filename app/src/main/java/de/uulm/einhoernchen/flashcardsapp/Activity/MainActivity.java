@@ -33,6 +33,9 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.uulm.einhoernchen.flashcardsapp.AsyncTasks.AsyncGetRemoteCarddeck;
+import de.uulm.einhoernchen.flashcardsapp.AsyncTasks.AsyncGetRemoteHeartbeat;
+import de.uulm.einhoernchen.flashcardsapp.AsyncTasks.AsyncSaveLocalCardDeck;
 import de.uulm.einhoernchen.flashcardsapp.Database.DbManager;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.FragmentFlashCard;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.FragmentHome;
@@ -65,6 +68,7 @@ public class MainActivity extends AppCompatActivity
     private Constants catalogueState = Constants.CATEGORY_LIST;
     private List<String> breadCrumbs;
     private ProgressBar progressBar;
+    private boolean isAlive;
     // the Flashcard that was loaded last in details fragment
     private FlashCard currentFlashCard;
 
@@ -323,6 +327,7 @@ public class MainActivity extends AppCompatActivity
 
         } else if (id == R.id.nav_catalogue) {
 
+            isServerAlive ();
             moveToLastCatalogueState();
 
         } else if (id == R.id.nav_profile) {
@@ -521,9 +526,10 @@ public class MainActivity extends AppCompatActivity
 
     private void setFlashcardList(boolean backPressed) {
 
+        isServerAlive();
         new ContentCard().collectItemsFromDb(this.childrenId, getSupportFragmentManager(), progressBar, backPressed, db);
 
-        if (isNetworkAvailable()) {
+        if (isNetworkAvailable() && isAlive) {
             new ContentCard().collectItemsFromServer(this.childrenId, getSupportFragmentManager(), progressBar, backPressed, db);
         }
 
@@ -532,9 +538,10 @@ public class MainActivity extends AppCompatActivity
 
     private void setCarddeckList(boolean backPressed) {
 
+        isServerAlive();
         new ContentCarddeck().collectItemsFromDb(this.childrenId, getSupportFragmentManager(), progressBar, backPressed, db);
 
-        if (isNetworkAvailable()) {
+        if (isNetworkAvailable() && isAlive) {
             new ContentCarddeck().collectItemsFromServer(this.childrenId, getSupportFragmentManager(), progressBar, backPressed, db);
         }
 
@@ -543,9 +550,10 @@ public class MainActivity extends AppCompatActivity
 
     private void setCategoryList(boolean backPressed) {
 
+        isServerAlive();
         new ContentCategory().collectItemsFromDb(this.categoryLevel, this.childrenId, getSupportFragmentManager(), progressBar, backPressed, db);
 
-        if (isNetworkAvailable()) {
+        if (isNetworkAvailable() && isAlive) {
             new ContentCategory().collectItemsFromServer(this.categoryLevel, this.childrenId, getSupportFragmentManager(), progressBar, backPressed, db);
 
         }
@@ -575,4 +583,30 @@ public class MainActivity extends AppCompatActivity
         NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
+
+
+    /**
+     * Call this before any async task that requests the server
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     * @since 2016-12-03
+     */
+    private void isServerAlive () {
+        AsyncGetRemoteHeartbeat asyncGetRemoteHeartbeat = new AsyncGetRemoteHeartbeat(new AsyncGetRemoteHeartbeat.AsyncResponseHeartbeat() {
+
+
+            @Override
+            public void processFinish(Boolean isAlive) {
+
+                setAlive(isAlive);
+            }
+        });
+
+        asyncGetRemoteHeartbeat.execute();
+    }
+
+    private void setAlive (boolean isAlive) {
+        this.isAlive = isAlive;
+    }
+
 }

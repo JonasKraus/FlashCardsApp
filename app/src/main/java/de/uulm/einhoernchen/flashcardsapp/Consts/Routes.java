@@ -17,6 +17,8 @@ public class Routes {
     public static final String BASE_PROTOCOL = "http:" + SLASH + SLASH;
     public static final String BASE_PORT = ":9000";
 
+    public static final String HEARTBEAT = "heartbeat";
+
     public static final String BASE_URL_LOCAL_HOST = BASE_PROTOCOL + "localhost" + BASE_PORT;
     public static final String BASE_URL_LOCAL_IP_HOME = BASE_PROTOCOL + "192.168.56.1" + BASE_PORT;
     public static final String BASE_URL_LOCAL_IP_WELCOME = BASE_PROTOCOL + "134.60.132.174" + BASE_PORT;

@@ -103,4 +103,7 @@ public class JsonKeys {
     public static final String CATEGORY_NAME = "categoryName";
     public static final String CATEGORY_CARDDECKS = "cardDecks";
     public static final String CATEGORY_PARENT = "parent";
+
+    //HEARTBEAT
+    public static final String CURRENT_DATE = "currentDate";
 }
