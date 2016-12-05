@@ -962,6 +962,13 @@ public class DbManager {
     public void deselectCarddeck(long carddeckID) {
         database.delete(DbHelper.TABLE_SELECTION, DbHelper.COLUMN_SELECTION_CARD_DECK_ID + "=" + carddeckID
                 + " AND " + DbHelper.COLUMN_SELECTION_USER_ID + "=" + loggedInUser.getId(), null);
+
+        List<FlashCard> flashCards = getFlashCards(carddeckID);
+
+        for (FlashCard card: flashCards) {
+
+            deselectCard(card.getId(), carddeckID);
+        }
     }
 
     /**
@@ -972,9 +979,12 @@ public class DbManager {
      *
      * @param cardID
      */
-    public void deselectCard(long cardID) {
+    public void deselectCard(long cardID, long parentID) {
+
         database.delete(DbHelper.TABLE_SELECTION, DbHelper.COLUMN_SELECTION_CARD_ID + "=" + cardID
                 + " AND " + DbHelper.COLUMN_SELECTION_USER_ID + "=" + loggedInUser.getId(), null);
+
+        //deselectCarddeck(parentID);
     }
 
 
@@ -995,6 +1005,13 @@ public class DbManager {
 
         // Executes the query
         database.insert(DbHelper.TABLE_SELECTION, null, values);
+
+        List<FlashCard> flashCards = getFlashCards(carddeckID);
+
+        for (FlashCard card: flashCards) {
+
+            selectCard(card.getId(), carddeckID);
+        }
     }
 
 
@@ -1006,7 +1023,7 @@ public class DbManager {
      *
      * @param cardID
      */
-    public void selectCard(long cardID) {
+    public void selectCard(long cardID, long parentID) {
 
         ContentValues values = new ContentValues();
         values.put(DbHelper.COLUMN_SELECTION_CARD_ID, cardID);
@@ -1015,6 +1032,8 @@ public class DbManager {
 
         // Executes the query
         database.insert(DbHelper.TABLE_SELECTION, null, values);
+
+        //selectCarddeck(parentID);
     }
 
 
@@ -1047,5 +1066,33 @@ public class DbManager {
 
         return selectionDate;
 
+    }
+
+    public void selectCard(long cardID) {
+        selectCard(cardID, getCardParentID(cardID));
+    }
+
+    public void deselectCard(long cardID) {
+        deselectCard(cardID, getCardParentID(cardID));
+    }
+
+    private long getCardParentID(long cardID) {
+
+        Cursor cursor = database.query(DbHelper.TABLE_FLASHCARD, allFlashCardColumns, DbHelper.COLUMN_FLASHCARD_ID + " = " + cardID
+                , null, null, null, null);
+
+        long parentId = -1;
+
+        if (cursor.moveToFirst()) {
+            do {
+
+                parentId = cursor.getLong(cursor.getColumnIndex(DbHelper.COLUMN_FLASHCARD_CARDDECK_ID));
+            } while (cursor.moveToNext());
+
+        }
+
+        cursor.close();
+
+        return parentId;
     }
 }
