@@ -1,4 +1,4 @@
-package de.uulm.einhoernchen.flashcardsapp.Fragment.dummy;
+package de.uulm.einhoernchen.flashcardsapp.Fragment.Dataset;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -7,26 +7,20 @@ import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.Random;
 
-import de.uulm.einhoernchen.flashcardsapp.AsyncTasks.AsyncGetFlashCard;
-import de.uulm.einhoernchen.flashcardsapp.AsyncTasks.AsyncGetFlashCardLocal;
-import de.uulm.einhoernchen.flashcardsapp.AsyncTasks.AsyncSaveFlashCardLocal;
+import de.uulm.einhoernchen.flashcardsapp.AsyncTasks.AsyncGetRemoteFlashCard;
+import de.uulm.einhoernchen.flashcardsapp.AsyncTasks.AsyncGetLocalFlashCard;
+import de.uulm.einhoernchen.flashcardsapp.AsyncTasks.AsyncSaveLocalFlashCard;
 import de.uulm.einhoernchen.flashcardsapp.Database.DbManager;
-import de.uulm.einhoernchen.flashcardsapp.Fragment.FlashcardRecyclerViewAdapter;
-import de.uulm.einhoernchen.flashcardsapp.Models.Answer;
+import de.uulm.einhoernchen.flashcardsapp.Fragment.Adapter.RecyclerViewAdapterFlashcard;
 import de.uulm.einhoernchen.flashcardsapp.Models.FlashCard;
-import de.uulm.einhoernchen.flashcardsapp.Models.Question;
-import de.uulm.einhoernchen.flashcardsapp.Models.User;
 import de.uulm.einhoernchen.flashcardsapp.R;
 
 /**
@@ -34,11 +28,14 @@ import de.uulm.einhoernchen.flashcardsapp.R;
  * Android template wizards.
  *
  */
-public class DummyContentCard {
+public class ContentCard {
 
     private static List<FlashCard> flashCards = new ArrayList<FlashCard>();
 
-    public static DummyContentCard.ItemFragmentFlashcard fragment;
+    public static ContentCard.ItemFragmentFlashcard fragment;
+
+    private static boolean isUpToDate = false;
+
 
     /**
      * @author Jonas Kraus jonas.kraus@uni-ulm.de
@@ -50,26 +47,24 @@ public class DummyContentCard {
      */
     public static void collectItemsFromServer(final long parentId, final FragmentManager fragmentManager, ProgressBar progressBarMain, final boolean backPressed, final DbManager db) {
 
-        AsyncGetFlashCard asyncGetFlashCard = new AsyncGetFlashCard(parentId, new AsyncGetFlashCard.AsyncResponseFlashCard() {
+        AsyncGetRemoteFlashCard asyncGetFlashCard = new AsyncGetRemoteFlashCard(parentId, new AsyncGetRemoteFlashCard.AsyncResponseFlashCard() {
 
             @Override
             public void processFinish(List<FlashCard> flashCards) {
 
                 // real dummy content generation
                 if (flashCards == null || flashCards.size() == 0) {
-                    flashCards = new ArrayList<>();
-                    for (int i = 0; i < 100; i++) {
-                        flashCards.add(createDummyFlashCard(i));
-                    }
+
+                    //Log.d("ContentCard", "no flashcards");
                 }
 
-                AsyncSaveFlashCardLocal asyncSaveFlashCardLocal = new AsyncSaveFlashCardLocal(parentId);
+                AsyncSaveLocalFlashCard asyncSaveFlashCardLocal = new AsyncSaveLocalFlashCard(parentId);
                 asyncSaveFlashCardLocal.setDbManager(db);
                 asyncSaveFlashCardLocal.setFlashCards(flashCards);
                 asyncSaveFlashCardLocal.execute();
 
-                DummyContentCard.flashCards = flashCards;
-                DummyContentCard.ItemFragmentFlashcard fragment = new DummyContentCard.ItemFragmentFlashcard();
+                ContentCard.flashCards = flashCards;
+                ContentCard.ItemFragmentFlashcard fragment = new ContentCard.ItemFragmentFlashcard();
 
                 Bundle args = new Bundle();
                 args.putLong(ItemFragmentFlashcard.ARG_PARENT_ID, parentId);
@@ -88,10 +83,12 @@ public class DummyContentCard {
                 }
                 */
 
-                fragmentTransaction.replace(R.id.fragment_container_home, fragment);
+                isUpToDate = true;
+
+                fragmentTransaction.replace(R.id.fragment_container_main, fragment);
                 fragmentTransaction.commit();
 
-                Log.d("async load", "online");
+                //Log.d("async load", "online");
             }
 
         });
@@ -101,33 +98,30 @@ public class DummyContentCard {
 
     }
 
-    private static FlashCard createDummyFlashCard(int position) {
-        Random rand = new Random();
-        User author = new User((long)position,"avatar","User "+position,"pwd","user"+position+"@flashcards.de",rand.nextInt(100), new Date().toString(), new Date().toString());
-        Question question = new Question("Item Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam ", author);
-        Answer answer = new Answer("consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam ","hint ....."+position, author);
-        List<String> tags = new ArrayList<>();
-        for (int i = 0; i <= position; i++) {
-            tags.add("tag"+i);
-        }
-        List<Answer>answers = new ArrayList<>();
-        answers.add(answer);
-        FlashCard flashCard = new FlashCard(new Date(), question, answers, author,false);
 
-        return flashCard;
-    }
-
+    /**
+     * Get data fro local sqlite db
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     * @since 2016-12-02
+     *
+     * @param parentId
+     * @param supportFragmentManager
+     * @param progressBar
+     * @param backPressed
+     * @param db
+     */
     public void collectItemsFromDb(final long parentId, final FragmentManager supportFragmentManager, final ProgressBar progressBar, final boolean backPressed, final DbManager db) {
 
-        AsyncGetFlashCardLocal asyncGetFlashCardLocal = new AsyncGetFlashCardLocal(parentId, new AsyncGetFlashCardLocal.AsyncResponseFlashCardLocal() {
+        AsyncGetLocalFlashCard asyncGetFlashCardLocal = new AsyncGetLocalFlashCard(parentId, new AsyncGetLocalFlashCard.AsyncResponseFlashCardLocal() {
 
             @Override
             public void processFinish(List<FlashCard> flashCards) {
 
-                DummyContentCard.flashCards = flashCards;
+                ContentCard.flashCards = flashCards;
 
-                DummyContentCard.flashCards = flashCards;
-                DummyContentCard.ItemFragmentFlashcard fragment = new DummyContentCard.ItemFragmentFlashcard();
+                ContentCard.flashCards = flashCards;
+                ContentCard.ItemFragmentFlashcard fragment = new ContentCard.ItemFragmentFlashcard();
 
                 Bundle args = new Bundle();
                 args.putLong(ItemFragmentFlashcard.ARG_PARENT_ID, parentId);
@@ -146,10 +140,10 @@ public class DummyContentCard {
                 }
                 */
 
-                fragmentTransaction.replace(R.id.fragment_container_home, fragment);
-                fragmentTransaction.commit();
+                isUpToDate = false;
 
-                collectItemsFromServer(parentId, supportFragmentManager, progressBar, backPressed, db);
+                fragmentTransaction.replace(R.id.fragment_container_main, fragment);
+                fragmentTransaction.commit();
 
             }
 
@@ -222,9 +216,8 @@ public class DummyContentCard {
                     recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
                 }
 
-                //recyclerView.setAdapter(new FlashcardRecyclerViewAdapter(DummyContentCard.flashCards, mListener));
-
-                recyclerView.setAdapter(new FlashcardRecyclerViewAdapter(flashCards, mListener));
+                // Set the view with the data
+                recyclerView.setAdapter(new RecyclerViewAdapterFlashcard(flashCards, mListener, isUpToDate));
             }
             return view;
         }

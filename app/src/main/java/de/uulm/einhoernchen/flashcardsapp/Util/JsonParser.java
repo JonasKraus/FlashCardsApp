@@ -1,5 +1,6 @@
 package de.uulm.einhoernchen.flashcardsapp.Util;
 
+import android.support.annotation.Nullable;
 import android.util.JsonReader;
 import android.util.JsonToken;
 import android.util.Log;
@@ -13,12 +14,17 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import de.uulm.einhoernchen.flashcardsapp.Models.Answer;
 import de.uulm.einhoernchen.flashcardsapp.Models.CardDeck;
+import de.uulm.einhoernchen.flashcardsapp.Models.Category;
 import de.uulm.einhoernchen.flashcardsapp.Models.FlashCard;
 import de.uulm.einhoernchen.flashcardsapp.Models.Question;
 import de.uulm.einhoernchen.flashcardsapp.Models.Tag;
@@ -32,6 +38,15 @@ import de.uulm.einhoernchen.flashcardsapp.Models.UserGroup;
 public class JsonParser {
 
     private static final boolean DEBUG = false;
+
+    public static List<Category> readCategroies(InputStream in) throws IOException {
+        JsonReader reader = new JsonReader(new InputStreamReader(in, "UTF-8"));
+        try {
+            return readCategoryArray(reader);
+        } finally {
+            reader.close();
+        }
+    }
 
     /**
      * Takes an inputstream and parses carddecks
@@ -90,12 +105,33 @@ public class JsonParser {
         }
     }
 
+    private static List<Category> readCategoryArray(JsonReader reader) {
+        if (DEBUG) Log.d("parser Method", "readCategoryArray");
+        List<Category> categoryList = new ArrayList<Category>();
+
+        try {
+            reader.beginArray();
+            while (reader.hasNext()) {
+
+                categoryList.add(readCategory(reader));
+
+            }
+            reader.endArray();
+        } catch (IOException e) {
+            if (DEBUG) Log.d("Parser Error", "readCategoryArray");
+            e.printStackTrace();
+        }
+        return categoryList;
+    }
+
     private static List<CardDeck> readCardDeckArray(JsonReader reader) {
         if (DEBUG) Log.d("parser Method", "readCardDeckArray");
         List<CardDeck> cardDeckList = new ArrayList<CardDeck>();
 
         try {
+
             reader.beginArray();
+
             while (reader.hasNext()) {
 
                 // TODO is this the right place to disable invisible Carddecks
@@ -110,6 +146,60 @@ public class JsonParser {
             e.printStackTrace();
         }
         return cardDeckList;
+    }
+
+    private static Category readCategory(JsonReader reader) {
+        if (DEBUG) Log.d("parser Method", "readCategory");
+        long id = -1;
+        String name = "";
+        List<CardDeck> cardDecks = new ArrayList<>();
+        long parent = -1;
+
+        try {
+            reader.beginObject();
+            while (reader.hasNext()) {
+
+                String stringName = reader.nextName();
+
+                if (stringName.equals(JsonKeys.CATEGORY_ID)) {
+                    id = reader.nextLong();
+                } else if (stringName.equals(JsonKeys.CATEGORY_NAME)) {
+                    name = reader.nextString();
+                } /*else if (stringName.equals(JsonKeys.CATEGORY_CARDDECKS)) {
+
+                    JsonToken check = reader.peek();
+                    Log.d("chck", check.toString());
+
+                    if (check != JsonToken.NULL) {
+                        // TODO wird hier nicht gebraucht - dekcs erst bei klich abholen
+                        //cardDecks = readCardDeckArray(reader);
+                        reader.beginArray();
+
+                        if (DEBUG) Log.d("parser Method", "readCategory readCardDecks " + reader.toString());
+                    } else {
+                        reader.nextNull();
+                    }
+                }*/ else if (stringName.equals(JsonKeys.CATEGORY_PARENT)) {
+
+                    JsonToken check = reader.peek();
+                    if (DEBUG) Log.d("parser Method", "readCategory readCardDecks " + reader.toString());
+
+                    if (check != JsonToken.NULL) {
+                        parent = readCategory(reader).getId();
+                    } else {
+                        reader.nextNull();
+                    }
+
+                } else {
+                    reader.skipValue();
+                }
+            }
+            reader.endObject();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return new Category(id,parent, name);
     }
 
     private static CardDeck readCarddeck(JsonReader reader) {
@@ -132,7 +222,15 @@ public class JsonParser {
                 } else if (stringName.equals(JsonKeys.CARDDECK_ID)) {
                     id = reader.nextLong();
                 } else if (stringName.equals(JsonKeys.CARDDECK_GROUP)) {
-                    userGroup = readUserGroup(reader);
+                    JsonToken check = reader.peek();
+
+
+                    if (check != JsonToken.NULL) {
+                        userGroup = readUserGroup(reader);
+                    } else {
+                        reader.nextNull();
+                    }
+
                 } else if (stringName.equals(JsonKeys.CARDDECK_NAME)) {
                     name = reader.nextString();
                 } else if (stringName.equals(JsonKeys.CARDDECK_DESCRIPTION)) {
@@ -144,8 +242,8 @@ public class JsonParser {
                         reader.nextNull();
                     }
 
-                } else if (stringName.equals(JsonKeys.CARDDECK_CARDS)) {
-                    cards = readFlashCardArray(reader);
+                /*} else if (stringName.equals(JsonKeys.CARDDECK_CARDS)) {
+                    cards = readFlashCardArray(reader);*/
                 } else {
                     reader.skipValue();
                 }
@@ -155,7 +253,7 @@ public class JsonParser {
             e.printStackTrace();
         }
 
-        return new CardDeck(id, visible, userGroup, name, description, cards);
+        return new CardDeck(id, visible, userGroup, name, description);
     }
 
     private static List<FlashCard> readFlashCardArray(JsonReader reader) {
@@ -205,10 +303,13 @@ public class JsonParser {
 
                 } else if (stringName.equals(JsonKeys.RATING)) {
                     rating = reader.nextInt();
-                } else if (stringName.equals(created)) {
-                    created = DateProcessor.stringToDate(reader.nextString());
-                } else if (stringName.equals(lastUpdated)) {
-                    lastUpdated = DateProcessor.stringToDate(reader.nextString());
+                } else if (stringName.equals(JsonKeys.DATE_CREATED)) {
+                    created = stringToDate(reader.nextString());
+
+                } else if (stringName.equals(JsonKeys.DATE_UPDATED)) {
+
+                    lastUpdated = stringToDate(reader.nextString());
+
                 } else if (stringName.equals(JsonKeys.FLASHCARD_QUESTION)) {
                     question = readQuestion(reader);
                 } else if (stringName.equals(JsonKeys.FLASHCARD_ANSWERS)) {
@@ -240,6 +341,7 @@ public class JsonParser {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
         return new FlashCard(id, tags, rating, created, lastUpdated, question, answers, author, multipleChoice);
     }
 
@@ -316,9 +418,9 @@ public class JsonParser {
                     }
 
                 } else if (stringName.equals(JsonKeys.DATE_CREATED)) {
-                    created = DateProcessor.stringToDate(reader.nextString());
+                    created = stringToDate(reader.nextString());
                 } else if (stringName.equals(JsonKeys.DATE_UPDATED)) {
-                    lastUpdated = DateProcessor.stringToDate(reader.nextString());
+                    lastUpdated = stringToDate(reader.nextString());
                 } else if (stringName.equals(JsonKeys.RATING)) {
                     rating = reader.nextInt();
                 } else if (stringName.equals(JsonKeys.ANSWER_CORRECT)) {
@@ -373,9 +475,9 @@ public class JsonParser {
                 } else if (stringName.equals(JsonKeys.RATING)) {
                     rating = reader.nextInt();
                 } else if (stringName.equals(JsonKeys.DATE_CREATED)) {
-                    created = DateProcessor.stringToDate(reader.nextString());
+                    created = stringToDate(reader.nextString());
                 } else if (stringName.equals(JsonKeys.DATE_LAST_LOGIN)) {
-                    lastLogin = DateProcessor.stringToDate(reader.nextString());
+                    lastLogin = stringToDate(reader.nextString());
                 } else if (stringName.equals(JsonKeys.USER_GROUPS)) {
                     JsonToken check = reader.peek();
 
@@ -404,7 +506,9 @@ public class JsonParser {
 
         try {
             reader.beginArray();
+
             while (reader.hasNext()) {
+
                 groups.add(readUserGroup(reader));
             }
             reader.endArray();
@@ -599,6 +703,82 @@ public class JsonParser {
         }
 
         return user;
+    }
+
+    @Nullable
+    public static Date stringToDate(String dateString) {
+
+        DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss z", Locale.ENGLISH);
+        try {
+            Date date = formatter.parse(dateString);
+            return date;
+        } catch (ParseException e) {
+            e.printStackTrace();
+            Log.d("Error", e.toString());
+        }
+
+
+        return null;
+    }
+
+
+    /**
+     * read an heartbeat from the server
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     * @since 2016-12-03
+     *
+     * @param inputStream
+     * @return
+     */
+    public static Boolean readHeartbeat(InputStream inputStream)  throws IOException  {
+
+        JsonReader reader = new JsonReader(new InputStreamReader(inputStream, "UTF-8"));
+        try {
+            return readHeartbeat(reader);
+        } finally {
+            reader.close();
+        }
+    }
+
+
+    /**
+     * read an heartbeat from the server
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     * @since 2016-12-03
+     *
+     * @param reader
+     * @return
+     */
+    private static Boolean readHeartbeat(JsonReader reader){
+        if (DEBUG) Log.d("parser Method", "readHeartbeat");
+
+        boolean isAlive = false;
+        String date = "";
+
+        try {
+            reader.beginObject();
+            while (reader.hasNext()) {
+
+                String stringName = reader.nextName();
+
+                if (stringName.equals(JsonKeys.CURRENT_DATE)) {
+                    date = reader.nextString();
+                    Log.d("heartbeat", date.toString());
+                    isAlive = true;
+
+                } else {
+                    reader.skipValue();
+                }
+
+            }
+            reader.endObject();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return isAlive;
     }
 
 }

@@ -1,6 +1,5 @@
-package de.uulm.einhoernchen.flashcardsapp.Fragment;
+package de.uulm.einhoernchen.flashcardsapp.Fragment.Adapter;
 
-import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,23 +12,25 @@ import com.amulyakhare.textdrawable.util.ColorGenerator;
 
 import java.util.List;
 
-import de.uulm.einhoernchen.flashcardsapp.Fragment.dummy.DummyContent.DummyItem;
-import de.uulm.einhoernchen.flashcardsapp.Models.Categroy;
+import de.uulm.einhoernchen.flashcardsapp.Fragment.Dataset.DummyContent.DummyItem;
+import de.uulm.einhoernchen.flashcardsapp.Fragment.Dataset.ContentCategory;
+import de.uulm.einhoernchen.flashcardsapp.Models.Category;
 import de.uulm.einhoernchen.flashcardsapp.R;
 
 /**
  * {@link RecyclerView.Adapter} that can display a {@link DummyItem} and makes a call to the
- * specified {@link de.uulm.einhoernchen.flashcardsapp.Fragment.ItemFragmentCategory.OnCategoryListFragmentInteractionListener}.
  * TODO: Replace the implementation with code for your data type.
  */
-public class CategoryRecyclerViewAdapter extends RecyclerView.Adapter<CategoryRecyclerViewAdapter.ViewHolder> {
+public class RecyclerViewAdapterCategory extends RecyclerView.Adapter<RecyclerViewAdapterCategory.ViewHolder> {
 
-    private final List<Categroy> categroys;
-    private final ItemFragmentCategory.OnCategoryListFragmentInteractionListener mListener;
+    private final List<Category> categories;
+    private final ContentCategory.OnCategoryListFragmentInteractionListener mListener;
+    private final boolean isUpToDate;
 
-    public CategoryRecyclerViewAdapter(List<Categroy> items, ItemFragmentCategory.OnCategoryListFragmentInteractionListener listener) {
-        categroys = items;
+    public RecyclerViewAdapterCategory(List<Category> items, ContentCategory.OnCategoryListFragmentInteractionListener listener, boolean isUpToDate) {
+        categories = items;
         mListener = listener;
+        this.isUpToDate = isUpToDate;
     }
 
     @Override
@@ -41,14 +42,22 @@ public class CategoryRecyclerViewAdapter extends RecyclerView.Adapter<CategoryRe
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        holder.mItem = categroys.get(position);
-        // holder.mIdView.setText(categroys.get(position).getId()+""); TODO Wird das benötigt?
-        holder.mContentView.setText(categroys.get(position).getName());
+        holder.mItem = categories.get(position);
+        // holder.mIdView.setText(categories.get(position).getId()+""); TODO Wird das benötigt?
+        holder.mContentView.setText(categories.get(position).getName());
         holder.mAuthorView.setVisibility(View.INVISIBLE);
         // holder.mGroupRatingView.setVisibility(View.INVISIBLE);
         holder.mCardRatingView.setVisibility(View.INVISIBLE);
         holder.mDateView.setVisibility(View.INVISIBLE);
         holder.mBookmarkView.setVisibility(View.INVISIBLE);
+
+        if (!isUpToDate) {
+
+            holder.mLocalView.setVisibility(View.INVISIBLE);
+        } else {
+
+            holder.mLocalView.setVisibility(View.VISIBLE);
+        }
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -62,11 +71,11 @@ public class CategoryRecyclerViewAdapter extends RecyclerView.Adapter<CategoryRe
         });
 
         //get first letter of each String item
-        final String firstLetter = String.valueOf(categroys.get(position).getName().charAt(0)); // hier wird der buchstabe gesetzt
+        final String firstLetter = String.valueOf(categories.get(position).getName().charAt(0)); // hier wird der buchstabe gesetzt
 
         ColorGenerator generator = ColorGenerator.MATERIAL; // or use DEFAULT
         // generate random color
-        final int color = generator.getColor(categroys.get(position).getId()); // TODO
+        final int color = generator.getColor(categories.get(position).getId()); // TODO
         //int color = generator.getRandomColor();
 
         TextDrawable drawable = TextDrawable.builder()
@@ -78,7 +87,10 @@ public class CategoryRecyclerViewAdapter extends RecyclerView.Adapter<CategoryRe
 
     @Override
     public int getItemCount() {
-        return categroys.size();
+        if (categories != null) {
+            return categories.size();
+        }
+        return 0;
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
@@ -92,7 +104,7 @@ public class CategoryRecyclerViewAdapter extends RecyclerView.Adapter<CategoryRe
         public final ImageView mBookmarkView;
         public final ImageView mLocalView;
         public final ImageView imageView; // Text icon
-        public Categroy mItem;
+        public Category mItem;
 
         public ViewHolder(View view) {
             super(view);

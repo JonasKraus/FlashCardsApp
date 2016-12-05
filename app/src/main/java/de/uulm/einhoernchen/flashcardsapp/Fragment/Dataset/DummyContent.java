@@ -1,16 +1,9 @@
-package de.uulm.einhoernchen.flashcardsapp.Fragment.dummy;
+package de.uulm.einhoernchen.flashcardsapp.Fragment.Dataset;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import de.uulm.einhoernchen.flashcardsapp.Models.Answer;
-import de.uulm.einhoernchen.flashcardsapp.Models.FlashCard;
-import de.uulm.einhoernchen.flashcardsapp.Models.Question;
-import de.uulm.einhoernchen.flashcardsapp.Models.Tag;
-import de.uulm.einhoernchen.flashcardsapp.Models.User;
 
 /**
  * Helper class for providing sample content for user interfaces created by
@@ -50,20 +43,6 @@ public class DummyContent {
 
     }
 
-    private static FlashCard createDummyFlashCard(int position) {
-        User author = new User((long)position,"avatar","User "+position,"","user"+position+"@flashcards.de",(int)Math.random()*10, new Date().toString(), new Date().toString());
-        Question question = new Question("Item Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam ", author);
-        Answer answer = new Answer("consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam ","hint ....."+position, author);
-        List<String> tags = new ArrayList<>();
-        for (int i = 0; i <= position; i++) {
-            tags.add("tag"+i);
-        }
-        List<Answer>answers = new ArrayList<>();
-        answers.add(answer);
-        FlashCard flashCard = new FlashCard(new Date(), question, answers, author,false);
-
-        return flashCard;
-    }
 
     private static String makeDetails(int position) {
         StringBuilder builder = new StringBuilder();

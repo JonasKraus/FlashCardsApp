@@ -1,25 +1,24 @@
 package de.uulm.einhoernchen.flashcardsapp.AsyncTasks;
 
 import android.os.AsyncTask;
-import android.view.View;
-import android.widget.ProgressBar;
 
 import java.util.List;
 
 import de.uulm.einhoernchen.flashcardsapp.Database.DbManager;
+import de.uulm.einhoernchen.flashcardsapp.Models.Category;
 import de.uulm.einhoernchen.flashcardsapp.Models.FlashCard;
 
 /**
  * Created by jonas-uni on 17.08.2016.
  */
-public class AsyncSaveFlashCardLocal extends AsyncTask<Long, Long, Void> {
+public class AsyncSaveLocalCategory extends AsyncTask<Long, Long, Void> {
 
-    private List<FlashCard> flashCards;
+    private List<Category> categories;
     private DbManager db;
 
 
-    public void setFlashCards(List<FlashCard> flashCards) {
-        this.flashCards = flashCards;
+    public void setCategories(List<Category> categories) {
+        this.categories = categories;
     }
 
     public void setDbManager(DbManager dbManager) {
@@ -33,13 +32,13 @@ public class AsyncSaveFlashCardLocal extends AsyncTask<Long, Long, Void> {
 
     private final Long parentId;
 
-    public AsyncSaveFlashCardLocal(Long parentId) {
+    public AsyncSaveLocalCategory(Long parentId) {
         this.parentId = parentId;
     }
 
     @Override
     protected Void doInBackground(Long... params) {
-        db.saveFlashCards(flashCards, parentId);
+        db.saveCategories(categories);
 
         return null;
     }

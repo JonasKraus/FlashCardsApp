@@ -19,7 +19,7 @@ import de.uulm.einhoernchen.flashcardsapp.Util.JsonParser;
 /**
  * Created by jonas-uni on 04.07.2016.
  */
-public class AsyncGetUser extends AsyncTask<Long, Void, User>{
+public class AsyncGetRemoteUser extends AsyncTask<Long, Void, User>{
 
     /**
      * Interface to receive the user in the activity that called this async task
@@ -31,7 +31,7 @@ public class AsyncGetUser extends AsyncTask<Long, Void, User>{
     private final long id;
     public AsyncResponseUser delegate = null;
 
-    public AsyncGetUser(long id, AsyncResponseUser delegate) {
+    public AsyncGetRemoteUser(long id, AsyncResponseUser delegate) {
         this.delegate = delegate;
         this.id = id;
     }
@@ -68,7 +68,6 @@ public class AsyncGetUser extends AsyncTask<Long, Void, User>{
 
         } catch (Exception e) {
 
-            Log.e("Async getLocalAccountUser Fehler", e.toString());
             System.out.println(e.getMessage());
 
         }

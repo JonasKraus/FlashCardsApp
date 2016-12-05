@@ -14,7 +14,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
 
-public class ImageProcessor {
+public class ProcessorImage {
 
 
     /**
@@ -224,7 +224,7 @@ public class ImageProcessor {
             outStream = new FileOutputStream(file);
 
             // Scale bitmap to right size
-            bitmap = ImageProcessor.scaleDownMaxHeight(bitmap, 180, true);
+            bitmap = ProcessorImage.scaleDownMaxHeight(bitmap, 180, true);
 
             // Now compress it
             bitmap.compress(Bitmap.CompressFormat.PNG, 50, outStream);

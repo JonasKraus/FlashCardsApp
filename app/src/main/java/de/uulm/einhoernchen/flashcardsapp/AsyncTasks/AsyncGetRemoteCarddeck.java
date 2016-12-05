@@ -25,7 +25,7 @@ import de.uulm.einhoernchen.flashcardsapp.Util.JsonParser;
 /**
  * Created by jonas-uni on 17.08.2016.
  */
-public class AsyncGetCarddeck extends AsyncTask<Long, Long, List<CardDeck>> {
+public class AsyncGetRemoteCarddeck extends AsyncTask<Long, Long, List<CardDeck>> {
 
     private ProgressBar progressBar;
 
@@ -49,7 +49,7 @@ public class AsyncGetCarddeck extends AsyncTask<Long, Long, List<CardDeck>> {
     public AsyncResponseCarddeck delegate = null;
     private final Long parentId;
 
-    public AsyncGetCarddeck(Long parentId, AsyncResponseCarddeck delegate) {
+    public AsyncGetRemoteCarddeck(Long parentId, AsyncResponseCarddeck delegate) {
         this.parentId = parentId;
         this.delegate = delegate;
     }
@@ -58,8 +58,8 @@ public class AsyncGetCarddeck extends AsyncTask<Long, Long, List<CardDeck>> {
     protected List<CardDeck> doInBackground(Long... params) {
 
 
-        String urlString = Routes.URL + Routes.SLASH + Routes.CARD_DECKS; // URL to call
-
+        String urlString = Routes.URL + Routes.SLASH + Routes.CATEGORIES + Routes.SLASH + parentId + Routes.SLASH + Routes.DECKS; // URL to call
+        Log.d("back call to ", urlString);
         HttpURLConnection urlConnection = null;
 
         try {
@@ -79,7 +79,7 @@ public class AsyncGetCarddeck extends AsyncTask<Long, Long, List<CardDeck>> {
 
         } catch (Exception e) {
 
-            Log.e("doInBackground Error", e.toString());
+            Log.e("doInBackground Carddeck", e.toString());
             System.out.println(e.getMessage());
 
         }
@@ -93,10 +93,7 @@ public class AsyncGetCarddeck extends AsyncTask<Long, Long, List<CardDeck>> {
         if (cardDecks == null || cardDecks.size() == 0) {
 
             // TODO just for testing purpose change to data from sqlite
-            cardDecks = new ArrayList<>();
-            for (int i = 0; i < 100; i ++) {
-                cardDecks.add(i, new CardDeck("deck "+ i, "beschreibung " + i));
-            }
+            Log.d("carddeck", "nothing found");
 
         }
 

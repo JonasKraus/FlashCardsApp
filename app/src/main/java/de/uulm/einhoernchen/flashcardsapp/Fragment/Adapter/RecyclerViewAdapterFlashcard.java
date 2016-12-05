@@ -1,4 +1,4 @@
-package de.uulm.einhoernchen.flashcardsapp.Fragment;
+package de.uulm.einhoernchen.flashcardsapp.Fragment.Adapter;
 
 import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
@@ -11,9 +11,9 @@ import android.widget.TextView;
 import com.amulyakhare.textdrawable.TextDrawable;
 import com.amulyakhare.textdrawable.util.ColorGenerator;
 
-import de.uulm.einhoernchen.flashcardsapp.Fragment.dummy.DummyContentCard;
-import de.uulm.einhoernchen.flashcardsapp.Fragment.dummy.DummyContentCard.ItemFragmentFlashcard.OnFlashcardListFragmentInteractionListener;
-import de.uulm.einhoernchen.flashcardsapp.Fragment.dummy.DummyContent.DummyItem;
+import de.uulm.einhoernchen.flashcardsapp.Fragment.Dataset.ContentCard;
+import de.uulm.einhoernchen.flashcardsapp.Fragment.Dataset.ContentCard.ItemFragmentFlashcard.OnFlashcardListFragmentInteractionListener;
+import de.uulm.einhoernchen.flashcardsapp.Fragment.Dataset.DummyContent.DummyItem;
 import de.uulm.einhoernchen.flashcardsapp.Models.FlashCard;
 import de.uulm.einhoernchen.flashcardsapp.R;
 
@@ -21,23 +21,26 @@ import java.util.List;
 
 /**
  * {@link RecyclerView.Adapter} that can display a {@link DummyItem} and makes a call to the
- * specified {@link DummyContentCard.ItemFragmentFlashcard.OnFlashcardListFragmentInteractionListener}.
+ * specified {@link ContentCard.ItemFragmentFlashcard.OnFlashcardListFragmentInteractionListener}.
  * TODO: Replace the implementation with code for your data type.
  */
-public class FlashcardRecyclerViewAdapter extends RecyclerView.Adapter<FlashcardRecyclerViewAdapter.ViewHolder> {
+public class RecyclerViewAdapterFlashcard extends RecyclerView.Adapter<RecyclerViewAdapterFlashcard.ViewHolder> {
 
     private final List<FlashCard> flashCards;
     private final OnFlashcardListFragmentInteractionListener mListener;
+    private final boolean isUpToDate;
 
-    public FlashcardRecyclerViewAdapter(List<FlashCard> items, OnFlashcardListFragmentInteractionListener listener) {
+    public RecyclerViewAdapterFlashcard(List<FlashCard> items, OnFlashcardListFragmentInteractionListener listener, boolean isUpToDate) {
         flashCards = items;
         mListener = listener;
+        this.isUpToDate = isUpToDate;
     }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.list_item, parent, false);
+
         return new ViewHolder(view);
     }
 
@@ -47,12 +50,22 @@ public class FlashcardRecyclerViewAdapter extends RecyclerView.Adapter<Flashcard
         // holder.mIdView.setText(flashCards.get(position).getId()+""); TODO Wird das benötigt?
         holder.mContentView.setText(flashCards.get(position).getQuestion().getQuestionText());
         String authorName = flashCards.get(position).getAuthor() != null ? flashCards.get(position).getAuthor().getName() : "No Author";
-        holder.mAuthorView.setText(authorName);
+
+        holder.mAuthorView.setText(flashCards.get(position).getAuthor().getId() + " " +authorName); //TODO delete
         // holder.mGroupRatingView.setVisibility(View.INVISIBLE);
         holder.mCardRatingView.setText(flashCards.get(position).getRatingForView());
-        holder.mDateView.setText(flashCards.get(position).getLastUpdated());
+        holder.mDateView.setText(flashCards.get(position).getLastUpdatedString());
         holder.mBookmarkView.setVisibility(View.VISIBLE);
-        // holder.mBookmarkView.setImageDrawable(// TODO set if maked);
+        // holder.mBookmarkView.setImageDrawable(// TODO set if marked);
+
+
+        if (!isUpToDate) {
+
+            holder.mLocalView.setVisibility(View.INVISIBLE);
+        } else {
+
+            holder.mLocalView.setVisibility(View.VISIBLE);
+        }
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -68,7 +68,20 @@ public class UserGroup {
         // List<CardDeck> decks = null; TODO ???
     }
 
-    public Long getId() {
+
+	/**
+	 * Standard for no available data
+	 *
+	 * @author Jonas Kraus jonas.kraus@uni-ulm.de
+	 * @since 2016-12-02
+	 *
+	 */
+	public UserGroup() {
+		this.name = "";
+		this.description = "no group available";
+	}
+
+	public Long getId() {
 		return id;
 	}
 
@@ -163,7 +176,10 @@ public class UserGroup {
         if (decks == null) {
             decks = new ArrayList<>();
         }
-		decks.add(cardDeck);
+		if (cardDeck != null) {
+			decks.add(cardDeck);
+		}
+
 		// update(); TODO to be implemented
 	}
 

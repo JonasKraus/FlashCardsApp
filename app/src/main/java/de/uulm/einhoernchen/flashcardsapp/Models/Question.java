@@ -65,7 +65,11 @@ public class Question {
         this.id = questionId;
         this.questionText = questionText;
         try {
-            this.uri = new URI(mediaURI);
+            if (mediaURI != null) {
+                this.uri = new URI(mediaURI);
+            } else {
+                this.uri = new URI("");
+            }
         } catch (URISyntaxException e) {
             e.printStackTrace();
             Log.d("construct Question", "faild to generate uri from string");

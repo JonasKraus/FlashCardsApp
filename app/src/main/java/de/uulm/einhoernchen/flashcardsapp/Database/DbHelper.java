@@ -8,7 +8,7 @@ import android.util.Log;
 /**
  * Created by Jonas on 02.07.2016.
  */
-public class MySQLiteHelper extends SQLiteOpenHelper {
+public class DbHelper extends SQLiteOpenHelper {
 
     // Strings for table user
     public static final String TABLE_USER = "user";
@@ -18,7 +18,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
     public static final String COLUMN_USER_PASSWORD = "password";                       //3
     public static final String COLUMN_USER_EMAIL = "email";                             //4
     public static final String COLUMN_USER_RATING = "rating";                           //5
-    public static final String COLUMN_USER_GROUP_ID = "groupId";                        //6
+    public static final String COLUMN_USER_GROUP = "groupId";                           //6
     public static final String COLUMN_USER_CREATED= "created";                          //7
     public static final String COLUMN_USER_LAST_LOGIN= "lastLogin";                     //8
     public static final String COLUMN_USER_LOCAL_ACCOUNT= "localAccount";               //9
@@ -92,10 +92,19 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
     public static final String COLUMN_CARD_DECK_ID = "cardDeckId";                      //0
     public static final String COLUMN_CARD_DECK_NAME = "cardDeckName";                  //1
     public static final String COLUMN_CARD_DECK_DESCRIPTION = "description";            //2
+    public static final String COLUMN_CARD_DECK_VISIBLE = "visible";                    //3
+    public static final String COLUMN_CARD_DECK_GROUP = "groupId";                      //4
+    public static final String COLUMN_CARD_DECK_PARENT = "parentId";                    //5
+
+
+    public static final String TABLE_CATEGORY = "category";
+    public static final String COLUMN_CATEGORY_ID = "categoryId";                       //0
+    public static final String COLUMN_CATEGORY_NAME = "categoryName";                   //1
+    public static final String COLUMN_CATEGORY_PARENT = "parentId";                     //2
 
     // Database name and version - increase when existing table is altered
     private static final String DATABASE_NAME = "flashcardsDb.db";
-    private static final int DATABASE_VERSION = 1; // @TODO revert version before first release
+    private static final int DATABASE_VERSION = 7; // @TODO revert version before first release
 
     /**
      * Database creation sql statement for table user
@@ -115,7 +124,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
             + " text not null, "
             + COLUMN_USER_RATING
             + " integer DEFAULT 0, "
-            + COLUMN_USER_GROUP_ID
+            + COLUMN_USER_GROUP
             + " integer, "
             + COLUMN_USER_CREATED
             + " text, " // TODO should be not null
@@ -138,9 +147,9 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
             + COLUMN_FLASHCARD_MULTIPLE_CHOICE
             + " integer DEFAULT 0, "
             + COLUMN_FLASHCARD_CREATED
-            + " text, "  // TODO should be not null
+            + " integer, "  // TODO should be not null
             + COLUMN_FLASHCARD_LAST_UPDATED
-            + " text, "  // TODO should be not null
+            + " integer, "  // TODO should be not null
             + COLUMN_FLASHCARD_USER_ID
             + " integer " // TODO maybe should be not null ??
             + ");";
@@ -242,7 +251,23 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
             + COLUMN_CARD_DECK_NAME
             + " text not null, "
             + COLUMN_CARD_DECK_DESCRIPTION
-            + " text "
+            + " text, "
+            + COLUMN_CARD_DECK_VISIBLE
+            + " integer, "
+            + COLUMN_CARD_DECK_GROUP
+            + " integer, "
+            + COLUMN_CARD_DECK_PARENT
+            + " integer "
+            + ");";
+
+    private static final String CATEGORY_CREATE = "create table "
+            + TABLE_CATEGORY + "("
+            + COLUMN_CATEGORY_ID
+            + " integer primary key, "
+            + COLUMN_CATEGORY_NAME
+            + " text not null, "
+            + COLUMN_CATEGORY_PARENT
+            + " integer "
             + ");";
 
     /**
@@ -250,7 +275,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
      *
      * @param context
      */
-    public MySQLiteHelper(Context context) {
+    public DbHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
@@ -266,12 +291,13 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
         db.execSQL(RATING_CREATE);
         db.execSQL(AUTH_TOKEN_CREATE);
         db.execSQL(CARD_DECK_CREATE);
+        db.execSQL(CATEGORY_CREATE);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 
-        Log.w(MySQLiteHelper.class.getName(),
+        Log.w(DbHelper.class.getName(),
                 "Upgrading database from version " + oldVersion + " to "
                         + newVersion + ", which will destroy all old data");
 
@@ -285,6 +311,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_RATING);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_AUTH_TOKEN);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_CARD_DECK);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_CATEGORY);
 
         onCreate(db);
     }

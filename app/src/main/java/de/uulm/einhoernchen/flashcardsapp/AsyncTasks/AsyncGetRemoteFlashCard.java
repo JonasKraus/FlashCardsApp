@@ -7,24 +7,16 @@ import android.widget.ProgressBar;
 
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.Random;
 
 import de.uulm.einhoernchen.flashcardsapp.Consts.Routes;
-import de.uulm.einhoernchen.flashcardsapp.Fragment.dummy.DummyContentCard;
-import de.uulm.einhoernchen.flashcardsapp.Models.Answer;
-import de.uulm.einhoernchen.flashcardsapp.Models.CardDeck;
 import de.uulm.einhoernchen.flashcardsapp.Models.FlashCard;
-import de.uulm.einhoernchen.flashcardsapp.Models.Question;
-import de.uulm.einhoernchen.flashcardsapp.Models.User;
 import de.uulm.einhoernchen.flashcardsapp.Util.JsonParser;
 
 /**
  * Created by jonas-uni on 17.08.2016.
  */
-public class AsyncGetFlashCard extends AsyncTask<Long, Long, List<FlashCard>> {
+public class AsyncGetRemoteFlashCard extends AsyncTask<Long, Long, List<FlashCard>> {
 
     private ProgressBar progressBar;
 
@@ -48,7 +40,7 @@ public class AsyncGetFlashCard extends AsyncTask<Long, Long, List<FlashCard>> {
     public AsyncResponseFlashCard delegate = null;
     private final Long parentId;
 
-    public AsyncGetFlashCard(Long parentId, AsyncResponseFlashCard delegate) {
+    public AsyncGetRemoteFlashCard(Long parentId, AsyncResponseFlashCard delegate) {
         this.parentId = parentId;
         this.delegate = delegate;
     }
@@ -59,7 +51,7 @@ public class AsyncGetFlashCard extends AsyncTask<Long, Long, List<FlashCard>> {
 
         String urlString = Routes.URL + Routes.SLASH + Routes.CARD_DECKS + Routes.SLASH
                 + parentId + Routes.SLASH + Routes.FLASH_CARDS;
-
+        Log.d("back call to ", urlString);
         HttpURLConnection urlConnection = null;
 
         try {
@@ -79,7 +71,7 @@ public class AsyncGetFlashCard extends AsyncTask<Long, Long, List<FlashCard>> {
 
         } catch (Exception e) {
 
-            Log.e("doInBackground Error", e.toString());
+            Log.e("doInBackground Card", e.toString());
             System.out.println(e.getMessage());
 
         }
@@ -95,25 +87,7 @@ public class AsyncGetFlashCard extends AsyncTask<Long, Long, List<FlashCard>> {
         // Should collect data from db
         if (flashCards == null || flashCards.size() == 0) {
 
-            List<FlashCard> cards = new ArrayList<>();
-
-            for (int position = 0; position < 100; position++) {
-                Log.d("parent id", parentId + "");
-                Random rand = new Random();
-
-                User author = new User((long) position, "avatar", "Author: User " + position, "pwd", "user" + position + "@flashcards.de", rand.nextInt(100), new Date().toString(), new Date().toString());
-                Question question = new Question("Item Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam ", author);
-                Answer answer = new Answer("consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam ", "hint ....." + position, author);
-                List<String> tags = new ArrayList<>();
-                for (int i = 0; i <= position; i++) {
-                    tags.add("tag" + i);
-                }
-                List<Answer> answers = new ArrayList<>();
-                answers.add(answer);
-                FlashCard flashCard = new FlashCard(new Date(), question, answers, author, false);
-
-                cards.add(position, flashCard);
-            }
+            Log.d("AsyncGetRemoteFlashCard", "no flashcards");
 
         }
 

@@ -3,14 +3,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context="de.uulm.einhoernchen.flashcardsapp.Fragment.FragmentHome">
+    tools:context="de.uulm.einhoernchen.flashcardsapp.Fragment.FragmentFlashCard">
 
     <!-- TODO: Update blank fragment layout -->
     <TextView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="Home Fragment"
-        android:id="@+id/textview_fragment_home"
+        android:id="@+id/text_view_test"
+        android:text="Flashcard Fragment"
         android:layout_marginTop="100dp"/>
 
     <android.support.design.widget.AppBarLayout

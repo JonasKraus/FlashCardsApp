@@ -106,7 +106,11 @@ public class Answer {
         this.answerText = answerText;
         this.hintText = answerHint;
         try {
-            this.uri = new URI(mediaURI);
+            if (mediaURI != null) {
+                this.uri = new URI(mediaURI);
+            } else {
+                this.uri = new URI("");
+            }
         } catch (URISyntaxException e) {
             e.printStackTrace();
             Log.d("construct Answer", "faild to generate uri from string");

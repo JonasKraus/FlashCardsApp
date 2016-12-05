@@ -36,8 +36,6 @@ public class CardDeck {
     @JsonProperty(JsonKeys.CARDDECK_CARDS)
     private List<FlashCard> cards;
 
-    private Date lastUpdated;
-
     public CardDeck(String name) {
         this.name = name;
     }
@@ -82,6 +80,25 @@ public class CardDeck {
         this.description = description;
         this.cards = cards;
         userGroup.addDeck(this);
+    }
+
+    /**
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     * @since 2016-12-01
+     *
+     * @param id
+     * @param visible
+     * @param userGroup
+     * @param name
+     * @param description
+     */
+    public CardDeck(long id, boolean visible, UserGroup userGroup, String name, String description) {
+        this.id = id;
+        this.visible = visible;
+        this.userGroup = userGroup;
+        this.name = name;
+        this.description = description;
     }
 
 
@@ -165,13 +182,6 @@ public class CardDeck {
                 '}';
     }
 
-    public String getLastUpdated() {
-        // TODO to be implemented
-        if (this.lastUpdated == null) {
-            return new SimpleDateFormat("dd.MM.yyyy").format(Calendar.getInstance().getTime());
-        }
-        return lastUpdated.toString();
-    }
 
     public int getRating() {
         // TODO to be implemented

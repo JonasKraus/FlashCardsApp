@@ -1,4 +1,4 @@
-package de.uulm.einhoernchen.flashcardsapp.Fragment;
+package de.uulm.einhoernchen.flashcardsapp.Fragment.Adapter;
 
 import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
@@ -13,24 +13,26 @@ import com.amulyakhare.textdrawable.util.ColorGenerator;
 
 import java.util.List;
 
-import de.uulm.einhoernchen.flashcardsapp.Fragment.dummy.DummyContent.DummyItem;
-import de.uulm.einhoernchen.flashcardsapp.Fragment.dummy.DummyContentCarddeck;
-import de.uulm.einhoernchen.flashcardsapp.Fragment.dummy.DummyContentCarddeck.OnCarddeckListFragmentInteractionListener;
+import de.uulm.einhoernchen.flashcardsapp.Fragment.Dataset.DummyContent.DummyItem;
+import de.uulm.einhoernchen.flashcardsapp.Fragment.Dataset.ContentCarddeck;
+import de.uulm.einhoernchen.flashcardsapp.Fragment.Dataset.ContentCarddeck.OnCarddeckListFragmentInteractionListener;
 import de.uulm.einhoernchen.flashcardsapp.Models.CardDeck;
 import de.uulm.einhoernchen.flashcardsapp.R;
 
 /**
  * {@link RecyclerView.Adapter} that can display a {@link DummyItem} and makes a call to the
- * specified {@link DummyContentCarddeck.OnCarddeckListFragmentInteractionListener}.
+ * specified {@link ContentCarddeck.OnCarddeckListFragmentInteractionListener}.
  */
-public class CarddeckRecyclerViewAdapter extends RecyclerView.Adapter<CarddeckRecyclerViewAdapter.ViewHolder> {
+public class RecyclerViewAdapterCarddeck extends RecyclerView.Adapter<RecyclerViewAdapterCarddeck.ViewHolder> {
 
     private final List<CardDeck> cardDecks;
     private final OnCarddeckListFragmentInteractionListener mListener;
+    private final boolean isUpToDate;
 
-    public CarddeckRecyclerViewAdapter(List<CardDeck> items, OnCarddeckListFragmentInteractionListener listener) {
+    public RecyclerViewAdapterCarddeck(List<CardDeck> items, OnCarddeckListFragmentInteractionListener listener, boolean isUpToDate) {
         cardDecks = items;
         mListener = listener;
+        this.isUpToDate = isUpToDate;
     }
 
     @Override
@@ -49,8 +51,18 @@ public class CarddeckRecyclerViewAdapter extends RecyclerView.Adapter<CarddeckRe
         holder.mAuthorView.setText(userGroupName);
         // holder.mGroupRatingView.setVisibility(View.INVISIBLE);
         holder.mCardRatingView.setText(cardDecks.get(position).getRatingForView());
-        holder.mDateView.setText(cardDecks.get(position).getLastUpdated());
+        //holder.mDateView.setText(cardDecks.get(position).getLastUpdatedString());
+        holder.mDateView.setVisibility(View.INVISIBLE);
         holder.mBookmarkView.setVisibility(View.INVISIBLE);
+
+        if (!isUpToDate) {
+
+            holder.mLocalView.setVisibility(View.INVISIBLE);
+        } else {
+
+            holder.mLocalView.setVisibility(View.VISIBLE);
+        }
+
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -104,7 +116,11 @@ public class CarddeckRecyclerViewAdapter extends RecyclerView.Adapter<CarddeckRe
 
     @Override
     public int getItemCount() {
-        return cardDecks.size();
+        if (cardDecks != null) {
+            return cardDecks.size();
+
+        }
+        return 0;
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {

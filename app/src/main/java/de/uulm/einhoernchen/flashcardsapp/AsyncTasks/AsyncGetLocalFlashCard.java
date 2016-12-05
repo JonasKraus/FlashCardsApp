@@ -24,7 +24,7 @@ import de.uulm.einhoernchen.flashcardsapp.Util.JsonParser;
 /**
  * Created by jonas-uni on 17.08.2016.
  */
-public class AsyncGetFlashCardLocal extends AsyncTask<Long, Long, List<FlashCard>> {
+public class AsyncGetLocalFlashCard extends AsyncTask<Long, Long, List<FlashCard>> {
 
     private ProgressBar progressBar;
     private DbManager db;
@@ -54,7 +54,7 @@ public class AsyncGetFlashCardLocal extends AsyncTask<Long, Long, List<FlashCard
     public AsyncResponseFlashCardLocal delegate = null;
     private final Long parentId;
 
-    public AsyncGetFlashCardLocal(Long parentId, AsyncResponseFlashCardLocal delegate) {
+    public AsyncGetLocalFlashCard(Long parentId, AsyncResponseFlashCardLocal delegate) {
         this.parentId = parentId;
         this.delegate = delegate;
     }
