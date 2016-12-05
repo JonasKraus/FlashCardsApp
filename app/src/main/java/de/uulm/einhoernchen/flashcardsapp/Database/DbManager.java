@@ -1076,7 +1076,7 @@ public class DbManager {
         deselectCard(cardID, getCardParentID(cardID));
     }
 
-    private long getCardParentID(long cardID) {
+    public long getCardParentID(long cardID) {
 
         Cursor cursor = database.query(DbHelper.TABLE_FLASHCARD, allFlashCardColumns, DbHelper.COLUMN_FLASHCARD_ID + " = " + cardID
                 , null, null, null, null);
@@ -1094,5 +1094,21 @@ public class DbManager {
         cursor.close();
 
         return parentId;
+    }
+
+
+    /**
+     * Logs out user
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     * @since 2016-12-05
+     *
+     */
+    public void logoutUser() {
+
+        ContentValues values = new ContentValues();
+        values.put(DbHelper.COLUMN_USER_IS_LOGGED_IN, 0);
+
+        database.update(DbHelper.TABLE_USER, values, DbHelper.COLUMN_USER_ID + " = " + loggedInUser.getId(), null);
     }
 }
