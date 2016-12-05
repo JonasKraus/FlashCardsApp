@@ -32,6 +32,8 @@ public class CardDeck {
     @JsonProperty(JsonKeys.CARDDECK_DESCRIPTION)
     private String description;
 
+    private long selectionDate;
+
     //this cascades from the "tag" to "join_cards_tag" - e.g. tag.delete -> delete evey entry with tag.id
     @JsonProperty(JsonKeys.CARDDECK_CARDS)
     private List<FlashCard> cards;
@@ -93,14 +95,22 @@ public class CardDeck {
      * @param name
      * @param description
      */
-    public CardDeck(long id, boolean visible, UserGroup userGroup, String name, String description) {
+    public CardDeck(long id, boolean visible, UserGroup userGroup, String name, String description, long selectionDate) {
         this.id = id;
         this.visible = visible;
         this.userGroup = userGroup;
         this.name = name;
         this.description = description;
+        this.selectionDate = selectionDate;
     }
 
+    public long getSelectionDate() {
+        return selectionDate;
+    }
+
+    public void setSelectionDate(long selectionDate) {
+        this.selectionDate = selectionDate;
+    }
 
     public long getId() {
         return id;

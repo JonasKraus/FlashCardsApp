@@ -253,7 +253,7 @@ public class JsonParser {
             e.printStackTrace();
         }
 
-        return new CardDeck(id, visible, userGroup, name, description);
+        return new CardDeck(id, visible, userGroup, name, description, 0);
     }
 
     private static List<FlashCard> readFlashCardArray(JsonReader reader) {

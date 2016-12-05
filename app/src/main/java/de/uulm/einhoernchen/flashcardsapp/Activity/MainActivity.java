@@ -590,9 +590,9 @@ public class MainActivity extends AppCompatActivity
      * @since 2016-12-03
      */
     private void isServerAlive () {
+
         AsyncGetRemoteHeartbeat asyncGetRemoteHeartbeat = new AsyncGetRemoteHeartbeat(new AsyncGetRemoteHeartbeat.AsyncResponseHeartbeat() {
-
-
+            
             @Override
             public void processFinish(Boolean isAlive) {
 

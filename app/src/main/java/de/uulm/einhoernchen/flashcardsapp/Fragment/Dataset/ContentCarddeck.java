@@ -33,6 +33,7 @@ public class ContentCarddeck {
 
     private static List<CardDeck> cardDecks = new ArrayList<>();
     private static boolean isUpToDate = false;
+    private static DbManager db;
 
     /**
      * @author Jonas Kraus jonas.kraus@uni-ulm.de
@@ -43,6 +44,8 @@ public class ContentCarddeck {
      *
      */
     public void collectItemsFromServer(final long parentId, final FragmentManager fragmentManager, ProgressBar progressBarMain, final boolean backPressed, final DbManager db) {
+
+        this.db = db;
 
         AsyncGetRemoteCarddeck asyncGetCarddeck = new AsyncGetRemoteCarddeck(parentId, new AsyncGetRemoteCarddeck.AsyncResponseCarddeck() {
 
@@ -101,6 +104,8 @@ public class ContentCarddeck {
      * @param db
      */
     public void collectItemsFromDb(final long parentId, final FragmentManager supportFragmentManager, final ProgressBar progressBar, final boolean backPressed, final DbManager db) {
+
+        this.db = db;
 
         AsyncGetLocalCardDeck asyncGetLocalCardDeck = new AsyncGetLocalCardDeck(parentId, new AsyncGetLocalCardDeck.AsyncResponseCardDeckLocal() {
 
@@ -201,7 +206,7 @@ public class ContentCarddeck {
                     recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
                 }
 
-                recyclerView.setAdapter(new RecyclerViewAdapterCarddeck(cardDecks, mListener, isUpToDate));
+                recyclerView.setAdapter(new RecyclerViewAdapterCarddeck(db, cardDecks, mListener, isUpToDate));
             }
             return view;
         }

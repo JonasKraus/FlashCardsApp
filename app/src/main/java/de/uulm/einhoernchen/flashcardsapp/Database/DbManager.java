@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteQueryBuilder;
 import android.util.Log;
 
 import java.sql.SQLException;
@@ -30,6 +31,7 @@ public class DbManager {
     private SQLiteDatabase database;
     private DbHelper dbHelper;
     private Context context;
+    private User loggedInUser;
 
     /**
      * All Columns of an user
@@ -41,10 +43,11 @@ public class DbManager {
             DbHelper.COLUMN_USER_PASSWORD,            //3
             DbHelper.COLUMN_USER_EMAIL,               //4
             DbHelper.COLUMN_USER_RATING,              //5
-            DbHelper.COLUMN_USER_GROUP,            //6
+            DbHelper.COLUMN_USER_GROUP,               //6
             DbHelper.COLUMN_USER_CREATED,             //7
             DbHelper.COLUMN_USER_LAST_LOGIN,          //8
-            DbHelper.COLUMN_USER_LOCAL_ACCOUNT        //9
+            DbHelper.COLUMN_USER_LOCAL_ACCOUNT,       //9
+            DbHelper.COLUMN_USER_IS_LOGGED_IN         //10
     };
 
     private String[] allFlashCardColumns = {
@@ -140,6 +143,14 @@ public class DbManager {
             DbHelper.COLUMN_CARD_DECK_PARENT,         //5
     };
 
+    private String[] allSelectionColumns = {
+            DbHelper.COLUMN_SELECTION_ID,             //0
+            DbHelper.COLUMN_SELECTION_USER_ID,        //1
+            DbHelper.COLUMN_SELECTION_CARD_DECK_ID,   //2
+            DbHelper.COLUMN_SELECTION_CARD_ID,        //3
+            DbHelper.COLUMN_SELECTION_DATE            //4
+    };
+
     /**
      * Constructor
      *
@@ -160,6 +171,8 @@ public class DbManager {
     public void open() throws SQLException {
 
         this.database = dbHelper.getWritableDatabase();
+
+        this.loggedInUser = getLoggedInUser();
     }
 
 
@@ -200,6 +213,7 @@ public class DbManager {
         values.put(DbHelper.COLUMN_USER_CREATED, created); // @TODO check correct date
         values.put(DbHelper.COLUMN_USER_LAST_LOGIN, lastLogin); // @TODO check correct date
         values.put(DbHelper.COLUMN_USER_LOCAL_ACCOUNT, localAccount);
+        values.put(DbHelper.COLUMN_USER_IS_LOGGED_IN, localAccount);
 
         // Executes the query
         Long id = database.insertWithOnConflict(DbHelper.TABLE_USER, null, values, SQLiteDatabase.CONFLICT_REPLACE);
@@ -217,7 +231,11 @@ public class DbManager {
      */
     public User getLocalAccountUser() {
 
-        Cursor cursor = database.query(DbHelper.TABLE_USER, allUserColumns, DbHelper.COLUMN_USER_LOCAL_ACCOUNT + " = " + 1, null, null, null, null);
+        Cursor cursor = database.query(
+                DbHelper.TABLE_USER, allUserColumns,
+                DbHelper.COLUMN_USER_LOCAL_ACCOUNT + " = " + 1 + " AND " + DbHelper.COLUMN_USER_IS_LOGGED_IN + " = " + 1,
+                null, null, null, null);
+
         User user = null;
 
         if (cursor.moveToFirst()) {
@@ -250,13 +268,54 @@ public class DbManager {
      */
     public boolean checkIfLocalAccountUserExists() {
 
-        Cursor cursor = database.query(DbHelper.TABLE_USER, allUserColumns,  DbHelper.COLUMN_USER_LOCAL_ACCOUNT + " = " + 1, null, null, null, null);
+        Cursor cursor = database.query(DbHelper.TABLE_USER, allUserColumns,
+                DbHelper.COLUMN_USER_LOCAL_ACCOUNT + " = " + 1 + " AND " + DbHelper.COLUMN_USER_IS_LOGGED_IN + " = " + 1
+                , null, null, null, null);
 
         boolean exists = cursor.getCount() > 0;
 
         cursor.close();
 
         return exists;
+    }
+
+
+    /**
+     * Get the currently logged in user
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     * @since 2016-12-05
+     *
+     * @return
+     */
+    public User getLoggedInUser() {
+
+        User user = null;
+        Cursor cursor = database.query(DbHelper.TABLE_USER, allUserColumns,
+                DbHelper.COLUMN_USER_LOCAL_ACCOUNT + " = " + 1 + " AND " + DbHelper.COLUMN_USER_IS_LOGGED_IN + " = " + 1
+                , null, null, null, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                long id = cursor.getLong(0);
+                String name = cursor.getString(2);
+                String avatar = cursor.getString(1);
+                // no pwd saved
+                String email = cursor.getString(4);
+                int rating = cursor.getInt(5);
+
+                //long groupId = cursor.getLong(5); not needed here
+                String created = cursor.getString(7);
+                String lastLogin = cursor.getString(8);
+
+                user = new User(id, avatar, name, email, rating, created, lastLogin);
+
+            } while (cursor.moveToNext());
+        }
+
+        cursor.close();
+
+        return user;
     }
 
     /**
@@ -650,9 +709,19 @@ public class DbManager {
 
     public List<CardDeck> getCardDecks(Long parentId) {
 
+        SQLiteQueryBuilder qb = new SQLiteQueryBuilder();
+
+        qb.setTables(DbHelper.TABLE_CARD_DECK +
+                " LEFT JOIN " + DbHelper.TABLE_SELECTION + " ON "
+                + DbHelper.TABLE_CARD_DECK + "." + DbHelper.COLUMN_CARD_DECK_ID + " = " +  DbHelper.TABLE_SELECTION + "." + DbHelper.COLUMN_SELECTION_CARD_DECK_ID
+                + " AND " + DbHelper.TABLE_SELECTION + "." + DbHelper.COLUMN_SELECTION_USER_ID + " = " + loggedInUser.getId()
+        );
+
+        Cursor cursor = qb.query(database, null, null, null, null, null, null);
+
         List<CardDeck> cardDecks = new ArrayList<CardDeck>();
 
-        Cursor cursor = database.query(DbHelper.TABLE_CARD_DECK, allCardDeckColumns, DbHelper.COLUMN_CARD_DECK_PARENT + " = " + parentId, null, null, null, null);
+        //Cursor cursor = database.query(DbHelper.TABLE_CARD_DECK, allCardDeckColumns, DbHelper.COLUMN_CARD_DECK_PARENT + " = " + parentId, null, null, null, null);
 
         if (cursor.moveToFirst()) {
             do {
@@ -662,9 +731,13 @@ public class DbManager {
                 boolean cardDeckVisible = cursor.getInt(3) > 0;
                 long cardDeckGroupId = cursor.getLong(4);
                 long cardDeckParentId = cursor.getLong(5);
+                long selectionDate = cursor.getLong(cursor.getColumnIndex(dbHelper.COLUMN_SELECTION_DATE));
+
+                boolean isSelected = selectionDate > 0;
+                Log.d("selection ", selectionDate + "");
 
                 UserGroup userGroup = getUserGroup(cardDeckGroupId);
-                cardDecks.add(new CardDeck(cardDeckId,cardDeckVisible, userGroup,cardDeckName, cardDeckDescription));
+                cardDecks.add(new CardDeck(cardDeckId,cardDeckVisible, userGroup,cardDeckName, cardDeckDescription, selectionDate));
 
             } while (cursor.moveToNext());
         }
@@ -847,4 +920,68 @@ public class DbManager {
                 + " AND " + DbHelper.COLUMN_CARD_TAG_FLASHCARD_ID + "=" + cardId, null);
     }
 
+
+    /**
+     * Returns the date when a carddeck was selected
+     * if 0 then carddeck is not selected
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     * @since 2016-12-05
+     *
+     * @param carddeckID
+     * @return
+     */
+    public long getCarddeckSelectionDate(long carddeckID) {
+
+        Cursor cursor = database.query(DbHelper.TABLE_SELECTION, allSelectionColumns, DbHelper.COLUMN_SELECTION_CARD_DECK_ID + " = " + carddeckID
+                + " AND " + DbHelper.COLUMN_SELECTION_USER_ID + " = " + loggedInUser.getId()
+                , null, null, null, null);
+
+        long selectionDate = 0;
+
+        if (cursor.moveToFirst()) {
+            do {
+
+                selectionDate = cursor.getLong(cursor.getColumnIndex(DbHelper.COLUMN_SELECTION_DATE));
+            } while (cursor.moveToNext());
+
+        }
+
+        cursor.close();
+
+        return selectionDate;
+    }
+
+    /**
+     * Deselects a carddeck
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     * @since 2016-12-05
+     *
+     * @param carddeckID
+     */
+    public void deselectCarddeck(long carddeckID) {
+        database.delete(DbHelper.TABLE_SELECTION, DbHelper.COLUMN_SELECTION_CARD_DECK_ID + "=" + carddeckID
+                + " AND " + DbHelper.COLUMN_SELECTION_USER_ID + "=" + loggedInUser.getId(), null);
+    }
+
+
+    /**
+     * Selects a carddeck
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     * @since 2016-12-05
+     *
+     * @param carddeckID
+     */
+    public void selectCarddeck(long carddeckID) {
+
+        ContentValues values = new ContentValues();
+        values.put(DbHelper.COLUMN_SELECTION_CARD_DECK_ID, carddeckID);
+        values.put(DbHelper.COLUMN_SELECTION_USER_ID, loggedInUser.getId());
+        values.put(DbHelper.COLUMN_SELECTION_DATE,  System.currentTimeMillis());
+
+        // Executes the query
+        database.insert(DbHelper.TABLE_SELECTION, null, values);
+    }
 }

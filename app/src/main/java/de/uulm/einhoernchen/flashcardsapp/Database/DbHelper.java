@@ -22,6 +22,7 @@ public class DbHelper extends SQLiteOpenHelper {
     public static final String COLUMN_USER_CREATED= "created";                          //7
     public static final String COLUMN_USER_LAST_LOGIN= "lastLogin";                     //8
     public static final String COLUMN_USER_LOCAL_ACCOUNT= "localAccount";               //9
+    public static final String COLUMN_USER_IS_LOGGED_IN= "isLoggedIn";                 //10
     // @TODO Auth Token
 
     // Strings for table flashcard
@@ -100,11 +101,18 @@ public class DbHelper extends SQLiteOpenHelper {
     public static final String TABLE_CATEGORY = "category";
     public static final String COLUMN_CATEGORY_ID = "categoryId";                       //0
     public static final String COLUMN_CATEGORY_NAME = "categoryName";                   //1
-    public static final String COLUMN_CATEGORY_PARENT = "parentId";                     //2
+    public static final String COLUMN_CATEGORY_PARENT = "parentId";
+
+    public static final String TABLE_SELECTION = "selection";
+    public static final String COLUMN_SELECTION_ID = "selectionId";                       //0
+    public static final String COLUMN_SELECTION_USER_ID = "userId";                       //1
+    public static final String COLUMN_SELECTION_CARD_DECK_ID = "carddeckId";              //2
+    public static final String COLUMN_SELECTION_CARD_ID = "cardId";                       //3
+    public static final String COLUMN_SELECTION_DATE = "selectionDate";                   //4
 
     // Database name and version - increase when existing table is altered
     private static final String DATABASE_NAME = "flashcardsDb.db";
-    private static final int DATABASE_VERSION = 7; // @TODO revert version before first release
+    private static final int DATABASE_VERSION = 10; // @TODO revert version before first release
 
     /**
      * Database creation sql statement for table user
@@ -131,6 +139,8 @@ public class DbHelper extends SQLiteOpenHelper {
             + COLUMN_USER_LAST_LOGIN
             + " text, "  // TODO should be not null
             + COLUMN_USER_LOCAL_ACCOUNT
+            + " integer default 0, "
+            + COLUMN_USER_IS_LOGGED_IN
             + " integer default 0"
             + ");";
 
@@ -270,6 +280,20 @@ public class DbHelper extends SQLiteOpenHelper {
             + " integer "
             + ");";
 
+    private static final String SELECTION_CREATE = "create table "
+            + TABLE_SELECTION + "("
+            + COLUMN_SELECTION_ID
+            + " integer primary key AUTOINCREMENT NOT NULL, "
+            + COLUMN_SELECTION_USER_ID
+            + " integer not null, "
+            + COLUMN_SELECTION_CARD_DECK_ID
+            + " integer default null, "
+            + COLUMN_SELECTION_CARD_ID
+            + " integer default null, "
+            + COLUMN_SELECTION_DATE
+            + " INTEGER DEFAULT CURRENT_TIMESTAMP"
+            + ");";
+
     /**
      * Constructor
      *
@@ -292,6 +316,7 @@ public class DbHelper extends SQLiteOpenHelper {
         db.execSQL(AUTH_TOKEN_CREATE);
         db.execSQL(CARD_DECK_CREATE);
         db.execSQL(CATEGORY_CREATE);
+        db.execSQL(SELECTION_CREATE);
     }
 
     @Override
@@ -312,6 +337,7 @@ public class DbHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_AUTH_TOKEN);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_CARD_DECK);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_CATEGORY);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_SELECTION);
 
         onCreate(db);
     }

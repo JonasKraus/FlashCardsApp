@@ -61,6 +61,7 @@ public class FragmentHome extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
@@ -71,12 +72,12 @@ public class FragmentHome extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
+        isServerAlive();
 
         View view = inflater.inflate(R.layout.fragment_home, container, false);
 
         textView = (TextView) view.findViewById(R.id.textview_fragment_home);
 
-        isServerAlive();
         textView.setText("Server is alive: " + this.isAlive);
 
         // Inflate the layout for this fragment
@@ -130,7 +131,7 @@ public class FragmentHome extends Fragment {
      * @since 2016-12-03
      */
     private void isServerAlive () {
-
+        Log.d("fragment", "call");
         AsyncGetRemoteHeartbeat asyncGetRemoteHeartbeat = new AsyncGetRemoteHeartbeat(new AsyncGetRemoteHeartbeat.AsyncResponseHeartbeat() {
 
             @Override
@@ -145,7 +146,7 @@ public class FragmentHome extends Fragment {
 
     private void setAlive (boolean isAlive) {
 
-        isServerAlive();
+        //isServerAlive();
         textView.setText("Server is alive: " + this.isAlive);
         this.isAlive = isAlive;
     }

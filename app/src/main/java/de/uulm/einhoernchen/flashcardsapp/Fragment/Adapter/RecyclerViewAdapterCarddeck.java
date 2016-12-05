@@ -13,6 +13,7 @@ import com.amulyakhare.textdrawable.util.ColorGenerator;
 
 import java.util.List;
 
+import de.uulm.einhoernchen.flashcardsapp.Database.DbManager;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.Dataset.DummyContent.DummyItem;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.Dataset.ContentCarddeck;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.Dataset.ContentCarddeck.OnCarddeckListFragmentInteractionListener;
@@ -28,11 +29,13 @@ public class RecyclerViewAdapterCarddeck extends RecyclerView.Adapter<RecyclerVi
     private final List<CardDeck> cardDecks;
     private final OnCarddeckListFragmentInteractionListener mListener;
     private final boolean isUpToDate;
+    private final DbManager db;
 
-    public RecyclerViewAdapterCarddeck(List<CardDeck> items, OnCarddeckListFragmentInteractionListener listener, boolean isUpToDate) {
+    public RecyclerViewAdapterCarddeck(DbManager db, List<CardDeck> items, OnCarddeckListFragmentInteractionListener listener, boolean isUpToDate) {
         cardDecks = items;
         mListener = listener;
         this.isUpToDate = isUpToDate;
+        this.db = db;
     }
 
     @Override
@@ -46,11 +49,11 @@ public class RecyclerViewAdapterCarddeck extends RecyclerView.Adapter<RecyclerVi
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.mItem = cardDecks.get(position);
         // holder.mIdView.setText(cardDecks.get(position).getId() + ""); TODO Wird das benötigt?
-        holder.mContentView.setText(cardDecks.get(position).getName() + "");
-        String userGroupName = cardDecks.get(position).getUserGroup() != null ? cardDecks.get(position).getUserGroup().getName() : "No Author";
+        holder.mContentView.setText(holder.mItem.getName() + "");
+        String userGroupName = holder.mItem.getUserGroup() != null ? cardDecks.get(position).getUserGroup().getName() : "No Author";
         holder.mAuthorView.setText(userGroupName);
         // holder.mGroupRatingView.setVisibility(View.INVISIBLE);
-        holder.mCardRatingView.setText(cardDecks.get(position).getRatingForView());
+        holder.mCardRatingView.setText(holder.mItem.getRatingForView());
         //holder.mDateView.setText(cardDecks.get(position).getLastUpdatedString());
         holder.mDateView.setVisibility(View.INVISIBLE);
         holder.mBookmarkView.setVisibility(View.INVISIBLE);
@@ -80,14 +83,31 @@ public class RecyclerViewAdapterCarddeck extends RecyclerView.Adapter<RecyclerVi
 
         ColorGenerator generator = ColorGenerator.MATERIAL; // or use DEFAULT
         // generate random color
-        final int color = generator.getColor(cardDecks.get(position).getId()); // TODO
+        final int color = generator.getColor(holder.mItem.getId()); // TODO
         //int color = generator.getRandomColor();
 
-        TextDrawable drawable = TextDrawable.builder()
-                .buildRound(firstLetter, color); // radius in px
+
+        final long carddeckID = holder.mItem.getId();
+        holder.mItem.setSelectionDate(db.getCarddeckSelectionDate(carddeckID));
+        holder.imageView.setTag(holder.mItem.getSelectionDate()>0);
+
+        TextDrawable drawable;
+
+        if (holder.imageView.getTag().equals(false)) {
+
+            drawable = TextDrawable.builder()
+                    .buildRound(firstLetter, color); // radius in px
+            holder.imageView.setTag(false);
+
+
+        } else {
+
+            drawable = TextDrawable.builder()
+                    .buildRound(String.valueOf("✓"), Color.GRAY); // radius in px
+            holder.imageView.setTag(true);
+        }
 
         holder.imageView.setImageDrawable(drawable);
-        holder.imageView.setTag(false);
 
         holder.imageView.setOnClickListener(new View.OnClickListener(){
 
@@ -99,10 +119,16 @@ public class RecyclerViewAdapterCarddeck extends RecyclerView.Adapter<RecyclerVi
 
                 // @TODO Set card as checked
                 if (holder.imageView.getTag().equals(true)) {
+
                     drawable = TextDrawable.builder()
                             .buildRound(firstLetter, color); // radius in px
                     holder.imageView.setTag(false);
+
+                    db.deselectCarddeck(carddeckID);
+
                 } else {
+
+                    db.selectCarddeck(carddeckID);
                     String firstLetter = String.valueOf("✓"); // hier wird der buchstabe gesetzt
                     drawable = TextDrawable.builder()
                             .buildRound(firstLetter, Color.GRAY); // radius in px
