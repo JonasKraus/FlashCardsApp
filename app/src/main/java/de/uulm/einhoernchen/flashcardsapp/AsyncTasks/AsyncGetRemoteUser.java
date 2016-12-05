@@ -44,6 +44,8 @@ public class AsyncGetRemoteUser extends AsyncTask<Long, Void, User>{
 
         String urlString = Routes.URL + Routes.SLASH + Routes.USERS + Routes.SLASH + id; // URL to call
 
+        Log.d("back call to ", urlString);
+
         HttpURLConnection urlConnection = null;
 
         try {

@@ -89,12 +89,9 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         // Immediately change to home activity
         if (db.checkIfLocalAccountUserExists()) {
-            Log.d("Login", "user bereits vorhanden");
 
            // startActivity(new Intent(LoginActivity.this, ItemListActivity.class));
             startActivity(new Intent(LoginActivity.this, MainActivity.class));
-        } else {
-            Log.d("Login", "user noch nicht vorhanden");
         }
 
 
@@ -465,8 +462,11 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 String decodedString;
                 while ((decodedString = in.readLine()) != null) {
 
+                    Log.d("decoded", decodedString);
                     int response = urlConnection.getResponseCode();
 
+
+                    Log.d("response", response +"");
                     if (response >= 200 && response <= 399) {
 
                         ObjectMapper mapper = new ObjectMapper();
@@ -476,6 +476,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                         return id;
                     } else {
 
+                        Log.d("response", response +"");
                         return null;
                     }
                 }
@@ -483,7 +484,12 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
             } catch (Exception e) {
 
-                System.out.println(e.getMessage());
+                if (db.loginUser(mEmail, mUserName, mPassword)) {
+                    startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                }
+
+
+                Log.e("error User", e.toString());
 
             }
             return null;

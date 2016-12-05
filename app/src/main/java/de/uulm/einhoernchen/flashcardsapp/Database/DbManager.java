@@ -1111,4 +1111,18 @@ public class DbManager {
 
         database.update(DbHelper.TABLE_USER, values, DbHelper.COLUMN_USER_ID + " = " + loggedInUser.getId(), null);
     }
+
+    public boolean loginUser(String mEmail, String mUserName, String mPassword) {
+        ContentValues values = new ContentValues();
+        values.put(DbHelper.COLUMN_USER_IS_LOGGED_IN, 1);
+
+        int affectedRows = database.update(DbHelper.TABLE_USER, values,
+                DbHelper.COLUMN_USER_NAME + " = '" + mUserName
+                + "' AND " + DbHelper.COLUMN_USER_EMAIL + " = '" + mEmail
+                + "' AND " + DbHelper.COLUMN_USER_PASSWORD + " = '" + mPassword
+                + "' AND " + DbHelper.COLUMN_USER_LOCAL_ACCOUNT + " = " + 1
+                , null);
+
+        return affectedRows > 0;
+    }
 }
