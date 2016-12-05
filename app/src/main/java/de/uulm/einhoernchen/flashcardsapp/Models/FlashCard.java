@@ -64,6 +64,7 @@ public class FlashCard {
 
     @JsonIgnore
     private boolean isMarked;
+    private long selectionDate;
 
     public FlashCard(User author, boolean multipleChoice, List<String> tags) {
         this.author = author;
@@ -351,6 +352,14 @@ public class FlashCard {
         } else {
             return "-" + this.getRating();
         }
+    }
+
+    public void setSelectionDate(long selectionDate) {
+        this.selectionDate = selectionDate;
+    }
+
+    public long getSelectionDate() {
+        return selectionDate;
     }
 }
 

@@ -11,6 +11,7 @@ import android.widget.TextView;
 import com.amulyakhare.textdrawable.TextDrawable;
 import com.amulyakhare.textdrawable.util.ColorGenerator;
 
+import de.uulm.einhoernchen.flashcardsapp.Database.DbManager;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.Dataset.ContentCard;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.Dataset.ContentCard.ItemFragmentFlashcard.OnFlashcardListFragmentInteractionListener;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.Dataset.DummyContent.DummyItem;
@@ -29,11 +30,13 @@ public class RecyclerViewAdapterFlashcard extends RecyclerView.Adapter<RecyclerV
     private final List<FlashCard> flashCards;
     private final OnFlashcardListFragmentInteractionListener mListener;
     private final boolean isUpToDate;
+    private final DbManager db;
 
-    public RecyclerViewAdapterFlashcard(List<FlashCard> items, OnFlashcardListFragmentInteractionListener listener, boolean isUpToDate) {
+    public RecyclerViewAdapterFlashcard(DbManager db, List<FlashCard> items, OnFlashcardListFragmentInteractionListener listener, boolean isUpToDate) {
         flashCards = items;
         mListener = listener;
         this.isUpToDate = isUpToDate;
+        this.db = db;
     }
 
     @Override
@@ -87,11 +90,27 @@ public class RecyclerViewAdapterFlashcard extends RecyclerView.Adapter<RecyclerV
         final int color = generator.getColor(authorRanking);
         //int color = generator.getRandomColor();
 
-        TextDrawable drawable = TextDrawable.builder()
-                .buildRound(firstLetter, color); // radius in px
+        final long cardID = holder.mItem.getId();
+        holder.mItem.setSelectionDate(db.getCardSelectionDate(cardID));
+        holder.imageView.setTag(holder.mItem.getSelectionDate()>0);
+
+        TextDrawable drawable;
+
+        if (holder.imageView.getTag().equals(false)) {
+
+            drawable = TextDrawable.builder()
+                    .buildRound(firstLetter, color); // radius in px
+            holder.imageView.setTag(false);
+
+
+        } else {
+
+            drawable = TextDrawable.builder()
+                    .buildRound(String.valueOf("✓"), Color.GRAY); // radius in px
+            holder.imageView.setTag(true);
+        }
 
         holder.imageView.setImageDrawable(drawable);
-        holder.imageView.setTag(false);
 
 
         holder.imageView.setOnClickListener(new View.OnClickListener(){
@@ -107,7 +126,11 @@ public class RecyclerViewAdapterFlashcard extends RecyclerView.Adapter<RecyclerV
                     drawable = TextDrawable.builder()
                             .buildRound(firstLetter, color); // radius in px
                     holder.imageView.setTag(false);
+
+                    db.deselectCard(cardID);
                 } else {
+
+                    db.selectCard(cardID);
                     String firstLetter = String.valueOf("✓"); // hier wird der buchstabe gesetzt
                     drawable = TextDrawable.builder()
                             .buildRound(firstLetter, Color.GRAY); // radius in px

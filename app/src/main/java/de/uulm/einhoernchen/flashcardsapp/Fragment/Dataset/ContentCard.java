@@ -35,6 +35,8 @@ public class ContentCard {
     public static ContentCard.ItemFragmentFlashcard fragment;
 
     private static boolean isUpToDate = false;
+    private static DbManager db;
+
 
 
     /**
@@ -45,7 +47,9 @@ public class ContentCard {
      * @param fragmentManager
      * @param progressBarMain
      */
-    public static void collectItemsFromServer(final long parentId, final FragmentManager fragmentManager, ProgressBar progressBarMain, final boolean backPressed, final DbManager db) {
+    public void collectItemsFromServer(final long parentId, final FragmentManager fragmentManager, ProgressBar progressBarMain, final boolean backPressed, final DbManager db) {
+
+        this.db = db;
 
         AsyncGetRemoteFlashCard asyncGetFlashCard = new AsyncGetRemoteFlashCard(parentId, new AsyncGetRemoteFlashCard.AsyncResponseFlashCard() {
 
@@ -112,6 +116,8 @@ public class ContentCard {
      * @param db
      */
     public void collectItemsFromDb(final long parentId, final FragmentManager supportFragmentManager, final ProgressBar progressBar, final boolean backPressed, final DbManager db) {
+
+        this.db = db;
 
         AsyncGetLocalFlashCard asyncGetFlashCardLocal = new AsyncGetLocalFlashCard(parentId, new AsyncGetLocalFlashCard.AsyncResponseFlashCardLocal() {
 
@@ -217,7 +223,7 @@ public class ContentCard {
                 }
 
                 // Set the view with the data
-                recyclerView.setAdapter(new RecyclerViewAdapterFlashcard(flashCards, mListener, isUpToDate));
+                recyclerView.setAdapter(new RecyclerViewAdapterFlashcard(db, flashCards, mListener, isUpToDate));
             }
             return view;
         }

@@ -734,7 +734,6 @@ public class DbManager {
                 long selectionDate = cursor.getLong(cursor.getColumnIndex(dbHelper.COLUMN_SELECTION_DATE));
 
                 boolean isSelected = selectionDate > 0;
-                Log.d("selection ", selectionDate + "");
 
                 UserGroup userGroup = getUserGroup(cardDeckGroupId);
                 cardDecks.add(new CardDeck(cardDeckId,cardDeckVisible, userGroup,cardDeckName, cardDeckDescription, selectionDate));
@@ -965,6 +964,19 @@ public class DbManager {
                 + " AND " + DbHelper.COLUMN_SELECTION_USER_ID + "=" + loggedInUser.getId(), null);
     }
 
+    /**
+     * Deselects a card
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     * @since 2016-12-05
+     *
+     * @param cardID
+     */
+    public void deselectCard(long cardID) {
+        database.delete(DbHelper.TABLE_SELECTION, DbHelper.COLUMN_SELECTION_CARD_ID + "=" + cardID
+                + " AND " + DbHelper.COLUMN_SELECTION_USER_ID + "=" + loggedInUser.getId(), null);
+    }
+
 
     /**
      * Selects a carddeck
@@ -983,5 +995,57 @@ public class DbManager {
 
         // Executes the query
         database.insert(DbHelper.TABLE_SELECTION, null, values);
+    }
+
+
+    /**
+     * Selects a card
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     * @since 2016-12-05
+     *
+     * @param cardID
+     */
+    public void selectCard(long cardID) {
+
+        ContentValues values = new ContentValues();
+        values.put(DbHelper.COLUMN_SELECTION_CARD_ID, cardID);
+        values.put(DbHelper.COLUMN_SELECTION_USER_ID, loggedInUser.getId());
+        values.put(DbHelper.COLUMN_SELECTION_DATE,  System.currentTimeMillis());
+
+        // Executes the query
+        database.insert(DbHelper.TABLE_SELECTION, null, values);
+    }
+
+
+    /**
+     * Returns the timestamp when a card was selected if 0 then card wasnt selected
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     * @since 2016-12-05
+     *
+     * @param cardID
+     * @return
+     */
+    public long getCardSelectionDate(long cardID) {
+
+        Cursor cursor = database.query(DbHelper.TABLE_SELECTION, allSelectionColumns, DbHelper.COLUMN_SELECTION_CARD_ID + " = " + cardID
+                        + " AND " + DbHelper.COLUMN_SELECTION_USER_ID + " = " + loggedInUser.getId()
+                , null, null, null, null);
+
+        long selectionDate = 0;
+
+        if (cursor.moveToFirst()) {
+            do {
+
+                selectionDate = cursor.getLong(cursor.getColumnIndex(DbHelper.COLUMN_SELECTION_DATE));
+            } while (cursor.moveToNext());
+
+        }
+
+        cursor.close();
+
+        return selectionDate;
+
     }
 }
