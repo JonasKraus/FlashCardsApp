@@ -765,6 +765,7 @@ public class JsonParser {
 
                 if (stringName.equals(JsonKeys.CURRENT_DATE)) {
                     date = reader.nextString();
+                    Log.d("heartbeat", date.toString());
                     isAlive = true;
 
                 } else {
