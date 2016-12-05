@@ -1,6 +1,5 @@
-package de.uulm.einhoernchen.flashcardsapp.Fragment;
+package de.uulm.einhoernchen.flashcardsapp.Fragment.Adapter;
 
-import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,24 +12,23 @@ import com.amulyakhare.textdrawable.util.ColorGenerator;
 
 import java.util.List;
 
-import de.uulm.einhoernchen.flashcardsapp.Fragment.content.DummyContent.DummyItem;
-import de.uulm.einhoernchen.flashcardsapp.Fragment.content.ContentCarddeck;
-import de.uulm.einhoernchen.flashcardsapp.Fragment.content.ContentCarddeck.OnCarddeckListFragmentInteractionListener;
-import de.uulm.einhoernchen.flashcardsapp.Models.CardDeck;
+import de.uulm.einhoernchen.flashcardsapp.Fragment.Dataset.DummyContent.DummyItem;
+import de.uulm.einhoernchen.flashcardsapp.Fragment.Dataset.ContentCategory;
+import de.uulm.einhoernchen.flashcardsapp.Models.Category;
 import de.uulm.einhoernchen.flashcardsapp.R;
 
 /**
  * {@link RecyclerView.Adapter} that can display a {@link DummyItem} and makes a call to the
- * specified {@link ContentCarddeck.OnCarddeckListFragmentInteractionListener}.
+ * TODO: Replace the implementation with code for your data type.
  */
-public class RecyclerViewAdapterCarddeck extends RecyclerView.Adapter<RecyclerViewAdapterCarddeck.ViewHolder> {
+public class RecyclerViewAdapterCategory extends RecyclerView.Adapter<RecyclerViewAdapterCategory.ViewHolder> {
 
-    private final List<CardDeck> cardDecks;
-    private final OnCarddeckListFragmentInteractionListener mListener;
+    private final List<Category> categories;
+    private final ContentCategory.OnCategoryListFragmentInteractionListener mListener;
     private final boolean isUpToDate;
 
-    public RecyclerViewAdapterCarddeck(List<CardDeck> items, OnCarddeckListFragmentInteractionListener listener, boolean isUpToDate) {
-        cardDecks = items;
+    public RecyclerViewAdapterCategory(List<Category> items, ContentCategory.OnCategoryListFragmentInteractionListener listener, boolean isUpToDate) {
+        categories = items;
         mListener = listener;
         this.isUpToDate = isUpToDate;
     }
@@ -44,14 +42,12 @@ public class RecyclerViewAdapterCarddeck extends RecyclerView.Adapter<RecyclerVi
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        holder.mItem = cardDecks.get(position);
-        // holder.mIdView.setText(cardDecks.get(position).getId() + ""); TODO Wird das benötigt?
-        holder.mContentView.setText(cardDecks.get(position).getName() + "");
-        String userGroupName = cardDecks.get(position).getUserGroup() != null ? cardDecks.get(position).getUserGroup().getName() : "No Author";
-        holder.mAuthorView.setText(userGroupName);
+        holder.mItem = categories.get(position);
+        // holder.mIdView.setText(categories.get(position).getId()+""); TODO Wird das benötigt?
+        holder.mContentView.setText(categories.get(position).getName());
+        holder.mAuthorView.setVisibility(View.INVISIBLE);
         // holder.mGroupRatingView.setVisibility(View.INVISIBLE);
-        holder.mCardRatingView.setText(cardDecks.get(position).getRatingForView());
-        //holder.mDateView.setText(cardDecks.get(position).getLastUpdatedString());
+        holder.mCardRatingView.setVisibility(View.INVISIBLE);
         holder.mDateView.setVisibility(View.INVISIBLE);
         holder.mBookmarkView.setVisibility(View.INVISIBLE);
 
@@ -63,62 +59,36 @@ public class RecyclerViewAdapterCarddeck extends RecyclerView.Adapter<RecyclerVi
             holder.mLocalView.setVisibility(View.VISIBLE);
         }
 
-
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (null != mListener) {
                     // Notify the active callbacks interface (the activity, if the
                     // fragment is attached to one) that an item has been selected.
-                    mListener.onCarddeckListFragmentInteraction(holder.mItem);
+                    mListener.onCategoryListFragmentInteraction(holder.mItem);
                 }
             }
         });
 
         //get first letter of each String item
-        final String firstLetter = String.valueOf(cardDecks.get(position).getName().charAt(0)); // hier wird der buchstabe gesetzt
+        final String firstLetter = String.valueOf(categories.get(position).getName().charAt(0)); // hier wird der buchstabe gesetzt
 
         ColorGenerator generator = ColorGenerator.MATERIAL; // or use DEFAULT
         // generate random color
-        final int color = generator.getColor(cardDecks.get(position).getId()); // TODO
+        final int color = generator.getColor(categories.get(position).getId()); // TODO
         //int color = generator.getRandomColor();
 
         TextDrawable drawable = TextDrawable.builder()
                 .buildRound(firstLetter, color); // radius in px
 
         holder.imageView.setImageDrawable(drawable);
-        holder.imageView.setTag(false);
 
-        holder.imageView.setOnClickListener(new View.OnClickListener(){
-
-            @Override
-            public void onClick(View v) {
-                //v.startAnimation(AnimationUtils.loadAnimation(v.getContext(), R.anim.card_flip_left_out));
-                
-                TextDrawable drawable;
-
-                // @TODO Set card as checked
-                if (holder.imageView.getTag().equals(true)) {
-                    drawable = TextDrawable.builder()
-                            .buildRound(firstLetter, color); // radius in px
-                    holder.imageView.setTag(false);
-                } else {
-                    String firstLetter = String.valueOf("✓"); // hier wird der buchstabe gesetzt
-                    drawable = TextDrawable.builder()
-                            .buildRound(firstLetter, Color.GRAY); // radius in px
-                    holder.imageView.setTag(true);
-                }
-
-                holder.imageView.setImageDrawable(drawable);
-            }
-        });
     }
 
     @Override
     public int getItemCount() {
-        if (cardDecks != null) {
-            return cardDecks.size();
-
+        if (categories != null) {
+            return categories.size();
         }
         return 0;
     }
@@ -134,7 +104,7 @@ public class RecyclerViewAdapterCarddeck extends RecyclerView.Adapter<RecyclerVi
         public final ImageView mBookmarkView;
         public final ImageView mLocalView;
         public final ImageView imageView; // Text icon
-        public CardDeck mItem;
+        public Category mItem;
 
         public ViewHolder(View view) {
             super(view);

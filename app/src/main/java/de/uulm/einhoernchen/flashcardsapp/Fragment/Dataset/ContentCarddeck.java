@@ -1,4 +1,4 @@
-package de.uulm.einhoernchen.flashcardsapp.Fragment.content;
+package de.uulm.einhoernchen.flashcardsapp.Fragment.Dataset;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -15,43 +15,52 @@ import android.widget.ProgressBar;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.uulm.einhoernchen.flashcardsapp.AsyncTasks.AsyncGetLocalCategory;
-import de.uulm.einhoernchen.flashcardsapp.AsyncTasks.AsyncGetRemoteCategory;
-import de.uulm.einhoernchen.flashcardsapp.AsyncTasks.AsyncSaveLocalCategory;
+import de.uulm.einhoernchen.flashcardsapp.AsyncTasks.AsyncGetLocalCardDeck;
+import de.uulm.einhoernchen.flashcardsapp.AsyncTasks.AsyncGetRemoteCarddeck;
+
+import de.uulm.einhoernchen.flashcardsapp.AsyncTasks.AsyncSaveLocalCardDeck;
 import de.uulm.einhoernchen.flashcardsapp.Database.DbManager;
-import de.uulm.einhoernchen.flashcardsapp.Fragment.RecyclerViewAdapterCategory;
-import de.uulm.einhoernchen.flashcardsapp.Models.Category;
+import de.uulm.einhoernchen.flashcardsapp.Fragment.Adapter.RecyclerViewAdapterCarddeck;
+import de.uulm.einhoernchen.flashcardsapp.Models.CardDeck;
 import de.uulm.einhoernchen.flashcardsapp.R;
 
 /**
  * Helper class for providing sample content for user interfaces created by
  * Android template wizards.
- * <p/>
- * TODO: Replace all uses of this class before publishing your app.
+ *
  */
-public class ContentCategory {
+public class ContentCarddeck {
 
-    private static List<Category> categories = new ArrayList<>();
+    private static List<CardDeck> cardDecks = new ArrayList<>();
     private static boolean isUpToDate = false;
 
-    public void collectItemsFromServer(final int categoryLevel, final long parentId, final FragmentManager fragmentManager, ProgressBar progressBarMain, final boolean backPressed, final DbManager db) {
+    /**
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     * @since 2016.08.21
+     *
+     * @param parentId given by the main activity
+     * @param fragmentManager given by main activity
+     *
+     */
+    public void collectItemsFromServer(final long parentId, final FragmentManager fragmentManager, ProgressBar progressBarMain, final boolean backPressed, final DbManager db) {
 
-        AsyncGetRemoteCategory asyncGetCategory = new AsyncGetRemoteCategory(categoryLevel, parentId, new AsyncGetRemoteCategory.AsyncResponseCategory() {
+        AsyncGetRemoteCarddeck asyncGetCarddeck = new AsyncGetRemoteCarddeck(parentId, new AsyncGetRemoteCarddeck.AsyncResponseCarddeck() {
 
             @Override
-            public void processFinish(List<Category> categories) {
+            public void processFinish(List<CardDeck> cardDecks) {
 
                 // Saving the collected categories localy
-                AsyncSaveLocalCategory asyncSaveLocalCategory = new AsyncSaveLocalCategory(parentId);
-                asyncSaveLocalCategory.setDbManager(db);
-                asyncSaveLocalCategory.setCategories(categories);
-                asyncSaveLocalCategory.execute();
+                AsyncSaveLocalCardDeck asyncSaveLocalCarddeck = new AsyncSaveLocalCardDeck(parentId);
+                asyncSaveLocalCarddeck.setDbManager(db);
+                asyncSaveLocalCarddeck.setCardDecks(cardDecks);
+                asyncSaveLocalCarddeck.execute();
 
-                ContentCategory.categories = categories;
-                ContentCategory.ItemFragmentCategory fragment = new ContentCategory.ItemFragmentCategory();
+
+                ContentCarddeck.cardDecks = cardDecks;
+                ContentCarddeck.ItemFragmentCarddeck fragment = new ContentCarddeck.ItemFragmentCarddeck();
 
                 Bundle args = new Bundle();
-                args.putLong(ContentCarddeck.ItemFragmentCarddeck.ARG_PARENT_ID, parentId);
+                args.putLong(ItemFragmentCarddeck.ARG_PARENT_ID, parentId);
                 fragment.setArguments(args);
 
                 android.support.v4.app.FragmentTransaction fragmentTransaction =
@@ -73,24 +82,37 @@ public class ContentCategory {
 
         });
 
-        asyncGetCategory.setProgressbar(progressBarMain);
-        asyncGetCategory.execute();
+        asyncGetCarddeck.setProgressbar(progressBarMain);
+        asyncGetCarddeck.execute();
 
     }
 
-    public void collectItemsFromDb(final int categoryLevel, final long parentId, final FragmentManager supportFragmentManager, final ProgressBar progressBar, final boolean backPressed, final DbManager db) {
 
-        AsyncGetLocalCategory asyncGetLocalCategory = new AsyncGetLocalCategory(parentId, new AsyncGetLocalCategory.AsyncResponseCategoryLocal() {
+    /**
+     * Collects Carddecks from sqLite
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     * @since 2016-12-02
+     *
+     * @param parentId
+     * @param supportFragmentManager
+     * @param progressBar
+     * @param backPressed
+     * @param db
+     */
+    public void collectItemsFromDb(final long parentId, final FragmentManager supportFragmentManager, final ProgressBar progressBar, final boolean backPressed, final DbManager db) {
+
+        AsyncGetLocalCardDeck asyncGetLocalCardDeck = new AsyncGetLocalCardDeck(parentId, new AsyncGetLocalCardDeck.AsyncResponseCardDeckLocal() {
 
             @Override
-            public void processFinish(List<Category> categories) {
+            public void processFinish(List<CardDeck> cardDecks) {
 
-                ContentCategory.categories = categories;
+                ContentCarddeck.cardDecks = cardDecks;
 
-                ContentCategory.ItemFragmentCategory fragment = new ContentCategory.ItemFragmentCategory();
+                ContentCarddeck.ItemFragmentCarddeck fragment = new ContentCarddeck.ItemFragmentCarddeck();
 
                 Bundle args = new Bundle();
-                args.putLong(ContentCategory.ItemFragmentCategory.ARG_PARENT_ID, parentId);
+                args.putLong(ContentCarddeck.ItemFragmentCarddeck.ARG_PARENT_ID, parentId);
                 fragment.setArguments(args);
 
                 android.support.v4.app.FragmentTransaction fragmentTransaction =
@@ -114,39 +136,39 @@ public class ContentCategory {
 
         });
 
-        asyncGetLocalCategory.setProgressbar(progressBar);
-        asyncGetLocalCategory.setDbManager(db);
-        asyncGetLocalCategory.execute();
+        asyncGetLocalCardDeck.setProgressbar(progressBar);
+        asyncGetLocalCardDeck.setDbManager(db);
+        asyncGetLocalCardDeck.execute();
 
     }
 
 
     /**
-     * A fragment representing a list of Category Items.
+     * A fragment representing a list of Carddeck Items.
      * <p/>
-     * Activities containing this fragment MUST implement the {@link ContentCategory.OnCategoryListFragmentInteractionListener}
+     * Activities containing this fragment MUST implement the {@link OnCarddeckListFragmentInteractionListener}
      * interface.
      */
-    public static class ItemFragmentCategory extends Fragment {
+    public static class ItemFragmentCarddeck extends Fragment {
 
         private static final String ARG_COLUMN_COUNT = "column-count";
         public static final String ARG_PARENT_ID = "parentId";
         private int mColumnCount = 1;
-        private ContentCategory.OnCategoryListFragmentInteractionListener mListener;
+        private OnCarddeckListFragmentInteractionListener mListener;
 
         /**
          * Mandatory empty constructor for the fragment manager to instantiate the
          * fragment (e.g. upon screen orientation changes).
          */
-        public ItemFragmentCategory() {
+        public ItemFragmentCarddeck() {
         }
 
 
         // TODO: Customize parameter initialization
         @SuppressWarnings("unused")
-        public static ContentCategory.ItemFragmentCategory newInstance(int columnCount) {
+        public static ItemFragmentCarddeck newInstance(int columnCount) {
 
-            ContentCategory.ItemFragmentCategory fragment = new ContentCategory.ItemFragmentCategory();
+            ItemFragmentCarddeck fragment = new ItemFragmentCarddeck();
 
             Bundle args = new Bundle();
             args.putInt(ARG_COLUMN_COUNT, columnCount);
@@ -179,7 +201,7 @@ public class ContentCategory {
                     recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
                 }
 
-                recyclerView.setAdapter(new RecyclerViewAdapterCategory(categories, mListener, isUpToDate));
+                recyclerView.setAdapter(new RecyclerViewAdapterCarddeck(cardDecks, mListener, isUpToDate));
             }
             return view;
         }
@@ -187,8 +209,8 @@ public class ContentCategory {
         @Override
         public void onAttach(Context context) {
             super.onAttach(context);
-            if (context instanceof ContentCategory.OnCategoryListFragmentInteractionListener) {
-                mListener = (ContentCategory.OnCategoryListFragmentInteractionListener) context;
+            if (context instanceof OnCarddeckListFragmentInteractionListener) {
+                mListener = (OnCarddeckListFragmentInteractionListener) context;
             } else {
                 throw new RuntimeException(context.toString()
                         + " must implement OnListFragmentInteractionListener");
@@ -213,9 +235,8 @@ public class ContentCategory {
      * "http://developer.android.com/training/basics/fragments/communicating.html"
      * >Communicating with Other Fragments</a> for more information.
      */
-    public interface OnCategoryListFragmentInteractionListener {
+    public interface OnCarddeckListFragmentInteractionListener {
 
-        void onCategoryListFragmentInteraction(Category item);
+        void onCarddeckListFragmentInteraction(CardDeck item);
     }
-
 }

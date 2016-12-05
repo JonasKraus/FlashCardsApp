@@ -1,4 +1,4 @@
-package de.uulm.einhoernchen.flashcardsapp.Fragment.content;
+package de.uulm.einhoernchen.flashcardsapp.Fragment.Dataset;
 
 import java.util.ArrayList;
 import java.util.HashMap;

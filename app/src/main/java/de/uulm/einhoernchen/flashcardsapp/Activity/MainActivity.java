@@ -33,15 +33,13 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.uulm.einhoernchen.flashcardsapp.AsyncTasks.AsyncGetRemoteCarddeck;
 import de.uulm.einhoernchen.flashcardsapp.AsyncTasks.AsyncGetRemoteHeartbeat;
-import de.uulm.einhoernchen.flashcardsapp.AsyncTasks.AsyncSaveLocalCardDeck;
 import de.uulm.einhoernchen.flashcardsapp.Database.DbManager;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.FragmentFlashCard;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.FragmentHome;
-import de.uulm.einhoernchen.flashcardsapp.Fragment.content.ContentCard;
-import de.uulm.einhoernchen.flashcardsapp.Fragment.content.ContentCarddeck;
-import de.uulm.einhoernchen.flashcardsapp.Fragment.content.ContentCategory;
+import de.uulm.einhoernchen.flashcardsapp.Fragment.Dataset.ContentCard;
+import de.uulm.einhoernchen.flashcardsapp.Fragment.Dataset.ContentCarddeck;
+import de.uulm.einhoernchen.flashcardsapp.Fragment.Dataset.ContentCategory;
 import de.uulm.einhoernchen.flashcardsapp.Models.CardDeck;
 import de.uulm.einhoernchen.flashcardsapp.Models.Category;
 import de.uulm.einhoernchen.flashcardsapp.Models.FlashCard;

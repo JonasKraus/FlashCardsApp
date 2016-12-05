@@ -1,4 +1,4 @@
-package de.uulm.einhoernchen.flashcardsapp.Fragment.content;
+package de.uulm.einhoernchen.flashcardsapp.Fragment.Dataset;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -19,7 +19,7 @@ import de.uulm.einhoernchen.flashcardsapp.AsyncTasks.AsyncGetRemoteFlashCard;
 import de.uulm.einhoernchen.flashcardsapp.AsyncTasks.AsyncGetLocalFlashCard;
 import de.uulm.einhoernchen.flashcardsapp.AsyncTasks.AsyncSaveLocalFlashCard;
 import de.uulm.einhoernchen.flashcardsapp.Database.DbManager;
-import de.uulm.einhoernchen.flashcardsapp.Fragment.RecyclerViewAdapterFlashcard;
+import de.uulm.einhoernchen.flashcardsapp.Fragment.Adapter.RecyclerViewAdapterFlashcard;
 import de.uulm.einhoernchen.flashcardsapp.Models.FlashCard;
 import de.uulm.einhoernchen.flashcardsapp.R;
 
