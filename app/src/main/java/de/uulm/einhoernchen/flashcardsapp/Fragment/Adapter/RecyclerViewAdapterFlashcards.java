@@ -12,9 +12,8 @@ import com.amulyakhare.textdrawable.TextDrawable;
 import com.amulyakhare.textdrawable.util.ColorGenerator;
 
 import de.uulm.einhoernchen.flashcardsapp.Database.DbManager;
-import de.uulm.einhoernchen.flashcardsapp.Fragment.Dataset.ContentCard;
-import de.uulm.einhoernchen.flashcardsapp.Fragment.Dataset.ContentCard.ItemFragmentFlashcard.OnFlashcardListFragmentInteractionListener;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.Dataset.DummyContent.DummyItem;
+import de.uulm.einhoernchen.flashcardsapp.Fragment.Interfaces.OnFragmentInteractionListenerFlashcard;
 import de.uulm.einhoernchen.flashcardsapp.Models.FlashCard;
 import de.uulm.einhoernchen.flashcardsapp.R;
 
@@ -22,17 +21,16 @@ import java.util.List;
 
 /**
  * {@link RecyclerView.Adapter} that can display a {@link DummyItem} and makes a call to the
- * specified {@link ContentCard.ItemFragmentFlashcard.OnFlashcardListFragmentInteractionListener}.
  * TODO: Replace the implementation with code for your data type.
  */
-public class RecyclerViewAdapterFlashcard extends RecyclerView.Adapter<RecyclerViewAdapterFlashcard.ViewHolder> {
+public class RecyclerViewAdapterFlashcards extends RecyclerView.Adapter<RecyclerViewAdapterFlashcards.ViewHolder> {
 
     private final List<FlashCard> flashCards;
-    private final OnFlashcardListFragmentInteractionListener mListener;
+    private final OnFragmentInteractionListenerFlashcard mListener;
     private final boolean isUpToDate;
     private final DbManager db;
 
-    public RecyclerViewAdapterFlashcard(DbManager db, List<FlashCard> items, OnFlashcardListFragmentInteractionListener listener, boolean isUpToDate) {
+    public RecyclerViewAdapterFlashcards(DbManager db, List<FlashCard> items, OnFragmentInteractionListenerFlashcard listener, boolean isUpToDate) {
         flashCards = items;
         mListener = listener;
         this.isUpToDate = isUpToDate;

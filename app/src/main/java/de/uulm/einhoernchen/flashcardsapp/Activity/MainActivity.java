@@ -35,11 +35,14 @@ import java.util.List;
 
 import de.uulm.einhoernchen.flashcardsapp.AsyncTasks.Remote.AsyncGetRemoteHeartbeat;
 import de.uulm.einhoernchen.flashcardsapp.Database.DbManager;
+import de.uulm.einhoernchen.flashcardsapp.Fragment.Dataset.ContentFlashCards;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.FragmentFlashCard;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.FragmentHome;
-import de.uulm.einhoernchen.flashcardsapp.Fragment.Dataset.ContentCard;
-import de.uulm.einhoernchen.flashcardsapp.Fragment.Dataset.ContentCarddeck;
-import de.uulm.einhoernchen.flashcardsapp.Fragment.Dataset.ContentCategory;
+import de.uulm.einhoernchen.flashcardsapp.Fragment.Dataset.ContentCarddecks;
+import de.uulm.einhoernchen.flashcardsapp.Fragment.Dataset.ContentCategories;
+import de.uulm.einhoernchen.flashcardsapp.Fragment.Interfaces.OnFragmentInteractionListenerCarddeck;
+import de.uulm.einhoernchen.flashcardsapp.Fragment.Interfaces.OnFragmentInteractionListenerCategory;
+import de.uulm.einhoernchen.flashcardsapp.Fragment.Interfaces.OnFragmentInteractionListenerFlashcard;
 import de.uulm.einhoernchen.flashcardsapp.Models.CardDeck;
 import de.uulm.einhoernchen.flashcardsapp.Models.Category;
 import de.uulm.einhoernchen.flashcardsapp.Models.FlashCard;
@@ -50,7 +53,7 @@ import de.uulm.einhoernchen.flashcardsapp.Util.ProcessorImage;
 import de.uulm.einhoernchen.flashcardsapp.Util.PermissionManager;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, FragmentHome.OnFragmentInteractionListener, ContentCard.ItemFragmentFlashcard.OnFlashcardListFragmentInteractionListener, ContentCategory.OnCategoryListFragmentInteractionListener, ContentCarddeck.OnCarddeckListFragmentInteractionListener, FragmentFlashCard.OnFlashCardFragmentInteractionListener {
+        implements NavigationView.OnNavigationItemSelectedListener, FragmentHome.OnFragmentInteractionListener, OnFragmentInteractionListenerFlashcard, OnFragmentInteractionListenerCategory, OnFragmentInteractionListenerCarddeck, FragmentFlashCard.OnFlashCardFragmentInteractionListener {
 
 
     private DbManager db;
@@ -526,10 +529,10 @@ public class MainActivity extends AppCompatActivity
     private void setFlashcardList(boolean backPressed) {
 
         isServerAlive();
-        new ContentCard().collectItemsFromDb(this.childrenId, getSupportFragmentManager(), progressBar, backPressed, db);
+        new ContentFlashCards().collectItemsFromDb(this.childrenId, getSupportFragmentManager(), progressBar, backPressed, db);
 
         if (isNetworkAvailable() && isAlive) {
-            new ContentCard().collectItemsFromServer(this.childrenId, getSupportFragmentManager(), progressBar, backPressed, db);
+            new ContentFlashCards().collectItemsFromServer(this.childrenId, getSupportFragmentManager(), progressBar, backPressed, db);
         }
 
         catalogueState = Constants.FLASH_CARD_LIST;
@@ -538,10 +541,10 @@ public class MainActivity extends AppCompatActivity
     private void setCarddeckList(boolean backPressed) {
 
         isServerAlive();
-        new ContentCarddeck().collectItemsFromDb(this.childrenId, getSupportFragmentManager(), progressBar, backPressed, db);
+        new ContentCarddecks().collectItemsFromDb(this.childrenId, getSupportFragmentManager(), progressBar, backPressed, db);
 
         if (isNetworkAvailable() && isAlive) {
-            new ContentCarddeck().collectItemsFromServer(this.childrenId, getSupportFragmentManager(), progressBar, backPressed, db);
+            new ContentCarddecks().collectItemsFromServer(this.childrenId, getSupportFragmentManager(), progressBar, backPressed, db);
         }
 
         catalogueState = Constants.CARD_DECK_LIST;
@@ -550,10 +553,10 @@ public class MainActivity extends AppCompatActivity
     private void setCategoryList(boolean backPressed) {
 
         isServerAlive();
-        new ContentCategory().collectItemsFromDb(this.categoryLevel, this.childrenId, getSupportFragmentManager(), progressBar, backPressed, db);
+        new ContentCategories().collectItemsFromDb(this.categoryLevel, this.childrenId, getSupportFragmentManager(), progressBar, backPressed, db);
 
         if (isNetworkAvailable() && isAlive) {
-            new ContentCategory().collectItemsFromServer(this.categoryLevel, this.childrenId, getSupportFragmentManager(), progressBar, backPressed, db);
+            new ContentCategories().collectItemsFromServer(this.categoryLevel, this.childrenId, getSupportFragmentManager(), progressBar, backPressed, db);
 
         }
 
@@ -571,7 +574,9 @@ public class MainActivity extends AppCompatActivity
         fragment.setFlashCard(flashCard);
         android.support.v4.app.FragmentTransaction fragmentTransaction =
                 getSupportFragmentManager().beginTransaction();
+        /*
         fragmentTransaction.setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left);
+        */
         fragmentTransaction.replace(R.id.fragment_container_main, fragment);
         fragmentTransaction.commit();
     }

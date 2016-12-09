@@ -19,7 +19,7 @@
 
 
         <!--
-        tools:context=".Fragment.ItemFragmentFlashcard"
+        tools:context=".Fragment.FragmentFlashcards"
 
         tools:listitem="@layout/list_item"
         />

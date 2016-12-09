@@ -272,6 +272,24 @@ public class JsonParser {
         return cards;
     }
 
+
+    /**
+     * Method to direktly read one card from an inputstream
+     *
+     * @param in
+     * @return
+     * @throws IOException
+     */
+    public static FlashCard readFlashCard(InputStream in) throws IOException {
+        JsonReader reader = new JsonReader(new InputStreamReader(in, "UTF-8"));
+        try {
+            return readFlashCard(reader);
+        } finally {
+            reader.close();
+        }
+    }
+
+
     private static FlashCard readFlashCard(JsonReader reader) {
         if (DEBUG) Log.d("parser Method", "readFlashCard");
         long id = -1;

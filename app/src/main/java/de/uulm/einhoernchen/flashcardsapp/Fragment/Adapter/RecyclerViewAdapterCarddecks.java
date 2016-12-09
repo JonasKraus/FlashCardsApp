@@ -1,5 +1,6 @@
 package de.uulm.einhoernchen.flashcardsapp.Fragment.Adapter;
 
+import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,25 +13,27 @@ import com.amulyakhare.textdrawable.util.ColorGenerator;
 
 import java.util.List;
 
+import de.uulm.einhoernchen.flashcardsapp.Database.DbManager;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.Dataset.DummyContent.DummyItem;
-import de.uulm.einhoernchen.flashcardsapp.Fragment.Dataset.ContentCategory;
-import de.uulm.einhoernchen.flashcardsapp.Models.Category;
+import de.uulm.einhoernchen.flashcardsapp.Fragment.Interfaces.OnFragmentInteractionListenerCarddeck;
+import de.uulm.einhoernchen.flashcardsapp.Models.CardDeck;
 import de.uulm.einhoernchen.flashcardsapp.R;
 
 /**
  * {@link RecyclerView.Adapter} that can display a {@link DummyItem} and makes a call to the
- * TODO: Replace the implementation with code for your data type.
  */
-public class RecyclerViewAdapterCategory extends RecyclerView.Adapter<RecyclerViewAdapterCategory.ViewHolder> {
+public class RecyclerViewAdapterCarddecks extends RecyclerView.Adapter<RecyclerViewAdapterCarddecks.ViewHolder> {
 
-    private final List<Category> categories;
-    private final ContentCategory.OnCategoryListFragmentInteractionListener mListener;
+    private final List<CardDeck> cardDecks;
+    private final OnFragmentInteractionListenerCarddeck mListener;
     private final boolean isUpToDate;
+    private final DbManager db;
 
-    public RecyclerViewAdapterCategory(List<Category> items, ContentCategory.OnCategoryListFragmentInteractionListener listener, boolean isUpToDate) {
-        categories = items;
+    public RecyclerViewAdapterCarddecks(DbManager db, List<CardDeck> items, OnFragmentInteractionListenerCarddeck listener, boolean isUpToDate) {
+        cardDecks = items;
         mListener = listener;
         this.isUpToDate = isUpToDate;
+        this.db = db;
     }
 
     @Override
@@ -42,12 +45,14 @@ public class RecyclerViewAdapterCategory extends RecyclerView.Adapter<RecyclerVi
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        holder.mItem = categories.get(position);
-        // holder.mIdView.setText(categories.get(position).getId()+""); TODO Wird das benötigt?
-        holder.mContentView.setText(categories.get(position).getName());
-        holder.mAuthorView.setVisibility(View.INVISIBLE);
+        holder.mItem = cardDecks.get(position);
+        // holder.mIdView.setText(cardDecks.get(position).getId() + ""); TODO Wird das benötigt?
+        holder.mContentView.setText(holder.mItem.getName() + "");
+        String userGroupName = holder.mItem.getUserGroup() != null ? cardDecks.get(position).getUserGroup().getName() : "No Author";
+        holder.mAuthorView.setText(userGroupName);
         // holder.mGroupRatingView.setVisibility(View.INVISIBLE);
-        holder.mCardRatingView.setVisibility(View.INVISIBLE);
+        holder.mCardRatingView.setText(holder.mItem.getRatingForView());
+        //holder.mDateView.setText(cardDecks.get(position).getLastUpdatedString());
         holder.mDateView.setVisibility(View.INVISIBLE);
         holder.mBookmarkView.setVisibility(View.INVISIBLE);
 
@@ -59,36 +64,85 @@ public class RecyclerViewAdapterCategory extends RecyclerView.Adapter<RecyclerVi
             holder.mLocalView.setVisibility(View.VISIBLE);
         }
 
+
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (null != mListener) {
                     // Notify the active callbacks interface (the activity, if the
                     // fragment is attached to one) that an item has been selected.
-                    mListener.onCategoryListFragmentInteraction(holder.mItem);
+                    mListener.onCarddeckListFragmentInteraction(holder.mItem);
                 }
             }
         });
 
         //get first letter of each String item
-        final String firstLetter = String.valueOf(categories.get(position).getName().charAt(0)); // hier wird der buchstabe gesetzt
+        final String firstLetter = String.valueOf(cardDecks.get(position).getName().charAt(0)); // hier wird der buchstabe gesetzt
 
         ColorGenerator generator = ColorGenerator.MATERIAL; // or use DEFAULT
         // generate random color
-        final int color = generator.getColor(categories.get(position).getId()); // TODO
+        final int color = generator.getColor(holder.mItem.getId()); // TODO
         //int color = generator.getRandomColor();
 
-        TextDrawable drawable = TextDrawable.builder()
-                .buildRound(firstLetter, color); // radius in px
+
+        final long carddeckID = holder.mItem.getId();
+        holder.mItem.setSelectionDate(db.getCarddeckSelectionDate(carddeckID));
+        holder.imageView.setTag(holder.mItem.getSelectionDate()>0);
+
+        TextDrawable drawable;
+
+        if (holder.imageView.getTag().equals(false)) {
+
+            drawable = TextDrawable.builder()
+                    .buildRound(firstLetter, color); // radius in px
+            holder.imageView.setTag(false);
+
+
+        } else {
+
+            drawable = TextDrawable.builder()
+                    .buildRound(String.valueOf("✓"), Color.GRAY); // radius in px
+            holder.imageView.setTag(true);
+        }
 
         holder.imageView.setImageDrawable(drawable);
 
+        holder.imageView.setOnClickListener(new View.OnClickListener(){
+
+            @Override
+            public void onClick(View v) {
+                //v.startAnimation(AnimationUtils.loadAnimation(v.getContext(), R.anim.card_flip_left_out));
+                
+                TextDrawable drawable;
+
+                // @TODO Set card as checked
+                if (holder.imageView.getTag().equals(true)) {
+
+                    drawable = TextDrawable.builder()
+                            .buildRound(firstLetter, color); // radius in px
+                    holder.imageView.setTag(false);
+
+                    db.deselectCarddeck(carddeckID);
+
+                } else {
+
+                    db.selectCarddeck(carddeckID);
+                    String firstLetter = String.valueOf("✓"); // hier wird der buchstabe gesetzt
+                    drawable = TextDrawable.builder()
+                            .buildRound(firstLetter, Color.GRAY); // radius in px
+                    holder.imageView.setTag(true);
+                }
+
+                holder.imageView.setImageDrawable(drawable);
+            }
+        });
     }
 
     @Override
     public int getItemCount() {
-        if (categories != null) {
-            return categories.size();
+        if (cardDecks != null) {
+            return cardDecks.size();
+
         }
         return 0;
     }
@@ -104,7 +158,7 @@ public class RecyclerViewAdapterCategory extends RecyclerView.Adapter<RecyclerVi
         public final ImageView mBookmarkView;
         public final ImageView mLocalView;
         public final ImageView imageView; // Text icon
-        public Category mItem;
+        public CardDeck mItem;
 
         public ViewHolder(View view) {
             super(view);
