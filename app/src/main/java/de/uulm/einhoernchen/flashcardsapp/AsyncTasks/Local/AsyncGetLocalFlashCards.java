@@ -1,30 +1,18 @@
-package de.uulm.einhoernchen.flashcardsapp.AsyncTasks;
+package de.uulm.einhoernchen.flashcardsapp.AsyncTasks.Local;
 
 import android.os.AsyncTask;
-import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
 
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.Random;
 
-import de.uulm.einhoernchen.flashcardsapp.Consts.Routes;
 import de.uulm.einhoernchen.flashcardsapp.Database.DbManager;
-import de.uulm.einhoernchen.flashcardsapp.Models.Answer;
 import de.uulm.einhoernchen.flashcardsapp.Models.FlashCard;
-import de.uulm.einhoernchen.flashcardsapp.Models.Question;
-import de.uulm.einhoernchen.flashcardsapp.Models.User;
-import de.uulm.einhoernchen.flashcardsapp.Util.JsonParser;
 
 /**
  * Created by jonas-uni on 17.08.2016.
  */
-public class AsyncGetLocalFlashCard extends AsyncTask<Long, Long, List<FlashCard>> {
+public class AsyncGetLocalFlashCards extends AsyncTask<Long, Long, List<FlashCard>> {
 
     private ProgressBar progressBar;
     private DbManager db;
@@ -47,14 +35,14 @@ public class AsyncGetLocalFlashCard extends AsyncTask<Long, Long, List<FlashCard
     /**
      * Interface to receive the carddecks in the activity that called this async task
      */
-    public interface AsyncResponseFlashCardLocal {
+    public interface AsyncResponseLocalFlashCards {
         void processFinish(List<FlashCard> flashCards);
     }
 
-    public AsyncResponseFlashCardLocal delegate = null;
+    public AsyncResponseLocalFlashCards delegate = null;
     private final Long parentId;
 
-    public AsyncGetLocalFlashCard(Long parentId, AsyncResponseFlashCardLocal delegate) {
+    public AsyncGetLocalFlashCards(Long parentId, AsyncResponseLocalFlashCards delegate) {
         this.parentId = parentId;
         this.delegate = delegate;
     }

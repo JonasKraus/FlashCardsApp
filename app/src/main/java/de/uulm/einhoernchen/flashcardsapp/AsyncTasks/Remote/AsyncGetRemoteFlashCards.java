@@ -1,4 +1,4 @@
-package de.uulm.einhoernchen.flashcardsapp.AsyncTasks;
+package de.uulm.einhoernchen.flashcardsapp.AsyncTasks.Remote;
 
 import android.os.AsyncTask;
 import android.util.Log;
@@ -16,7 +16,7 @@ import de.uulm.einhoernchen.flashcardsapp.Util.JsonParser;
 /**
  * Created by jonas-uni on 17.08.2016.
  */
-public class AsyncGetRemoteFlashCard extends AsyncTask<Long, Long, List<FlashCard>> {
+public class AsyncGetRemoteFlashCards extends AsyncTask<Long, Long, List<FlashCard>> {
 
     private ProgressBar progressBar;
 
@@ -33,14 +33,14 @@ public class AsyncGetRemoteFlashCard extends AsyncTask<Long, Long, List<FlashCar
     /**
      * Interface to receive the carddecks in the activity that called this async task
      */
-    public interface AsyncResponseFlashCard {
+    public interface AsyncResponseFlashCards {
         void processFinish(List<FlashCard> flashCards);
     }
 
-    public AsyncResponseFlashCard delegate = null;
+    public AsyncResponseFlashCards delegate = null;
     private final Long parentId;
 
-    public AsyncGetRemoteFlashCard(Long parentId, AsyncResponseFlashCard delegate) {
+    public AsyncGetRemoteFlashCards(Long parentId, AsyncResponseFlashCards delegate) {
         this.parentId = parentId;
         this.delegate = delegate;
     }
@@ -87,7 +87,7 @@ public class AsyncGetRemoteFlashCard extends AsyncTask<Long, Long, List<FlashCar
         // Should collect data from db
         if (flashCards == null || flashCards.size() == 0) {
 
-            Log.d("AsyncGetRemoteFlashCard", "no flashcards");
+            Log.d("AsyncGetRemoteFlashCards", "no flashcards");
 
         }
 

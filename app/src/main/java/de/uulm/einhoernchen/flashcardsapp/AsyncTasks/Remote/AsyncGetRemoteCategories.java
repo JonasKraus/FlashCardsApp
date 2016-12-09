@@ -1,4 +1,4 @@
-package de.uulm.einhoernchen.flashcardsapp.AsyncTasks;
+package de.uulm.einhoernchen.flashcardsapp.AsyncTasks.Remote;
 
 import android.os.AsyncTask;
 import android.util.Log;
@@ -7,7 +7,6 @@ import android.widget.ProgressBar;
 
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.List;
 
 import de.uulm.einhoernchen.flashcardsapp.Consts.Routes;
@@ -17,7 +16,7 @@ import de.uulm.einhoernchen.flashcardsapp.Util.JsonParser;
 /**
  * Created by jonas-uni on 26.11.2016.
  */
-public class AsyncGetRemoteCategory extends AsyncTask<Long, Long, List<Category>> {
+public class AsyncGetRemoteCategories extends AsyncTask<Long, Long, List<Category>> {
 
     private ProgressBar progressBar;
 
@@ -34,15 +33,15 @@ public class AsyncGetRemoteCategory extends AsyncTask<Long, Long, List<Category>
     /**
      * Interface to receive the categories in the activity that called this async task
      */
-    public interface AsyncResponseCategory {
+    public interface AsyncResponseRemoteCategories {
         void processFinish(List<Category> categories);
     }
 
-    public AsyncResponseCategory delegate = null;
+    public AsyncResponseRemoteCategories delegate = null;
     private final Long parentId;
     private final int categoryLevel;
 
-    public AsyncGetRemoteCategory(int categoryLevel, Long parentId, AsyncResponseCategory delegate) {
+    public AsyncGetRemoteCategories(int categoryLevel, Long parentId, AsyncResponseRemoteCategories delegate) {
         this.parentId = parentId;
         this.categoryLevel = categoryLevel;
         this.delegate = delegate;

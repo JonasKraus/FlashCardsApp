@@ -1,4 +1,4 @@
-package de.uulm.einhoernchen.flashcardsapp.AsyncTasks;
+package de.uulm.einhoernchen.flashcardsapp.AsyncTasks.Local;
 
 import android.os.AsyncTask;
 import android.view.View;
@@ -12,7 +12,7 @@ import de.uulm.einhoernchen.flashcardsapp.Models.CardDeck;
 /**
  * Created by jonas-uni on 17.08.2016.
  */
-public class AsyncGetLocalCardDeck extends AsyncTask<Long, Long, List<CardDeck>> {
+public class AsyncGetLocalCarddecks extends AsyncTask<Long, Long, List<CardDeck>> {
 
     private ProgressBar progressBar;
     private DbManager db;
@@ -35,14 +35,14 @@ public class AsyncGetLocalCardDeck extends AsyncTask<Long, Long, List<CardDeck>>
     /**
      * Interface to receive the carddecks in the activity that called this async task
      */
-    public interface AsyncResponseCardDeckLocal {
+    public interface AsyncResponseLocalCarddecks {
         void processFinish(List<CardDeck> categories);
     }
 
-    public AsyncResponseCardDeckLocal delegate = null;
+    public AsyncResponseLocalCarddecks delegate = null;
     private final Long parentId;
 
-    public AsyncGetLocalCardDeck(Long parentId, AsyncResponseCardDeckLocal delegate) {
+    public AsyncGetLocalCarddecks(Long parentId, AsyncResponseLocalCarddecks delegate) {
         this.parentId = parentId;
         this.delegate = delegate;
     }

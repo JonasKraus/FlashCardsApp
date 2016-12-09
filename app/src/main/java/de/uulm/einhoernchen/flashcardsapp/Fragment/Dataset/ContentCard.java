@@ -15,9 +15,9 @@ import android.widget.ProgressBar;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.uulm.einhoernchen.flashcardsapp.AsyncTasks.AsyncGetRemoteFlashCard;
-import de.uulm.einhoernchen.flashcardsapp.AsyncTasks.AsyncGetLocalFlashCard;
-import de.uulm.einhoernchen.flashcardsapp.AsyncTasks.AsyncSaveLocalFlashCard;
+import de.uulm.einhoernchen.flashcardsapp.AsyncTasks.Remote.AsyncGetRemoteFlashCards;
+import de.uulm.einhoernchen.flashcardsapp.AsyncTasks.Local.AsyncGetLocalFlashCards;
+import de.uulm.einhoernchen.flashcardsapp.AsyncTasks.Local.AsyncSaveLocalFlashCards;
 import de.uulm.einhoernchen.flashcardsapp.Database.DbManager;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.Adapter.RecyclerViewAdapterFlashcard;
 import de.uulm.einhoernchen.flashcardsapp.Models.FlashCard;
@@ -51,7 +51,7 @@ public class ContentCard {
 
         this.db = db;
 
-        AsyncGetRemoteFlashCard asyncGetFlashCard = new AsyncGetRemoteFlashCard(parentId, new AsyncGetRemoteFlashCard.AsyncResponseFlashCard() {
+        AsyncGetRemoteFlashCards asyncGetFlashCard = new AsyncGetRemoteFlashCards(parentId, new AsyncGetRemoteFlashCards.AsyncResponseFlashCards() {
 
             @Override
             public void processFinish(List<FlashCard> flashCards) {
@@ -62,7 +62,7 @@ public class ContentCard {
                     //Log.d("ContentCard", "no flashcards");
                 }
 
-                AsyncSaveLocalFlashCard asyncSaveFlashCardLocal = new AsyncSaveLocalFlashCard(parentId);
+                AsyncSaveLocalFlashCards asyncSaveFlashCardLocal = new AsyncSaveLocalFlashCards(parentId);
                 asyncSaveFlashCardLocal.setDbManager(db);
                 asyncSaveFlashCardLocal.setFlashCards(flashCards);
                 asyncSaveFlashCardLocal.execute();
@@ -119,7 +119,7 @@ public class ContentCard {
 
         this.db = db;
 
-        AsyncGetLocalFlashCard asyncGetFlashCardLocal = new AsyncGetLocalFlashCard(parentId, new AsyncGetLocalFlashCard.AsyncResponseFlashCardLocal() {
+        AsyncGetLocalFlashCards asyncGetFlashCardLocal = new AsyncGetLocalFlashCards(parentId, new AsyncGetLocalFlashCards.AsyncResponseLocalFlashCards() {
 
             @Override
             public void processFinish(List<FlashCard> flashCards) {

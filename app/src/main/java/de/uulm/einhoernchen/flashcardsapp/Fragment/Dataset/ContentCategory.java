@@ -15,9 +15,9 @@ import android.widget.ProgressBar;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.uulm.einhoernchen.flashcardsapp.AsyncTasks.AsyncGetLocalCategory;
-import de.uulm.einhoernchen.flashcardsapp.AsyncTasks.AsyncGetRemoteCategory;
-import de.uulm.einhoernchen.flashcardsapp.AsyncTasks.AsyncSaveLocalCategory;
+import de.uulm.einhoernchen.flashcardsapp.AsyncTasks.Local.AsyncGetLocalCategories;
+import de.uulm.einhoernchen.flashcardsapp.AsyncTasks.Remote.AsyncGetRemoteCategories;
+import de.uulm.einhoernchen.flashcardsapp.AsyncTasks.Local.AsyncSaveLocalCategories;
 import de.uulm.einhoernchen.flashcardsapp.Database.DbManager;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.Adapter.RecyclerViewAdapterCategory;
 import de.uulm.einhoernchen.flashcardsapp.Models.Category;
@@ -36,13 +36,13 @@ public class ContentCategory {
 
     public void collectItemsFromServer(final int categoryLevel, final long parentId, final FragmentManager fragmentManager, ProgressBar progressBarMain, final boolean backPressed, final DbManager db) {
 
-        AsyncGetRemoteCategory asyncGetCategory = new AsyncGetRemoteCategory(categoryLevel, parentId, new AsyncGetRemoteCategory.AsyncResponseCategory() {
+        AsyncGetRemoteCategories asyncGetCategory = new AsyncGetRemoteCategories(categoryLevel, parentId, new AsyncGetRemoteCategories.AsyncResponseRemoteCategories() {
 
             @Override
             public void processFinish(List<Category> categories) {
 
                 // Saving the collected categories localy
-                AsyncSaveLocalCategory asyncSaveLocalCategory = new AsyncSaveLocalCategory(parentId);
+                AsyncSaveLocalCategories asyncSaveLocalCategory = new AsyncSaveLocalCategories(parentId);
                 asyncSaveLocalCategory.setDbManager(db);
                 asyncSaveLocalCategory.setCategories(categories);
                 asyncSaveLocalCategory.execute();
@@ -80,7 +80,7 @@ public class ContentCategory {
 
     public void collectItemsFromDb(final int categoryLevel, final long parentId, final FragmentManager supportFragmentManager, final ProgressBar progressBar, final boolean backPressed, final DbManager db) {
 
-        AsyncGetLocalCategory asyncGetLocalCategory = new AsyncGetLocalCategory(parentId, new AsyncGetLocalCategory.AsyncResponseCategoryLocal() {
+        AsyncGetLocalCategories asyncGetLocalCategory = new AsyncGetLocalCategories(parentId, new AsyncGetLocalCategories.AsyncResponseLocalCategories() {
 
             @Override
             public void processFinish(List<Category> categories) {

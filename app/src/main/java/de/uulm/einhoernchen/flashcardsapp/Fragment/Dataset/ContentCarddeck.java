@@ -15,10 +15,10 @@ import android.widget.ProgressBar;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.uulm.einhoernchen.flashcardsapp.AsyncTasks.AsyncGetLocalCardDeck;
-import de.uulm.einhoernchen.flashcardsapp.AsyncTasks.AsyncGetRemoteCarddeck;
+import de.uulm.einhoernchen.flashcardsapp.AsyncTasks.Local.AsyncGetLocalCarddecks;
+import de.uulm.einhoernchen.flashcardsapp.AsyncTasks.Remote.AsyncGetRemoteCarddecks;
 
-import de.uulm.einhoernchen.flashcardsapp.AsyncTasks.AsyncSaveLocalCardDeck;
+import de.uulm.einhoernchen.flashcardsapp.AsyncTasks.Local.AsyncSaveLocalCardDecks;
 import de.uulm.einhoernchen.flashcardsapp.Database.DbManager;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.Adapter.RecyclerViewAdapterCarddeck;
 import de.uulm.einhoernchen.flashcardsapp.Models.CardDeck;
@@ -47,13 +47,13 @@ public class ContentCarddeck {
 
         this.db = db;
 
-        AsyncGetRemoteCarddeck asyncGetCarddeck = new AsyncGetRemoteCarddeck(parentId, new AsyncGetRemoteCarddeck.AsyncResponseCarddeck() {
+        AsyncGetRemoteCarddecks asyncGetCarddeck = new AsyncGetRemoteCarddecks(parentId, new AsyncGetRemoteCarddecks.AsyncResponseRemoteCarddecks() {
 
             @Override
             public void processFinish(List<CardDeck> cardDecks) {
 
                 // Saving the collected categories localy
-                AsyncSaveLocalCardDeck asyncSaveLocalCarddeck = new AsyncSaveLocalCardDeck(parentId);
+                AsyncSaveLocalCardDecks asyncSaveLocalCarddeck = new AsyncSaveLocalCardDecks(parentId);
                 asyncSaveLocalCarddeck.setDbManager(db);
                 asyncSaveLocalCarddeck.setCardDecks(cardDecks);
                 asyncSaveLocalCarddeck.execute();
@@ -107,7 +107,7 @@ public class ContentCarddeck {
 
         this.db = db;
 
-        AsyncGetLocalCardDeck asyncGetLocalCardDeck = new AsyncGetLocalCardDeck(parentId, new AsyncGetLocalCardDeck.AsyncResponseCardDeckLocal() {
+        AsyncGetLocalCarddecks asyncGetLocalCardDeck = new AsyncGetLocalCarddecks(parentId, new AsyncGetLocalCarddecks.AsyncResponseLocalCarddecks() {
 
             @Override
             public void processFinish(List<CardDeck> cardDecks) {

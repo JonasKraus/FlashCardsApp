@@ -1,31 +1,22 @@
-package de.uulm.einhoernchen.flashcardsapp.AsyncTasks;
+package de.uulm.einhoernchen.flashcardsapp.AsyncTasks.Remote;
 
-import android.app.Activity;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.view.View;
-import android.view.Window;
 import android.widget.ProgressBar;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.List;
 
 import de.uulm.einhoernchen.flashcardsapp.Consts.Routes;
 import de.uulm.einhoernchen.flashcardsapp.Models.CardDeck;
-import de.uulm.einhoernchen.flashcardsapp.Models.User;
 import de.uulm.einhoernchen.flashcardsapp.Util.JsonParser;
 
 /**
  * Created by jonas-uni on 17.08.2016.
  */
-public class AsyncGetRemoteCarddeck extends AsyncTask<Long, Long, List<CardDeck>> {
+public class AsyncGetRemoteCarddecks extends AsyncTask<Long, Long, List<CardDeck>> {
 
     private ProgressBar progressBar;
 
@@ -42,14 +33,14 @@ public class AsyncGetRemoteCarddeck extends AsyncTask<Long, Long, List<CardDeck>
     /**
      * Interface to receive the carddecks in the activity that called this async task
      */
-    public interface AsyncResponseCarddeck {
+    public interface AsyncResponseRemoteCarddecks {
         void processFinish(List<CardDeck> cardDecks);
     }
 
-    public AsyncResponseCarddeck delegate = null;
+    public AsyncResponseRemoteCarddecks delegate = null;
     private final Long parentId;
 
-    public AsyncGetRemoteCarddeck(Long parentId, AsyncResponseCarddeck delegate) {
+    public AsyncGetRemoteCarddecks(Long parentId, AsyncResponseRemoteCarddecks delegate) {
         this.parentId = parentId;
         this.delegate = delegate;
     }

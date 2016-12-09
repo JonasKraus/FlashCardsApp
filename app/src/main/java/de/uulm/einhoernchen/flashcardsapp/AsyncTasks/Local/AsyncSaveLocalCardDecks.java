@@ -1,4 +1,4 @@
-package de.uulm.einhoernchen.flashcardsapp.AsyncTasks;
+package de.uulm.einhoernchen.flashcardsapp.AsyncTasks.Local;
 
 import android.os.AsyncTask;
 
@@ -11,7 +11,7 @@ import de.uulm.einhoernchen.flashcardsapp.Models.Category;
 /**
  * Created by jonas-uni on 17.08.2016.
  */
-public class AsyncSaveLocalCardDeck extends AsyncTask<Long, Long, Void> {
+public class AsyncSaveLocalCardDecks extends AsyncTask<Long, Long, Void> {
 
     private List<CardDeck> cardDecks;
     private DbManager db;
@@ -32,7 +32,7 @@ public class AsyncSaveLocalCardDeck extends AsyncTask<Long, Long, Void> {
 
     private final Long parentId;
 
-    public AsyncSaveLocalCardDeck(Long parentId) {
+    public AsyncSaveLocalCardDecks(Long parentId) {
         this.parentId = parentId;
     }
 
