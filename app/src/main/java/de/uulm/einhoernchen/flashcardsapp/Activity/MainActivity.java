@@ -232,7 +232,7 @@ public class MainActivity extends AppCompatActivity
         if (resultCode == RESULT_OK && data.getData() == null && requestCode != MY_INTENT_CLICK) {
 
             Bitmap bitmap = (Bitmap) data.getExtras().get("data");
-            ProcessorImage.savebitmap(bitmap, user.getId());
+            ProcessorImage.savebitmap(bitmap, user.getId(), "_flashcards_profile");
             setProfileImage();
 
         }
@@ -249,7 +249,7 @@ public class MainActivity extends AppCompatActivity
             BitmapFactory.Options bmOptions = new BitmapFactory.Options();
 
             Bitmap bitmap = BitmapFactory.decodeFile(selectedImagePath, bmOptions);
-            ProcessorImage.savebitmap(bitmap, user.getId());
+            ProcessorImage.savebitmap(bitmap, user.getId(), "_flashcards_profile");
             setProfileImage();
         }
 

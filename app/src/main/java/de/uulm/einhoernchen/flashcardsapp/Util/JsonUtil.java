@@ -1,5 +1,7 @@
 package de.uulm.einhoernchen.flashcardsapp.Util;
 
+import android.net.Uri;
+
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
@@ -200,7 +202,7 @@ public class JsonUtil {
         Answer answer=new Answer(answerText,hintText,author);
 
         if(node.has(JsonKeys.URI)){
-            answer.setUri(new URI(node.get(JsonKeys.URI).asText()));
+            answer.setUri(Uri.parse(node.get(JsonKeys.URI).asText()));
         }
         return answer;
     }

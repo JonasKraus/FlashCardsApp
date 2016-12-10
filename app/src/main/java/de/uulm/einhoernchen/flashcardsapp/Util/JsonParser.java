@@ -1,5 +1,6 @@
 package de.uulm.einhoernchen.flashcardsapp.Util;
 
+import android.net.Uri;
 import android.support.annotation.Nullable;
 import android.util.JsonReader;
 import android.util.JsonToken;
@@ -12,8 +13,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -388,7 +387,7 @@ public class JsonParser {
         String text = "No answer text found";
         String hint = "";
         String uriString = "";
-        URI uri = null;
+        Uri uri = null;
         User author = null;
         Date created = null;
         Date lastUpdated = null;
@@ -425,7 +424,7 @@ public class JsonParser {
                         reader.nextNull();
                     }
 
-                    uri = new URI(uriString); // TODO check what happens when string is empty
+                    uri = Uri.parse(uriString); // TODO check what happens when string is empty
                 } else if (stringName.equals(JsonKeys.AUTHOR)) {
                     JsonToken check = reader.peek();
 
@@ -450,8 +449,6 @@ public class JsonParser {
             }
             reader.endObject();
         } catch (IOException e) {
-            e.printStackTrace();
-        } catch (URISyntaxException e) {
             e.printStackTrace();
         }
         return new Answer(id, correct, text, hint, uri, author, created, lastUpdated, rating, answerCorrect);
@@ -542,7 +539,7 @@ public class JsonParser {
         long id = -1;
         String text = "";
         String uriString = "";
-        URI uri = null;
+        Uri uri = null;
         User author = null;
 
         try {
@@ -564,7 +561,7 @@ public class JsonParser {
                         reader.nextNull();
                     }
 
-                    uri = new URI(uriString); // TODO check what happens when string is empty
+                    uri = Uri.parse(uriString); // TODO check what happens when string is empty
                 }else if (stringName.equals(JsonKeys.AUTHOR)) {
                     JsonToken check = reader.peek();
 
@@ -581,8 +578,6 @@ public class JsonParser {
             }
             reader.endObject();
         } catch (IOException e) {
-            e.printStackTrace();
-        } catch (URISyntaxException e) {
             e.printStackTrace();
         }
         return new Question(id, text, uri, author);

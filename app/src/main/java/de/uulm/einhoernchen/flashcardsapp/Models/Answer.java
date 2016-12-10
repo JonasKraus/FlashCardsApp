@@ -1,6 +1,7 @@
 package de.uulm.einhoernchen.flashcardsapp.Models;
 
 
+import android.net.Uri;
 import android.util.Log;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -31,7 +32,7 @@ public class Answer {
     private String hintText;
 
     @JsonProperty(JsonKeys.URI)
-    private URI uri;
+    private Uri uri;
 
     // TODO: 11/07/16  Ist die Antwort richtig oder falsch?
     @JsonProperty(JsonKeys.AUTHOR)
@@ -73,7 +74,7 @@ public class Answer {
      * @param rating
      * @param answerCorrect
      */
-    public Answer(long id, boolean correct, String text, String hint, URI uri, User author, java.util.Date created, java.util.Date lastUpdated, int rating, boolean answerCorrect) {
+    public Answer(long id, boolean correct, String text, String hint, Uri uri, User author, java.util.Date created, java.util.Date lastUpdated, int rating, boolean answerCorrect) {
         this.id = id;
         this.isCorrect = correct; // TODO redundant??
         this.answerText = text;
@@ -107,11 +108,11 @@ public class Answer {
         this.hintText = answerHint;
         try {
             if (mediaURI != null) {
-                this.uri = new URI(mediaURI);
+                this.uri = Uri.parse(mediaURI);
             } else {
-                this.uri = new URI("");
+                this.uri = Uri.parse("");
             }
-        } catch (URISyntaxException e) {
+        } catch (Exception e) {
             e.printStackTrace();
             Log.d("construct Answer", "faild to generate uri from string");
         }
@@ -168,11 +169,11 @@ public class Answer {
         this.hintText = hintText;
     }
 
-    public URI getUri() {
+    public Uri getUri() {
         return uri;
     }
 
-    public void setUri(URI uri) {
+    public void setUri(Uri uri) {
         this.uri = uri;
     }
 

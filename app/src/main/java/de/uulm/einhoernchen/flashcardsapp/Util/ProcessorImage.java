@@ -1,18 +1,24 @@
 package de.uulm.einhoernchen.flashcardsapp.Util;
 
+import android.app.Activity;
 import android.content.ContentUris;
 import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
+import android.util.Log;
+import android.widget.ImageView;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
+
+import de.uulm.einhoernchen.flashcardsapp.AsyncTasks.Remote.BitmapDownloaderTask;
 
 public class ProcessorImage {
 
@@ -205,7 +211,15 @@ public class ProcessorImage {
      * @param bitmap
      * @return
      */
-    public static File savebitmap(Bitmap bitmap, Long userId) {
+    public static File savebitmap(Bitmap bitmap, Long userId, String appendix) {
+
+        if (appendix == null) {
+            appendix = "_flashcards_profile.png";
+        }
+
+        if (!appendix.contains(".png")) {
+            appendix += ".png";
+        }
 
         String extStorageDirectory = Environment.getExternalStorageDirectory().toString()+"/flashcards";
 
@@ -213,11 +227,11 @@ public class ProcessorImage {
 
         OutputStream outStream = null;
 
-        File file = new File(extStorageDirectory, userId +"_flashcards_profile.png");
+        File file = new File(extStorageDirectory, userId + appendix);
 
         if (file.exists()) {
             file.delete();
-            file = new File(extStorageDirectory, userId +"_flashcards_profile.png");
+            file = new File(extStorageDirectory, userId + appendix);
         }
 
         try {
@@ -239,4 +253,47 @@ public class ProcessorImage {
         return file;
     }
 
+    /**
+     * Checks if image exists locally otherwise downloads and saves it
+     *
+     * @param url
+     * @param imageView
+     * @param id
+     * @param appendix
+     */
+    public static void download(String url, ImageView imageView, long id, String appendix) {
+
+        //PermissionManager.verifyStoragePermissionsWrite((Activity) context);
+        File sd =  Environment.getExternalStorageDirectory();
+
+        File folder = new File(sd + "/flashcards");
+        boolean success = true;
+
+        if (!folder.exists()) {
+            success = folder.mkdir();
+        }
+
+        if (success) {
+
+            appendix = appendix.contains(".png") ? appendix : appendix + ".png";
+
+            File image = new File(sd+"/flashcards", id + appendix);
+
+            if (image.exists()) {
+                BitmapFactory.Options bmOptions = new BitmapFactory.Options();
+                Bitmap bitmap = BitmapFactory.decodeFile(image.getAbsolutePath(), bmOptions);
+                imageView.setImageBitmap(bitmap);
+
+            } else {
+
+                BitmapDownloaderTask task = new BitmapDownloaderTask(imageView, id, appendix);
+                task.execute(url);
+            }
+
+        }
+
+
+    }
 }
+
+

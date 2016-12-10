@@ -1,12 +1,14 @@
 package de.uulm.einhoernchen.flashcardsapp.Fragment.Adapter;
 
 import android.graphics.Color;
+import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.VideoView;
 
 import com.amulyakhare.textdrawable.TextDrawable;
 import com.amulyakhare.textdrawable.util.ColorGenerator;
@@ -16,6 +18,7 @@ import de.uulm.einhoernchen.flashcardsapp.Fragment.Dataset.DummyContent.DummyIte
 import de.uulm.einhoernchen.flashcardsapp.Fragment.Interfaces.OnFragmentInteractionListenerFlashcard;
 import de.uulm.einhoernchen.flashcardsapp.Models.FlashCard;
 import de.uulm.einhoernchen.flashcardsapp.R;
+import de.uulm.einhoernchen.flashcardsapp.Util.ProcessorImage;
 
 import java.util.List;
 
@@ -40,7 +43,7 @@ public class RecyclerViewAdapterFlashcards extends RecyclerView.Adapter<Recycler
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.list_item, parent, false);
+                .inflate(R.layout.list_item_card, parent, false);
 
         return new ViewHolder(view);
     }
@@ -59,6 +62,11 @@ public class RecyclerViewAdapterFlashcards extends RecyclerView.Adapter<Recycler
         holder.mBookmarkView.setVisibility(View.VISIBLE);
         // holder.mBookmarkView.setImageDrawable(// TODO set if marked);
 
+
+        if (holder.mItem.getQuestion().getUri() != null && holder.mItem.getQuestion().getUri().toString() != "") {
+
+            ProcessorImage.download(holder.mItem.getQuestion().getUri().toString(), holder.imageViewUri, holder.mItem.getQuestion().getId(), "_question");
+        }
 
         if (!isUpToDate) {
 
@@ -156,6 +164,7 @@ public class RecyclerViewAdapterFlashcards extends RecyclerView.Adapter<Recycler
         public final ImageView mBookmarkView;
         public final ImageView mLocalView;
         public final ImageView imageView; // Text icon
+        public final ImageView imageViewUri; // Text icon
         public FlashCard mItem;
 
         public ViewHolder(View view) {
@@ -172,6 +181,7 @@ public class RecyclerViewAdapterFlashcards extends RecyclerView.Adapter<Recycler
             mLocalView = (ImageView) view.findViewById(R.id.image_view_offline);
 
             imageView = (ImageView) view.findViewById(R.id.image_view_round_icon);
+            imageViewUri = (ImageView) view.findViewById(R.id.image_view_question_uri);
         }
 
         @Override

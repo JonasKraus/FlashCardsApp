@@ -1,13 +1,12 @@
 package de.uulm.einhoernchen.flashcardsapp.Models;
 
+import android.net.Uri;
 import android.util.Log;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.databind.JsonNode;
 
-import java.net.URI;
-import java.net.URISyntaxException;
 
 import de.uulm.einhoernchen.flashcardsapp.Util.JsonKeys;
 
@@ -25,7 +24,7 @@ public class Question {
     private String questionText;
 
     @JsonProperty(JsonKeys.URI)
-    private URI uri;
+    private Uri uri;
 
     @JsonProperty(JsonKeys.AUTHOR)
     private User author;
@@ -46,7 +45,7 @@ public class Question {
      * @param uri
      * @param author
      */
-    public Question(long id, String questionText, URI uri, User author) {
+    public Question(long id, String questionText, Uri uri, User author) {
         this.id = id;
         this.questionText = questionText;
         this.uri = uri;
@@ -66,13 +65,12 @@ public class Question {
         this.questionText = questionText;
         try {
             if (mediaURI != null) {
-                this.uri = new URI(mediaURI);
+                this.uri = Uri.parse(mediaURI);
             } else {
-                this.uri = new URI("");
+                this.uri = Uri.parse("");
             }
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
-            Log.d("construct Question", "faild to generate uri from string");
+        } catch (Exception e) {
+            Log.e("exeption parse uri", e.getMessage());
         }
         this.author = author;
     }
@@ -81,9 +79,8 @@ public class Question {
      * Parses a question from the given JsonNode node.
      * @param node the json node to parse
      * @return a question object containing the information
-     * @throws URISyntaxException
      */
-    public static Question parseQuestion(JsonNode node) throws URISyntaxException {
+    public static Question parseQuestion(JsonNode node) {
         User author=null;
         String questionText = null;
         if(node.has(JsonKeys.AUTHOR)){
@@ -99,7 +96,7 @@ public class Question {
         Question question=new Question(questionText, author);
 
         if(node.has(JsonKeys.URI)){
-            question.setUri(new URI(node.get(JsonKeys.URI).asText()));
+            question.setUri(Uri.parse(node.get(JsonKeys.URI).asText()));
         }
         return question;
     }
@@ -130,11 +127,11 @@ public class Question {
         this.questionText = questionText;
     }
 
-    public URI getUri() {
+    public Uri getUri() {
         return uri;
     }
 
-    public void setUri(URI uri) {
+    public void setUri(Uri uri) {
         this.uri = uri;
     }
 
