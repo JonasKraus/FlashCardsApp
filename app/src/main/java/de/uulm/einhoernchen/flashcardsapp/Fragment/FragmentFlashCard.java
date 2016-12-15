@@ -7,7 +7,9 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import de.uulm.einhoernchen.flashcardsapp.Database.DbManager;
@@ -84,6 +86,14 @@ public class FragmentFlashCard extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_fragment_flash_card, container, false);
+        ListView listview =(ListView) view.findViewById(R.id.listview_answers);
+
+        String[] items = new String[] {"Item 1", "Item 2", "Item 3","Item 1", "Item 2", "Item 3","Item 1", "Item 2", "Item 3"};
+        ArrayAdapter<String> adapter =
+                new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, items);
+
+        listview.setAdapter(adapter);
+
 
         mIdView = (TextView) view.findViewById(R.id.id);
         mContentView = (TextView) view.findViewById(R.id.content);
