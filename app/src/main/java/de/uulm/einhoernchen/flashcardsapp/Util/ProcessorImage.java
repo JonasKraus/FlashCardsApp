@@ -1,6 +1,5 @@
 package de.uulm.einhoernchen.flashcardsapp.Util;
 
-import android.app.Activity;
 import android.content.ContentUris;
 import android.content.Context;
 import android.database.Cursor;
@@ -11,14 +10,13 @@ import android.os.Build;
 import android.os.Environment;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
-import android.util.Log;
 import android.widget.ImageView;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
 
-import de.uulm.einhoernchen.flashcardsapp.AsyncTasks.Remote.BitmapDownloaderTask;
+import de.uulm.einhoernchen.flashcardsapp.AsyncTasks.Remote.AsyncGetRemoteBitmap;
 
 public class ProcessorImage {
 
@@ -286,7 +284,7 @@ public class ProcessorImage {
 
             } else {
 
-                BitmapDownloaderTask task = new BitmapDownloaderTask(imageView, id, appendix);
+                AsyncGetRemoteBitmap task = new AsyncGetRemoteBitmap(imageView, id, appendix);
                 task.execute(url);
             }
 

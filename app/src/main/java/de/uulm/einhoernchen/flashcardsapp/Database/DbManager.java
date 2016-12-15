@@ -359,6 +359,48 @@ public class DbManager {
         return flashCards;
     }
 
+
+    /**
+     * Gets the card with the given card Id
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     * @since 2016-12-12
+     *
+     * @param flashCardId
+     * @return
+     */
+    public FlashCard getFlashCard(long flashCardId) {
+
+        FlashCard flashCard = null;
+
+        Cursor cursor = database.query(DbHelper.TABLE_FLASHCARD, allFlashCardColumns, DbHelper.COLUMN_FLASHCARD_ID + " = " + flashCardId, null, null, null, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+
+                long cardId = cursor.getLong(0);
+                long carddeckId = cursor.getLong(1);
+                int rating = cursor.getInt(2);
+                long questionId = cursor.getLong(3);
+                boolean multipleChoice = cursor.getInt(4) > 0;
+                long created = cursor.getLong(5);
+                long lastUpdated = cursor.getLong(6);
+                long userId = cursor.getLong(7);
+                User author = getUser(userId);
+                List<Tag> tags = getTags(cardId);
+                Question question = getQuestion(questionId);
+                List<Answer> answers = getAnswers(cardId);
+
+
+                flashCard = new FlashCard(cardId, tags, rating, new Date(created), new Date(lastUpdated), question, answers, author, multipleChoice);
+
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+
+        return flashCard;
+    }
+
     /**
      * Returns all answers for a given card id
      *

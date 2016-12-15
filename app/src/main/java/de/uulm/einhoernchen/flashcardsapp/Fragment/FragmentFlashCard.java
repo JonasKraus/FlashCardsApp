@@ -4,14 +4,17 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import de.uulm.einhoernchen.flashcardsapp.Database.DbManager;
 import de.uulm.einhoernchen.flashcardsapp.Models.FlashCard;
 import de.uulm.einhoernchen.flashcardsapp.R;
+import de.uulm.einhoernchen.flashcardsapp.Util.ProcessorImage;
+
 
 /**
  * A simple {@link Fragment} subclass.
@@ -29,13 +32,21 @@ public class FragmentFlashCard extends Fragment {
 
     private FlashCard flashCard;
 
-    private TextView textView;
-
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
 
     private OnFlashCardFragmentInteractionListener mListener;
+    private DbManager db;
+    private boolean isUpToDate;
+    private TextView mIdView;
+    private TextView mContentView;
+    private TextView mAuthorView;
+    private TextView mCardRatingView;
+    private TextView mDateView;
+    private ImageView mBookmarkView;
+    private ImageView mLocalView;
+    private ImageView imageViewUri;
 
     public FragmentFlashCard() {
         // Required empty public constructor
@@ -74,9 +85,38 @@ public class FragmentFlashCard extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_fragment_flash_card, container, false);
 
-        textView = (TextView) view.findViewById(R.id.text_view_test);
+        mIdView = (TextView) view.findViewById(R.id.id);
+        mContentView = (TextView) view.findViewById(R.id.content);
+        mAuthorView = (TextView) view.findViewById(R.id.textView_listItem_author);
 
-        textView.setText(flashCard.toString());
+        // mGroupRatingView = (TextView) view.findViewById(R.id.text_view_listItem_group_rating);
+        mCardRatingView = (TextView) view.findViewById(R.id.text_view_listItem_card_rating);
+        mDateView = (TextView) view.findViewById(R.id.text_view_listItem_date);
+        mBookmarkView = (ImageView) view.findViewById(R.id.image_view_bookmark);
+        mLocalView = (ImageView) view.findViewById(R.id.image_view_offline);
+
+        imageViewUri = (ImageView) view.findViewById(R.id.image_view_question_uri);
+
+        //mIdView.setText(flashCard.getId() + "");
+        mContentView.setText(flashCard.getQuestion().getQuestionText());
+        mAuthorView.setText(flashCard.getQuestion().getAuthor().getName());
+        mCardRatingView.setText(flashCard.getRatingForView());
+        mDateView.setText(flashCard.getLastUpdatedString());
+        //mBookmarkView =; TODO
+
+        if (flashCard.getQuestion().getUri() != null && flashCard.getQuestion().getUri().toString() != "") {
+
+            ProcessorImage.download(flashCard.getQuestion().getUri().toString(), imageViewUri, flashCard.getQuestion().getId(), "_question");
+        }
+
+        if (!isUpToDate) {
+
+            mLocalView.setVisibility(View.GONE);
+        } else {
+
+            mLocalView.setVisibility(View.VISIBLE);
+        }
+
         return view;
 
     }
@@ -111,9 +151,18 @@ public class FragmentFlashCard extends Fragment {
         mListener = null;
     }
 
-    public void setFlashCard(FlashCard flashCard) {
+    public void setItem(FlashCard flashCard) {
         this.flashCard = flashCard;
     }
+
+    public void setDb(DbManager db) {
+        this.db = db;
+    }
+
+    public void setUpToDate(boolean isUpToDate) {
+        this.isUpToDate = isUpToDate;
+    }
+
 
     /**
      * This interface must be implemented by activities that contain this

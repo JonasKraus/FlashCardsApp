@@ -35,6 +35,7 @@ import java.util.List;
 
 import de.uulm.einhoernchen.flashcardsapp.AsyncTasks.Remote.AsyncGetRemoteHeartbeat;
 import de.uulm.einhoernchen.flashcardsapp.Database.DbManager;
+import de.uulm.einhoernchen.flashcardsapp.Fragment.Dataset.ContentFlashCard;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.Dataset.ContentFlashCards;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.FragmentFlashCard;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.FragmentHome;
@@ -374,7 +375,7 @@ public class MainActivity extends AppCompatActivity
                 break;
 
             case FLASH_CARD_DETAIL:
-                createFragmentFlashCard(this.currentFlashCard);
+                createFragmentFlashCard(this.currentFlashCard, true);
                 break;
 
             default:
@@ -522,7 +523,7 @@ public class MainActivity extends AppCompatActivity
         this.parentIds.add(this.childrenId);
         this.childrenId = item.getId();
 
-        createFragmentFlashCard(item);
+        createFragmentFlashCard(item, false);
 
     }
 
@@ -565,20 +566,32 @@ public class MainActivity extends AppCompatActivity
     }
 
 
-    private void createFragmentFlashCard (FlashCard flashCard) {
+    private void createFragmentFlashCard (FlashCard flashCard, boolean backPressed) {
+
+        isServerAlive();
+        new ContentFlashCard().collectItemFromDb(flashCard.getId(), getSupportFragmentManager(), progressBar, backPressed, db);
+
+        if (isNetworkAvailable() && isAlive) {
+            new  ContentFlashCard().collectItemFromServer(flashCard.getId(), getSupportFragmentManager(), progressBar, backPressed, db);
+
+        }
 
         this.currentFlashCard = flashCard;
         this.catalogueState = Constants.FLASH_CARD_DETAIL;
 
+        /*
         FragmentFlashCard fragment = new FragmentFlashCard();
-        fragment.setFlashCard(flashCard);
+        fragment.setItem(flashCard);
         android.support.v4.app.FragmentTransaction fragmentTransaction =
                 getSupportFragmentManager().beginTransaction();
+                */
         /*
         fragmentTransaction.setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left);
         */
+        /*
         fragmentTransaction.replace(R.id.fragment_container_main, fragment);
         fragmentTransaction.commit();
+        */
     }
 
     private boolean isNetworkAvailable() {

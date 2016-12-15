@@ -22,13 +22,13 @@ import de.uulm.einhoernchen.flashcardsapp.Util.ProcessorImage;
  * @since 2016.12.09
  */
 
-public class BitmapDownloaderTask extends AsyncTask<String, Void, Bitmap> {
+public class AsyncGetRemoteBitmap extends AsyncTask<String, Void, Bitmap> {
     private String url;
     private final WeakReference<ImageView> imageViewReference;
     private final long id;
     private final String appendix;
 
-    public BitmapDownloaderTask(ImageView imageView, long id, String appendix) {
+    public AsyncGetRemoteBitmap(ImageView imageView, long id, String appendix) {
         imageViewReference = new WeakReference<ImageView>(imageView);
         this.id = id;
         this.appendix = appendix;

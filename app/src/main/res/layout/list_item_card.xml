@@ -17,7 +17,6 @@
         android:layout_marginLeft="3dp"
         android:layout_marginRight="3dp"
         android:padding="5dp"
-
         card_view:cardCornerRadius="5dp">
 
         <LinearLayout
@@ -38,7 +37,7 @@
             android:layout_margin="5dp"
             android:layout_marginTop="@dimen/activity_horizontal_margin"
             android:clipToPadding="false"
-            android:paddingTop="255dp"
+            android:paddingTop="253dp"
             android:orientation="horizontal">
 
             <TextView

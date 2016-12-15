@@ -4,6 +4,7 @@ import android.os.AsyncTask;
 import android.view.View;
 import android.widget.ProgressBar;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import de.uulm.einhoernchen.flashcardsapp.Database.DbManager;
@@ -18,8 +19,21 @@ public class AsyncSaveLocalFlashCards extends AsyncTask<Long, Long, Void> {
     private DbManager db;
 
 
+    /**
+     * Use this method to save a list of flashcards
+     * @param flashCards
+     */
     public void setFlashCards(List<FlashCard> flashCards) {
         this.flashCards = flashCards;
+    }
+
+    /**
+     * User this to only save one flasshcard
+     * @param flashCard
+     */
+    public void setFlashCard(FlashCard flashCard) {
+        this.flashCards = new ArrayList<FlashCard>();
+        this.flashCards.add(flashCard);
     }
 
     public void setDbManager(DbManager dbManager) {
