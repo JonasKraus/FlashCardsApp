@@ -1,7 +1,6 @@
 package de.uulm.einhoernchen.flashcardsapp.Models;
 
 
-import android.net.Uri;
 import android.util.Log;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -9,9 +8,9 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.sql.Date;
+import java.util.Date;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 
 import de.uulm.einhoernchen.flashcardsapp.Util.JsonKeys;
 
@@ -32,7 +31,7 @@ public class Answer {
     private String hintText;
 
     @JsonProperty(JsonKeys.URI)
-    private Uri uri;
+    private String uri;
 
     // TODO: 11/07/16  Ist die Antwort richtig oder falsch?
     @JsonProperty(JsonKeys.AUTHOR)
@@ -62,6 +61,7 @@ public class Answer {
 
     /**
      * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     * @since 2016-12-16
      *
      * @param id
      * @param correct
@@ -74,54 +74,19 @@ public class Answer {
      * @param rating
      * @param answerCorrect
      */
-    public Answer(long id, boolean correct, String text, String hint, Uri uri, User author, java.util.Date created, java.util.Date lastUpdated, int rating, boolean answerCorrect) {
+    public Answer(long id, boolean correct, String text, String hint, String uri, User author, Date created, Date lastUpdated, int rating, boolean answerCorrect) {
         this.id = id;
         this.isCorrect = correct; // TODO redundant??
         this.answerText = text;
         this.hintText = hint;
         this.uri = uri;
         this.author = author;
-        // this.created = created; TODO Welches Date und welches Format
-        // this.lastUpdated = lastUpdated;
+        this.created = created;
+        this.lastUpdated = lastUpdated;
         this.rating = rating;
         this.isCorrect = answerCorrect;
     }
 
-    /**
-     * @author Jonas Kraus jonas.kraus@uni-ulm.de
-     *
-     * @param answerId
-     * @param correct
-     * @param answerText
-     * @param answerHint
-     * @param mediaURI
-     * @param author
-     * @param created
-     * @param lastupdated
-     * @param rating
-     * @param correct1
-     */
-    public Answer(long answerId, boolean correct, String answerText, String answerHint, String mediaURI, User author, String created, String lastupdated, int rating, boolean correct1) {
-        this.id = answerId;
-        this.isCorrect = correct; // TODO redundant??
-        this.answerText = answerText;
-        this.hintText = answerHint;
-        try {
-            if (mediaURI != null) {
-                this.uri = Uri.parse(mediaURI);
-            } else {
-                this.uri = Uri.parse("");
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            Log.d("construct Answer", "faild to generate uri from string");
-        }
-        this.author = author;
-        // this.created = created; TODO Welches Date und welches Format
-        // this.lastUpdated = lastUpdated;
-        this.rating = rating;
-        this.isCorrect = correct1;
-    }
 
     @Override
     public String toString() {
@@ -169,11 +134,11 @@ public class Answer {
         this.hintText = hintText;
     }
 
-    public Uri getUri() {
+    public String getUri() {
         return uri;
     }
 
-    public void setUri(Uri uri) {
+    public void setUri(String uri) {
         this.uri = uri;
     }
 
@@ -199,6 +164,17 @@ public class Answer {
 
     public Date getLastUpdated() {
         return this.lastUpdated;
+    }
+
+    public String getLastUpdatedString() {
+        // TODO to be implemented
+
+        if (this.lastUpdated == null) {
+
+            return new SimpleDateFormat("dd.MM.yyyy hh:mm:ss").format(Calendar.getInstance().getTime());
+        }
+
+        return new SimpleDateFormat("dd.MM.yyyy hh:mm:ss").format( lastUpdated.getTime());
     }
 
     public void setCorrect(boolean correct) {

@@ -169,6 +169,13 @@
 
 
             </android.support.v7.widget.CardView>
+
+            <FrameLayout
+                android:id="@+id/fragment_container_card_answer"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+            </FrameLayout>
             <ListView
                 android:id="@+id/listview_answers"
                 android:layout_width="match_parent"

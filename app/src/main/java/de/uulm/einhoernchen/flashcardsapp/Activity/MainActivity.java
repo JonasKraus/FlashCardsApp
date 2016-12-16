@@ -36,14 +36,18 @@ import java.util.List;
 import de.uulm.einhoernchen.flashcardsapp.AsyncTasks.Remote.AsyncGetRemoteHeartbeat;
 import de.uulm.einhoernchen.flashcardsapp.Database.DbManager;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.Dataset.ContentFlashCard;
+import de.uulm.einhoernchen.flashcardsapp.Fragment.Dataset.ContentFlashCardAnswers;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.Dataset.ContentFlashCards;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.FragmentFlashCard;
+import de.uulm.einhoernchen.flashcardsapp.Fragment.FragmentFlashCardAnswers;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.FragmentHome;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.Dataset.ContentCarddecks;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.Dataset.ContentCategories;
+import de.uulm.einhoernchen.flashcardsapp.Fragment.Interfaces.OnFragmentInteractionListenerAnswer;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.Interfaces.OnFragmentInteractionListenerCarddeck;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.Interfaces.OnFragmentInteractionListenerCategory;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.Interfaces.OnFragmentInteractionListenerFlashcard;
+import de.uulm.einhoernchen.flashcardsapp.Models.Answer;
 import de.uulm.einhoernchen.flashcardsapp.Models.CardDeck;
 import de.uulm.einhoernchen.flashcardsapp.Models.Category;
 import de.uulm.einhoernchen.flashcardsapp.Models.FlashCard;
@@ -54,7 +58,7 @@ import de.uulm.einhoernchen.flashcardsapp.Util.ProcessorImage;
 import de.uulm.einhoernchen.flashcardsapp.Util.PermissionManager;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, FragmentHome.OnFragmentInteractionListener, OnFragmentInteractionListenerFlashcard, OnFragmentInteractionListenerCategory, OnFragmentInteractionListenerCarddeck, FragmentFlashCard.OnFlashCardFragmentInteractionListener {
+        implements NavigationView.OnNavigationItemSelectedListener, FragmentHome.OnFragmentInteractionListener, OnFragmentInteractionListenerFlashcard, OnFragmentInteractionListenerCategory, OnFragmentInteractionListenerCarddeck, FragmentFlashCard.OnFlashCardFragmentInteractionListener, OnFragmentInteractionListenerAnswer {
 
 
     private DbManager db;
@@ -570,9 +574,11 @@ public class MainActivity extends AppCompatActivity
 
         isServerAlive();
         new ContentFlashCard().collectItemFromDb(flashCard.getId(), getSupportFragmentManager(), progressBar, backPressed, db);
+        new ContentFlashCardAnswers().collectItemsFromDb(flashCard.getId(), getSupportFragmentManager(), progressBar, backPressed, db);
 
         if (isNetworkAvailable() && isAlive) {
             new  ContentFlashCard().collectItemFromServer(flashCard.getId(), getSupportFragmentManager(), progressBar, backPressed, db);
+            new  ContentFlashCardAnswers().collectItemsFromServer(flashCard.getId(), getSupportFragmentManager(), progressBar, backPressed, db);
 
         }
 
@@ -626,4 +632,8 @@ public class MainActivity extends AppCompatActivity
         this.isAlive = isAlive;
     }
 
+    @Override
+    public void onAnswerListFragmentInteraction(Answer item) {
+        Log.d("click answer", item.toString());
+    }
 }

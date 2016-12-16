@@ -112,7 +112,7 @@ public class DbHelper extends SQLiteOpenHelper {
 
     // Database name and version - increase when existing table is altered
     private static final String DATABASE_NAME = "flashcardsDb.db";
-    private static final int DATABASE_VERSION = 10; // @TODO revert version before first release
+    private static final int DATABASE_VERSION = 11; // @TODO revert version before first release
 
     /**
      * Database creation sql statement for table user
@@ -195,9 +195,9 @@ public class DbHelper extends SQLiteOpenHelper {
             + COLUMN_ANSWER_CORRECT
             + " integer DEFAULT 1, "
             + COLUMN_ANSWER_CREATED
-            + " text, "  // TODO should be not null
+            + " integer, "  // TODO should be not null
             + COLUMN_ANSWER_LAST_UPDATED
-            + " text "  // TODO should be not null
+            + " interger "  // TODO should be not null
             + ");";
 
     private static final String CARD_TAG_CREATE = "create table "

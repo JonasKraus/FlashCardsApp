@@ -202,7 +202,7 @@ public class JsonUtil {
         Answer answer=new Answer(answerText,hintText,author);
 
         if(node.has(JsonKeys.URI)){
-            answer.setUri(Uri.parse(node.get(JsonKeys.URI).asText()));
+            answer.setUri(node.get(JsonKeys.URI).asText());
         }
         return answer;
     }

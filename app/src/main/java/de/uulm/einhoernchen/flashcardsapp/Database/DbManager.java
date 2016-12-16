@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.util.Log;
 
+import java.net.URI;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -410,7 +411,7 @@ public class DbManager {
      * @param parentCardId
      * @return
      */
-    private List<Answer> getAnswers(long parentCardId) {
+    public List<Answer> getAnswers(long parentCardId) {
 
         List<Answer> answers = new ArrayList<Answer>();
 
@@ -426,12 +427,12 @@ public class DbManager {
                 // parentCardId do we already have
                 int rating = cursor.getInt(6);
                 boolean correct = cursor.getInt(7) > 0;
-                String created = cursor.getString(8);
-                String lastupdated = cursor.getString(9);
+                long created = cursor.getLong(8);
+                long lastupdated = cursor.getLong(9);
 
                 User author = getUser(userId);
 
-                answers.add(new Answer(answerId, correct, answerText, answerHint, mediaURI, author, created, lastupdated, rating, correct));
+                answers.add(new Answer(answerId, correct, answerText, answerHint, mediaURI, author, new Date(created), new Date(lastupdated), rating, correct));
             } while (cursor.moveToNext());
         }
         return answers;
@@ -838,18 +839,18 @@ public class DbManager {
         values.put(DbHelper.COLUMN_ANSWER_ID, answer.getId());
         values.put(DbHelper.COLUMN_ANSWER_TEXT, answer.getAnswerText());
         values.put(DbHelper.COLUMN_ANSWER_HINT, answer.getHintText());
-        values.put(DbHelper.COLUMN_ANSWER_MEDIA_URI, answer.getUri() != null ? answer.getUri().toString() : null);
+        values.put(DbHelper.COLUMN_ANSWER_MEDIA_URI, answer.getUri() != null ? answer.getUri() : null);
         values.put(DbHelper.COLUMN_ANSWER_USER_ID, answer.getAuthor().getId());
         values.put(DbHelper.COLUMN_ANSWER_PARENT_CARD_ID, cardId);
         values.put(DbHelper.COLUMN_ANSWER_RATING, answer.getRating());
         values.put(DbHelper.COLUMN_ANSWER_CORRECT, answer.isCorrect());
 
         if (answer.getCreated() != null) {
-            values.put(DbHelper.COLUMN_ANSWER_CREATED, answer.getCreated().toString());
+            values.put(DbHelper.COLUMN_ANSWER_CREATED, answer.getCreated().getTime()); // TODO make time int val
         }
 
         if (answer.getLastUpdated() != null) {
-            values.put(DbHelper.COLUMN_ANSWER_LAST_UPDATED, answer.getLastUpdated().toString());
+            values.put(DbHelper.COLUMN_ANSWER_LAST_UPDATED, answer.getLastUpdated().getTime());  // TODO make time int val
         }
 
         database.insertWithOnConflict(DbHelper.TABLE_ANSWER, null, values, SQLiteDatabase.CONFLICT_REPLACE);

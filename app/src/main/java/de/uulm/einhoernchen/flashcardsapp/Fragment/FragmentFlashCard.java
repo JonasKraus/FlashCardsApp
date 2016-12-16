@@ -15,6 +15,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import de.uulm.einhoernchen.flashcardsapp.Database.DbManager;
+import de.uulm.einhoernchen.flashcardsapp.Fragment.Dataset.ContentFlashCard;
+import de.uulm.einhoernchen.flashcardsapp.Fragment.Dataset.ContentFlashCardAnswers;
 import de.uulm.einhoernchen.flashcardsapp.Models.FlashCard;
 import de.uulm.einhoernchen.flashcardsapp.R;
 import de.uulm.einhoernchen.flashcardsapp.Util.ProcessorImage;
@@ -88,6 +90,8 @@ public class FragmentFlashCard extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.parallax, container, false);
+
+        /*
         ListView listview =(ListView) view.findViewById(R.id.listview_answers);
 
         if (view instanceof RecyclerView) {
@@ -98,6 +102,7 @@ public class FragmentFlashCard extends Fragment {
                 new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, items);
 
         listview.setAdapter(adapter);
+        */
 
 
         mIdView = (TextView) view.findViewById(R.id.id);

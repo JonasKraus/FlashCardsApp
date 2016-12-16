@@ -33,6 +33,7 @@ public class Routes {
     public static final String DECKS = "decks";
     public static final String CATEGORIES = "categories";
     public static final String USERS = "users";
+    public static final String ANSWERS = "answers";
 
 
 }

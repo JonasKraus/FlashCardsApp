@@ -104,6 +104,26 @@ public class JsonParser {
         }
     }
 
+
+    /**
+     * Reads all answers of a card
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     * @since 2016-12-16
+     *
+     * @param in
+     * @return
+     * @throws IOException
+     */
+    public static List<Answer> readAnswers(InputStream in)  throws IOException  {
+        JsonReader reader = new JsonReader(new InputStreamReader(in, "UTF-8"));
+        try {
+            return readAnswerArray(reader);
+        } finally {
+            reader.close();
+        }
+    }
+
     private static List<Category> readCategoryArray(JsonReader reader) {
         if (DEBUG) Log.d("parser Method", "readCategoryArray");
         List<Category> categoryList = new ArrayList<Category>();
@@ -387,7 +407,7 @@ public class JsonParser {
         String text = "No answer text found";
         String hint = "";
         String uriString = "";
-        Uri uri = null;
+        String uri = null;
         User author = null;
         Date created = null;
         Date lastUpdated = null;
@@ -424,7 +444,7 @@ public class JsonParser {
                         reader.nextNull();
                     }
 
-                    uri = Uri.parse(uriString); // TODO check what happens when string is empty
+                    uri = uriString; // TODO check what happens when string is empty
                 } else if (stringName.equals(JsonKeys.AUTHOR)) {
                     JsonToken check = reader.peek();
 
@@ -435,9 +455,11 @@ public class JsonParser {
                     }
 
                 } else if (stringName.equals(JsonKeys.DATE_CREATED)) {
-                    created = stringToDate(reader.nextString());
+                    String stringCreated = reader.nextString();
+                    created = stringToDate(stringCreated);
                 } else if (stringName.equals(JsonKeys.DATE_UPDATED)) {
-                    lastUpdated = stringToDate(reader.nextString());
+                    String stringUpdated = reader.nextString();
+                    lastUpdated = stringToDate(stringUpdated);
                 } else if (stringName.equals(JsonKeys.RATING)) {
                     rating = reader.nextInt();
                 } else if (stringName.equals(JsonKeys.ANSWER_CORRECT)) {
