@@ -28,8 +28,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 android:background="?attr/colorPrimary"
-                app:layout_collapseMode="parallax"
-                app:layout_scrollFlags="scroll|exitUntilCollapsed">
+                app:layout_collapseMode="pin"
+                app:layout_scrollFlags="scroll|enterAlways">
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
@@ -15,11 +16,15 @@ import android.widget.ImageView;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
+import java.util.Random;
 
 import de.uulm.einhoernchen.flashcardsapp.AsyncTasks.Remote.AsyncGetRemoteBitmap;
+import de.uulm.einhoernchen.flashcardsapp.R;
 
 public class ProcessorImage {
 
+    public static final int COLOR_MIN = 0x00;
+    public static final int COLOR_MAX = 0xFF;
 
     /**
      * Method for return file path of Gallery image
@@ -287,10 +292,62 @@ public class ProcessorImage {
                 AsyncGetRemoteBitmap task = new AsyncGetRemoteBitmap(imageView, id, appendix);
                 task.execute(url);
             }
-
         }
+    }
 
 
+    /**
+     * generates a random image
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     * @since 2016-12-17
+     *
+     * @param context
+     * @return
+     */
+    public static Bitmap generateImage(Context context) {
+        Bitmap bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.profileimage);
+        //bitmap = Bitmap.createScaledBitmap(bitmap,parent.getWidth(),parent.getHeight(),true);
+        return applyFleaEffect(bitmap);
+    }
+
+
+    /**
+     * Applies random pattern to bitmap
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     * @since 2016-12-17
+     *
+     * @param source
+     * @return
+     */
+    public static Bitmap applyFleaEffect(Bitmap source) {
+        // get image size
+        int width = source.getWidth();
+        int height = source.getHeight();
+        int[] pixels = new int[width * height];
+        // get pixel array from source
+        source.getPixels(pixels, 0, width, 0, 0, width, height);
+        // a random object
+        Random random = new Random();
+
+        int index = 0;
+        // iteration through pixels
+        for(int y = 0; y < height; ++y) {
+            for(int x = 0; x < width; ++x) {
+                // get current index in 2D-matrix
+                index = y * width + x;
+                // get random color
+                int randColor = Color.rgb(random.nextInt(COLOR_MAX),
+                        random.nextInt(COLOR_MAX), random.nextInt(COLOR_MAX));
+                // OR
+                pixels[index] |= randColor;
+            }
+        }
+        // output bitmap
+        Bitmap bmOut = Bitmap.createBitmap(width, height, source.getConfig());
+        bmOut.setPixels(pixels, 0, width, 0, 0, width, height);
+        return bmOut;
     }
 }
 

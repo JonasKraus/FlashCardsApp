@@ -39,7 +39,6 @@ import de.uulm.einhoernchen.flashcardsapp.Fragment.Dataset.ContentFlashCard;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.Dataset.ContentFlashCardAnswers;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.Dataset.ContentFlashCards;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.FragmentFlashCard;
-import de.uulm.einhoernchen.flashcardsapp.Fragment.FragmentFlashCardAnswers;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.FragmentHome;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.Dataset.ContentCarddecks;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.Dataset.ContentCategories;
@@ -213,6 +212,10 @@ public class MainActivity extends AppCompatActivity
             if (image.exists()) {
                 BitmapFactory.Options bmOptions = new BitmapFactory.Options();
                 Bitmap bitmap = BitmapFactory.decodeFile(image.getAbsolutePath(), bmOptions);
+                profileImage.setImageBitmap(bitmap);
+            } else {
+                Bitmap bitmap = ProcessorImage.generateImage(this);
+                ProcessorImage.savebitmap(bitmap, user.getId(), "_flashcards_profile");
                 profileImage.setImageBitmap(bitmap);
             }
 
