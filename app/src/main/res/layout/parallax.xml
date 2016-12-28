@@ -146,7 +146,7 @@
                             android:textSize="@dimen/item_small_text_size" />
 
                         <ImageView
-                            android:id="@+id/image_view_bookmark"
+                            android:id="@+id/image_view_iscorrect"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="right"

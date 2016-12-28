@@ -170,7 +170,7 @@ public class RecyclerViewAdapterCarddecks extends RecyclerView.Adapter<RecyclerV
             // mGroupRatingView = (TextView) view.findViewById(R.id.text_view_listItem_group_rating);
             mCardRatingView = (TextView) view.findViewById(R.id.text_view_listItem_card_rating);
             mDateView = (TextView) view.findViewById(R.id.text_view_listItem_date);
-            mBookmarkView = (ImageView) view.findViewById(R.id.image_view_bookmark);
+            mBookmarkView = (ImageView) view.findViewById(R.id.image_view_iscorrect);
             mLocalView = (ImageView) view.findViewById(R.id.image_view_offline);
 
             imageView = (ImageView) view.findViewById(R.id.image_view_round_icon);

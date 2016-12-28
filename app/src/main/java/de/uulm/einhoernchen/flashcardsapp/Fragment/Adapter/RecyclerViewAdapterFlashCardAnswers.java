@@ -1,21 +1,19 @@
 package de.uulm.einhoernchen.flashcardsapp.Fragment.Adapter;
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.amulyakhare.textdrawable.TextDrawable;
-import com.amulyakhare.textdrawable.util.ColorGenerator;
-
-import java.util.Date;
 import java.util.List;
 
 import de.uulm.einhoernchen.flashcardsapp.Fragment.Dataset.DummyContent.DummyItem;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.Interfaces.OnFragmentInteractionListenerAnswer;
-import de.uulm.einhoernchen.flashcardsapp.Fragment.Interfaces.OnFragmentInteractionListenerCategory;
 import de.uulm.einhoernchen.flashcardsapp.Models.Answer;
 import de.uulm.einhoernchen.flashcardsapp.R;
 
@@ -28,17 +26,19 @@ public class RecyclerViewAdapterFlashCardAnswers extends RecyclerView.Adapter<Re
     private final List<Answer> answers;
     private final OnFragmentInteractionListenerAnswer mListener;
     private final boolean isUpToDate;
+    private final Context context;
 
-    public RecyclerViewAdapterFlashCardAnswers(List<Answer> items, OnFragmentInteractionListenerAnswer listener, boolean isUpToDate) {
+    public RecyclerViewAdapterFlashCardAnswers(List<Answer> items, OnFragmentInteractionListenerAnswer listener, boolean isUpToDate, Context context) {
         answers = items;
         mListener = listener;
         this.isUpToDate = isUpToDate;
+        this.context = context;
     }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.list_item, parent, false);
+                .inflate(R.layout.list_item_answer, parent, false);
         return new ViewHolder(view);
     }
 
@@ -54,7 +54,16 @@ public class RecyclerViewAdapterFlashCardAnswers extends RecyclerView.Adapter<Re
         holder.mCardRatingView.setText(answers.get(position).getRating() + "");
         holder.mDateView.setVisibility(View.VISIBLE);
         holder.mDateView.setText(answers.get(position).getLastUpdatedString());
-        holder.mBookmarkView.setVisibility(View.INVISIBLE);
+        holder.misCorrectView.setVisibility(View.VISIBLE);
+        holder.mDownvote.setVisibility(View.VISIBLE);
+        holder.mUpvote.setVisibility(View.VISIBLE);
+        final long answerId = answers.get(position).getId();
+
+        if (answers.get(position).isCorrect()) {
+            holder.misCorrectView.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_check));
+        } else {
+            holder.misCorrectView.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_close));
+        }
 
         if (!isUpToDate) {
 
@@ -72,6 +81,28 @@ public class RecyclerViewAdapterFlashCardAnswers extends RecyclerView.Adapter<Re
                     // fragment is attached to one) that an item has been selected.
                     mListener.onAnswerListFragmentInteraction(holder.mItem);
                 }
+            }
+        });
+
+        /**
+         * Listener to downwote an answer
+         * TODO start asnc task to update the vote
+         */
+        holder.mDownvote.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d("click down vote", answerId + "");
+            }
+        });
+
+        /**
+         * Listener to up vote an answer
+         * TODO start async task to snyc the voteing
+         */
+        holder.mUpvote.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d("click up vote", answerId + "");
             }
         });
 
@@ -93,9 +124,11 @@ public class RecyclerViewAdapterFlashCardAnswers extends RecyclerView.Adapter<Re
         // public final TextView mGroupRatingView;
         public final TextView mCardRatingView;
         public final TextView mDateView;
-        public final ImageView mBookmarkView;
+        public final ImageView misCorrectView;
         public final ImageView mLocalView;
         public final ImageView imageView; // Text icon
+        public final ImageButton mDownvote; // Text icon
+        public final ImageButton mUpvote; // Text icon
         public Answer mItem;
 
         public ViewHolder(View view) {
@@ -108,10 +141,12 @@ public class RecyclerViewAdapterFlashCardAnswers extends RecyclerView.Adapter<Re
             // mGroupRatingView = (TextView) view.findViewById(R.id.text_view_listItem_group_rating);
             mCardRatingView = (TextView) view.findViewById(R.id.text_view_listItem_card_rating);
             mDateView = (TextView) view.findViewById(R.id.text_view_listItem_date);
-            mBookmarkView = (ImageView) view.findViewById(R.id.image_view_bookmark);
+            misCorrectView = (ImageView) view.findViewById(R.id.image_view_iscorrect);
             mLocalView = (ImageView) view.findViewById(R.id.image_view_offline);
 
             imageView = (ImageView) view.findViewById(R.id.image_view_round_icon);
+            mUpvote = (ImageButton) view.findViewById(R.id.button_up_vote);
+            mDownvote = (ImageButton) view.findViewById(R.id.button_down_vote);
         }
 
         @Override

@@ -79,7 +79,7 @@ public class FragmentFlashCardAnswers extends Fragment {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
 
-            recyclerView.setAdapter(new RecyclerViewAdapterFlashCardAnswers(itemList, mListener, isUpToDate));
+            recyclerView.setAdapter(new RecyclerViewAdapterFlashCardAnswers(itemList, mListener, isUpToDate, context));
         }
         return view;
     }

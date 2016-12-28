@@ -1,14 +1,12 @@
 package de.uulm.einhoernchen.flashcardsapp.Fragment.Adapter;
 
 import android.graphics.Color;
-import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.VideoView;
 
 import com.amulyakhare.textdrawable.TextDrawable;
 import com.amulyakhare.textdrawable.util.ColorGenerator;
@@ -60,7 +58,7 @@ public class RecyclerViewAdapterFlashcards extends RecyclerView.Adapter<Recycler
         holder.mCardRatingView.setText(flashCards.get(position).getRatingForView());
         holder.mDateView.setText(flashCards.get(position).getLastUpdatedString());
         holder.mBookmarkView.setVisibility(View.VISIBLE);
-        // holder.mBookmarkView.setImageDrawable(// TODO set if marked);
+        // holder.misCorrectView.setImageDrawable(// TODO set if marked);
 
 
         if (holder.mItem.getQuestion().getUri() != null && holder.mItem.getQuestion().getUri().toString() != "") {
@@ -177,7 +175,7 @@ public class RecyclerViewAdapterFlashcards extends RecyclerView.Adapter<Recycler
             // mGroupRatingView = (TextView) view.findViewById(R.id.text_view_listItem_group_rating);
             mCardRatingView = (TextView) view.findViewById(R.id.text_view_listItem_card_rating);
             mDateView = (TextView) view.findViewById(R.id.text_view_listItem_date);
-            mBookmarkView = (ImageView) view.findViewById(R.id.image_view_bookmark);
+            mBookmarkView = (ImageView) view.findViewById(R.id.image_view_iscorrect);
             mLocalView = (ImageView) view.findViewById(R.id.image_view_offline);
 
             imageView = (ImageView) view.findViewById(R.id.image_view_round_icon);

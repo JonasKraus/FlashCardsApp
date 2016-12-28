@@ -99,7 +99,7 @@
             android:layout_width="wrap_content"
             android:layout_height="47dp"
             android:src="@drawable/ic_bookmark_border"
-            android:id="@+id/image_view_bookmark"
+            android:id="@+id/image_view_iscorrect"
             android:layout_marginRight="-4.5dp"
             android:layout_gravity="right"/>
 

@@ -4,19 +4,13 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import de.uulm.einhoernchen.flashcardsapp.Database.DbManager;
-import de.uulm.einhoernchen.flashcardsapp.Fragment.Dataset.ContentFlashCard;
-import de.uulm.einhoernchen.flashcardsapp.Fragment.Dataset.ContentFlashCardAnswers;
 import de.uulm.einhoernchen.flashcardsapp.Models.FlashCard;
 import de.uulm.einhoernchen.flashcardsapp.R;
 import de.uulm.einhoernchen.flashcardsapp.Util.ProcessorImage;
@@ -112,7 +106,7 @@ public class FragmentFlashCard extends Fragment {
         // mGroupRatingView = (TextView) view.findViewById(R.id.text_view_listItem_group_rating);
         mCardRatingView = (TextView) view.findViewById(R.id.text_view_listItem_card_rating);
         mDateView = (TextView) view.findViewById(R.id.text_view_listItem_date);
-        mBookmarkView = (ImageView) view.findViewById(R.id.image_view_bookmark);
+        mBookmarkView = (ImageView) view.findViewById(R.id.image_view_iscorrect);
         mLocalView = (ImageView) view.findViewById(R.id.image_view_offline);
 
         imageViewUri = (ImageView) view.findViewById(R.id.image_view_question_uri);
@@ -122,7 +116,7 @@ public class FragmentFlashCard extends Fragment {
         mAuthorView.setText(flashCard.getQuestion().getAuthor().getName());
         mCardRatingView.setText(flashCard.getRatingForView());
         mDateView.setText(flashCard.getLastUpdatedString());
-        //mBookmarkView =; TODO
+        //misCorrectView =; TODO
 
         if (flashCard.getQuestion().getUri() != null && flashCard.getQuestion().getUri().toString() != "") {
 
