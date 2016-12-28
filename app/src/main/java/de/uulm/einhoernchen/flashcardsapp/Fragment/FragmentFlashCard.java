@@ -83,7 +83,7 @@ public class FragmentFlashCard extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.parallax, container, false);
+        View view = inflater.inflate(R.layout.fragment_flashcard_parallax, container, false);
 
         /*
         ListView listview =(ListView) view.findViewById(R.id.listview_answers);

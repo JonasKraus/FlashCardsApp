@@ -65,6 +65,9 @@ public class RecyclerViewAdapterFlashCardAnswers extends RecyclerView.Adapter<Re
             holder.misCorrectView.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_close));
         }
 
+        /**
+         * Check if the data is from the server or from the local db
+         */
         if (!isUpToDate) {
 
             holder.mLocalView.setVisibility(View.INVISIBLE);
@@ -73,6 +76,9 @@ public class RecyclerViewAdapterFlashCardAnswers extends RecyclerView.Adapter<Re
             holder.mLocalView.setVisibility(View.VISIBLE);
         }
 
+        /**
+         * Sets the clicklistener for clicking a list item
+         */
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -127,8 +133,8 @@ public class RecyclerViewAdapterFlashCardAnswers extends RecyclerView.Adapter<Re
         public final ImageView misCorrectView;
         public final ImageView mLocalView;
         public final ImageView imageView; // Text icon
-        public final ImageButton mDownvote; // Text icon
-        public final ImageButton mUpvote; // Text icon
+        public final ImageView mDownvote; // Text icon
+        public final ImageView mUpvote; // Text icon
         public Answer mItem;
 
         public ViewHolder(View view) {
@@ -145,8 +151,8 @@ public class RecyclerViewAdapterFlashCardAnswers extends RecyclerView.Adapter<Re
             mLocalView = (ImageView) view.findViewById(R.id.image_view_offline);
 
             imageView = (ImageView) view.findViewById(R.id.image_view_round_icon);
-            mUpvote = (ImageButton) view.findViewById(R.id.button_up_vote);
-            mDownvote = (ImageButton) view.findViewById(R.id.button_down_vote);
+            mUpvote = (ImageView) view.findViewById(R.id.button_up_vote);
+            mDownvote = (ImageView) view.findViewById(R.id.button_down_vote);
         }
 
         @Override
