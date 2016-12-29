@@ -82,7 +82,7 @@ public class FragmentFlashcards extends Fragment {
             }
 
             // Set the view with the data
-            recyclerView.setAdapter(new RecyclerViewAdapterFlashcards(db, itemList, mListener, isUpToDate));
+            recyclerView.setAdapter(new RecyclerViewAdapterFlashcards(db, itemList, mListener, isUpToDate, context));
         }
         return view;
     }

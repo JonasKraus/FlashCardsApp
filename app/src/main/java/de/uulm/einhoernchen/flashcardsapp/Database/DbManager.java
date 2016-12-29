@@ -7,7 +7,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.util.Log;
 
-import java.net.URI;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -150,6 +149,15 @@ public class DbManager {
             DbHelper.COLUMN_SELECTION_CARD_DECK_ID,   //2
             DbHelper.COLUMN_SELECTION_CARD_ID,        //3
             DbHelper.COLUMN_SELECTION_DATE            //4
+    };
+
+    private String[] allVotingColumns = {
+            DbHelper.COLUMN_VOTING_ID,                //0
+            DbHelper.COLUMN_VOTING_USER_ID,           //1
+            DbHelper.COLUMN_VOTING_CARD_ID,           //2
+            DbHelper.COLUMN_VOTING_ANSWER_ID,         //3
+            DbHelper.COLUMN_VOTING_VALUE,             //4
+            DbHelper.COLUMN_VOTING_DATE               //5
     };
 
     /**
@@ -912,6 +920,122 @@ public class DbManager {
 
     }
 
+
+    /**
+     * Saves or Updates a voting of a card
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     * @since 2016-12-29
+     *
+     * @param cardId
+     * @param value
+     */
+    public boolean saveCardVoting(long cardId, int value) {
+
+        int voting = getCardVoting(cardId);
+        int rating;
+
+        if (value == voting) {
+            return false;
+        } else if (value == -1 && voting == 1) {
+            rating = -2;
+        } else if (value == 1 && voting == -1) {
+            rating = +2;
+        } else {
+            rating = value;
+        }
+
+        updateCardRating(cardId, rating);
+
+        ContentValues values = new ContentValues();
+        values.put(DbHelper.COLUMN_VOTING_USER_ID, loggedInUser.getId());
+        values.put(DbHelper.COLUMN_VOTING_CARD_ID, cardId);
+        values.put(DbHelper.COLUMN_VOTING_VALUE, value);
+
+        // Executes the query
+        database.insertWithOnConflict(DbHelper.TABLE_VOTING, null, values, SQLiteDatabase.CONFLICT_REPLACE);
+
+        return true;
+    }
+
+    /**
+     * Locally updates the cardrating
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     * @since 2016-12-29
+     *
+     * @param cardId
+     * @param rating
+     */
+    private void updateCardRating(long cardId, int rating) {
+
+        ContentValues values = new ContentValues();
+        values.put(DbHelper.COLUMN_FLASHCARD_RATING, + rating);
+
+        // Executes the query
+        database.updateWithOnConflict(DbHelper.TABLE_FLASHCARD, values, DbHelper.COLUMN_FLASHCARD_ID + "=" + cardId, null, SQLiteDatabase.CONFLICT_REPLACE);
+
+    }
+
+
+    /**
+     * Locally updates the answer rating
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     * @since 2016-12-29
+     *
+     * @param answerId
+     * @param rating
+     */
+    private void updateAnswerRating(long answerId, int rating) {
+
+        ContentValues values = new ContentValues();
+        values.put(DbHelper.COLUMN_ANSWER_RATING, + rating);
+
+        // Executes the query
+        database.updateWithOnConflict(DbHelper.TABLE_ANSWER, values, DbHelper.COLUMN_ANSWER_ID + "=" + answerId, null, SQLiteDatabase.CONFLICT_REPLACE);
+
+    }
+
+
+    /**
+     * Saves or Updates a voting of an answer
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     * @since 2016-12-29
+     *
+     * @param answerId
+     * @param value
+     */
+    public boolean saveAnswerVoting(long answerId, int value) {
+
+        int voting = getCardVoting(answerId);
+        int rating;
+
+        if (value == voting) {
+            return false;
+        } else if (value == -1 && voting == 1) {
+            rating = -2;
+        } else if (value == 1 && voting == -1) {
+            rating = +2;
+        } else {
+            rating = value;
+        }
+
+        updateAnswerRating(answerId, rating);
+
+        ContentValues values = new ContentValues();
+        values.put(DbHelper.COLUMN_VOTING_USER_ID, loggedInUser.getId());
+        values.put(DbHelper.COLUMN_VOTING_ANSWER_ID, answerId);
+        values.put(DbHelper.COLUMN_VOTING_VALUE, value);
+
+        // Executes the query
+        database.insertWithOnConflict(DbHelper.TABLE_VOTING, null, values, SQLiteDatabase.CONFLICT_REPLACE);
+
+        return true;
+    }
+
+
     /**
      * Finally deletes a tag
      * don't use for update purpose
@@ -994,6 +1118,7 @@ public class DbManager {
         return selectionDate;
     }
 
+
     /**
      * Deselects a carddeck
      *
@@ -1013,6 +1138,7 @@ public class DbManager {
             deselectCard(card.getId(), carddeckID);
         }
     }
+
 
     /**
      * Deselects a card
@@ -1108,6 +1234,72 @@ public class DbManager {
         cursor.close();
 
         return selectionDate;
+
+    }
+
+
+    /**
+     * Returns the voting of a card
+     * if it returns 0 then the logged in user hasn't voted already
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     * @since 2016-12-29
+     *
+     * @param cardID
+     * @return
+     */
+    public int getCardVoting(long cardID) {
+
+        Cursor cursor = database.query(DbHelper.TABLE_VOTING, allVotingColumns, DbHelper.COLUMN_VOTING_CARD_ID + " = " + cardID
+                        + " AND " + DbHelper.COLUMN_VOTING_USER_ID + " = " + loggedInUser.getId()
+                , null, null, null, null);
+
+        int value = 0;
+
+        if (cursor.moveToFirst()) {
+            do {
+
+                value = cursor.getInt(cursor.getColumnIndex(DbHelper.COLUMN_VOTING_VALUE));
+            } while (cursor.moveToNext());
+
+        }
+
+        cursor.close();
+
+        return value;
+
+    }
+
+
+    /**
+     * Returns the voting of an answer
+     * if it returns 0 then the logged in user hasn't voted already
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     * @since 2016-12-29
+     *
+     * @param answerId
+     * @return
+     */
+    public int getAnswerVoting(long answerId) {
+
+        Cursor cursor = database.query(DbHelper.TABLE_VOTING, allVotingColumns, DbHelper.COLUMN_VOTING_ANSWER_ID + " = " + answerId
+                        + " AND " + DbHelper.COLUMN_VOTING_USER_ID + " = " + loggedInUser.getId()
+                , null, null, null, null);
+
+        int value = 0;
+
+        if (cursor.moveToFirst()) {
+            do {
+
+                value = cursor.getInt(cursor.getColumnIndex(DbHelper.COLUMN_VOTING_VALUE));
+            } while (cursor.moveToNext());
+
+        }
+
+        cursor.close();
+
+        return value;
 
     }
 

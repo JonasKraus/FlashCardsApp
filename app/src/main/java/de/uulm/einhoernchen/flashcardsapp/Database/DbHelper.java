@@ -108,11 +108,19 @@ public class DbHelper extends SQLiteOpenHelper {
     public static final String COLUMN_SELECTION_USER_ID = "userId";                       //1
     public static final String COLUMN_SELECTION_CARD_DECK_ID = "carddeckId";              //2
     public static final String COLUMN_SELECTION_CARD_ID = "cardId";                       //3
-    public static final String COLUMN_SELECTION_DATE = "selectionDate";                   //4
+    public static final String COLUMN_SELECTION_DATE = "selectionDate";
+
+    public static final String TABLE_VOTING = "voting";
+    public static final String COLUMN_VOTING_ID = "votingId";                             //0
+    public static final String COLUMN_VOTING_USER_ID = "userId";                          //1
+    public static final String COLUMN_VOTING_CARD_ID = "cardId";                          //2
+    public static final String COLUMN_VOTING_ANSWER_ID = "answerId";                      //3
+    public static final String COLUMN_VOTING_VALUE = "value";                             //4
+    public static final String COLUMN_VOTING_DATE = "votingDate";                         //5
 
     // Database name and version - increase when existing table is altered
     private static final String DATABASE_NAME = "flashcardsDb.db";
-    private static final int DATABASE_VERSION = 11; // @TODO revert version before first release
+    private static final int DATABASE_VERSION = 12; // @TODO revert version before first release
 
     /**
      * Database creation sql statement for table user
@@ -294,6 +302,22 @@ public class DbHelper extends SQLiteOpenHelper {
             + " INTEGER DEFAULT CURRENT_TIMESTAMP"
             + ");";
 
+    private static final String VOTING_CREATE = "create table "
+            + TABLE_VOTING + "("
+            + COLUMN_VOTING_ID
+            + " integer primary key AUTOINCREMENT NOT NULL, "
+            + COLUMN_VOTING_USER_ID
+            + " integer not null, "
+            + COLUMN_VOTING_CARD_ID
+            + " integer default null, "
+            + COLUMN_VOTING_ANSWER_ID
+            + " integer default null, "
+            + COLUMN_VOTING_VALUE
+            + " integer default 0, "
+            + COLUMN_VOTING_DATE
+            + " INTEGER DEFAULT CURRENT_TIMESTAMP"
+            + ");";
+
     /**
      * Constructor
      *
@@ -317,6 +341,7 @@ public class DbHelper extends SQLiteOpenHelper {
         db.execSQL(CARD_DECK_CREATE);
         db.execSQL(CATEGORY_CREATE);
         db.execSQL(SELECTION_CREATE);
+        db.execSQL(VOTING_CREATE);
     }
 
     @Override
@@ -338,6 +363,7 @@ public class DbHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_CARD_DECK);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_CATEGORY);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_SELECTION);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_VOTING);
 
         onCreate(db);
     }

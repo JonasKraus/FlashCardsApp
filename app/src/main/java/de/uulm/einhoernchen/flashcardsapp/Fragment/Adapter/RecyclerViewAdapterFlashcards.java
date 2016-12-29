@@ -1,7 +1,9 @@
 package de.uulm.einhoernchen.flashcardsapp.Fragment.Adapter;
 
+import android.content.Context;
 import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,12 +32,14 @@ public class RecyclerViewAdapterFlashcards extends RecyclerView.Adapter<Recycler
     private final OnFragmentInteractionListenerFlashcard mListener;
     private final boolean isUpToDate;
     private final DbManager db;
+    private final Context context;
 
-    public RecyclerViewAdapterFlashcards(DbManager db, List<FlashCard> items, OnFragmentInteractionListenerFlashcard listener, boolean isUpToDate) {
+    public RecyclerViewAdapterFlashcards(DbManager db, List<FlashCard> items, OnFragmentInteractionListenerFlashcard listener, boolean isUpToDate, Context context) {
         flashCards = items;
         mListener = listener;
         this.isUpToDate = isUpToDate;
         this.db = db;
+        this.context = context;
     }
 
     @Override
@@ -116,7 +120,9 @@ public class RecyclerViewAdapterFlashcards extends RecyclerView.Adapter<Recycler
 
         holder.imageView.setImageDrawable(drawable);
 
-
+        /**
+         * Sets the clicklistener for de/selecting a card
+         */
         holder.imageView.setOnClickListener(new View.OnClickListener(){
 
             @Override
@@ -144,6 +150,7 @@ public class RecyclerViewAdapterFlashcards extends RecyclerView.Adapter<Recycler
                 holder.imageView.setImageDrawable(drawable);
             }
         });
+
     }
 
     @Override

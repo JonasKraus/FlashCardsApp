@@ -1,14 +1,17 @@
 package de.uulm.einhoernchen.flashcardsapp.Fragment;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import de.uulm.einhoernchen.flashcardsapp.Database.DbManager;
 import de.uulm.einhoernchen.flashcardsapp.Models.FlashCard;
@@ -47,6 +50,8 @@ public class FragmentFlashCard extends Fragment {
     private ImageView mBookmarkView;
     private ImageView mLocalView;
     private ImageView imageViewUri;
+    private ImageView imageViewVoteUp;
+    private ImageView imageViewVoteDown;
 
     public FragmentFlashCard() {
         // Required empty public constructor
@@ -111,12 +116,16 @@ public class FragmentFlashCard extends Fragment {
 
         imageViewUri = (ImageView) view.findViewById(R.id.image_view_question_uri);
 
+        imageViewVoteDown = (ImageView) view.findViewById(R.id.button_down_vote);
+        imageViewVoteUp = (ImageView) view.findViewById(R.id.button_up_vote);
+
         //mIdView.setText(flashCard.getId() + "");
         mContentView.setText(flashCard.getQuestion().getQuestionText());
         mAuthorView.setText(flashCard.getQuestion().getAuthor().getName());
         mCardRatingView.setText(flashCard.getRatingForView());
         mDateView.setText(flashCard.getLastUpdatedString());
         //misCorrectView =; TODO
+
 
         if (flashCard.getQuestion().getUri() != null && flashCard.getQuestion().getUri().toString() != "") {
 
@@ -131,7 +140,86 @@ public class FragmentFlashCard extends Fragment {
             mLocalView.setVisibility(View.VISIBLE);
         }
 
+        int voting = db.getCardVoting(flashCard.getId());
+        switch (voting) {
+            case -1:
+                imageViewVoteDown.setColorFilter(getResources().getColor(R.color.colorAccent));
+                mCardRatingView.setTextColor(getResources().getColor(R.color.colorAccent));
+                break;
+            case 1:
+                imageViewVoteUp.setColorFilter(getResources().getColor(R.color.colorAccent));
+                mCardRatingView.setTextColor(getResources().getColor(R.color.colorAccent));
+                break;
+
+        }
+
+        setListener();
         return view;
+
+    }
+
+
+    /**
+     * Sets the listeners for the view
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     * @since 2016-12-29
+     */
+    private void setListener() {
+
+        final long cardID = flashCard.getId();
+
+        /**
+         * Sets the clicklistener to vote a cards rating down
+         */
+        imageViewVoteDown.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if (!db.saveCardVoting(cardID, -1)) {
+
+                    Toast.makeText(getContext(), getResources().getText(R.string.voting_already_voted), Toast.LENGTH_SHORT).show();
+                } else {
+
+                    //TODO start async task to remote save the voting
+
+                    int rating = Integer.parseInt(mCardRatingView.getText().toString());
+                    rating -= 1;
+                    mCardRatingView.setText(rating + "");
+                    imageViewVoteDown.setColorFilter(getResources().getColor(R.color.colorAccent));
+                    imageViewVoteUp.setColorFilter(Color.BLACK);
+                    mCardRatingView.setTextColor(getResources().getColor(R.color.colorAccent));
+                }
+
+            }
+        });
+
+        /**
+         * Sets the clicklistener to vote a cards rating up
+         */
+        imageViewVoteUp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                    if (!db.saveCardVoting(cardID, +1)) {
+
+                        Toast.makeText(getContext(), getResources().getText(R.string.voting_already_voted), Toast.LENGTH_SHORT).show();
+                    } else {
+
+                        //TODO start async task to remote save the voting
+
+                        int rating = Integer.parseInt(mCardRatingView.getText().toString());
+                        rating += 1;
+                        mCardRatingView.setText(rating + "");
+                        imageViewVoteUp.setColorFilter(getResources().getColor(R.color.colorAccent));
+                        imageViewVoteDown.setColorFilter(Color.BLACK);
+                        mCardRatingView.setTextColor(getResources().getColor(R.color.colorAccent));
+                    }
+
+
+
+            }
+        });
 
     }
 

@@ -51,4 +51,7 @@
     <string name="nav_feedback">Feedback</string>
     <string name="nav_settings">Settings</string>
     <string name="nav_logout">Logout</string>
+
+    <!-- Strings for toasts -->
+    <string name="voting_already_voted">You already voted!</string>
 </resources>
