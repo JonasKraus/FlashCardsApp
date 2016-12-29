@@ -176,6 +176,8 @@ public class FragmentFlashCard extends Fragment {
             @Override
             public void onClick(View v) {
 
+                int lastVoting = db.getCardVoting(cardID);
+
                 if (!db.saveCardVoting(cardID, -1)) {
 
                     Toast.makeText(getContext(), getResources().getText(R.string.voting_already_voted), Toast.LENGTH_SHORT).show();
@@ -184,7 +186,7 @@ public class FragmentFlashCard extends Fragment {
                     //TODO start async task to remote save the voting
 
                     int rating = Integer.parseInt(mCardRatingView.getText().toString());
-                    rating -= 1;
+                    rating -= 1 + lastVoting;
                     mCardRatingView.setText(rating + "");
                     imageViewVoteDown.setColorFilter(getResources().getColor(R.color.colorAccent));
                     imageViewVoteUp.setColorFilter(Color.BLACK);
@@ -201,6 +203,7 @@ public class FragmentFlashCard extends Fragment {
             @Override
             public void onClick(View v) {
 
+                int lastVoting = db.getCardVoting(cardID);
                     if (!db.saveCardVoting(cardID, +1)) {
 
                         Toast.makeText(getContext(), getResources().getText(R.string.voting_already_voted), Toast.LENGTH_SHORT).show();
@@ -209,7 +212,7 @@ public class FragmentFlashCard extends Fragment {
                         //TODO start async task to remote save the voting
 
                         int rating = Integer.parseInt(mCardRatingView.getText().toString());
-                        rating += 1;
+                        rating += 1 - lastVoting;
                         mCardRatingView.setText(rating + "");
                         imageViewVoteUp.setColorFilter(getResources().getColor(R.color.colorAccent));
                         imageViewVoteDown.setColorFilter(Color.BLACK);

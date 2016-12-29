@@ -945,7 +945,7 @@ public class DbManager {
             rating = value;
         }
 
-        updateCardRating(cardId, rating);
+        //updateCardRating(cardId, rating);
 
         ContentValues values = new ContentValues();
         values.put(DbHelper.COLUMN_VOTING_USER_ID, loggedInUser.getId());
@@ -1026,7 +1026,7 @@ public class DbManager {
             rating = value;
         }
 
-        updateAnswerRating(answerId, rating);
+        //updateAnswerRating(answerId, rating);
 
         ContentValues values = new ContentValues();
         values.put(DbHelper.COLUMN_VOTING_USER_ID, loggedInUser.getId());

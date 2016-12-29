@@ -82,7 +82,7 @@ public class RecyclerViewAdapterFlashCardAnswers extends RecyclerView.Adapter<Re
         }
 
         // Set votings of logged in user
-        int voting = db.getCardVoting(answers.get(position).getId());
+        int voting = db.getAnswerVoting(answers.get(position).getId());
         switch (voting) {
             case -1:
                 holder.mDownvote.setColorFilter(context.getResources().getColor(R.color.colorAccent));
@@ -111,12 +111,13 @@ public class RecyclerViewAdapterFlashCardAnswers extends RecyclerView.Adapter<Re
 
         /**
          * Listener to downwote an answer
-         * TODO start asnc task to update the vote
          */
         holder.mDownvote.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d("click down vote", answerId + "");
+
+                int lastVoting = db.getAnswerVoting(answerId);
+
                 if (!db.saveAnswerVoting(answerId, -1)) {
 
                     Toast.makeText(context, context.getResources().getText(R.string.voting_already_voted), Toast.LENGTH_SHORT).show();
@@ -125,7 +126,8 @@ public class RecyclerViewAdapterFlashCardAnswers extends RecyclerView.Adapter<Re
                     //TODO start async task to remote save the voting
 
                     int rating = Integer.parseInt(holder.mCardRatingView.getText().toString());
-                    rating -= 1;
+                    rating -= 1 + lastVoting;
+
                     holder.mCardRatingView.setText(rating + "");
                     holder.mDownvote.setColorFilter(context.getResources().getColor(R.color.colorAccent));
                     holder.mUpvote.setColorFilter(Color.BLACK);
@@ -136,12 +138,12 @@ public class RecyclerViewAdapterFlashCardAnswers extends RecyclerView.Adapter<Re
 
         /**
          * Listener to up vote an answer
-         * TODO start async task to snyc the voteing
          */
         holder.mUpvote.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d("click up vote", answerId + "");
+
+                int lastVoting = db.getAnswerVoting(answerId);
 
                 if (!db.saveAnswerVoting(answerId, +1)) {
 
@@ -151,7 +153,8 @@ public class RecyclerViewAdapterFlashCardAnswers extends RecyclerView.Adapter<Re
                     //TODO start async task to remote save the voting
 
                     int rating = Integer.parseInt(holder.mCardRatingView.getText().toString());
-                    rating += 1;
+                    rating += 1 - lastVoting;
+
                     holder.mCardRatingView.setText(rating + "");
                     holder.mUpvote.setColorFilter(context.getResources().getColor(R.color.colorAccent));
                     holder.mDownvote.setColorFilter(Color.BLACK);
