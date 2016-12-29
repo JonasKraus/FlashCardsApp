@@ -94,8 +94,6 @@ public class AsyncSetRemoteFlashCardRating extends AsyncTask<Long, Long, Boolean
 
             urlConnection.connect();
 
-            Log.d("post cred", cred.toString());
-
             //Send request JSON Data
             DataOutputStream wr = new DataOutputStream(
                     urlConnection.getOutputStream());

@@ -14,6 +14,7 @@ import android.widget.Toast;
 
 import java.util.List;
 
+import de.uulm.einhoernchen.flashcardsapp.AsyncTasks.Remote.AsyncSetRemoteFlashCardRating;
 import de.uulm.einhoernchen.flashcardsapp.Database.DbManager;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.Dataset.DummyContent.DummyItem;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.Interfaces.OnFragmentInteractionListenerAnswer;
@@ -123,7 +124,8 @@ public class RecyclerViewAdapterFlashCardAnswers extends RecyclerView.Adapter<Re
                     Toast.makeText(context, context.getResources().getText(R.string.voting_already_voted), Toast.LENGTH_SHORT).show();
                 } else {
 
-                    //TODO start async task to remote save the voting
+                    AsyncSetRemoteFlashCardRating task = new AsyncSetRemoteFlashCardRating("answer", answerId, db.getLoggedInUser().getId(), -1);
+                    task.execute();
 
                     int rating = Integer.parseInt(holder.mCardRatingView.getText().toString());
                     rating -= 1 + lastVoting;
@@ -150,7 +152,7 @@ public class RecyclerViewAdapterFlashCardAnswers extends RecyclerView.Adapter<Re
                     Toast.makeText(context, context.getResources().getText(R.string.voting_already_voted), Toast.LENGTH_SHORT).show();
                 } else {
 
-                    //TODO start async task to remote save the voting
+                    AsyncSetRemoteFlashCardRating task = new AsyncSetRemoteFlashCardRating("answer", answerId, db.getLoggedInUser().getId(), 1);
 
                     int rating = Integer.parseInt(holder.mCardRatingView.getText().toString());
                     rating += 1 - lastVoting;
