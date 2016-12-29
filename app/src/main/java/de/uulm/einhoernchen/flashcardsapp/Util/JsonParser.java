@@ -13,6 +13,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -36,7 +37,7 @@ import de.uulm.einhoernchen.flashcardsapp.Models.UserGroup;
  */
 public class JsonParser {
 
-    private static final boolean DEBUG = false;
+    private static final boolean DEBUG = true;
 
     public static List<Category> readCategroies(InputStream in) throws IOException {
         JsonReader reader = new JsonReader(new InputStreamReader(in, "UTF-8"));
@@ -816,4 +817,68 @@ public class JsonParser {
         return isAlive;
     }
 
+
+    /**
+     * reads the responsecode from the post method of creating a rating
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     * @since 2016-12-29
+     *
+     * @param inputStream
+     * @return
+     */
+    public static Boolean readResponseRating(InputStream inputStream) throws IOException {
+
+        JsonReader reader = new JsonReader(new InputStreamReader(inputStream, "UTF-8"));
+
+        try {
+            return readResponseRating(reader);
+        } finally {
+            reader.close();
+        }
+    }
+
+    /**
+     * reads the responsecode from the post method of creating a rating
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     * @since 2016-12-29
+     *
+     * @param reader
+     * @return
+     */
+    private static Boolean readResponseRating(JsonReader reader) {
+        if (DEBUG) Log.d("parser Method", "readResponseRating");
+
+        int statuscode = 400;
+        boolean created = false;
+
+        try {
+            reader.beginObject();
+            while (reader.hasNext()) {
+
+                String stringName = reader.nextName();
+
+                if (stringName.equals(JsonKeys.STATUS_CODE)) {
+
+                    statuscode = reader.nextInt();
+
+                    if (statuscode < 400) {
+                        created = true;
+                    } else {
+                        Log.e("pars rating resp", statuscode + "");
+                    }
+
+                } else {
+                    reader.skipValue();
+                }
+
+            }
+            reader.endObject();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return created;
+    }
 }

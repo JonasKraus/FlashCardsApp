@@ -34,6 +34,5 @@ public class Routes {
     public static final String CATEGORIES = "categories";
     public static final String USERS = "users";
     public static final String ANSWERS = "answers";
-
-
+    public static final String RATINGS = "ratings";
 }

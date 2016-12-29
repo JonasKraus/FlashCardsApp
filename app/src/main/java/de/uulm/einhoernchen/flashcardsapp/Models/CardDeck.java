@@ -205,9 +205,9 @@ public class CardDeck {
      */
     public String getRatingForView() {
         if (this.getRating() >= 0) {
-            return "+" + this.getRating();
+            return this.getRating() + "";
         } else {
-            return "-" + this.getRating();
+            return this.getRating() + "";
         }
     }
 }
