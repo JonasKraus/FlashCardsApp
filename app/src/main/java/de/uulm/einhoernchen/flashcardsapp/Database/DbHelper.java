@@ -120,7 +120,7 @@ public class DbHelper extends SQLiteOpenHelper {
 
     // Database name and version - increase when existing table is altered
     private static final String DATABASE_NAME = "flashcardsDb.db";
-    private static final int DATABASE_VERSION = 12; // @TODO revert version before first release
+    private static final int DATABASE_VERSION = 16; // @TODO revert version before first release
 
     /**
      * Database creation sql statement for table user
@@ -315,8 +315,11 @@ public class DbHelper extends SQLiteOpenHelper {
             + COLUMN_VOTING_VALUE
             + " integer default 0, "
             + COLUMN_VOTING_DATE
-            + " INTEGER DEFAULT CURRENT_TIMESTAMP"
-            + ");";
+            + " INTEGER DEFAULT CURRENT_TIMESTAMP" + "); "
+            + "CREATE UNIQUE INDEX " + TABLE_VOTING + "_user_card "
+            + "ON " + TABLE_VOTING + "(" + COLUMN_VOTING_USER_ID + ", " + COLUMN_VOTING_CARD_ID + ") ON CONFLICT REPLACE; "
+            + "CREATE UNIQUE INDEX " + TABLE_VOTING + "_user_answer "
+            + "ON " + TABLE_VOTING + "(" + COLUMN_VOTING_USER_ID + ", " + COLUMN_VOTING_ANSWER_ID + ") ON CONFLICT REPLACE;";
 
     /**
      * Constructor

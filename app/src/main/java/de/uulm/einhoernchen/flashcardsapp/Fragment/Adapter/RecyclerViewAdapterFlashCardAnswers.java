@@ -1,6 +1,7 @@
 package de.uulm.einhoernchen.flashcardsapp.Fragment.Adapter;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -9,9 +10,11 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.List;
 
+import de.uulm.einhoernchen.flashcardsapp.Database.DbManager;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.Dataset.DummyContent.DummyItem;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.Interfaces.OnFragmentInteractionListenerAnswer;
 import de.uulm.einhoernchen.flashcardsapp.Models.Answer;
@@ -27,12 +30,14 @@ public class RecyclerViewAdapterFlashCardAnswers extends RecyclerView.Adapter<Re
     private final OnFragmentInteractionListenerAnswer mListener;
     private final boolean isUpToDate;
     private final Context context;
+    private final DbManager db;
 
-    public RecyclerViewAdapterFlashCardAnswers(List<Answer> items, OnFragmentInteractionListenerAnswer listener, boolean isUpToDate, Context context) {
+    public RecyclerViewAdapterFlashCardAnswers(DbManager db, List<Answer> items, OnFragmentInteractionListenerAnswer listener, boolean isUpToDate, Context context) {
         answers = items;
         mListener = listener;
         this.isUpToDate = isUpToDate;
         this.context = context;
+        this.db = db;
     }
 
     @Override
@@ -76,8 +81,22 @@ public class RecyclerViewAdapterFlashCardAnswers extends RecyclerView.Adapter<Re
             holder.mLocalView.setVisibility(View.VISIBLE);
         }
 
+        // Set votings of logged in user
+        int voting = db.getCardVoting(answers.get(position).getId());
+        switch (voting) {
+            case -1:
+                holder.mDownvote.setColorFilter(context.getResources().getColor(R.color.colorAccent));
+                holder.mCardRatingView.setTextColor(context.getResources().getColor(R.color.colorAccent));
+                break;
+            case 1:
+                holder.mUpvote.setColorFilter(context.getResources().getColor(R.color.colorAccent));
+                holder.mCardRatingView.setTextColor(context.getResources().getColor(R.color.colorAccent));
+                break;
+
+        }
+
         /**
-         * Sets the clicklistener for clicking a list item
+         * Sets the clicklistener for clicking a list item (answer)
          */
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -98,6 +117,20 @@ public class RecyclerViewAdapterFlashCardAnswers extends RecyclerView.Adapter<Re
             @Override
             public void onClick(View v) {
                 Log.d("click down vote", answerId + "");
+                if (!db.saveAnswerVoting(answerId, -1)) {
+
+                    Toast.makeText(context, context.getResources().getText(R.string.voting_already_voted), Toast.LENGTH_SHORT).show();
+                } else {
+
+                    //TODO start async task to remote save the voting
+
+                    int rating = Integer.parseInt(holder.mCardRatingView.getText().toString());
+                    rating -= 1;
+                    holder.mCardRatingView.setText(rating + "");
+                    holder.mDownvote.setColorFilter(context.getResources().getColor(R.color.colorAccent));
+                    holder.mUpvote.setColorFilter(Color.BLACK);
+                    holder.mCardRatingView.setTextColor(context.getResources().getColor(R.color.colorAccent));
+                }
             }
         });
 
@@ -109,6 +142,21 @@ public class RecyclerViewAdapterFlashCardAnswers extends RecyclerView.Adapter<Re
             @Override
             public void onClick(View v) {
                 Log.d("click up vote", answerId + "");
+
+                if (!db.saveAnswerVoting(answerId, +1)) {
+
+                    Toast.makeText(context, context.getResources().getText(R.string.voting_already_voted), Toast.LENGTH_SHORT).show();
+                } else {
+
+                    //TODO start async task to remote save the voting
+
+                    int rating = Integer.parseInt(holder.mCardRatingView.getText().toString());
+                    rating += 1;
+                    holder.mCardRatingView.setText(rating + "");
+                    holder.mUpvote.setColorFilter(context.getResources().getColor(R.color.colorAccent));
+                    holder.mDownvote.setColorFilter(Color.BLACK);
+                    holder.mCardRatingView.setTextColor(context.getResources().getColor(R.color.colorAccent));
+                }
             }
         });
 

@@ -952,9 +952,13 @@ public class DbManager {
         values.put(DbHelper.COLUMN_VOTING_CARD_ID, cardId);
         values.put(DbHelper.COLUMN_VOTING_VALUE, value);
 
-        // Executes the query
-        database.insertWithOnConflict(DbHelper.TABLE_VOTING, null, values, SQLiteDatabase.CONFLICT_REPLACE);
+        if (voting != 0) {
+            database.updateWithOnConflict(DbHelper.TABLE_VOTING, values, DbHelper.COLUMN_VOTING_USER_ID + "=" + loggedInUser.getId() + " AND " + DbHelper.COLUMN_VOTING_CARD_ID + "=" + cardId, null, SQLiteDatabase.CONFLICT_REPLACE);
+        } else {
 
+            // Executes the query
+            database.insertWithOnConflict(DbHelper.TABLE_VOTING, null, values, SQLiteDatabase.CONFLICT_REPLACE);
+        }
         return true;
     }
 
@@ -1009,7 +1013,7 @@ public class DbManager {
      */
     public boolean saveAnswerVoting(long answerId, int value) {
 
-        int voting = getCardVoting(answerId);
+        int voting = getAnswerVoting(answerId);
         int rating;
 
         if (value == voting) {
@@ -1029,8 +1033,14 @@ public class DbManager {
         values.put(DbHelper.COLUMN_VOTING_ANSWER_ID, answerId);
         values.put(DbHelper.COLUMN_VOTING_VALUE, value);
 
-        // Executes the query
-        database.insertWithOnConflict(DbHelper.TABLE_VOTING, null, values, SQLiteDatabase.CONFLICT_REPLACE);
+
+        if (voting != 0) {
+            database.updateWithOnConflict(DbHelper.TABLE_VOTING, values, DbHelper.COLUMN_VOTING_USER_ID + "=" + loggedInUser.getId() + " AND " + DbHelper.COLUMN_VOTING_ANSWER_ID + "=" + answerId, null, SQLiteDatabase.CONFLICT_REPLACE);
+        } else {
+
+            // Executes the query
+            database.insertWithOnConflict(DbHelper.TABLE_VOTING, null, values, SQLiteDatabase.CONFLICT_REPLACE);
+        }
 
         return true;
     }
