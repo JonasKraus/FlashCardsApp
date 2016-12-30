@@ -16,7 +16,7 @@ import de.uulm.einhoernchen.flashcardsapp.Util.JsonParser;
 /**
  * Created by jonas-uni on 17.08.2016.
  */
-public class AsyncPostRemoteFlashCardRating extends AsyncTask<Long, Long, Long> {
+public class AsyncPostRemoteRating extends AsyncTask<Long, Long, Long> {
 
     private String ratingObjectName;
     private long objectId;
@@ -34,7 +34,7 @@ public class AsyncPostRemoteFlashCardRating extends AsyncTask<Long, Long, Long> 
      * @param userId
      * @param ratingmodifier
      */
-    public AsyncPostRemoteFlashCardRating(String ratingObjectName, long objectId, Long userId, int ratingmodifier, DbManager db) {
+    public AsyncPostRemoteRating(String ratingObjectName, long objectId, Long userId, int ratingmodifier, DbManager db) {
 
         this.ratingObjectName = ratingObjectName;
         this.objectId = objectId;
@@ -53,6 +53,8 @@ public class AsyncPostRemoteFlashCardRating extends AsyncTask<Long, Long, Long> 
     protected Long doInBackground(Long... params) {
 
         String urlString = Routes.URL + Routes.SLASH + Routes.RATINGS;
+
+        Log.d("back call to", urlString);
 
         HttpURLConnection urlConnection = null;
 
@@ -89,13 +91,11 @@ public class AsyncPostRemoteFlashCardRating extends AsyncTask<Long, Long, Long> 
             wr.writeBytes(cred.toString());
             wr.flush();
 
-
             return JsonParser.readResponseRating(urlConnection.getInputStream());
 
         } catch (Exception e) {
 
             Log.e("doInBackground rating", e.toString());
-            System.out.println(e.getMessage());
             System.out.println(e.toString());
             return null;
 
@@ -107,11 +107,7 @@ public class AsyncPostRemoteFlashCardRating extends AsyncTask<Long, Long, Long> 
     protected void onPostExecute(Long ratingId) {
         super.onPostExecute(ratingId);
 
-        // TODO for testing only
-        // Should collect data from db
         if (ratingId != null) {
-
-            Log.d("do post update rating", ratingObjectName);
 
             if (ratingObjectName == "flashcard") {
 
@@ -120,12 +116,7 @@ public class AsyncPostRemoteFlashCardRating extends AsyncTask<Long, Long, Long> 
 
                 db.addRatingIdToAnswerVoting(ratingId, objectId);
             }
-
-        } else {
-
-            Log.d("do post update rating", ratingObjectName);
         }
-
 
     }
 

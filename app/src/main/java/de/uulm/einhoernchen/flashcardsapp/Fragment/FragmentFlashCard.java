@@ -12,7 +12,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import de.uulm.einhoernchen.flashcardsapp.AsyncTasks.Remote.AsyncPostRemoteFlashCardRating;
+import de.uulm.einhoernchen.flashcardsapp.AsyncTasks.Remote.AsyncDeleteRemoteRating;
+import de.uulm.einhoernchen.flashcardsapp.AsyncTasks.Remote.AsyncPostRemoteRating;
 import de.uulm.einhoernchen.flashcardsapp.Database.DbManager;
 import de.uulm.einhoernchen.flashcardsapp.Models.FlashCard;
 import de.uulm.einhoernchen.flashcardsapp.R;
@@ -183,9 +184,16 @@ public class FragmentFlashCard extends Fragment {
                     Toast.makeText(getContext(), getResources().getText(R.string.voting_already_voted), Toast.LENGTH_SHORT).show();
                 } else {
 
-                    //TODO start async task to remote save the voting
+                    Long ratingId = db.getCardVotingRatingId(cardID);
 
-                    AsyncPostRemoteFlashCardRating task = new AsyncPostRemoteFlashCardRating("flashcard", cardID, db.getLoggedInUser().getId(), -1, db);
+                    // Check if ratingExists and deletes it
+                    if (ratingId != null) {
+
+                        AsyncDeleteRemoteRating taskDelete = new AsyncDeleteRemoteRating(ratingId);
+                        taskDelete.execute();
+                    }
+
+                    AsyncPostRemoteRating task = new AsyncPostRemoteRating("flashcard", cardID, db.getLoggedInUser().getId(), -1, db);
                     task.execute();
 
                     int rating = Integer.parseInt(mCardRatingView.getText().toString());
@@ -212,7 +220,16 @@ public class FragmentFlashCard extends Fragment {
                         Toast.makeText(getContext(), getResources().getText(R.string.voting_already_voted), Toast.LENGTH_SHORT).show();
                     } else {
 
-                        AsyncPostRemoteFlashCardRating task = new AsyncPostRemoteFlashCardRating("flashcard", cardID, db.getLoggedInUser().getId(), 1, db);
+                        Long ratingId = db.getCardVotingRatingId(cardID);
+
+                        // Check if ratingExists and deletes it
+                        if (ratingId != null) {
+
+                            AsyncDeleteRemoteRating taskDelete = new AsyncDeleteRemoteRating(ratingId);
+                            taskDelete.execute();
+                        }
+
+                        AsyncPostRemoteRating task = new AsyncPostRemoteRating("flashcard", cardID, db.getLoggedInUser().getId(), 1, db);
                         task.execute();
 
                         int rating = Integer.parseInt(mCardRatingView.getText().toString());

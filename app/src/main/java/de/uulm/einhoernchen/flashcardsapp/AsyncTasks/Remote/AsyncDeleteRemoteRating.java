@@ -12,7 +12,7 @@ import de.uulm.einhoernchen.flashcardsapp.Consts.Routes;
  * @author Jonas Kraus jonas.kraus@uni-ulm.de
  * @since 2016-12-30
  */
-public class AsyncDeleteRemoteFlashCardRating extends AsyncTask<Long, Long, Boolean> {
+public class AsyncDeleteRemoteRating extends AsyncTask<Long, Long, Boolean> {
 
     private long ratingId;
 
@@ -23,7 +23,7 @@ public class AsyncDeleteRemoteFlashCardRating extends AsyncTask<Long, Long, Bool
      *
      * @param ratingId
      */
-    public AsyncDeleteRemoteFlashCardRating(long ratingId) {
+    public AsyncDeleteRemoteRating(long ratingId) {
 
         this.ratingId = ratingId;
     }
@@ -57,8 +57,6 @@ public class AsyncDeleteRemoteFlashCardRating extends AsyncTask<Long, Long, Bool
 
             urlConnection.connect();
 
-            Log.d("response delete", urlConnection.getResponseCode() + "");
-
             return urlConnection.getResponseCode() == 204;
 
         } catch (Exception e) {
@@ -76,11 +74,9 @@ public class AsyncDeleteRemoteFlashCardRating extends AsyncTask<Long, Long, Bool
     protected void onPostExecute(Boolean success) {
         super.onPostExecute(success);
 
-        // TODO for testing only
-        // Should collect data from db
         if (success) {
 
-            Log.d("do delete rating", "deleted");
+            //Log.d("do delete rating", "deleted");
 
         } else {
 

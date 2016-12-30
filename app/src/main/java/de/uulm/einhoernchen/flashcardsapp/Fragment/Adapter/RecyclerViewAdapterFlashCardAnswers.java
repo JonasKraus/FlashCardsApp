@@ -3,7 +3,6 @@ package de.uulm.einhoernchen.flashcardsapp.Fragment.Adapter;
 import android.content.Context;
 import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,8 +12,8 @@ import android.widget.Toast;
 
 import java.util.List;
 
-import de.uulm.einhoernchen.flashcardsapp.AsyncTasks.Remote.AsyncDeleteRemoteFlashCardRating;
-import de.uulm.einhoernchen.flashcardsapp.AsyncTasks.Remote.AsyncPostRemoteFlashCardRating;
+import de.uulm.einhoernchen.flashcardsapp.AsyncTasks.Remote.AsyncDeleteRemoteRating;
+import de.uulm.einhoernchen.flashcardsapp.AsyncTasks.Remote.AsyncPostRemoteRating;
 import de.uulm.einhoernchen.flashcardsapp.Database.DbManager;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.Dataset.DummyContent.DummyItem;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.Interfaces.OnFragmentInteractionListenerAnswer;
@@ -128,12 +127,12 @@ public class RecyclerViewAdapterFlashCardAnswers extends RecyclerView.Adapter<Re
 
                     // Check if ratingExists and deletes it
                     if (ratingId != null) {
-                        AsyncDeleteRemoteFlashCardRating taskDelete = new AsyncDeleteRemoteFlashCardRating(ratingId);
+                        AsyncDeleteRemoteRating taskDelete = new AsyncDeleteRemoteRating(ratingId);
                         taskDelete.execute();
                     }
 
 
-                    AsyncPostRemoteFlashCardRating task = new AsyncPostRemoteFlashCardRating("answer", answerId, db.getLoggedInUser().getId(), -1, db);
+                    AsyncPostRemoteRating task = new AsyncPostRemoteRating("answer", answerId, db.getLoggedInUser().getId(), -1, db);
                     task.execute();
 
                     int rating = Integer.parseInt(holder.mCardRatingView.getText().toString());
@@ -166,11 +165,11 @@ public class RecyclerViewAdapterFlashCardAnswers extends RecyclerView.Adapter<Re
                     // Check if ratingExists and deletes it
                     if (ratingId != null) {
 
-                        AsyncDeleteRemoteFlashCardRating taskDelete = new AsyncDeleteRemoteFlashCardRating(ratingId);
+                        AsyncDeleteRemoteRating taskDelete = new AsyncDeleteRemoteRating(ratingId);
                         taskDelete.execute();
                     }
 
-                    AsyncPostRemoteFlashCardRating task = new AsyncPostRemoteFlashCardRating("answer", answerId, db.getLoggedInUser().getId(), 1, db);
+                    AsyncPostRemoteRating task = new AsyncPostRemoteRating("answer", answerId, db.getLoggedInUser().getId(), 1, db);
                     task.execute();
 
                     int rating = Integer.parseInt(holder.mCardRatingView.getText().toString());
