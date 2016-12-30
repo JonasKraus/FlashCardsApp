@@ -827,7 +827,7 @@ public class JsonParser {
      * @param inputStream
      * @return
      */
-    public static Boolean readResponseRating(InputStream inputStream) throws IOException {
+    public static Long readResponseRating(InputStream inputStream) throws IOException {
 
         JsonReader reader = new JsonReader(new InputStreamReader(inputStream, "UTF-8"));
 
@@ -847,11 +847,13 @@ public class JsonParser {
      * @param reader
      * @return
      */
-    private static Boolean readResponseRating(JsonReader reader) {
+    private static Long readResponseRating(JsonReader reader) {
         if (DEBUG) Log.d("parser Method", "readResponseRating");
 
         int statuscode = 400;
         boolean created = false;
+        String description = "";
+        Long ratingId = null;
 
         try {
             reader.beginObject();
@@ -869,7 +871,31 @@ public class JsonParser {
                         Log.e("pars rating resp", statuscode + "");
                     }
 
-                } else {
+                } else if (stringName.equals(JsonKeys.DESCRIPTION)) {
+
+                    JsonToken check = reader.peek();
+
+                    if (check != JsonToken.NULL) {
+
+                        description = reader.nextString();
+
+                    } else {
+                        reader.nextNull();
+                    }
+
+                } else if (stringName.equals(JsonKeys.ID)) {
+
+                    JsonToken check = reader.peek();
+
+                    if (check != JsonToken.NULL) {
+
+                        ratingId = reader.nextLong();
+
+                    } else {
+                        reader.nextNull();
+                    }
+
+                }  else {
                     reader.skipValue();
                 }
 
@@ -879,6 +905,6 @@ public class JsonParser {
             e.printStackTrace();
         }
 
-        return created;
+        return ratingId;
     }
 }

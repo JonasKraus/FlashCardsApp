@@ -5,7 +5,6 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,7 +12,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import de.uulm.einhoernchen.flashcardsapp.AsyncTasks.Remote.AsyncSetRemoteFlashCardRating;
+import de.uulm.einhoernchen.flashcardsapp.AsyncTasks.Remote.AsyncPostRemoteFlashCardRating;
 import de.uulm.einhoernchen.flashcardsapp.Database.DbManager;
 import de.uulm.einhoernchen.flashcardsapp.Models.FlashCard;
 import de.uulm.einhoernchen.flashcardsapp.R;
@@ -186,7 +185,7 @@ public class FragmentFlashCard extends Fragment {
 
                     //TODO start async task to remote save the voting
 
-                    AsyncSetRemoteFlashCardRating task = new AsyncSetRemoteFlashCardRating("flashcard", cardID, db.getLoggedInUser().getId(), -1);
+                    AsyncPostRemoteFlashCardRating task = new AsyncPostRemoteFlashCardRating("flashcard", cardID, db.getLoggedInUser().getId(), -1, db);
                     task.execute();
 
                     int rating = Integer.parseInt(mCardRatingView.getText().toString());
@@ -213,7 +212,7 @@ public class FragmentFlashCard extends Fragment {
                         Toast.makeText(getContext(), getResources().getText(R.string.voting_already_voted), Toast.LENGTH_SHORT).show();
                     } else {
 
-                        AsyncSetRemoteFlashCardRating task = new AsyncSetRemoteFlashCardRating("flashcard", cardID, db.getLoggedInUser().getId(), 1);
+                        AsyncPostRemoteFlashCardRating task = new AsyncPostRemoteFlashCardRating("flashcard", cardID, db.getLoggedInUser().getId(), 1, db);
                         task.execute();
 
                         int rating = Integer.parseInt(mCardRatingView.getText().toString());

@@ -1,35 +1,28 @@
 package de.uulm.einhoernchen.flashcardsapp.AsyncTasks.Remote;
 
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import org.json.JSONObject;
 
-import java.io.BufferedReader;
 import java.io.DataOutputStream;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-import de.uulm.einhoernchen.flashcardsapp.Activity.LoginActivity;
-import de.uulm.einhoernchen.flashcardsapp.Activity.MainActivity;
 import de.uulm.einhoernchen.flashcardsapp.Consts.Routes;
+import de.uulm.einhoernchen.flashcardsapp.Database.DbManager;
 import de.uulm.einhoernchen.flashcardsapp.Util.JsonParser;
 
 /**
  * Created by jonas-uni on 17.08.2016.
  */
-public class AsyncSetRemoteFlashCardRating extends AsyncTask<Long, Long, Boolean> {
+public class AsyncPostRemoteFlashCardRating extends AsyncTask<Long, Long, Long> {
 
     private String ratingObjectName;
     private long objectId;
     private Long userId;
     private int ratingmodifier;
+    private DbManager db;
 
 
     /**
@@ -41,12 +34,13 @@ public class AsyncSetRemoteFlashCardRating extends AsyncTask<Long, Long, Boolean
      * @param userId
      * @param ratingmodifier
      */
-    public AsyncSetRemoteFlashCardRating(String ratingObjectName, long objectId, Long userId, int ratingmodifier) {
+    public AsyncPostRemoteFlashCardRating(String ratingObjectName, long objectId, Long userId, int ratingmodifier, DbManager db) {
 
         this.ratingObjectName = ratingObjectName;
         this.objectId = objectId;
         this.userId = userId;
         this.ratingmodifier = ratingmodifier;
+        this.db = db;
     }
 
     @Override
@@ -56,15 +50,10 @@ public class AsyncSetRemoteFlashCardRating extends AsyncTask<Long, Long, Boolean
 
 
     @Override
-    protected Boolean doInBackground(Long... params) {
+    protected Long doInBackground(Long... params) {
 
         String urlString = Routes.URL + Routes.SLASH + Routes.RATINGS;
 
-        Log.d("back call to ", urlString);
-        Log.d("back call param ", ratingObjectName);
-        Log.d("back call param ", objectId + "");
-        Log.d("back call param ", userId + "");
-        Log.d("back call param ", ratingmodifier + "");
         HttpURLConnection urlConnection = null;
 
         try {
@@ -100,6 +89,7 @@ public class AsyncSetRemoteFlashCardRating extends AsyncTask<Long, Long, Boolean
             wr.writeBytes(cred.toString());
             wr.flush();
 
+
             return JsonParser.readResponseRating(urlConnection.getInputStream());
 
         } catch (Exception e) {
@@ -107,21 +97,29 @@ public class AsyncSetRemoteFlashCardRating extends AsyncTask<Long, Long, Boolean
             Log.e("doInBackground rating", e.toString());
             System.out.println(e.getMessage());
             System.out.println(e.toString());
-            return false;
+            return null;
 
         }
 
     }
 
     @Override
-    protected void onPostExecute(Boolean doPost) {
-        super.onPostExecute(doPost);
+    protected void onPostExecute(Long ratingId) {
+        super.onPostExecute(ratingId);
 
         // TODO for testing only
         // Should collect data from db
-        if (doPost) {
+        if (ratingId != null) {
 
             Log.d("do post update rating", ratingObjectName);
+
+            if (ratingObjectName == "flashcard") {
+
+                db.addRatingIdToCardVoting(ratingId, objectId);
+            } else if (ratingObjectName == "answer") {
+
+                db.addRatingIdToAnswerVoting(ratingId, objectId);
+            }
 
         } else {
 

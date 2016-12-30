@@ -157,7 +157,8 @@ public class DbManager {
             DbHelper.COLUMN_VOTING_CARD_ID,           //2
             DbHelper.COLUMN_VOTING_ANSWER_ID,         //3
             DbHelper.COLUMN_VOTING_VALUE,             //4
-            DbHelper.COLUMN_VOTING_DATE               //5
+            DbHelper.COLUMN_VOTING_DATE,              //5
+            DbHelper.COLUMN_VOTING_RATING_ID          //6
     };
 
     /**
@@ -1282,6 +1283,40 @@ public class DbManager {
 
 
     /**
+     * Returns the votings rating id of a card
+     * if it returns null then the logged in user hasn't voted already
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     * @since 2016-12-29
+     *
+     * @param cardID
+     * @return
+     */
+    public Long getCardVotingRatingId(long cardID) {
+
+        Cursor cursor = database.query(DbHelper.TABLE_VOTING, allVotingColumns, DbHelper.COLUMN_VOTING_CARD_ID + " = " + cardID
+                        + " AND " + DbHelper.COLUMN_VOTING_USER_ID + " = " + loggedInUser.getId()
+                , null, null, null, null);
+
+        Long value = null;
+
+        if (cursor.moveToFirst()) {
+
+            if (!cursor.isNull(cursor.getColumnIndex(DbHelper.COLUMN_VOTING_RATING_ID))) {
+
+                value = cursor.getLong(cursor.getColumnIndex(DbHelper.COLUMN_VOTING_RATING_ID));
+            }
+
+        }
+
+        cursor.close();
+
+        return value;
+
+    }
+
+
+    /**
      * Returns the voting of an answer
      * if it returns 0 then the logged in user hasn't voted already
      *
@@ -1305,6 +1340,39 @@ public class DbManager {
                 value = cursor.getInt(cursor.getColumnIndex(DbHelper.COLUMN_VOTING_VALUE));
             } while (cursor.moveToNext());
 
+        }
+
+        cursor.close();
+
+        return value;
+
+    }
+
+
+    /**
+     * Returns the votings rating id of an answer
+     * if it returns null then the logged in user hasn't voted already
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     * @since 2016-12-30
+     *
+     * @param answerId
+     * @return
+     */
+    public Long getAnswerVotingRatingId(long answerId) {
+
+        Cursor cursor = database.query(DbHelper.TABLE_VOTING, allVotingColumns, DbHelper.COLUMN_VOTING_ANSWER_ID + " = " + answerId
+                        + " AND " + DbHelper.COLUMN_VOTING_USER_ID + " = " + loggedInUser.getId()
+                , null, null, null, null);
+
+        Long value = null;
+
+        if (cursor.moveToFirst()) {
+
+            if (!cursor.isNull(cursor.getColumnIndex(DbHelper.COLUMN_VOTING_RATING_ID))) {
+
+                value = cursor.getLong(cursor.getColumnIndex(DbHelper.COLUMN_VOTING_RATING_ID));
+            }
         }
 
         cursor.close();
@@ -1369,5 +1437,47 @@ public class DbManager {
                 , null);
 
         return affectedRows > 0;
+    }
+
+
+    /**
+     * Updates a card voting to set the remote rating id
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     * @since 2016-12-30
+     *
+     * @param ratingId
+     * @param cardId
+     */
+    public void addRatingIdToCardVoting(Long ratingId, long cardId) {
+
+        ContentValues values = new ContentValues();
+        values.put(DbHelper.COLUMN_VOTING_USER_ID, loggedInUser.getId());
+        values.put(DbHelper.COLUMN_VOTING_CARD_ID, cardId);
+        values.put(DbHelper.COLUMN_VOTING_RATING_ID, ratingId);
+
+        database.updateWithOnConflict(DbHelper.TABLE_VOTING, values, DbHelper.COLUMN_VOTING_USER_ID + "=" + loggedInUser.getId() + " AND " + DbHelper.COLUMN_VOTING_CARD_ID + "=" + cardId, null, SQLiteDatabase.CONFLICT_ABORT);
+
+    }
+
+
+    /**
+     * Updates an answer voting to set the remote rating id
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     * @since 2016-12-30
+     *
+     * @param ratingId
+     * @param answerId
+     */
+    public void addRatingIdToAnswerVoting(Long ratingId, long answerId) {
+
+        ContentValues values = new ContentValues();
+        values.put(DbHelper.COLUMN_VOTING_USER_ID, loggedInUser.getId());
+        values.put(DbHelper.COLUMN_VOTING_ANSWER_ID, answerId);
+        values.put(DbHelper.COLUMN_VOTING_RATING_ID, ratingId);
+
+        database.updateWithOnConflict(DbHelper.TABLE_VOTING, values, DbHelper.COLUMN_VOTING_USER_ID + "=" + loggedInUser.getId() + " AND " + DbHelper.COLUMN_VOTING_ANSWER_ID + "=" + answerId, null, SQLiteDatabase.CONFLICT_ABORT);
+
     }
 }

@@ -107,4 +107,5 @@ public class JsonKeys {
 
     //HEARTBEAT
     public static final String CURRENT_DATE = "currentDate";
+    public static final String ID = "id";
 }

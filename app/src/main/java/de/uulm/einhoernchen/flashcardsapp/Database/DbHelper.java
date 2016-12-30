@@ -117,10 +117,11 @@ public class DbHelper extends SQLiteOpenHelper {
     public static final String COLUMN_VOTING_ANSWER_ID = "answerId";                      //3
     public static final String COLUMN_VOTING_VALUE = "value";                             //4
     public static final String COLUMN_VOTING_DATE = "votingDate";                         //5
+    public static final String COLUMN_VOTING_RATING_ID = "ratingId";                     //6
 
     // Database name and version - increase when existing table is altered
     private static final String DATABASE_NAME = "flashcardsDb.db";
-    private static final int DATABASE_VERSION = 16; // @TODO revert version before first release
+    private static final int DATABASE_VERSION = 17; // @TODO revert version before first release
 
     /**
      * Database creation sql statement for table user
@@ -315,11 +316,19 @@ public class DbHelper extends SQLiteOpenHelper {
             + COLUMN_VOTING_VALUE
             + " integer default 0, "
             + COLUMN_VOTING_DATE
-            + " INTEGER DEFAULT CURRENT_TIMESTAMP" + "); "
-            + "CREATE UNIQUE INDEX " + TABLE_VOTING + "_user_card "
-            + "ON " + TABLE_VOTING + "(" + COLUMN_VOTING_USER_ID + ", " + COLUMN_VOTING_CARD_ID + ") ON CONFLICT REPLACE; "
-            + "CREATE UNIQUE INDEX " + TABLE_VOTING + "_user_answer "
-            + "ON " + TABLE_VOTING + "(" + COLUMN_VOTING_USER_ID + ", " + COLUMN_VOTING_ANSWER_ID + ") ON CONFLICT REPLACE;";
+            + " INTEGER DEFAULT CURRENT_TIMESTAMP, "
+            + COLUMN_VOTING_RATING_ID
+            + " INTEGER DEFAULT null"
+            + ");";
+
+    private static final String VOTING_CREATE_UNIQUE_INDEX_1 =
+            "CREATE UNIQUE INDEX " + TABLE_VOTING + "_user_card "
+                    + "ON " + TABLE_VOTING + "(" + COLUMN_VOTING_USER_ID + ", " + COLUMN_VOTING_CARD_ID + "); ";
+
+    private static final String VOTING_CREATE_UNIQUE_INDEX_2 =
+            "CREATE UNIQUE INDEX " + TABLE_VOTING + "_user_answer "
+                    + "ON " + TABLE_VOTING + "(" + COLUMN_VOTING_USER_ID + ", " + COLUMN_VOTING_ANSWER_ID + ");";
+
 
     /**
      * Constructor
@@ -345,6 +354,8 @@ public class DbHelper extends SQLiteOpenHelper {
         db.execSQL(CATEGORY_CREATE);
         db.execSQL(SELECTION_CREATE);
         db.execSQL(VOTING_CREATE);
+        db.execSQL(VOTING_CREATE_UNIQUE_INDEX_1);
+        db.execSQL(VOTING_CREATE_UNIQUE_INDEX_2);
     }
 
     @Override

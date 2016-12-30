@@ -7,14 +7,14 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.List;
 
-import de.uulm.einhoernchen.flashcardsapp.AsyncTasks.Remote.AsyncSetRemoteFlashCardRating;
+import de.uulm.einhoernchen.flashcardsapp.AsyncTasks.Remote.AsyncDeleteRemoteFlashCardRating;
+import de.uulm.einhoernchen.flashcardsapp.AsyncTasks.Remote.AsyncPostRemoteFlashCardRating;
 import de.uulm.einhoernchen.flashcardsapp.Database.DbManager;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.Dataset.DummyContent.DummyItem;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.Interfaces.OnFragmentInteractionListenerAnswer;
@@ -124,7 +124,16 @@ public class RecyclerViewAdapterFlashCardAnswers extends RecyclerView.Adapter<Re
                     Toast.makeText(context, context.getResources().getText(R.string.voting_already_voted), Toast.LENGTH_SHORT).show();
                 } else {
 
-                    AsyncSetRemoteFlashCardRating task = new AsyncSetRemoteFlashCardRating("answer", answerId, db.getLoggedInUser().getId(), -1);
+                    Long ratingId = db.getAnswerVotingRatingId(answerId);
+
+                    // Check if ratingExists and deletes it
+                    if (ratingId != null) {
+                        AsyncDeleteRemoteFlashCardRating taskDelete = new AsyncDeleteRemoteFlashCardRating(ratingId);
+                        taskDelete.execute();
+                    }
+
+
+                    AsyncPostRemoteFlashCardRating task = new AsyncPostRemoteFlashCardRating("answer", answerId, db.getLoggedInUser().getId(), -1, db);
                     task.execute();
 
                     int rating = Integer.parseInt(holder.mCardRatingView.getText().toString());
@@ -152,7 +161,17 @@ public class RecyclerViewAdapterFlashCardAnswers extends RecyclerView.Adapter<Re
                     Toast.makeText(context, context.getResources().getText(R.string.voting_already_voted), Toast.LENGTH_SHORT).show();
                 } else {
 
-                    AsyncSetRemoteFlashCardRating task = new AsyncSetRemoteFlashCardRating("answer", answerId, db.getLoggedInUser().getId(), 1);
+                    Long ratingId = db.getAnswerVotingRatingId(answerId);
+
+                    // Check if ratingExists and deletes it
+                    if (ratingId != null) {
+
+                        AsyncDeleteRemoteFlashCardRating taskDelete = new AsyncDeleteRemoteFlashCardRating(ratingId);
+                        taskDelete.execute();
+                    }
+
+                    AsyncPostRemoteFlashCardRating task = new AsyncPostRemoteFlashCardRating("answer", answerId, db.getLoggedInUser().getId(), 1, db);
+                    task.execute();
 
                     int rating = Integer.parseInt(holder.mCardRatingView.getText().toString());
                     rating += 1 - lastVoting;
