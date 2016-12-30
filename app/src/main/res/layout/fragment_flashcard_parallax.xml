@@ -32,6 +32,7 @@
     </android.support.design.widget.AppBarLayout>
 
 
+
     <android.support.v4.widget.NestedScrollView
         android:id="@+id/scroll"
         android:layout_width="match_parent"
@@ -47,6 +48,16 @@
             android:orientation="vertical"
             app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/button_add_answer"
+                android:backgroundTint="@color/colorPrimary"
+                android:visibility="gone"
+                android:text="@string/answer_add"/>
+
+            <include layout="@layout/fragment_flashcard_answer_editor" />
+
             <FrameLayout
                 android:id="@+id/fragment_container_card_answer"
                 android:layout_width="match_parent"
@@ -54,11 +65,7 @@
 
             </FrameLayout>
 
-            <ListView
-                android:id="@+id/listview_answers"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
         </LinearLayout>
 
     </android.support.v4.widget.NestedScrollView>

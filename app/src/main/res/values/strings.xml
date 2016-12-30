@@ -54,4 +54,22 @@
 
     <!-- Strings for toasts -->
     <string name="voting_already_voted">You already voted!</string>
+
+
+    <string name="answer_add">add answer</string>
+
+    <!-- General buttons -->
+    <string name="save">save</string>
+    <string name="cancel">cancel</string>
+    <string name="correct">correct</string>
+    <string name="incorrect">incorrect</string>
+
+
+    <string name="answer_editor_text">answer</string>
+    <string name="answer_editor_hint">hint</string>
+    <string name="answer_editor_uri">uri</string>
+
+
+
+
 </resources>

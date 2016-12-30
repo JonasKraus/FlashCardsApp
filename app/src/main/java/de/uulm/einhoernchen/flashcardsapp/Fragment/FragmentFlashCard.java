@@ -8,6 +8,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -53,6 +54,8 @@ public class FragmentFlashCard extends Fragment {
     private ImageView imageViewUri;
     private ImageView imageViewVoteUp;
     private ImageView imageViewVoteDown;
+
+    private Button buttonAddAnswer;
 
     public FragmentFlashCard() {
         // Required empty public constructor
@@ -120,11 +123,16 @@ public class FragmentFlashCard extends Fragment {
         imageViewVoteDown = (ImageView) view.findViewById(R.id.button_down_vote);
         imageViewVoteUp = (ImageView) view.findViewById(R.id.button_up_vote);
 
+        buttonAddAnswer = (Button) view.findViewById(R.id.button_add_answer);
+
+        setOnClickListenerButtonAddAnswer();
+
         //mIdView.setText(flashCard.getId() + "");
         mContentView.setText(flashCard.getQuestion().getQuestionText());
         mAuthorView.setText(flashCard.getQuestion().getAuthor().getName());
         mCardRatingView.setText(flashCard.getRatingForView());
         mDateView.setText(flashCard.getLastUpdatedString());
+
         //misCorrectView =; TODO
 
 
@@ -157,6 +165,22 @@ public class FragmentFlashCard extends Fragment {
         setListener();
         return view;
 
+    }
+
+    /**
+     * Adds a clicklistener to the add answer button
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     * @since 2016-12-30
+     */
+    private void setOnClickListenerButtonAddAnswer() {
+
+        buttonAddAnswer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
     }
 
 
