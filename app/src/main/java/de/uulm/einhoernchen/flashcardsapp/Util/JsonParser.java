@@ -37,7 +37,7 @@ import de.uulm.einhoernchen.flashcardsapp.Models.UserGroup;
  */
 public class JsonParser {
 
-    private static final boolean DEBUG = true;
+    private static final boolean DEBUG = false;
 
     public static List<Category> readCategroies(InputStream in) throws IOException {
         JsonReader reader = new JsonReader(new InputStreamReader(in, "UTF-8"));

@@ -56,6 +56,7 @@ public class FragmentHome extends Fragment {
     }
     public FragmentHome() {
         // Required empty public constructor
+        isServerAlive();
     }
 
     @Override
@@ -131,7 +132,7 @@ public class FragmentHome extends Fragment {
      * @since 2016-12-03
      */
     private void isServerAlive () {
-        Log.d("fragment", "call");
+
         AsyncGetRemoteHeartbeat asyncGetRemoteHeartbeat = new AsyncGetRemoteHeartbeat(new AsyncGetRemoteHeartbeat.AsyncResponseHeartbeat() {
 
             @Override

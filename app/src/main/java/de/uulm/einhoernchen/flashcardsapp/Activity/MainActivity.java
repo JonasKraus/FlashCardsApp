@@ -85,6 +85,8 @@ public class MainActivity extends AppCompatActivity
 
         this.context = this;
 
+        isServerAlive();
+
         setContentView(R.layout.activity_home);
 
         progressBar = (ProgressBar) findViewById(R.id.progressBarMain);
