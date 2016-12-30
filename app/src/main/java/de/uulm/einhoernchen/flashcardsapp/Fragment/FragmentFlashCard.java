@@ -5,17 +5,33 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentContainer;
+import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import de.uulm.einhoernchen.flashcardsapp.AsyncTasks.Remote.AsyncDeleteRemoteRating;
+import de.uulm.einhoernchen.flashcardsapp.AsyncTasks.Remote.AsyncPatchRemoteCard;
 import de.uulm.einhoernchen.flashcardsapp.AsyncTasks.Remote.AsyncPostRemoteRating;
 import de.uulm.einhoernchen.flashcardsapp.Database.DbManager;
+import de.uulm.einhoernchen.flashcardsapp.Fragment.Adapter.RecyclerViewAdapterFlashCardAnswers;
+import de.uulm.einhoernchen.flashcardsapp.Fragment.Dataset.ContentFlashCardAnswers;
+import de.uulm.einhoernchen.flashcardsapp.Models.Answer;
 import de.uulm.einhoernchen.flashcardsapp.Models.FlashCard;
 import de.uulm.einhoernchen.flashcardsapp.R;
 import de.uulm.einhoernchen.flashcardsapp.Util.ProcessorImage;
@@ -29,7 +45,7 @@ import de.uulm.einhoernchen.flashcardsapp.Util.ProcessorImage;
  * Use the {@link FragmentFlashCard#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class FragmentFlashCard extends Fragment {
+public class FragmentFlashCard extends Fragment implements View.OnClickListener{
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -56,9 +72,30 @@ public class FragmentFlashCard extends Fragment {
     private ImageView imageViewVoteDown;
 
     private Button buttonAddAnswer;
+    private Button buttonAnswerEditorSave;
+
+    private EditText editTextAnswerText;
+    private EditText editTextAnswerHint;
+    private EditText editTextAnswerUri;
+
+    private RadioGroup radioGroupAnswerCorrect;
+    private RadioButton radioButtonAnswerCorrect;
+    private RadioButton radioButtonAnswerIncorrect;
+
+    private ProgressBar progressBar;
 
     public FragmentFlashCard() {
         // Required empty public constructor
+    }
+
+
+    /**
+     * Sets the progressbar
+     *
+     * @param progressBar
+     */
+    public void setProgressBar(ProgressBar progressBar) {
+        this.progressBar = progressBar;
     }
 
     /**
@@ -124,8 +161,16 @@ public class FragmentFlashCard extends Fragment {
         imageViewVoteUp = (ImageView) view.findViewById(R.id.button_up_vote);
 
         buttonAddAnswer = (Button) view.findViewById(R.id.button_add_answer);
+        buttonAnswerEditorSave = (Button) view.findViewById(R.id.button_answer_editor_save);
 
-        setOnClickListenerButtonAddAnswer();
+        editTextAnswerText = (EditText) view.findViewById(R.id.edittext_answer_text);
+        editTextAnswerHint = (EditText) view.findViewById(R.id.edittext_answer_hint);
+        editTextAnswerUri = (EditText) view.findViewById(R.id.edittext_answer_uri);
+        radioGroupAnswerCorrect = (RadioGroup) view.findViewById(R.id.radio_buttongroup_answer_editor);
+        radioButtonAnswerCorrect = (RadioButton) view.findViewById(R.id.radio_button_answer_editor_correct);
+        radioButtonAnswerIncorrect = (RadioButton) view.findViewById(R.id.radio_button_answer_editor_incorrect);
+
+        buttonAnswerEditorSave.setOnClickListener(this);
 
         //mIdView.setText(flashCard.getId() + "");
         mContentView.setText(flashCard.getQuestion().getQuestionText());
@@ -149,7 +194,20 @@ public class FragmentFlashCard extends Fragment {
             mLocalView.setVisibility(View.VISIBLE);
         }
 
+        if (flashCard.isMultipleChoice()) {
+
+            radioButtonAnswerCorrect.setChecked(true);
+            radioButtonAnswerIncorrect.setChecked(false);
+            radioGroupAnswerCorrect.setVisibility(View.VISIBLE);
+        } else {
+
+            radioButtonAnswerCorrect.setChecked(true);
+            radioButtonAnswerIncorrect.setChecked(false);
+            radioGroupAnswerCorrect.setVisibility(View.GONE);
+        }
+
         int voting = db.getCardVoting(flashCard.getId());
+
         switch (voting) {
             case -1:
                 imageViewVoteDown.setColorFilter(getResources().getColor(R.color.colorAccent));
@@ -163,25 +221,16 @@ public class FragmentFlashCard extends Fragment {
         }
 
         setListener();
+
+        /*
+        FrameLayout container1 = (FrameLayout) view.findViewById(R.id.fragment_container_card_answer);
+        RecyclerView recyclerView = (RecyclerView) container1.findViewById(R.id.list);
+        recyclerView.setAdapter(new RecyclerViewAdapterFlashCardAnswers(db, itemList, mListener, isUpToDate, context));*/
+
         return view;
 
     }
 
-    /**
-     * Adds a clicklistener to the add answer button
-     *
-     * @author Jonas Kraus jonas.kraus@uni-ulm.de
-     * @since 2016-12-30
-     */
-    private void setOnClickListenerButtonAddAnswer() {
-
-        buttonAddAnswer.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
-    }
 
 
     /**
@@ -311,6 +360,74 @@ public class FragmentFlashCard extends Fragment {
 
     public void setUpToDate(boolean isUpToDate) {
         this.isUpToDate = isUpToDate;
+    }
+
+
+    /**
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     * @since 2016-12-30
+     *
+     * @param v
+     */
+    @Override
+    public void onClick(View v) {
+
+        switch (v.getId()) {
+
+            //save answer
+            case R.id.button_answer_editor_save:
+
+                String text = editTextAnswerText.getText().toString();
+                String hint = editTextAnswerHint.getText().toString();
+                String uri = editTextAnswerUri.getText().toString();
+
+                boolean isCorrect = true;
+
+                if (this.flashCard.isMultipleChoice()) {
+
+                    isCorrect = radioButtonAnswerCorrect.isChecked();
+                }
+
+                try {
+
+                    JSONObject jsonObject = new JSONObject();
+
+                    JSONObject jsonObjectAnswer = new JSONObject();
+
+                    jsonObjectAnswer.put("answerText", text);
+                    jsonObjectAnswer.put("hint", hint);
+                    jsonObjectAnswer.put("mediaURI", uri);
+
+                    JSONObject jsonObjectAuthor = new JSONObject();
+                    jsonObjectAuthor.put("userId", db.getLoggedInUser().getId());
+
+                    jsonObjectAnswer.put("author", jsonObjectAuthor);
+
+                    JSONArray jsonArray = new JSONArray();
+                    jsonArray.put(jsonObjectAnswer);
+
+                    jsonObject.put("answers", jsonArray);
+
+                    AsyncPatchRemoteCard task = new AsyncPatchRemoteCard(jsonObject, this.flashCard.getId());
+                    task.execute();
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                new ContentFlashCardAnswers().collectItemsFromServer(flashCard.getId(), getFragmentManager(), progressBar, false, db);
+
+
+                editTextAnswerText.setText(null);
+                editTextAnswerHint.setText(null);
+                editTextAnswerUri.setText(null);
+
+
+
+                //TODO async task save answer
+                //TODO async task reload answerlist
+                break;
+        }
     }
 
 

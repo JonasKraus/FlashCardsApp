@@ -70,15 +70,17 @@
     <RadioGroup
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/radio_buttongroup_anwser_editor"
+        android:id="@+id/radio_buttongroup_answer_editor"
         android:orientation="horizontal">
         <RadioButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:id="@+id/radio_button_answer_editor_correct"
             android:text="@string/correct"/>
         <RadioButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:id="@+id/radio_button_answer_editor_incorrect"
             android:text="@string/incorrect"/>
     </RadioGroup>
 

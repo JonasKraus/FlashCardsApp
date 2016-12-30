@@ -13,7 +13,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -827,12 +826,12 @@ public class JsonParser {
      * @param inputStream
      * @return
      */
-    public static Long readResponseRating(InputStream inputStream) throws IOException {
+    public static Long readResponse(InputStream inputStream) throws IOException {
 
         JsonReader reader = new JsonReader(new InputStreamReader(inputStream, "UTF-8"));
 
         try {
-            return readResponseRating(reader);
+            return readResponse(reader);
         } finally {
             reader.close();
         }
@@ -847,8 +846,8 @@ public class JsonParser {
      * @param reader
      * @return
      */
-    private static Long readResponseRating(JsonReader reader) {
-        if (DEBUG) Log.d("parser Method", "readResponseRating");
+    private static Long readResponse(JsonReader reader) {
+        if (DEBUG) Log.d("parser Method", "readResponse");
 
         int statuscode = 400;
         boolean created = false;

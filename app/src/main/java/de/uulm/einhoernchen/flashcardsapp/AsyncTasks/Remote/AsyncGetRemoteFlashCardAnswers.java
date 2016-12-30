@@ -29,7 +29,7 @@ public class AsyncGetRemoteFlashCardAnswers extends AsyncTask<Long, Long, List<A
     @Override
     protected void onPreExecute() {
         super.onPreExecute();
-        progressBar.setVisibility(View.VISIBLE);
+        if (progressBar != null )progressBar.setVisibility(View.VISIBLE);
     }
 
     /**
@@ -94,7 +94,7 @@ public class AsyncGetRemoteFlashCardAnswers extends AsyncTask<Long, Long, List<A
 
         }
 
-        progressBar.setVisibility(View.GONE);
+        if (progressBar != null) progressBar.setVisibility(View.GONE);
         delegate.processFinish(answers);
 
     }

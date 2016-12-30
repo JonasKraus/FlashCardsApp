@@ -38,7 +38,7 @@ public class ContentFlashCard {
      * @param fragmentManager
      * @param progressBarMain
      */
-    public void collectItemFromServer(final long flashcardId, final FragmentManager fragmentManager, ProgressBar progressBarMain, final boolean backPressed, final DbManager db) {
+    public void collectItemFromServer(final long flashcardId, final FragmentManager fragmentManager, final ProgressBar progressBarMain, final boolean backPressed, final DbManager db) {
 
         this.db = db;
 
@@ -61,6 +61,7 @@ public class ContentFlashCard {
                 isUpToDate = true;
 
                 FragmentFlashCard fragment = new FragmentFlashCard();
+                fragment.setProgressBar(progressBarMain);
                 fragment.setItem(ContentFlashCard.flashCard);
                 fragment.setDb(db);
                 fragment.setUpToDate(isUpToDate);

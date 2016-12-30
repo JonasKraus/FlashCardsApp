@@ -14,6 +14,7 @@ public class Routes {
     public static final String BOOL_TRUE = "true";
     public static final String BOOL_FALSE = "false";
     public static final String CHILDREN = "children";
+    public static final String APPEND = "append";
     public static final String BASE_PROTOCOL = "http:" + SLASH + SLASH;
     public static final String BASE_PORT = ":9000";
 

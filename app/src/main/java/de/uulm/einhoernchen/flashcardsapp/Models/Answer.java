@@ -88,6 +88,27 @@ public class Answer {
     }
 
 
+    /**
+     * Constructor for creating a new answer and to send it to an asynctask to save it on the server
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     * @since 2016-12-30
+     *
+     * @param text
+     * @param hint
+     * @param uri
+     * @param isCorrect
+     * @param user
+     */
+    public Answer(String text, String hint, String uri, boolean isCorrect, User user) {
+        this.answerText = text;
+        this.hintText = hint;
+        this.uri = uri;
+        this.isCorrect = isCorrect;
+        this.author = user;
+    }
+
+
     @Override
     public String toString() {
         return "Answer{" +

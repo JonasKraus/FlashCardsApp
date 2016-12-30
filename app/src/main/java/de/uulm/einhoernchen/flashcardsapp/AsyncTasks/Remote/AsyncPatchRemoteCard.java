@@ -10,37 +10,27 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 import de.uulm.einhoernchen.flashcardsapp.Consts.Routes;
-import de.uulm.einhoernchen.flashcardsapp.Database.DbManager;
 import de.uulm.einhoernchen.flashcardsapp.Util.JsonParser;
 
 /**
  * Created by jonas-uni on 17.08.2016.
  */
-public class AsyncPostRemoteRating extends AsyncTask<Long, Long, Long> {
+public class AsyncPatchRemoteCard extends AsyncTask<Long, Long, Long> {
 
-    private String ratingObjectName;
-    private long objectId;
-    private Long userId;
-    private int ratingmodifier;
-    private DbManager db;
+    private JSONObject jsonObject;
+    private long cardId;
 
 
     /**
      * @author Jonas Kraus jonas.kraus@uni-ulm.de
-     * @since 2016-12-29
+     * @since 2016-12-30
      *
-     * @param ratingObjectName
-     * @param objectId
-     * @param userId
-     * @param ratingmodifier
+     * @param jsonObject
      */
-    public AsyncPostRemoteRating(String ratingObjectName, long objectId, Long userId, int ratingmodifier, DbManager db) {
+    public AsyncPatchRemoteCard(JSONObject jsonObject, long cardId) {
 
-        this.ratingObjectName = ratingObjectName;
-        this.objectId = objectId;
-        this.userId = userId;
-        this.ratingmodifier = ratingmodifier;
-        this.db = db;
+        this.jsonObject = jsonObject;
+        this.cardId = cardId;
     }
 
     @Override
@@ -52,7 +42,7 @@ public class AsyncPostRemoteRating extends AsyncTask<Long, Long, Long> {
     @Override
     protected Long doInBackground(Long... params) {
 
-        String urlString = Routes.URL + Routes.SLASH + Routes.RATINGS;
+        String urlString = Routes.URL + Routes.SLASH + Routes.FLASH_CARDS + Routes.SLASH + cardId + Routes.QUESTION_MARK + Routes.APPEND + Routes.EQUAL + Routes.BOOL_TRUE;
 
         Log.d("back call to", urlString);
 
@@ -69,33 +59,21 @@ public class AsyncPostRemoteRating extends AsyncTask<Long, Long, Long> {
             urlConnection.setChunkedStreamingMode(0);
             urlConnection.setRequestProperty("Accept", "application/json");
             urlConnection.setRequestProperty("Content-Type", "application/json");
-            urlConnection.setRequestMethod("POST");
-
-            // Construct json body
-            JSONObject cred = new JSONObject();
-            JSONObject author = new JSONObject();
-            JSONObject ratingObject = new JSONObject();
-
-            author.put("userId", userId);
-            ratingObject.put(ratingObjectName + "Id", objectId);
-
-            cred.put("author", author);
-            cred.put(ratingObjectName, ratingObject);
-            cred.put("ratingModifier", ratingmodifier);
+            urlConnection.setRequestMethod("PATCH");
 
             urlConnection.connect();
 
             //Send request JSON Data
             DataOutputStream wr = new DataOutputStream(
                     urlConnection.getOutputStream());
-            wr.writeBytes(cred.toString());
+            wr.writeBytes(jsonObject.toString());
             wr.flush();
 
             return JsonParser.readResponse(urlConnection.getInputStream());
 
         } catch (Exception e) {
 
-            Log.e("doInBackground rating", e.toString());
+            Log.e("doInBack card patch", e.toString());
             System.out.println(e.toString());
             return null;
 
@@ -104,18 +82,12 @@ public class AsyncPostRemoteRating extends AsyncTask<Long, Long, Long> {
     }
 
     @Override
-    protected void onPostExecute(Long ratingId) {
-        super.onPostExecute(ratingId);
+    protected void onPostExecute(Long id) {
+        super.onPostExecute(id);
 
-        if (ratingId != null) {
+        if (id != null) {
 
-            if (ratingObjectName == "flashcard") {
 
-                db.addRatingIdToCardVoting(ratingId, objectId);
-            } else if (ratingObjectName == "answer") {
-
-                db.addRatingIdToAnswerVoting(ratingId, objectId);
-            }
         }
 
     }
