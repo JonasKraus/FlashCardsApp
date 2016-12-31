@@ -214,7 +214,6 @@ public class DbManager {
         values.put(DbHelper.COLUMN_USER_ID, user.getId());
         values.put(DbHelper.COLUMN_USER_AVATAR, user.getAvatar());
         values.put(DbHelper.COLUMN_USER_NAME, user.getName());
-        values.put(DbHelper.COLUMN_USER_PASSWORD, user.getPassword());
         values.put(DbHelper.COLUMN_USER_EMAIL, user.getEmail());
         values.put(DbHelper.COLUMN_USER_RATING, user.getRating());
         //@TODO GroupID ??? values.put(DbHelper.COLUMN_USER_GROUP, user.getGroup().getId());
@@ -222,12 +221,30 @@ public class DbManager {
         String lastLogin = user.getLastLogin() != null ? user.getLastLogin().toString() : "";
         values.put(DbHelper.COLUMN_USER_CREATED, created); // @TODO check correct date
         values.put(DbHelper.COLUMN_USER_LAST_LOGIN, lastLogin); // @TODO check correct date
+
+        if (!localAccount) {
+            localAccount = isLocalAccount(user.getId());
+
+        } else if(user.getPassword() != null && user.getPassword() != "") {
+
+            values.put(DbHelper.COLUMN_USER_PASSWORD, user.getPassword());
+        }
+
         values.put(DbHelper.COLUMN_USER_LOCAL_ACCOUNT, localAccount);
         values.put(DbHelper.COLUMN_USER_IS_LOGGED_IN, localAccount);
 
-        // Executes the query
-        Long id = database.insertWithOnConflict(DbHelper.TABLE_USER, null, values, SQLiteDatabase.CONFLICT_REPLACE);
-         if (DEBUG) Log.d("local user created", id+" "+ localAccount);
+
+        if (doUpdateUser(user.getId())) {
+
+            database.updateWithOnConflict(DbHelper.TABLE_USER, values, DbHelper.COLUMN_USER_ID + "=" + user.getId() , null, SQLiteDatabase.CONFLICT_REPLACE);
+
+        } else {
+
+            // Executes the query
+            Long id = database.insertWithOnConflict(DbHelper.TABLE_USER, null, values, SQLiteDatabase.CONFLICT_REPLACE);
+            if (DEBUG) Log.d("local user created", id+" "+ localAccount);
+        }
+
     }
 
 
@@ -574,6 +591,72 @@ public class DbManager {
         cursor.close();
 
         return user;
+    }
+
+
+    /**
+     * checks if a user is a local account
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     * @since 2016-12-31
+     *
+     * @param userId
+     * @return
+     */
+    public boolean isLocalAccount(long userId) {
+
+        Cursor cursor = database.query(DbHelper.TABLE_USER, allUserColumns, DbHelper.COLUMN_USER_ID + " = " + userId, null, null, null, null);
+
+        boolean isLocalAccount = false;
+
+        if (cursor.moveToFirst()) {
+
+            try {
+
+                isLocalAccount = cursor.getInt(cursor.getColumnIndex(DbHelper.COLUMN_USER_LOCAL_ACCOUNT)) > 0;
+            } catch (Exception e) {
+
+                System.out.print(e.getMessage());
+            }
+
+        }
+
+        cursor.close();
+
+        return isLocalAccount;
+    }
+
+
+    /**
+     * checks if a user exists in local db - so update him
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     * @since 2016-12-31
+     *
+     * @param userId
+     * @return
+     */
+    public boolean doUpdateUser(long userId) {
+
+        Cursor cursor = database.query(DbHelper.TABLE_USER, allUserColumns, DbHelper.COLUMN_USER_ID + " = " + userId, null, null, null, null);
+
+        boolean exists = false;
+
+        if (cursor.moveToFirst()) {
+
+            try {
+
+                exists = cursor.getInt(cursor.getColumnIndex(DbHelper.COLUMN_USER_ID)) > 0;
+            } catch (Exception e) {
+
+                System.out.print(e.getMessage());
+            }
+
+        }
+
+        cursor.close();
+
+        return exists;
     }
 
     /**
