@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
@@ -45,7 +46,7 @@ import de.uulm.einhoernchen.flashcardsapp.Util.ProcessorImage;
  * Use the {@link FragmentFlashCard#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class FragmentFlashCard extends Fragment implements View.OnClickListener{
+public class FragmentFlashCard extends Fragment implements View.OnClickListener {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -381,6 +382,13 @@ public class FragmentFlashCard extends Fragment implements View.OnClickListener{
                 String hint = editTextAnswerHint.getText().toString();
                 String uri = editTextAnswerUri.getText().toString();
 
+                // Check if edittext is empty
+                if (text.equals("")) {
+
+                    Toast.makeText(getContext(), getContext().getResources().getText(R.string.insert_text), Toast.LENGTH_SHORT).show();
+                    break;
+                }
+
                 boolean isCorrect = true;
 
                 if (this.flashCard.isMultipleChoice()) {
@@ -422,6 +430,9 @@ public class FragmentFlashCard extends Fragment implements View.OnClickListener{
                 editTextAnswerHint.setText(null);
                 editTextAnswerUri.setText(null);
 
+                InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+
 
 
                 //TODO async task save answer
@@ -429,6 +440,7 @@ public class FragmentFlashCard extends Fragment implements View.OnClickListener{
                 break;
         }
     }
+
 
 
     /**

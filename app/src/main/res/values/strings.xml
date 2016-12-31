@@ -54,6 +54,7 @@
 
     <!-- Strings for toasts -->
     <string name="voting_already_voted">You already voted!</string>
+    <string name="insert_text">Please insert some text</string>
 
 
     <string name="answer_add">add answer</string>
