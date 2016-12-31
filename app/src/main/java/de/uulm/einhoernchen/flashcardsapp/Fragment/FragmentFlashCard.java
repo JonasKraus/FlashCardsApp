@@ -403,7 +403,7 @@ public class FragmentFlashCard extends Fragment implements View.OnClickListener 
                     JSONObject jsonObjectAnswer = new JSONObject();
 
                     jsonObjectAnswer.put("answerText", text);
-                    jsonObjectAnswer.put("hint", hint);
+                    jsonObjectAnswer.put("answerHint", hint);
                     jsonObjectAnswer.put("mediaURI", uri);
                     jsonObjectAnswer.put("answerCorrect", isCorrect);
 
