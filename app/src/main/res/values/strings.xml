@@ -67,6 +67,7 @@
 
 
     <string name="answer_editor_text">answer</string>
+    <string name="question_editor_text">question</string>
     <string name="answer_editor_hint">hint</string>
     <string name="answer_editor_uri">uri</string>
 

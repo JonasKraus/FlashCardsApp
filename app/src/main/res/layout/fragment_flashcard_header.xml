@@ -26,8 +26,24 @@
             android:visibility="gone"
             android:src="@drawable/ic_play_circle_outline"
             android:id="@+id/imageview_card_media_play"/>
-
     </RelativeLayout>
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/textInputLayout_uri"
+        android:visibility="gone"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textMultiLine"
+            android:id="@+id/edittext_uri"
+            android:hint="@string/answer_editor_uri"
+            android:layout_weight="1"/>
+    </android.support.design.widget.TextInputLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -150,14 +166,36 @@
             android:layout_weight="1"
             android:text="Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt"
             android:textAppearance="?attr/textAppearanceListItem" />
+
+        <android.support.design.widget.TextInputLayout
+            android:visibility="gone"
+            android:id="@+id/textInputLayout_content"
+            android:layout_weight="1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textMultiLine"
+                android:id="@+id/edittext_content"
+                android:hint="@string/question_editor_text"/>
+        </android.support.design.widget.TextInputLayout>
+
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-
             android:tint="@color/white"
             android:alpha=".1"
             android:id="@+id/imageview_question_edit"
             android:src="@drawable/ic_menu_manage"/>
+
+        <ImageView
+            android:visibility="gone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:tint="@color/white"
+            android:id="@+id/imageview_question_save"
+            android:src="@drawable/ic_save"/>
     </LinearLayout>
 
 

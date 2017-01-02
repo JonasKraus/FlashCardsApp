@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -69,6 +70,7 @@ public class FragmentFlashCard extends Fragment implements View.OnClickListener 
     private ImageView imageViewVoteUp;
     private ImageView imageViewVoteDown;
     private ImageView imageViewEditQuestion;
+    private ImageView imageViewSaveQuestion;
 
     private Button buttonAddAnswer;
     private Button buttonAnswerEditorSave;
@@ -76,6 +78,12 @@ public class FragmentFlashCard extends Fragment implements View.OnClickListener 
     private EditText editTextAnswerText;
     private EditText editTextAnswerHint;
     private EditText editTextAnswerUri;
+
+    private EditText editTextQuestionUri;
+    private EditText editTextQuestionText;
+
+    private TextInputLayout textInputLayoutUri;
+    private TextInputLayout textInputLayoutContent;
 
     private RadioGroup radioGroupAnswerCorrect;
     private RadioButton radioButtonAnswerCorrect;
@@ -160,6 +168,7 @@ public class FragmentFlashCard extends Fragment implements View.OnClickListener 
         imageViewVoteUp = (ImageView) view.findViewById(R.id.button_up_vote);
 
         imageViewEditQuestion = (ImageView) view.findViewById(R.id.imageview_question_edit);
+        imageViewSaveQuestion = (ImageView) view.findViewById(R.id.imageview_question_save);
 
         buttonAddAnswer = (Button) view.findViewById(R.id.button_add_answer);
         buttonAnswerEditorSave = (Button) view.findViewById(R.id.button_answer_editor_save);
@@ -167,6 +176,13 @@ public class FragmentFlashCard extends Fragment implements View.OnClickListener 
         editTextAnswerText = (EditText) view.findViewById(R.id.edittext_answer_text);
         editTextAnswerHint = (EditText) view.findViewById(R.id.edittext_answer_hint);
         editTextAnswerUri = (EditText) view.findViewById(R.id.edittext_answer_uri);
+
+        textInputLayoutUri = (TextInputLayout) view.findViewById(R.id.textInputLayout_uri);
+        textInputLayoutContent = (TextInputLayout) view.findViewById(R.id.textInputLayout_content);
+
+        editTextQuestionUri = (EditText) view.findViewById(R.id.edittext_uri);
+        editTextQuestionText = (EditText) view.findViewById(R.id.edittext_content);
+
         imageViewPlay = (ImageView) view.findViewById(R.id.imageview_card_media_play);
         radioGroupAnswerCorrect = (RadioGroup) view.findViewById(R.id.radio_buttongroup_answer_editor);
         radioButtonAnswerCorrect = (RadioButton) view.findViewById(R.id.radio_button_answer_editor_correct);
@@ -462,7 +478,37 @@ public class FragmentFlashCard extends Fragment implements View.OnClickListener 
 
             case R.id.imageview_question_edit:
 
-                Log.d("hier", flashCard.toString());
+                mContentView.setVisibility(View.GONE);
+                textInputLayoutContent.setVisibility(View.VISIBLE);
+                textInputLayoutUri.setVisibility(View.VISIBLE);
+                imageViewEditQuestion.setVisibility(View.GONE);
+                imageViewSaveQuestion.setVisibility(View.VISIBLE);
+
+                imageViewSaveQuestion.setOnClickListener(this);
+
+                editTextQuestionText.setText(flashCard.getQuestion().getQuestionText());
+                editTextQuestionUri.setText(flashCard.getQuestion().getUri().toString());
+
+                break;
+
+            case R.id.imageview_question_save:
+
+                String newUri = editTextQuestionUri.getText().toString();
+                String newQuestionText = editTextQuestionText.getText().toString();
+
+                mContentView.setText(editTextQuestionText.getText());
+
+                mContentView.setVisibility(View.VISIBLE);
+                textInputLayoutContent.setVisibility(View.GONE);
+                textInputLayoutUri.setVisibility(View.GONE);
+                imageViewEditQuestion.setVisibility(View.VISIBLE);
+                imageViewSaveQuestion.setVisibility(View.GONE);
+
+
+                Log.d("hier save", flashCard.toString());
+                // TODO Start async task to save answer
+                // TODO reload question
+
                 break;
         }
     }
