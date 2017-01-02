@@ -68,6 +68,15 @@ public class RecyclerViewAdapterFlashCardAnswers extends RecyclerView.Adapter<Re
         holder.mUpvote.setVisibility(View.VISIBLE);
         final long answerId = answers.get(position).getId();
 
+        // Sets the hint to the list item
+        if (answers.get(position).getHintText() != null && !answers.get(position).getHintText().equals("")) {
+
+            holder.mHintView.setVisibility(View.VISIBLE);
+            holder.mHintView.setText(answers.get(position).getHintText());
+        } else {
+            holder.mHintView.setVisibility(View.GONE);
+        }
+
         if (answers.get(position).isCorrect()) {
             holder.misCorrectView.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_check));
         } else {
@@ -242,6 +251,7 @@ public class RecyclerViewAdapterFlashCardAnswers extends RecyclerView.Adapter<Re
         public final View mView;
         public final TextView mIdView;
         public final TextView mContentView;
+        public final TextView mHintView;
         public final TextView mAuthorView;
         // public final TextView mGroupRatingView;
         public final TextView mCardRatingView;
@@ -260,6 +270,7 @@ public class RecyclerViewAdapterFlashCardAnswers extends RecyclerView.Adapter<Re
             mView = view;
             mIdView = (TextView) view.findViewById(R.id.id);
             mContentView = (TextView) view.findViewById(R.id.content);
+            mHintView = (TextView) view.findViewById(R.id.hint);
             mAuthorView = (TextView) view.findViewById(R.id.textView_listItem_author);
 
             // mGroupRatingView = (TextView) view.findViewById(R.id.text_view_listItem_group_rating);
