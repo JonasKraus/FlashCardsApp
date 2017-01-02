@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -67,6 +68,7 @@ public class FragmentFlashCard extends Fragment implements View.OnClickListener 
     private ImageView imageViewPlay;
     private ImageView imageViewVoteUp;
     private ImageView imageViewVoteDown;
+    private ImageView imageViewEditQuestion;
 
     private Button buttonAddAnswer;
     private Button buttonAnswerEditorSave;
@@ -157,6 +159,8 @@ public class FragmentFlashCard extends Fragment implements View.OnClickListener 
         imageViewVoteDown = (ImageView) view.findViewById(R.id.button_down_vote);
         imageViewVoteUp = (ImageView) view.findViewById(R.id.button_up_vote);
 
+        imageViewEditQuestion = (ImageView) view.findViewById(R.id.imageview_question_edit);
+
         buttonAddAnswer = (Button) view.findViewById(R.id.button_add_answer);
         buttonAnswerEditorSave = (Button) view.findViewById(R.id.button_answer_editor_save);
 
@@ -177,6 +181,16 @@ public class FragmentFlashCard extends Fragment implements View.OnClickListener 
         mDateView.setText(flashCard.getLastUpdatedString());
 
         //misCorrectView =; TODO
+
+        // check if the question was created by the current user - so set the edit button enabled
+        if (flashCard.getQuestion().getAuthor().getId() == db.getLoggedInUser().getId()) {
+
+            imageViewEditQuestion.setAlpha(1f);
+            imageViewEditQuestion.setOnClickListener(this);
+
+        } else {
+            imageViewEditQuestion.setAlpha(.1f);
+        }
 
 
         if (flashCard.getQuestion().getUri() != null && flashCard.getQuestion().getUri().toString() != "") {
@@ -444,6 +458,11 @@ public class FragmentFlashCard extends Fragment implements View.OnClickListener 
 
                 // starts the youtube player
                 getContext().startActivity(new Intent(Intent.ACTION_VIEW,flashCard.getQuestion().getUri()));
+                break;
+
+            case R.id.imageview_question_edit:
+
+                Log.d("hier", flashCard.toString());
                 break;
         }
     }
