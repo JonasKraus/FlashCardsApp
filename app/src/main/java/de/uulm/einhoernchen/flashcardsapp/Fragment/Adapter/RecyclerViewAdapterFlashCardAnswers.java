@@ -1,14 +1,20 @@
 package de.uulm.einhoernchen.flashcardsapp.Fragment.Adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
+import android.media.MediaPlayer;
+import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.MediaController;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.VideoView;
 
 import java.util.List;
 
@@ -19,6 +25,7 @@ import de.uulm.einhoernchen.flashcardsapp.Fragment.Dataset.DummyContent.DummyIte
 import de.uulm.einhoernchen.flashcardsapp.Fragment.Interfaces.OnFragmentInteractionListenerAnswer;
 import de.uulm.einhoernchen.flashcardsapp.Models.Answer;
 import de.uulm.einhoernchen.flashcardsapp.R;
+import de.uulm.einhoernchen.flashcardsapp.Util.ProcessorImage;
 
 /**
  * {@link RecyclerView.Adapter} that can display a {@link DummyItem} and makes a call to the
@@ -69,6 +76,8 @@ public class RecyclerViewAdapterFlashCardAnswers extends RecyclerView.Adapter<Re
         } else {
             holder.misCorrectView.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_close));
         }
+
+        checkAnswerMediatype(holder, answers.get(position));
 
         /**
          * Check if the data is from the server or from the local db
@@ -185,6 +194,45 @@ public class RecyclerViewAdapterFlashCardAnswers extends RecyclerView.Adapter<Re
 
     }
 
+    private void checkAnswerMediatype(ViewHolder holder, Answer answer) {
+
+        //Log.d("answer uri", answer.getUri());
+
+        final String uriString = answer.getUri();
+
+        boolean isImage = false;
+        boolean isVideo = false;
+        boolean isAudio = false;
+
+        if (uriString.toLowerCase().endsWith(".png") || uriString.toLowerCase().endsWith(".jpg")) {
+
+            ProcessorImage.download(uriString, holder.mediaImage, answer.getId(), "_answer" );
+            isImage = true;
+
+        } else if (uriString.contains("youtube")) {
+
+            ProcessorImage.download(uriString, holder.mediaImage, answer.getId(), "_answer" );
+            isImage = true;
+            isVideo = true;
+
+            holder.mediaPlay.setOnClickListener(new View.OnClickListener() {
+
+                @Override
+                public void onClick(View v) {
+                    context.startActivity(new Intent(Intent.ACTION_VIEW,Uri.parse(uriString)));
+                    Log.i("Video", "Video Playing....");
+                }
+            });
+
+
+        }
+
+        holder.mediaImage.setVisibility(isImage ? View.VISIBLE : View.GONE);
+        holder.mediaPlay.setVisibility(uriString.contains("youtube") ? View.VISIBLE : View.GONE);
+
+
+    }
+
     @Override
     public int getItemCount() {
         if (answers != null) {
@@ -206,7 +254,9 @@ public class RecyclerViewAdapterFlashCardAnswers extends RecyclerView.Adapter<Re
         public final ImageView imageView; // Text icon
         public final ImageView mDownvote; // Text icon
         public final ImageView mUpvote; // Text icon
+        public final ImageView mediaImage; // Answer url image
         public Answer mItem;
+        public final ImageView mediaPlay;
 
         public ViewHolder(View view) {
             super(view);
@@ -224,6 +274,9 @@ public class RecyclerViewAdapterFlashCardAnswers extends RecyclerView.Adapter<Re
             imageView = (ImageView) view.findViewById(R.id.image_view_round_icon);
             mUpvote = (ImageView) view.findViewById(R.id.button_up_vote);
             mDownvote = (ImageView) view.findViewById(R.id.button_down_vote);
+
+            mediaImage = (ImageView) view.findViewById(R.id.imageview_answer_media);
+            mediaPlay = (ImageView) view.findViewById(R.id.imageview_answer_media_play);
         }
 
         @Override

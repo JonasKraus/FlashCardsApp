@@ -241,7 +241,7 @@ public class ProcessorImage {
             outStream = new FileOutputStream(file);
 
             // Scale bitmap to right size
-            bitmap = ProcessorImage.scaleDownMaxHeight(bitmap, 180, true);
+            bitmap = ProcessorImage.scaleDownMaxHeight(bitmap, 480, true);
 
             // Now compress it
             bitmap.compress(Bitmap.CompressFormat.PNG, 50, outStream);
