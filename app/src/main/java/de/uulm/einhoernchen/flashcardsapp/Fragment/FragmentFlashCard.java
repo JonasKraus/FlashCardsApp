@@ -206,6 +206,7 @@ public class FragmentFlashCard extends Fragment implements View.OnClickListener 
 
         } else {
             imageViewEditQuestion.setAlpha(.1f);
+
         }
 
 
@@ -505,9 +506,13 @@ public class FragmentFlashCard extends Fragment implements View.OnClickListener 
                 imageViewSaveQuestion.setVisibility(View.GONE);
 
 
-                Log.d("hier save", flashCard.toString());
                 // TODO Start async task to save answer
                 // TODO reload question
+                JSONObject jsonObject = new JSONObject();
+
+
+                AsyncPatchRemoteCard task = new AsyncPatchRemoteCard(jsonObject, flashCard.getId());
+                task.execute();
 
                 break;
         }

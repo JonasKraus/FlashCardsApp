@@ -536,7 +536,7 @@ public class DbManager {
 
         Tag tag = null;
 
-        Cursor cursor = database.query(DbHelper.TABLE_TAG, allCardTagColumns, DbHelper.COLUMN_TAG_ID + " = " + tagId, null, null, null, null);
+        Cursor cursor = database.query(DbHelper.TABLE_TAG, allTagColumns, DbHelper.COLUMN_TAG_ID + " = " + tagId, null, null, null, null);
 
         if (cursor.moveToFirst()) {
             String name = cursor.getString(1);
