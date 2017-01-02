@@ -65,7 +65,7 @@
                     android:layout_marginTop="-100dp"
                     android:visibility="gone"
                     android:src="@drawable/ic_play_circle_outline"
-                    android:id="@+id/imageview_answer_media_play"/>
+                    android:id="@+id/imageview_card_media_play"/>
             </LinearLayout>
 
             <TextView

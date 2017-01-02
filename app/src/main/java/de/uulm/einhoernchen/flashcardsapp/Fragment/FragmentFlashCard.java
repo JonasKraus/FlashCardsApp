@@ -1,20 +1,17 @@
 package de.uulm.einhoernchen.flashcardsapp.Fragment;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentContainer;
-import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RadioButton;
@@ -30,9 +27,7 @@ import de.uulm.einhoernchen.flashcardsapp.AsyncTasks.Remote.AsyncDeleteRemoteRat
 import de.uulm.einhoernchen.flashcardsapp.AsyncTasks.Remote.AsyncPatchRemoteCard;
 import de.uulm.einhoernchen.flashcardsapp.AsyncTasks.Remote.AsyncPostRemoteRating;
 import de.uulm.einhoernchen.flashcardsapp.Database.DbManager;
-import de.uulm.einhoernchen.flashcardsapp.Fragment.Adapter.RecyclerViewAdapterFlashCardAnswers;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.Dataset.ContentFlashCardAnswers;
-import de.uulm.einhoernchen.flashcardsapp.Models.Answer;
 import de.uulm.einhoernchen.flashcardsapp.Models.FlashCard;
 import de.uulm.einhoernchen.flashcardsapp.R;
 import de.uulm.einhoernchen.flashcardsapp.Util.ProcessorImage;
@@ -69,6 +64,7 @@ public class FragmentFlashCard extends Fragment implements View.OnClickListener 
     private ImageView mBookmarkView;
     private ImageView mLocalView;
     private ImageView imageViewUri;
+    private ImageView imageViewPlay;
     private ImageView imageViewVoteUp;
     private ImageView imageViewVoteDown;
 
@@ -167,6 +163,7 @@ public class FragmentFlashCard extends Fragment implements View.OnClickListener 
         editTextAnswerText = (EditText) view.findViewById(R.id.edittext_answer_text);
         editTextAnswerHint = (EditText) view.findViewById(R.id.edittext_answer_hint);
         editTextAnswerUri = (EditText) view.findViewById(R.id.edittext_answer_uri);
+        imageViewPlay = (ImageView) view.findViewById(R.id.imageview_card_media_play);
         radioGroupAnswerCorrect = (RadioGroup) view.findViewById(R.id.radio_buttongroup_answer_editor);
         radioButtonAnswerCorrect = (RadioButton) view.findViewById(R.id.radio_button_answer_editor_correct);
         radioButtonAnswerIncorrect = (RadioButton) view.findViewById(R.id.radio_button_answer_editor_incorrect);
@@ -184,8 +181,14 @@ public class FragmentFlashCard extends Fragment implements View.OnClickListener 
 
         if (flashCard.getQuestion().getUri() != null && flashCard.getQuestion().getUri().toString() != "") {
 
+            if (flashCard.getQuestion().getUri().toString().contains("youtube")) {
+                imageViewPlay.setVisibility(View.VISIBLE);
+                imageViewPlay.setOnClickListener(this);
+            }
+
             ProcessorImage.download(flashCard.getQuestion().getUri().toString(), imageViewUri, flashCard.getQuestion().getId(), "_question");
         }
+
 
         if (!isUpToDate) {
 
@@ -431,13 +434,16 @@ public class FragmentFlashCard extends Fragment implements View.OnClickListener 
                 editTextAnswerHint.setText(null);
                 editTextAnswerUri.setText(null);
 
+                // hides the softkeyboard
                 InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
 
+                break;
 
+            case R.id.imageview_card_media_play:
 
-                //TODO async task save answer
-                //TODO async task reload answerlist
+                // starts the youtube player
+                getContext().startActivity(new Intent(Intent.ACTION_VIEW,flashCard.getQuestion().getUri()));
                 break;
         }
     }

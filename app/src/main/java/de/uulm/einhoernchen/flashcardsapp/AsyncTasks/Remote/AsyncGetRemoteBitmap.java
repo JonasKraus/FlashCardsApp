@@ -65,6 +65,8 @@ public class AsyncGetRemoteBitmap extends AsyncTask<String, Void, Bitmap> {
             url = "https://img.youtube.com/vi/" + parts[1] + "/0.jpg";
         }
 
+        Log.d("back call to", url);
+
         final AndroidHttpClient client = AndroidHttpClient.newInstance("Android");
         final HttpGet getRequest = new HttpGet(url);
 

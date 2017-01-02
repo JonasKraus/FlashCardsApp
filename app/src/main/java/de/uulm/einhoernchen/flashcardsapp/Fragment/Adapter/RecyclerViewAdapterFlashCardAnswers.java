@@ -3,7 +3,6 @@ package de.uulm.einhoernchen.flashcardsapp.Fragment.Adapter;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
-import android.media.MediaPlayer;
 import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -11,10 +10,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.MediaController;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.VideoView;
 
 import java.util.List;
 
@@ -219,8 +216,8 @@ public class RecyclerViewAdapterFlashCardAnswers extends RecyclerView.Adapter<Re
 
                 @Override
                 public void onClick(View v) {
+
                     context.startActivity(new Intent(Intent.ACTION_VIEW,Uri.parse(uriString)));
-                    Log.i("Video", "Video Playing....");
                 }
             });
 
@@ -276,7 +273,7 @@ public class RecyclerViewAdapterFlashCardAnswers extends RecyclerView.Adapter<Re
             mDownvote = (ImageView) view.findViewById(R.id.button_down_vote);
 
             mediaImage = (ImageView) view.findViewById(R.id.imageview_answer_media);
-            mediaPlay = (ImageView) view.findViewById(R.id.imageview_answer_media_play);
+            mediaPlay = (ImageView) view.findViewById(R.id.imageview_card_media_play);
         }
 
         @Override
