@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -36,6 +37,8 @@ import java.util.List;
  */
 public class RecyclerViewAdapterFlashcards extends RecyclerView.Adapter<RecyclerViewAdapterFlashcards.ViewHolder> {
 
+    private static final int VIEW_TYPE_FOOTER = 1;
+    private static final int VIEW_TYPE_CELL = 2;
     private final List<FlashCard> flashCards;
     private final OnFragmentInteractionListenerFlashcard mListener;
     private final boolean isUpToDate;
@@ -54,20 +57,67 @@ public class RecyclerViewAdapterFlashcards extends RecyclerView.Adapter<Recycler
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.list_item_card, parent, false);
+
+        View view = null;
+
+        Log.d("view typ", viewType + "");
+
+        if (viewType == VIEW_TYPE_CELL) {
+
+            view = LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.list_item_card, parent, false);
+        }
+        else {
+
+            Log.d("view", "inlfate 1");
+            view = LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.add_flashcard, parent, false);
+        }
+
+
 
         return new ViewHolder(view);
     }
 
+
+    /**
+     * Checks if its the last item then returns a new type
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     * @since 2017-01-03
+     *
+     * @param position
+     * @return
+     */
+    @Override
+    public int getItemViewType(int position) {
+
+        // If last item then add type for the footer (add-Button)
+        return (position == flashCards.size()) ? VIEW_TYPE_FOOTER : VIEW_TYPE_CELL;
+    }
+
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
+
+        if (position >= flashCards.size()) {
+
+            holder.buttonAddCard.setOnClickListener(new View.OnClickListener(){
+
+                @Override
+                public void onClick(View v) {
+
+                    Log.d("click add", "start fragment");
+                }
+            });
+
+        } else {
+
         holder.mItem = flashCards.get(position);
         // holder.mIdView.setText(flashCards.get(position).getId()+""); TODO Wird das benötigt?
         holder.mContentView.setText(flashCards.get(position).getQuestion().getQuestionText());
         String authorName = flashCards.get(position).getAuthor() != null ? flashCards.get(position).getAuthor().getName() : "No Author";
 
-        holder.mAuthorView.setText(flashCards.get(position).getAuthor().getId() + " " +authorName); //TODO delete
+        holder.mAuthorView.setText(flashCards.get(position).getAuthor().getId() + " " + authorName); //TODO delete
         // holder.mGroupRatingView.setVisibility(View.INVISIBLE);
         holder.mCardRatingView.setText(flashCards.get(position).getRatingForView());
         holder.mDateView.setText(flashCards.get(position).getLastUpdatedString());
@@ -106,7 +156,7 @@ public class RecyclerViewAdapterFlashcards extends RecyclerView.Adapter<Recycler
 
         final long cardID = holder.mItem.getId();
         holder.mItem.setSelectionDate(db.getCardSelectionDate(cardID));
-        holder.imageView.setTag(holder.mItem.getSelectionDate()>0);
+        holder.imageView.setTag(holder.mItem.getSelectionDate() > 0);
 
         TextDrawable drawable;
 
@@ -129,12 +179,12 @@ public class RecyclerViewAdapterFlashcards extends RecyclerView.Adapter<Recycler
         /**
          * Sets the clicklistener for de/selecting a card
          */
-        holder.imageView.setOnClickListener(new View.OnClickListener(){
+        holder.imageView.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
                 //v.startAnimation(AnimationUtils.loadAnimation(v.getContext(), R.anim.card_flip_left_out));
-                
+
                 TextDrawable drawable;
 
                 // @TODO Set card as checked
@@ -156,6 +206,7 @@ public class RecyclerViewAdapterFlashcards extends RecyclerView.Adapter<Recycler
                 holder.imageView.setImageDrawable(drawable);
             }
         });
+    }
 
     }
 
@@ -229,7 +280,8 @@ public class RecyclerViewAdapterFlashcards extends RecyclerView.Adapter<Recycler
 
     @Override
     public int getItemCount() {
-        return flashCards.size();
+
+        return flashCards.size() +1;
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
@@ -246,6 +298,7 @@ public class RecyclerViewAdapterFlashcards extends RecyclerView.Adapter<Recycler
         public final ImageView imageViewUri; // Text icon
         public final ImageView mediaPlay; // VideoPlay Icon
         public final WebView webViewUri; // Text icon
+        public final Button buttonAddCard; // Text icon
 
         public FlashCard mItem;
 
@@ -266,6 +319,8 @@ public class RecyclerViewAdapterFlashcards extends RecyclerView.Adapter<Recycler
             imageViewUri = (ImageView) view.findViewById(R.id.image_view_question_uri);
             webViewUri = (WebView) view.findViewById(R.id.webview_answer_question);
             mediaPlay = (ImageView) view.findViewById(R.id.imageview_card_media_play);
+
+            buttonAddCard = (Button) view.findViewById(R.id.button_card_add);
         }
 
         @Override

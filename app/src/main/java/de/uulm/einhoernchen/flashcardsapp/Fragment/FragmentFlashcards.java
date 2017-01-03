@@ -6,10 +6,13 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 
 import java.util.List;
 
@@ -71,8 +74,21 @@ public class FragmentFlashcards extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_item_list, container, false);
+        View view = inflater.inflate(R.layout.fragment_item_list_cards, container, false);
 
+        RecyclerView mRecyclerView = (RecyclerView) view.findViewById(R.id.recycler_view_cards);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+
+        if (mColumnCount <= 1) {
+            mRecyclerView.setLayoutManager(new LinearLayoutManager(mRecyclerView.getContext()));
+        } else {
+            mRecyclerView.setLayoutManager(new GridLayoutManager(mRecyclerView.getContext(), mColumnCount));
+        }
+
+        // Set the view with the data
+        mRecyclerView.setAdapter(new RecyclerViewAdapterFlashcards(db, itemList, mListener, isUpToDate, mRecyclerView.getContext(), progressBar));
+
+        /*
         // Set the adapter
         if (view instanceof RecyclerView) {
             Context context = view.getContext();
@@ -86,6 +102,10 @@ public class FragmentFlashcards extends Fragment {
             // Set the view with the data
             recyclerView.setAdapter(new RecyclerViewAdapterFlashcards(db, itemList, mListener, isUpToDate, context, progressBar));
         }
+        */
+
+        Button button = (Button) view.findViewById(R.id.button_card_add);
+
         return view;
     }
 

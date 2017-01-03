@@ -58,6 +58,7 @@
 
 
     <string name="answer_add">add answer</string>
+    <string name="card_add">add card</string>
 
     <!-- General buttons -->
     <string name="save">save</string>
