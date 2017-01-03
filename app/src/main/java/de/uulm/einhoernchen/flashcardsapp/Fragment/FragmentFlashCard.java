@@ -290,7 +290,7 @@ public class FragmentFlashCard extends Fragment implements View.OnClickListener 
 
                 ProcessorImage.download(flashCard.getQuestion().getUri().toString(), imageViewUri, flashCard.getQuestion().getId(), "_question");
                 webViewUri.setVisibility(View.GONE);
-                imageViewPlay.setVisibility(View.VISIBLE);
+                imageViewPlay.setVisibility(uriString.contains("youtube") ? View.VISIBLE : View.GONE);
                 imageViewUri.setVisibility(View.VISIBLE);
 
             } else {
