@@ -578,13 +578,9 @@ public class MainActivity extends AppCompatActivity
     private void createFragmentFlashCard (FlashCard flashCard, boolean backPressed) {
 
         isServerAlive();
-        new ContentFlashCard().collectItemFromDb(flashCard.getId(), getSupportFragmentManager(), progressBar, backPressed, db);
-        new ContentFlashCardAnswers().collectItemsFromDb(flashCard.getId(), getSupportFragmentManager(), progressBar, backPressed, db);
 
         if (isNetworkAvailable() && isAlive) {
             new  ContentFlashCard().collectItemFromServer(flashCard.getId(), getSupportFragmentManager(), progressBar, backPressed, db);
-            new  ContentFlashCardAnswers().collectItemsFromServer(flashCard.getId(), getSupportFragmentManager(), progressBar, backPressed, db);
-
         }
 
         this.currentFlashCard = flashCard;

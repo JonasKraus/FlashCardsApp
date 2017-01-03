@@ -161,6 +161,8 @@ public class FragmentFlashCard extends Fragment implements View.OnClickListener 
         listview.setAdapter(adapter);
         */
 
+        new ContentFlashCardAnswers().collectItemsFromServer(flashCard.getId(), getFragmentManager(), progressBar, false, db);
+
 
         mIdView = (TextView) view.findViewById(R.id.id);
         mContentView = (TextView) view.findViewById(R.id.content);
@@ -603,7 +605,6 @@ public class FragmentFlashCard extends Fragment implements View.OnClickListener 
                 task.execute();
 
                 new ContentFlashCard().collectItemFromServer(flashCard.getId(), getFragmentManager(), progressBar, false, db);
-
 
                 break;
         }
