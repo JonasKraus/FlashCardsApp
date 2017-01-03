@@ -207,7 +207,16 @@ public class RecyclerViewAdapterFlashcards extends RecyclerView.Adapter<Recycler
 
             progressBar.setVisibility(View.VISIBLE);
 
-            holder.webViewUri.setWebViewClient(new WebViewClient());
+            holder.webViewUri.setWebViewClient(new WebViewClient() {
+
+                public void onPageFinished(WebView view, String url) {
+
+                    if (progressBar.isShown()) {
+                        progressBar.setVisibility(View.GONE);
+                    }
+                }
+
+            });
             holder.webViewUri.loadUrl(uriString);
         }
 
