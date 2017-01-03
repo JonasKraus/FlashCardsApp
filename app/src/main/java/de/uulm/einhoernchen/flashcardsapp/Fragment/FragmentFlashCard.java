@@ -1,17 +1,23 @@
 package de.uulm.einhoernchen.flashcardsapp.Fragment;
 
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -72,6 +78,8 @@ public class FragmentFlashCard extends Fragment implements View.OnClickListener 
     private ImageView imageViewEditQuestion;
     private ImageView imageViewSaveQuestion;
 
+    private WebView webViewUri;
+
     private Button buttonAddAnswer;
     private Button buttonAnswerEditorSave;
 
@@ -90,6 +98,7 @@ public class FragmentFlashCard extends Fragment implements View.OnClickListener 
     private RadioButton radioButtonAnswerIncorrect;
 
     private ProgressBar progressBar;
+    private ProgressDialog progressBarWebView;
 
     public FragmentFlashCard() {
         // Required empty public constructor
@@ -164,6 +173,8 @@ public class FragmentFlashCard extends Fragment implements View.OnClickListener 
 
         imageViewUri = (ImageView) view.findViewById(R.id.image_view_question_uri);
 
+        webViewUri = (WebView) view.findViewById(R.id.webview_card_question);
+
         imageViewVoteDown = (ImageView) view.findViewById(R.id.button_down_vote);
         imageViewVoteUp = (ImageView) view.findViewById(R.id.button_up_vote);
 
@@ -212,12 +223,51 @@ public class FragmentFlashCard extends Fragment implements View.OnClickListener 
 
         if (flashCard.getQuestion().getUri() != null && flashCard.getQuestion().getUri().toString() != "") {
 
-            if (flashCard.getQuestion().getUri().toString().contains("youtube")) {
+            String uriString = flashCard.getQuestion().getUri().toString().toLowerCase();
+
+            if (uriString.contains("youtube")) {
+
                 imageViewPlay.setVisibility(View.VISIBLE);
                 imageViewPlay.setOnClickListener(this);
             }
 
-            ProcessorImage.download(flashCard.getQuestion().getUri().toString(), imageViewUri, flashCard.getQuestion().getId(), "_question");
+            if (uriString.endsWith("jpg") || uriString.endsWith(".png") || uriString.contains("youtube")) {
+
+                ProcessorImage.download(flashCard.getQuestion().getUri().toString(), imageViewUri, flashCard.getQuestion().getId(), "_question");
+                webViewUri.setVisibility(View.GONE);
+                imageViewPlay.setVisibility(View.VISIBLE);
+                imageViewUri.setVisibility(View.VISIBLE);
+
+            } else {
+
+                webViewUri.setVisibility(View.VISIBLE);
+                imageViewPlay.setVisibility(View.GONE);
+                imageViewUri.setVisibility(View.GONE);
+
+                WebSettings settings = webViewUri.getSettings();
+                settings.setJavaScriptEnabled(true);
+                webViewUri.setScrollBarStyle(WebView.SCROLLBARS_OUTSIDE_OVERLAY);
+
+                progressBar.setVisibility(View.VISIBLE);
+
+                webViewUri.setWebViewClient(new WebViewClient() {
+
+                    public boolean shouldOverrideUrlLoading(WebView view, String url) {
+
+                        view.loadUrl(url);
+                        return true;
+                    }
+
+                    public void onPageFinished(WebView view, String url) {
+
+                        if (progressBar.isShown()) {
+                            progressBar.setVisibility(View.GONE);
+                        }
+                    }
+
+                });
+                webViewUri.loadUrl(uriString);
+            }
         }
 
 

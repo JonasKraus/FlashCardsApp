@@ -4,6 +4,17 @@
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <WebView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:id="@+id/webview_card_question">
+        </WebView>
+    </RelativeLayout>
+
 
     <RelativeLayout
         android:layout_marginTop="56dp"

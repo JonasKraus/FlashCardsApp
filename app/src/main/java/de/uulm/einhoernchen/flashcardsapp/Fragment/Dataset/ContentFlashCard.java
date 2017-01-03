@@ -125,6 +125,7 @@ public class ContentFlashCard {
                 fragment.setItem(flashCard);
                 fragment.setDb(db);
                 fragment.setUpToDate(isUpToDate);
+                fragment.setProgressBar(progressBar);
 
                 Bundle args = new Bundle();
                 args.putLong(FragmentFlashcards.ARG_PARENT_ID, flashcardId);
