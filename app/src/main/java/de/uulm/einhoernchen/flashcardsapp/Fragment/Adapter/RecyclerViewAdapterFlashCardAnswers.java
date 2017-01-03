@@ -254,9 +254,12 @@ public class RecyclerViewAdapterFlashCardAnswers extends RecyclerView.Adapter<Re
             holder.mediaPlay.setVisibility(View.GONE);
             holder.mediaImage.setVisibility(View.GONE);
 
-            if (!uriString.startsWith("https://") && !uriString.startsWith("http://")) {
+            if (!uriString.startsWith("https://") && !uriString.startsWith("http://") && !uriString.equals("")) {
 
                 uriString = "https://" + uriString;
+
+            } else if (uriString == null || uriString.equals("")) {
+                uriString = "http://134.60.51.72:9000/";
             }
 
             WebSettings settings = holder.webViewUri.getSettings();

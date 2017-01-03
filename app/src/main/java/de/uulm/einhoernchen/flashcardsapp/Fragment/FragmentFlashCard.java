@@ -299,9 +299,13 @@ public class FragmentFlashCard extends Fragment implements View.OnClickListener 
                 imageViewPlay.setVisibility(View.GONE);
                 imageViewUri.setVisibility(View.GONE);
 
-                if (!uriString.startsWith("https://") && !uriString.startsWith("http://")) {
+                if (!uriString.startsWith("https://") && !uriString.startsWith("http://") && !uriString.equals("")) {
 
                     uriString = "https://" + uriString;
+
+                } else if (uriString.equals("")) {
+
+                    uriString = "http://134.60.51.72:9000/";
                 }
 
                 WebSettings settings = webViewUri.getSettings();
