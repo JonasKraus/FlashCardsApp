@@ -206,6 +206,16 @@ public class RecyclerViewAdapterFlashCardAnswers extends RecyclerView.Adapter<Re
 
     }
 
+
+    /**
+     * Checks wich mediatype the answer has and sets its content
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     * @since 2016-01-02
+     *
+     * @param holder
+     * @param answer
+     */
     private void checkAnswerMediatype(ViewHolder holder, Answer answer) {
 
         //Log.d("answer uri", answer.getUri());
