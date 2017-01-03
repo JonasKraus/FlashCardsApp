@@ -2,6 +2,7 @@ package de.uulm.einhoernchen.flashcardsapp.Fragment.Dataset;
 
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
+import android.util.Log;
 import android.widget.ProgressBar;
 
 import de.uulm.einhoernchen.flashcardsapp.AsyncTasks.Local.AsyncGetLocalFlashCard;
@@ -62,7 +63,7 @@ public class ContentFlashCard {
 
                 FragmentFlashCard fragment = new FragmentFlashCard();
                 fragment.setProgressBar(progressBarMain);
-                fragment.setItem(ContentFlashCard.flashCard);
+                fragment.setItem(flashCard);
                 fragment.setDb(db);
                 fragment.setUpToDate(isUpToDate);
 

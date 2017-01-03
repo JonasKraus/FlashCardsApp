@@ -35,6 +35,7 @@ import de.uulm.einhoernchen.flashcardsapp.AsyncTasks.Remote.AsyncDeleteRemoteRat
 import de.uulm.einhoernchen.flashcardsapp.AsyncTasks.Remote.AsyncPatchRemoteCard;
 import de.uulm.einhoernchen.flashcardsapp.AsyncTasks.Remote.AsyncPostRemoteRating;
 import de.uulm.einhoernchen.flashcardsapp.Database.DbManager;
+import de.uulm.einhoernchen.flashcardsapp.Fragment.Dataset.ContentFlashCard;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.Dataset.ContentFlashCardAnswers;
 import de.uulm.einhoernchen.flashcardsapp.Models.FlashCard;
 import de.uulm.einhoernchen.flashcardsapp.R;
@@ -201,7 +202,6 @@ public class FragmentFlashCard extends Fragment implements View.OnClickListener 
 
         buttonAnswerEditorSave.setOnClickListener(this);
 
-        //mIdView.setText(flashCard.getId() + "");
         mContentView.setText(flashCard.getQuestion().getQuestionText());
         mAuthorView.setText(flashCard.getQuestion().getAuthor().getName());
         mCardRatingView.setText(flashCard.getRatingForView());
@@ -558,11 +558,33 @@ public class FragmentFlashCard extends Fragment implements View.OnClickListener 
 
                 // TODO Start async task to save answer
                 // TODO reload question
-                JSONObject jsonObject = new JSONObject();
+
+                JSONObject jsonObjectQuestion = new JSONObject();
+                JSONObject questionData = new JSONObject();
+                JSONObject author = new JSONObject();
+                JSONObject jsonUser = new JSONObject();
 
 
-                AsyncPatchRemoteCard task = new AsyncPatchRemoteCard(jsonObject, flashCard.getId());
+                try {
+
+                    jsonUser.put("userId", db.getLoggedInUser().getId());
+                    author.put("author", jsonUser);
+                    questionData.put("questionText", newQuestionText);
+                    questionData.put("mediaURI", newUri);
+                    jsonObjectQuestion.put("question", questionData);
+                    questionData.put("author", jsonUser);
+
+                } catch (JSONException e) {
+
+                    Log.d("Flascard", "init json for question update");
+                    e.printStackTrace();
+                }
+
+                AsyncPatchRemoteCard task = new AsyncPatchRemoteCard(jsonObjectQuestion, flashCard.getId());
                 task.execute();
+
+                new ContentFlashCard().collectItemFromServer(flashCard.getId(), getFragmentManager(), progressBar, false, db);
+
 
                 break;
         }
