@@ -14,6 +14,7 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -258,8 +259,9 @@ public class RecyclerViewAdapterFlashCardAnswers extends RecyclerView.Adapter<Re
 
                 uriString = "https://" + uriString;
 
-            } else if (uriString == null || uriString.equals("")) {
-                uriString = "http://134.60.51.72:9000/";
+            } else {
+
+                holder.relativeLayoutWebview.setVisibility(View.GONE);
             }
 
             WebSettings settings = holder.webViewUri.getSettings();
@@ -319,6 +321,7 @@ public class RecyclerViewAdapterFlashCardAnswers extends RecyclerView.Adapter<Re
         public final ImageView mediaImage; // Answer url image
         public Answer mItem;
         public final ImageView mediaPlay;
+        public final RelativeLayout relativeLayoutWebview;
         protected WebView webViewUri;
 
         public ViewHolder(View view) {
@@ -343,6 +346,7 @@ public class RecyclerViewAdapterFlashCardAnswers extends RecyclerView.Adapter<Re
             mediaPlay = (ImageView) view.findViewById(R.id.imageview_card_media_play);
 
             webViewUri = (WebView) view.findViewById(R.id.webview_answer_question);
+            relativeLayoutWebview = (RelativeLayout) view.findViewById(R.id.rl_answer_webview);
         }
 
         @Override

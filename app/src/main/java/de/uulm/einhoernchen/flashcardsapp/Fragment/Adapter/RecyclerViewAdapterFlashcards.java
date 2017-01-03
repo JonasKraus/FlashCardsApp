@@ -204,26 +204,10 @@ public class RecyclerViewAdapterFlashcards extends RecyclerView.Adapter<Recycler
 
             WebSettings settings = holder.webViewUri.getSettings();
             settings.setJavaScriptEnabled(true);
-            holder.webViewUri.setScrollBarStyle(WebView.SCROLLBARS_OUTSIDE_OVERLAY);
 
             progressBar.setVisibility(View.VISIBLE);
 
-            holder.webViewUri.setWebViewClient(new WebViewClient() {
-
-                public boolean shouldOverrideUrlLoading(WebView view, String url) {
-
-                    view.loadUrl(url);
-                    return true;
-                }
-
-                public void onPageFinished(WebView view, String url) {
-
-                    if (progressBar.isShown()) {
-                        progressBar.setVisibility(View.GONE);
-                    }
-                }
-
-            });
+            holder.webViewUri.setWebViewClient(new WebViewClient());
             holder.webViewUri.loadUrl(uriString);
         }
 
