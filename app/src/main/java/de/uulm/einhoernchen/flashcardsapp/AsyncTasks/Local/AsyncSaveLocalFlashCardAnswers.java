@@ -52,7 +52,11 @@ public class AsyncSaveLocalFlashCardAnswers extends AsyncTask<Long, Long, Void> 
 
     @Override
     protected Void doInBackground(Long... params) {
-        db.saveAnswers(answers, parentId);
+
+        if (answers != null) {
+
+            db.saveAnswers(answers, parentId);
+        }
 
         return null;
     }

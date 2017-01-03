@@ -9,7 +9,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -35,13 +39,15 @@ public class RecyclerViewAdapterFlashCardAnswers extends RecyclerView.Adapter<Re
     private final boolean isUpToDate;
     private final Context context;
     private final DbManager db;
+    private final ProgressBar progressBar;
 
-    public RecyclerViewAdapterFlashCardAnswers(DbManager db, List<Answer> items, OnFragmentInteractionListenerAnswer listener, boolean isUpToDate, Context context) {
+    public RecyclerViewAdapterFlashCardAnswers(DbManager db, List<Answer> items, OnFragmentInteractionListenerAnswer listener, boolean isUpToDate, Context context, ProgressBar progressBar) {
         answers = items;
         mListener = listener;
         this.isUpToDate = isUpToDate;
         this.context = context;
         this.db = db;
+        this.progressBar = progressBar;
     }
 
     @Override
@@ -204,7 +210,8 @@ public class RecyclerViewAdapterFlashCardAnswers extends RecyclerView.Adapter<Re
 
         //Log.d("answer uri", answer.getUri());
 
-        final String uriString = answer.getUri();
+        String uriString = answer.getUri();
+        final String uriStringFinal = uriString;
 
         boolean isImage = false;
         boolean isVideo = false;
@@ -226,15 +233,50 @@ public class RecyclerViewAdapterFlashCardAnswers extends RecyclerView.Adapter<Re
                 @Override
                 public void onClick(View v) {
 
-                    context.startActivity(new Intent(Intent.ACTION_VIEW,Uri.parse(uriString)));
+                    context.startActivity(new Intent(Intent.ACTION_VIEW,Uri.parse(uriStringFinal)));
                 }
             });
 
 
+        } else {
+
+            holder.webViewUri.setVisibility(View.VISIBLE);
+            holder.mediaPlay.setVisibility(View.GONE);
+            holder.mediaImage.setVisibility(View.GONE);
+
+            if (!uriString.startsWith("https://") && !uriString.startsWith("http://")) {
+
+                uriString = "https://" + uriString;
+            }
+
+            WebSettings settings = holder.webViewUri.getSettings();
+            settings.setJavaScriptEnabled(true);
+            holder.webViewUri.setScrollBarStyle(WebView.SCROLLBARS_OUTSIDE_OVERLAY);
+
+            progressBar.setVisibility(View.VISIBLE);
+
+            holder.webViewUri.setWebViewClient(new WebViewClient() {
+
+                public boolean shouldOverrideUrlLoading(WebView view, String url) {
+
+                    view.loadUrl(url);
+                    return true;
+                }
+
+                public void onPageFinished(WebView view, String url) {
+
+                    if (progressBar.isShown()) {
+                        progressBar.setVisibility(View.GONE);
+                    }
+                }
+
+            });
+            holder.webViewUri.loadUrl(uriString);
         }
 
         holder.mediaImage.setVisibility(isImage ? View.VISIBLE : View.GONE);
         holder.mediaPlay.setVisibility(uriString.contains("youtube") ? View.VISIBLE : View.GONE);
+        holder.webViewUri.setVisibility(!isImage && !isVideo ? View.VISIBLE : View.GONE);
 
 
     }
@@ -264,6 +306,7 @@ public class RecyclerViewAdapterFlashCardAnswers extends RecyclerView.Adapter<Re
         public final ImageView mediaImage; // Answer url image
         public Answer mItem;
         public final ImageView mediaPlay;
+        private WebView webViewUri;
 
         public ViewHolder(View view) {
             super(view);
@@ -285,6 +328,8 @@ public class RecyclerViewAdapterFlashCardAnswers extends RecyclerView.Adapter<Re
 
             mediaImage = (ImageView) view.findViewById(R.id.imageview_answer_media);
             mediaPlay = (ImageView) view.findViewById(R.id.imageview_card_media_play);
+
+            webViewUri = (WebView) view.findViewById(R.id.webview_answer_question);
         }
 
         @Override

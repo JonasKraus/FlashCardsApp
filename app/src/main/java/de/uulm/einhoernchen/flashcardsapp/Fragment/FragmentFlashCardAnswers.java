@@ -9,6 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 
 import java.util.List;
 
@@ -19,6 +20,7 @@ import de.uulm.einhoernchen.flashcardsapp.Fragment.Interfaces.OnFragmentInteract
 import de.uulm.einhoernchen.flashcardsapp.Models.Answer;
 import de.uulm.einhoernchen.flashcardsapp.Models.Category;
 import de.uulm.einhoernchen.flashcardsapp.R;
+import de.uulm.einhoernchen.flashcardsapp.Util.ProcessorImage;
 
 /**
  * A fragment representing a list of Category Items.
@@ -33,6 +35,7 @@ public class FragmentFlashCardAnswers extends Fragment {
     private List<Answer> itemList;
     private DbManager db;
     private boolean isUpToDate;
+    private ProgressBar progressBar;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -79,7 +82,7 @@ public class FragmentFlashCardAnswers extends Fragment {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
 
-            recyclerView.setAdapter(new RecyclerViewAdapterFlashCardAnswers(db, itemList, mListener, isUpToDate, context));
+            recyclerView.setAdapter(new RecyclerViewAdapterFlashCardAnswers(db, itemList, mListener, isUpToDate, context, progressBar));
         }
         return view;
     }
@@ -112,4 +115,6 @@ public class FragmentFlashCardAnswers extends Fragment {
     public void setUpToDate(boolean isUpToDate) {
         this.isUpToDate = isUpToDate;
     }
+
+    public void setProgressBar(ProgressBar progressBar) { this.progressBar = progressBar; }
 }

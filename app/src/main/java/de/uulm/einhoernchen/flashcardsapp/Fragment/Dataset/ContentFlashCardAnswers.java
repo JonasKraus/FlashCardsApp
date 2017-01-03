@@ -44,7 +44,7 @@ public class ContentFlashCardAnswers {
      * @param fragmentManager
      * @param progressBarMain
      */
-    public void collectItemsFromServer(final long parentId, final FragmentManager fragmentManager, ProgressBar progressBarMain, final boolean backPressed, final DbManager db) {
+    public void collectItemsFromServer(final long parentId, final FragmentManager fragmentManager, final ProgressBar progressBarMain, final boolean backPressed, final DbManager db) {
 
         this.db = db;
 
@@ -66,6 +66,7 @@ public class ContentFlashCardAnswers {
                 fragment.setItemList(answers);
                 fragment.setDb(db);
                 fragment.setUpToDate(isUpToDate);
+                fragment.setProgressBar(progressBarMain);
 
                 Bundle args = new Bundle();
                 args.putLong(FragmentFlashcards.ARG_PARENT_ID, parentId);
@@ -126,6 +127,7 @@ public class ContentFlashCardAnswers {
                 fragment.setItemList(answers);
                 fragment.setDb(db);
                 fragment.setUpToDate(isUpToDate);
+                fragment.setProgressBar(progressBar);
 
                 Bundle args = new Bundle();
                 args.putLong(FragmentFlashcards.ARG_PARENT_ID, parentId);

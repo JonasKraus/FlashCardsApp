@@ -220,56 +220,7 @@ public class FragmentFlashCard extends Fragment implements View.OnClickListener 
 
         }
 
-
-        if (flashCard.getQuestion().getUri() != null && flashCard.getQuestion().getUri().toString() != "") {
-
-            String uriString = flashCard.getQuestion().getUri().toString().toLowerCase();
-
-            if (uriString.contains("youtube")) {
-
-                imageViewPlay.setVisibility(View.VISIBLE);
-                imageViewPlay.setOnClickListener(this);
-            }
-
-            if (uriString.endsWith("jpg") || uriString.endsWith(".png") || uriString.contains("youtube")) {
-
-                ProcessorImage.download(flashCard.getQuestion().getUri().toString(), imageViewUri, flashCard.getQuestion().getId(), "_question");
-                webViewUri.setVisibility(View.GONE);
-                imageViewPlay.setVisibility(View.VISIBLE);
-                imageViewUri.setVisibility(View.VISIBLE);
-
-            } else {
-
-                webViewUri.setVisibility(View.VISIBLE);
-                imageViewPlay.setVisibility(View.GONE);
-                imageViewUri.setVisibility(View.GONE);
-
-                WebSettings settings = webViewUri.getSettings();
-                settings.setJavaScriptEnabled(true);
-                webViewUri.setScrollBarStyle(WebView.SCROLLBARS_OUTSIDE_OVERLAY);
-
-                progressBar.setVisibility(View.VISIBLE);
-
-                webViewUri.setWebViewClient(new WebViewClient() {
-
-                    public boolean shouldOverrideUrlLoading(WebView view, String url) {
-
-                        view.loadUrl(url);
-                        return true;
-                    }
-
-                    public void onPageFinished(WebView view, String url) {
-
-                        if (progressBar.isShown()) {
-                            progressBar.setVisibility(View.GONE);
-                        }
-                    }
-
-                });
-                webViewUri.loadUrl(uriString);
-            }
-        }
-
+        setMedia();
 
         if (!isUpToDate) {
 
@@ -316,6 +267,70 @@ public class FragmentFlashCard extends Fragment implements View.OnClickListener 
 
     }
 
+
+    /**
+     * Sets the mediatype and content
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     * @since 2017-01-03
+     */
+    private void setMedia() {
+
+        if (flashCard.getQuestion().getUri() != null && flashCard.getQuestion().getUri().toString() != "") {
+
+            String uriString = flashCard.getQuestion().getUri().toString().toLowerCase();
+
+            if (uriString.contains("youtube")) {
+
+                imageViewPlay.setVisibility(View.VISIBLE);
+                imageViewPlay.setOnClickListener(this);
+            }
+
+            if (uriString.endsWith("jpg") || uriString.endsWith(".png") || uriString.contains("youtube")) {
+
+                ProcessorImage.download(flashCard.getQuestion().getUri().toString(), imageViewUri, flashCard.getQuestion().getId(), "_question");
+                webViewUri.setVisibility(View.GONE);
+                imageViewPlay.setVisibility(View.VISIBLE);
+                imageViewUri.setVisibility(View.VISIBLE);
+
+            } else {
+
+                webViewUri.setVisibility(View.VISIBLE);
+                imageViewPlay.setVisibility(View.GONE);
+                imageViewUri.setVisibility(View.GONE);
+
+                if (!uriString.startsWith("https://") && !uriString.startsWith("http://")) {
+
+                    uriString = "https://" + uriString;
+                }
+
+                WebSettings settings = webViewUri.getSettings();
+                settings.setJavaScriptEnabled(true);
+                webViewUri.setScrollBarStyle(WebView.SCROLLBARS_OUTSIDE_OVERLAY);
+
+                progressBar.setVisibility(View.VISIBLE);
+
+                webViewUri.setWebViewClient(new WebViewClient() {
+
+                    public boolean shouldOverrideUrlLoading(WebView view, String url) {
+
+                        view.loadUrl(url);
+                        return true;
+                    }
+
+                    public void onPageFinished(WebView view, String url) {
+
+                        if (progressBar.isShown()) {
+                            progressBar.setVisibility(View.GONE);
+                        }
+                    }
+
+                });
+                webViewUri.loadUrl(uriString);
+            }
+        }
+
+    }
 
 
     /**
