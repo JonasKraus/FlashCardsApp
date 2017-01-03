@@ -21,14 +21,40 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
-
-            <ImageView
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="242dp"
-                android:id="@+id/image_view_question_uri"
-                android:src="@color/cardview_dark_background" />
+                android:layout_height="match_parent">
+                <WebView
+                    android:layout_width="match_parent"
+                    android:layout_height="242dp"
+                    android:visibility="gone"
+                    android:id="@+id/webview_answer_question">
+                </WebView>
+            </RelativeLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_weight="1"
+                android:id="@+id/ll_answer_media">
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="242dp"
+                    android:visibility="gone"
+                    android:id="@+id/image_view_question_uri"/>
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="-150dp"
+                    android:visibility="gone"
+                    android:src="@drawable/ic_play_circle_outline"
+                    android:id="@+id/imageview_card_media_play"/>
+            </LinearLayout>
         </LinearLayout>
 
         <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"

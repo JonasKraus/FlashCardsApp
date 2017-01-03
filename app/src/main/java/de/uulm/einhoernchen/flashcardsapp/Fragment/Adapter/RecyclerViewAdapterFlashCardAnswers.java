@@ -316,7 +316,7 @@ public class RecyclerViewAdapterFlashCardAnswers extends RecyclerView.Adapter<Re
         public final ImageView mediaImage; // Answer url image
         public Answer mItem;
         public final ImageView mediaPlay;
-        private WebView webViewUri;
+        protected WebView webViewUri;
 
         public ViewHolder(View view) {
             super(view);

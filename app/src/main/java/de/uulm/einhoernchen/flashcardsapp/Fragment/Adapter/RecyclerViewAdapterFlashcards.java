@@ -1,13 +1,19 @@
 package de.uulm.einhoernchen.flashcardsapp.Fragment.Adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
+import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.amulyakhare.textdrawable.TextDrawable;
@@ -16,7 +22,9 @@ import com.amulyakhare.textdrawable.util.ColorGenerator;
 import de.uulm.einhoernchen.flashcardsapp.Database.DbManager;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.Dataset.DummyContent.DummyItem;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.Interfaces.OnFragmentInteractionListenerFlashcard;
+import de.uulm.einhoernchen.flashcardsapp.Models.Answer;
 import de.uulm.einhoernchen.flashcardsapp.Models.FlashCard;
+import de.uulm.einhoernchen.flashcardsapp.Models.Question;
 import de.uulm.einhoernchen.flashcardsapp.R;
 import de.uulm.einhoernchen.flashcardsapp.Util.ProcessorImage;
 
@@ -33,13 +41,15 @@ public class RecyclerViewAdapterFlashcards extends RecyclerView.Adapter<Recycler
     private final boolean isUpToDate;
     private final DbManager db;
     private final Context context;
+    private final ProgressBar progressBar;
 
-    public RecyclerViewAdapterFlashcards(DbManager db, List<FlashCard> items, OnFragmentInteractionListenerFlashcard listener, boolean isUpToDate, Context context) {
+    public RecyclerViewAdapterFlashcards(DbManager db, List<FlashCard> items, OnFragmentInteractionListenerFlashcard listener, boolean isUpToDate, Context context, ProgressBar progressBar) {
         flashCards = items;
         mListener = listener;
         this.isUpToDate = isUpToDate;
         this.db = db;
         this.context = context;
+        this.progressBar = progressBar;
     }
 
     @Override
@@ -64,11 +74,7 @@ public class RecyclerViewAdapterFlashcards extends RecyclerView.Adapter<Recycler
         holder.mBookmarkView.setVisibility(View.VISIBLE);
         // holder.misCorrectView.setImageDrawable(// TODO set if marked);
 
-
-        if (holder.mItem.getQuestion().getUri() != null && holder.mItem.getQuestion().getUri().toString() != "") {
-
-            ProcessorImage.download(holder.mItem.getQuestion().getUri().toString(), holder.imageViewUri, holder.mItem.getQuestion().getId(), "_question");
-        }
+        checkAnswerMediatype(holder, flashCards.get(position).getQuestion());
 
         if (!isUpToDate) {
 
@@ -153,6 +159,78 @@ public class RecyclerViewAdapterFlashcards extends RecyclerView.Adapter<Recycler
 
     }
 
+
+    /**
+     * checks which type the media uri has and sets the content
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     * @since 2017-01-03
+     *
+     * @param holder
+     * @param question
+     */
+    private void checkAnswerMediatype(ViewHolder holder, Question question) {
+
+        String uriString = question.getUri().toString();
+        final String uriStringFinal = uriString;
+
+        boolean isImage = false;
+        boolean isVideo = false;
+        boolean isAudio = false;
+
+        if (uriString.toLowerCase().endsWith(".png") || uriString.toLowerCase().endsWith(".jpg")) {
+
+            ProcessorImage.download(uriString, holder.imageViewUri, question.getId(), "_question" );
+            isImage = true;
+
+        } else if (uriString.contains("youtube")) {
+
+            ProcessorImage.download(uriString, holder.imageViewUri, question.getId(), "_question" );
+            isImage = true;
+            isVideo = true;
+
+
+        } else {
+
+            holder.webViewUri.setVisibility(View.VISIBLE);
+            holder.imageViewUri.setVisibility(View.GONE);
+
+            if (!uriString.startsWith("https://") && !uriString.startsWith("http://")) {
+
+                uriString = "https://" + uriString;
+            }
+
+            WebSettings settings = holder.webViewUri.getSettings();
+            settings.setJavaScriptEnabled(true);
+            holder.webViewUri.setScrollBarStyle(WebView.SCROLLBARS_OUTSIDE_OVERLAY);
+
+            progressBar.setVisibility(View.VISIBLE);
+
+            holder.webViewUri.setWebViewClient(new WebViewClient() {
+
+                public boolean shouldOverrideUrlLoading(WebView view, String url) {
+
+                    view.loadUrl(url);
+                    return true;
+                }
+
+                public void onPageFinished(WebView view, String url) {
+
+                    if (progressBar.isShown()) {
+                        progressBar.setVisibility(View.GONE);
+                    }
+                }
+
+            });
+            holder.webViewUri.loadUrl(uriString);
+        }
+
+        holder.imageViewUri.setVisibility(isImage ? View.VISIBLE : View.GONE);
+        holder.mediaPlay.setVisibility(uriString.contains("youtube") ? View.VISIBLE : View.GONE);
+        holder.webViewUri.setVisibility(!isImage && !isVideo ? View.VISIBLE : View.GONE);
+
+
+    }
+
     @Override
     public int getItemCount() {
         return flashCards.size();
@@ -170,6 +248,9 @@ public class RecyclerViewAdapterFlashcards extends RecyclerView.Adapter<Recycler
         public final ImageView mLocalView;
         public final ImageView imageView; // Text icon
         public final ImageView imageViewUri; // Text icon
+        public final ImageView mediaPlay; // VideoPlay Icon
+        public final WebView webViewUri; // Text icon
+
         public FlashCard mItem;
 
         public ViewHolder(View view) {
@@ -187,6 +268,8 @@ public class RecyclerViewAdapterFlashcards extends RecyclerView.Adapter<Recycler
 
             imageView = (ImageView) view.findViewById(R.id.image_view_round_icon);
             imageViewUri = (ImageView) view.findViewById(R.id.image_view_question_uri);
+            webViewUri = (WebView) view.findViewById(R.id.webview_answer_question);
+            mediaPlay = (ImageView) view.findViewById(R.id.imageview_card_media_play);
         }
 
         @Override
