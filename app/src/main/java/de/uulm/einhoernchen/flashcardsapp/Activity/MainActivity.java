@@ -53,6 +53,7 @@ import de.uulm.einhoernchen.flashcardsapp.Models.FlashCard;
 import de.uulm.einhoernchen.flashcardsapp.Models.User;
 import de.uulm.einhoernchen.flashcardsapp.R;
 import de.uulm.einhoernchen.flashcardsapp.Consts.Constants;
+import de.uulm.einhoernchen.flashcardsapp.Util.ProcessConnectivity;
 import de.uulm.einhoernchen.flashcardsapp.Util.ProcessorImage;
 import de.uulm.einhoernchen.flashcardsapp.Util.PermissionManager;
 
@@ -578,10 +579,10 @@ public class MainActivity extends AppCompatActivity
     private void setFlashcardList(boolean backPressed) {
 
         isServerAlive();
-        new ContentFlashCards().collectItemsFromDb(this.childrenId, getSupportFragmentManager(), progressBar, backPressed, db);
+        new ContentFlashCards().collectItemsFromDb(this.childrenId, getSupportFragmentManager(), progressBar, backPressed, db, context);
 
         if (isNetworkAvailable() && isAlive) {
-            new ContentFlashCards().collectItemsFromServer(this.childrenId, getSupportFragmentManager(), progressBar, backPressed, db);
+            new ContentFlashCards().collectItemsFromServer(this.childrenId, getSupportFragmentManager(), progressBar, backPressed, db, context);
         }
 
         catalogueState = Constants.FLASH_CARD_LIST;
@@ -590,10 +591,10 @@ public class MainActivity extends AppCompatActivity
     private void setCarddeckList(boolean backPressed) {
 
         isServerAlive();
-        new ContentCarddecks().collectItemsFromDb(this.childrenId, getSupportFragmentManager(), progressBar, backPressed, db);
+        new ContentCarddecks().collectItemsFromDb(this.childrenId, getSupportFragmentManager(), progressBar, backPressed, db, context);
 
         if (isNetworkAvailable() && isAlive) {
-            new ContentCarddecks().collectItemsFromServer(this.childrenId, getSupportFragmentManager(), progressBar, backPressed, db);
+            new ContentCarddecks().collectItemsFromServer(this.childrenId, getSupportFragmentManager(), progressBar, backPressed, db, context);
         }
 
         catalogueState = Constants.CARD_DECK_LIST;
@@ -602,10 +603,10 @@ public class MainActivity extends AppCompatActivity
     private void setCategoryList(boolean backPressed) {
 
         isServerAlive();
-        new ContentCategories().collectItemsFromDb(this.categoryLevel, this.childrenId, getSupportFragmentManager(), progressBar, backPressed, db);
+        new ContentCategories().collectItemsFromDb(this.categoryLevel, this.childrenId, getSupportFragmentManager(), progressBar, backPressed, db, context);
 
         if (isNetworkAvailable() && isAlive) {
-            new ContentCategories().collectItemsFromServer(this.categoryLevel, this.childrenId, getSupportFragmentManager(), progressBar, backPressed, db);
+            new ContentCategories().collectItemsFromServer(this.categoryLevel, this.childrenId, getSupportFragmentManager(), progressBar, backPressed, db, context);
 
         }
 
@@ -620,7 +621,7 @@ public class MainActivity extends AppCompatActivity
 
         if (isNetworkAvailable() && isAlive) {
 
-            new  ContentFlashCard().collectItemFromServer(flashCard.getId(), getSupportFragmentManager(), progressBar, backPressed, db);
+            new  ContentFlashCard().collectItemFromServer(flashCard.getId(), getSupportFragmentManager(), progressBar, backPressed, db, context);
         } else {
 
             new  ContentFlashCard().collectItemFromDb(flashCard.getId(), getSupportFragmentManager(), progressBar, backPressed, db);
@@ -645,9 +646,11 @@ public class MainActivity extends AppCompatActivity
     }
 
     private boolean isNetworkAvailable() {
+
         ConnectivityManager connectivityManager
                 = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 
@@ -669,7 +672,10 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
-        asyncGetRemoteHeartbeat.execute();
+        if (ProcessConnectivity.isOk(context)) {
+
+            asyncGetRemoteHeartbeat.execute();
+        }
     }
 
     private void setAlive (boolean isAlive) {

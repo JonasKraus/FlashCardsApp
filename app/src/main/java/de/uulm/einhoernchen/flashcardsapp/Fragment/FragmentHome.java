@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import de.uulm.einhoernchen.flashcardsapp.AsyncTasks.Remote.AsyncGetRemoteHeartbeat;
 import de.uulm.einhoernchen.flashcardsapp.R;
+import de.uulm.einhoernchen.flashcardsapp.Util.ProcessConnectivity;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -56,7 +57,8 @@ public class FragmentHome extends Fragment {
     }
     public FragmentHome() {
         // Required empty public constructor
-        isServerAlive();
+
+        // TODO check with broadcast isAlive = ProcessConnectivity.isOk(getContext());
     }
 
     @Override
@@ -73,7 +75,7 @@ public class FragmentHome extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        isServerAlive();
+        isAlive = ProcessConnectivity.isOk(getContext());
 
         View view = inflater.inflate(R.layout.fragment_home, container, false);
 
@@ -124,31 +126,4 @@ public class FragmentHome extends Fragment {
         void onFragmentInteraction(Uri uri);
     }
 
-
-    /**
-     * Call this before any async task that requests the server
-     *
-     * @author Jonas Kraus jonas.kraus@uni-ulm.de
-     * @since 2016-12-03
-     */
-    private void isServerAlive () {
-
-        AsyncGetRemoteHeartbeat asyncGetRemoteHeartbeat = new AsyncGetRemoteHeartbeat(new AsyncGetRemoteHeartbeat.AsyncResponseHeartbeat() {
-
-            @Override
-            public void processFinish(Boolean isAlive) {
-
-                setAlive(isAlive);
-            }
-        });
-
-        asyncGetRemoteHeartbeat.execute();
-    }
-
-    private void setAlive (boolean isAlive) {
-
-        //isServerAlive();
-        textView.setText("Server is alive: " + this.isAlive);
-        this.isAlive = isAlive;
-    }
 }

@@ -27,6 +27,7 @@ import de.uulm.einhoernchen.flashcardsapp.Fragment.Dataset.DummyContent.DummyIte
 import de.uulm.einhoernchen.flashcardsapp.Fragment.Interfaces.OnFragmentInteractionListenerAnswer;
 import de.uulm.einhoernchen.flashcardsapp.Models.Answer;
 import de.uulm.einhoernchen.flashcardsapp.R;
+import de.uulm.einhoernchen.flashcardsapp.Util.ProcessConnectivity;
 import de.uulm.einhoernchen.flashcardsapp.Util.ProcessorImage;
 
 /**
@@ -150,12 +151,21 @@ public class RecyclerViewAdapterFlashCardAnswers extends RecyclerView.Adapter<Re
                     // Check if ratingExists and deletes it
                     if (ratingId != null) {
                         AsyncDeleteRemoteRating taskDelete = new AsyncDeleteRemoteRating(ratingId);
-                        taskDelete.execute();
+
+                        if (ProcessConnectivity.isOk(context)) {
+
+                            taskDelete.execute();
+                        }
+
                     }
 
 
                     AsyncPostRemoteRating task = new AsyncPostRemoteRating("answer", answerId, db.getLoggedInUser().getId(), -1, db);
-                    task.execute();
+
+                    if (ProcessConnectivity.isOk(context)) {
+
+                        task.execute();
+                    }
 
                     int rating = Integer.parseInt(holder.mCardRatingView.getText().toString());
                     rating -= 1 + lastVoting;
@@ -188,11 +198,19 @@ public class RecyclerViewAdapterFlashCardAnswers extends RecyclerView.Adapter<Re
                     if (ratingId != null) {
 
                         AsyncDeleteRemoteRating taskDelete = new AsyncDeleteRemoteRating(ratingId);
-                        taskDelete.execute();
+
+                        if (ProcessConnectivity.isOk(context)) {
+
+                            taskDelete.execute();
+                        }
                     }
 
                     AsyncPostRemoteRating task = new AsyncPostRemoteRating("answer", answerId, db.getLoggedInUser().getId(), 1, db);
-                    task.execute();
+
+                    if (ProcessConnectivity.isOk(context)) {
+
+                        task.execute();
+                    }
 
                     int rating = Integer.parseInt(holder.mCardRatingView.getText().toString());
                     rating += 1 - lastVoting;

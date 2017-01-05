@@ -1,5 +1,6 @@
 package de.uulm.einhoernchen.flashcardsapp.Fragment.Dataset;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.widget.ProgressBar;
@@ -15,6 +16,7 @@ import de.uulm.einhoernchen.flashcardsapp.Fragment.FragmentCarddecks;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.FragmentCategories;
 import de.uulm.einhoernchen.flashcardsapp.Models.Category;
 import de.uulm.einhoernchen.flashcardsapp.R;
+import de.uulm.einhoernchen.flashcardsapp.Util.ProcessConnectivity;
 
 /**
  * Helper class for providing sample content for user interfaces created by
@@ -27,7 +29,7 @@ public class ContentCategories {
     private static List<Category> categories = new ArrayList<>();
     private static boolean isUpToDate = false;
 
-    public void collectItemsFromServer(final int categoryLevel, final long parentId, final FragmentManager fragmentManager, ProgressBar progressBarMain, final boolean backPressed, final DbManager db) {
+    public void collectItemsFromServer(final int categoryLevel, final long parentId, final FragmentManager fragmentManager, ProgressBar progressBarMain, final boolean backPressed, final DbManager db, Context context) {
 
         AsyncGetRemoteCategories asyncGetCategory = new AsyncGetRemoteCategories(categoryLevel, parentId, new AsyncGetRemoteCategories.AsyncResponseRemoteCategories() {
 
@@ -71,11 +73,15 @@ public class ContentCategories {
         });
 
         asyncGetCategory.setProgressbar(progressBarMain);
-        asyncGetCategory.execute();
 
+        if (ProcessConnectivity.isOk(context)) {
+
+            asyncGetCategory.execute();
+        }
     }
 
-    public void collectItemsFromDb(final int categoryLevel, final long parentId, final FragmentManager supportFragmentManager, final ProgressBar progressBar, final boolean backPressed, final DbManager db) {
+
+    public void collectItemsFromDb(final int categoryLevel, final long parentId, final FragmentManager supportFragmentManager, final ProgressBar progressBar, final boolean backPressed, final DbManager db, Context context) {
 
         AsyncGetLocalCategories asyncGetLocalCategory = new AsyncGetLocalCategories(parentId, new AsyncGetLocalCategories.AsyncResponseLocalCategories() {
 

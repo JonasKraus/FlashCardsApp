@@ -290,6 +290,8 @@ public class ProcessorImage {
             } else {
 
                 AsyncGetRemoteBitmap task = new AsyncGetRemoteBitmap(imageView, id, appendix);
+
+                // TODO Connectivity check
                 task.execute(url);
             }
         }

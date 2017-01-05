@@ -1,5 +1,6 @@
 package de.uulm.einhoernchen.flashcardsapp.Fragment.Dataset;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.widget.ProgressBar;
@@ -15,6 +16,7 @@ import de.uulm.einhoernchen.flashcardsapp.Database.DbManager;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.FragmentCarddecks;
 import de.uulm.einhoernchen.flashcardsapp.Models.CardDeck;
 import de.uulm.einhoernchen.flashcardsapp.R;
+import de.uulm.einhoernchen.flashcardsapp.Util.ProcessConnectivity;
 
 /**
  * Helper class for providing sample content for user interfaces created by
@@ -26,6 +28,7 @@ public class ContentCarddecks {
     private static List<CardDeck> cardDecks = new ArrayList<>();
     private static boolean isUpToDate = false;
     private static DbManager db;
+    private static Context context;
 
     /**
      * @author Jonas Kraus jonas.kraus@uni-ulm.de
@@ -35,7 +38,7 @@ public class ContentCarddecks {
      * @param fragmentManager given by main activity
      *
      */
-    public void collectItemsFromServer(final long parentId, final FragmentManager fragmentManager, ProgressBar progressBarMain, final boolean backPressed, final DbManager db) {
+    public void collectItemsFromServer(final long parentId, final FragmentManager fragmentManager, ProgressBar progressBarMain, final boolean backPressed, final DbManager db, Context context) {
 
         this.db = db;
 
@@ -80,7 +83,11 @@ public class ContentCarddecks {
         });
 
         asyncGetCarddeck.setProgressbar(progressBarMain);
-        asyncGetCarddeck.execute();
+
+        if (ProcessConnectivity.isOk(context)) {
+
+            asyncGetCarddeck.execute();
+        }
 
     }
 
@@ -97,7 +104,7 @@ public class ContentCarddecks {
      * @param backPressed
      * @param db
      */
-    public void collectItemsFromDb(final long parentId, final FragmentManager supportFragmentManager, final ProgressBar progressBar, final boolean backPressed, final DbManager db) {
+    public void collectItemsFromDb(final long parentId, final FragmentManager supportFragmentManager, final ProgressBar progressBar, final boolean backPressed, final DbManager db, Context context) {
 
         this.db = db;
 
@@ -142,6 +149,7 @@ public class ContentCarddecks {
         asyncGetLocalCardDeck.setProgressbar(progressBar);
         asyncGetLocalCardDeck.setDbManager(db);
         asyncGetLocalCardDeck.execute();
+
 
     }
 

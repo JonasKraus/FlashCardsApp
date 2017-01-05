@@ -1,5 +1,6 @@
 package de.uulm.einhoernchen.flashcardsapp.Fragment.Dataset;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.util.Log;
@@ -14,6 +15,7 @@ import de.uulm.einhoernchen.flashcardsapp.Fragment.FragmentFlashCard;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.FragmentFlashcards;
 import de.uulm.einhoernchen.flashcardsapp.Models.FlashCard;
 import de.uulm.einhoernchen.flashcardsapp.R;
+import de.uulm.einhoernchen.flashcardsapp.Util.ProcessConnectivity;
 
 /**
  * Helper class for providing sample content for user interfaces created by
@@ -39,7 +41,7 @@ public class ContentFlashCard {
      * @param fragmentManager
      * @param progressBarMain
      */
-    public void collectItemFromServer(final long flashcardId, final FragmentManager fragmentManager, final ProgressBar progressBarMain, final boolean backPressed, final DbManager db) {
+    public void collectItemFromServer(final long flashcardId, final FragmentManager fragmentManager, final ProgressBar progressBarMain, final boolean backPressed, final DbManager db, Context context) {
 
         this.db = db;
 
@@ -93,7 +95,11 @@ public class ContentFlashCard {
         });
 
         asyncGetFlashCard.setProgressbar(progressBarMain);
-        asyncGetFlashCard.execute();
+
+        if (ProcessConnectivity.isOk(context)) {
+
+            asyncGetFlashCard.execute();
+        }
 
     }
 

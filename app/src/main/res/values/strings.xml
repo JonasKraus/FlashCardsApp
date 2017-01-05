@@ -72,6 +72,10 @@
     <string name="answer_editor_hint">hint</string>
     <string name="answer_editor_uri">uri</string>
 
+    <!-- Network -->
+    <string name="no_connection">You have no internet connection. Check either your wifi settings or your mobile data.</string>
+    <string name="service_unavailable">The service is currently unavailable.</string>+
+
 
 
 

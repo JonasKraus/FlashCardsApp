@@ -3,6 +3,7 @@ package de.uulm.einhoernchen.flashcardsapp.Activity;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
@@ -49,6 +50,7 @@ import de.uulm.einhoernchen.flashcardsapp.Consts.Routes;
 import de.uulm.einhoernchen.flashcardsapp.Database.DbManager;
 import de.uulm.einhoernchen.flashcardsapp.Models.User;
 import de.uulm.einhoernchen.flashcardsapp.R;
+import de.uulm.einhoernchen.flashcardsapp.Util.ProcessConnectivity;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -79,11 +81,15 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
     private String password;
 
+    private Context context;
+
     private DbManager db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        this.context = this;
 
         openDb();
 
@@ -227,6 +233,9 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
             showProgress(true);
+
+            final Context c = this.context;
+
             mAuthTask = new UserLoginTask(email, userName, password, new AsyncResponseId(){
 
                 @Override
@@ -241,13 +250,22 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                             startActivity(new Intent(LoginActivity.this, MainActivity.class));
                         }
                     });
-                    asyncGetUser.execute();
+
+                    if (ProcessConnectivity.isOk(context)) {
+
+                        asyncGetUser.execute();
+                    }
+
 
                 }
 
             });
             //TODO: give the string if sign in or create to async task
-            mAuthTask.execute((Void) null);
+
+            if (ProcessConnectivity.isOk(context)) {
+
+                mAuthTask.execute((Void) null);
+            }
         }
     }
 

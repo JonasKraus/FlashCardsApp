@@ -1,5 +1,6 @@
 package de.uulm.einhoernchen.flashcardsapp.Fragment.Dataset;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.widget.ProgressBar;
@@ -14,6 +15,7 @@ import de.uulm.einhoernchen.flashcardsapp.Database.DbManager;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.FragmentFlashcards;
 import de.uulm.einhoernchen.flashcardsapp.Models.FlashCard;
 import de.uulm.einhoernchen.flashcardsapp.R;
+import de.uulm.einhoernchen.flashcardsapp.Util.ProcessConnectivity;
 
 /**
  * Helper class for providing sample content for user interfaces created by
@@ -34,12 +36,12 @@ public class ContentFlashCards {
     /**
      * @author Jonas Kraus jonas.kraus@uni-ulm.de
      * @since 2016.08.25
-     *
-     * @param parentId
+     *@param parentId
      * @param fragmentManager
      * @param progressBarMain
+     * @param context
      */
-    public void collectItemsFromServer(final long parentId, final FragmentManager fragmentManager, final ProgressBar progressBarMain, final boolean backPressed, final DbManager db) {
+    public void collectItemsFromServer(final long parentId, final FragmentManager fragmentManager, final ProgressBar progressBarMain, final boolean backPressed, final DbManager db, Context context) {
 
         this.db = db;
 
@@ -94,8 +96,11 @@ public class ContentFlashCards {
         });
 
         asyncGetFlashCard.setProgressbar(progressBarMain);
-        asyncGetFlashCard.execute();
 
+        if (ProcessConnectivity.isOk(context)) {
+
+            asyncGetFlashCard.execute();
+        }
     }
 
 
@@ -104,14 +109,14 @@ public class ContentFlashCards {
      *
      * @author Jonas Kraus jonas.kraus@uni-ulm.de
      * @since 2016-12-02
-     *
-     * @param parentId
+     *@param parentId
      * @param supportFragmentManager
      * @param progressBar
      * @param backPressed
      * @param db
+     * @param context
      */
-    public void collectItemsFromDb(final long parentId, final FragmentManager supportFragmentManager, final ProgressBar progressBar, final boolean backPressed, final DbManager db) {
+    public void collectItemsFromDb(final long parentId, final FragmentManager supportFragmentManager, final ProgressBar progressBar, final boolean backPressed, final DbManager db, Context context) {
 
         this.db = db;
 

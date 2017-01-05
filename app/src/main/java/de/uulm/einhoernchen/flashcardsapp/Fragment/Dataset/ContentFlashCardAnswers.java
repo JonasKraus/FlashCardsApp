@@ -1,7 +1,9 @@
 package de.uulm.einhoernchen.flashcardsapp.Fragment.Dataset;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
+import android.util.Log;
 import android.widget.ProgressBar;
 
 import java.util.ArrayList;
@@ -19,6 +21,7 @@ import de.uulm.einhoernchen.flashcardsapp.Fragment.FragmentFlashcards;
 import de.uulm.einhoernchen.flashcardsapp.Models.Answer;
 import de.uulm.einhoernchen.flashcardsapp.Models.FlashCard;
 import de.uulm.einhoernchen.flashcardsapp.R;
+import de.uulm.einhoernchen.flashcardsapp.Util.ProcessConnectivity;
 
 /**
  * Helper class for providing sample content for user interfaces created by
@@ -44,7 +47,7 @@ public class ContentFlashCardAnswers {
      * @param fragmentManager
      * @param progressBarMain
      */
-    public void collectItemsFromServer(final long parentId, final FragmentManager fragmentManager, final ProgressBar progressBarMain, final boolean backPressed, final DbManager db) {
+    public void collectItemsFromServer(final long parentId, final FragmentManager fragmentManager, final ProgressBar progressBarMain, final boolean backPressed, final DbManager db, Context context) {
 
         this.db = db;
 
@@ -94,7 +97,11 @@ public class ContentFlashCardAnswers {
         });
 
         asyncGetFlashCardAnswers.setProgressbar(progressBarMain);
-        asyncGetFlashCardAnswers.execute();
+
+        if (ProcessConnectivity.isOk(context)) {
+
+            asyncGetFlashCardAnswers.execute();
+        }
 
     }
 
@@ -119,6 +126,8 @@ public class ContentFlashCardAnswers {
 
             @Override
             public void processFinish(List<Answer> answers) {
+
+                Log.d("getlocal", answers.get(0).toString());
 
                 ContentFlashCardAnswers.answers = answers;
                 isUpToDate = false;

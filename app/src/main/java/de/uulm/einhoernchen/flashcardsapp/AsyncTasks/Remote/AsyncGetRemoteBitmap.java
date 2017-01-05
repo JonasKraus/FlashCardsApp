@@ -71,7 +71,7 @@ public class AsyncGetRemoteBitmap extends AsyncTask<String, Void, Bitmap> {
         final HttpGet getRequest = new HttpGet(url);
 
         try {
-            HttpResponse response = client.execute(getRequest);
+            HttpResponse response = client.execute(getRequest); // TODO Connectivity check
             final int statusCode = response.getStatusLine().getStatusCode();
             if (statusCode != HttpStatus.SC_OK) {
                 Log.w("ImageDownloader", "Error " + statusCode + " while retrieving bitmap from " + url);
