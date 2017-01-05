@@ -8,6 +8,8 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.databind.JsonNode;
 
 
+import java.net.URI;
+
 import de.uulm.einhoernchen.flashcardsapp.Util.JsonKeys;
 
 
@@ -73,6 +75,23 @@ public class Question {
             Log.e("exeption parse uri", e.getMessage());
         }
         this.author = author;
+    }
+
+
+    /**
+     * Dummyconstructor
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     * @since 2017-01-03
+     *
+     * @param text
+     * @param uri
+     * @param loggedInUser
+     */
+    public Question(String text, String uri, User loggedInUser) {
+        this.questionText = text;
+        this.uri = Uri.parse(uri);
+        this.author = loggedInUser;
     }
 
     /**

@@ -86,7 +86,7 @@ public class FragmentFlashcards extends Fragment {
         }
 
         // Set the view with the data
-        mRecyclerView.setAdapter(new RecyclerViewAdapterFlashcards(db, itemList, mListener, isUpToDate, mRecyclerView.getContext(), progressBar));
+        mRecyclerView.setAdapter(new RecyclerViewAdapterFlashcards(db, itemList, mListener, isUpToDate, mRecyclerView.getContext(), progressBar, getFragmentManager()));
 
         /*
         // Set the adapter

@@ -74,7 +74,7 @@ public class AsyncPutRemoteCard extends AsyncTask<Long, Long, Long> {
 
         } catch (Exception e) {
 
-            Log.e("doInBack card patch", e.toString());
+            Log.e("doInBack card put", e.toString());
             System.out.println(e.toString());
             return null;
 

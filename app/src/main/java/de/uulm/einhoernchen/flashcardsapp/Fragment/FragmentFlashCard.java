@@ -33,12 +33,15 @@ import org.json.JSONObject;
 
 import de.uulm.einhoernchen.flashcardsapp.AsyncTasks.Remote.AsyncDeleteRemoteRating;
 import de.uulm.einhoernchen.flashcardsapp.AsyncTasks.Remote.AsyncPatchRemoteCard;
+import de.uulm.einhoernchen.flashcardsapp.AsyncTasks.Remote.AsyncPostRemoteCard;
 import de.uulm.einhoernchen.flashcardsapp.AsyncTasks.Remote.AsyncPostRemoteRating;
 import de.uulm.einhoernchen.flashcardsapp.Database.DbManager;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.Dataset.ContentFlashCard;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.Dataset.ContentFlashCardAnswers;
 import de.uulm.einhoernchen.flashcardsapp.Models.FlashCard;
+import de.uulm.einhoernchen.flashcardsapp.Models.Question;
 import de.uulm.einhoernchen.flashcardsapp.R;
+import de.uulm.einhoernchen.flashcardsapp.Util.JsonKeys;
 import de.uulm.einhoernchen.flashcardsapp.Util.ProcessorImage;
 
 
@@ -100,6 +103,7 @@ public class FragmentFlashCard extends Fragment implements View.OnClickListener 
 
     private ProgressBar progressBar;
     private ProgressDialog progressBarWebView;
+    private long carddeckId;
 
     public FragmentFlashCard() {
         // Required empty public constructor
@@ -161,8 +165,16 @@ public class FragmentFlashCard extends Fragment implements View.OnClickListener 
         listview.setAdapter(adapter);
         */
 
-        new ContentFlashCardAnswers().collectItemsFromServer(flashCard.getId(), getFragmentManager(), progressBar, false, db);
 
+        if (flashCard != null) {
+            new ContentFlashCardAnswers().collectItemsFromServer(flashCard.getId(), getFragmentManager(), progressBar, false, db);
+
+        } else {
+            this.flashCard = new FlashCard(db.getLoggedInUser(),null,new Question("","",db.getLoggedInUser()),false);
+        }
+
+        Log.d("onCreate", this.flashCard.toString());
+        Log.d("onCreate q", this.flashCard.getQuestion().toString());
 
         mIdView = (TextView) view.findViewById(R.id.id);
         mContentView = (TextView) view.findViewById(R.id.content);
@@ -457,9 +469,20 @@ public class FragmentFlashCard extends Fragment implements View.OnClickListener 
     }
 
     public void setItem(FlashCard flashCard) {
+
+        if (flashCard == null) {
+            this.flashCard = new FlashCard(db.getLoggedInUser(),null,new Question("","",db.getLoggedInUser()),false);
+        }
+
+        Log.d("set fla", (this.flashCard == null) + "");
+
         this.flashCard = flashCard;
     }
 
+    /**
+     * Important do call this bevore setItem
+     * @param db
+     */
     public void setDb(DbManager db) {
         this.db = db;
     }
@@ -588,12 +611,13 @@ public class FragmentFlashCard extends Fragment implements View.OnClickListener 
 
                 try {
 
-                    jsonUser.put("userId", db.getLoggedInUser().getId());
-                    author.put("author", jsonUser);
-                    questionData.put("questionText", newQuestionText);
-                    questionData.put("mediaURI", newUri);
-                    jsonObjectQuestion.put("question", questionData);
-                    questionData.put("author", jsonUser);
+                    jsonUser.put(JsonKeys.USER_ID, db.getLoggedInUser().getId());
+                    //author.put(JsonKeys.AUTHOR, jsonUser);
+                    questionData.put(JsonKeys.QUESTION_TEXT, newQuestionText);
+                    questionData.put(JsonKeys.URI, newUri);
+                    jsonObjectQuestion.put(JsonKeys.FLASHCARD_QUESTION, questionData);
+                    jsonObjectQuestion.put(JsonKeys.AUTHOR, jsonUser);
+                    questionData.put(JsonKeys.AUTHOR, jsonUser);
 
                 } catch (JSONException e) {
 
@@ -601,15 +625,27 @@ public class FragmentFlashCard extends Fragment implements View.OnClickListener 
                     e.printStackTrace();
                 }
 
-                AsyncPatchRemoteCard task = new AsyncPatchRemoteCard(jsonObjectQuestion, flashCard.getId());
-                task.execute();
+                if (flashCard.getId() == 0) {
 
-                new ContentFlashCard().collectItemFromServer(flashCard.getId(), getFragmentManager(), progressBar, false, db);
+                    Log.d("create", "new flashcard");
+                    AsyncPostRemoteCard task = new AsyncPostRemoteCard(jsonObjectQuestion);
+                    task.execute(this.carddeckId);
+
+                } else {
+
+                    AsyncPatchRemoteCard task = new AsyncPatchRemoteCard(jsonObjectQuestion, flashCard.getId());
+                    task.execute();
+                }
+
+                // TODO new ContentFlashCard().collectItemFromServer(flashCard.getId(), getFragmentManager(), progressBar, false, db);
 
                 break;
         }
     }
 
+    public void setCarddeckId(long carddeckId) {
+        this.carddeckId = carddeckId;
+    }
 
 
     /**

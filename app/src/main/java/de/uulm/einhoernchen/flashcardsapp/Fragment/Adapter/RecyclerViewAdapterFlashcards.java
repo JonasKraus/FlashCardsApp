@@ -1,9 +1,13 @@
 package de.uulm.einhoernchen.flashcardsapp.Fragment.Adapter;
 
+import android.app.Activity;
+import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
+import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -22,6 +26,8 @@ import com.amulyakhare.textdrawable.util.ColorGenerator;
 
 import de.uulm.einhoernchen.flashcardsapp.Database.DbManager;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.Dataset.DummyContent.DummyItem;
+import de.uulm.einhoernchen.flashcardsapp.Fragment.FragmentFlashCard;
+import de.uulm.einhoernchen.flashcardsapp.Fragment.FragmentFlashcards;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.Interfaces.OnFragmentInteractionListenerFlashcard;
 import de.uulm.einhoernchen.flashcardsapp.Models.Answer;
 import de.uulm.einhoernchen.flashcardsapp.Models.FlashCard;
@@ -45,14 +51,16 @@ public class RecyclerViewAdapterFlashcards extends RecyclerView.Adapter<Recycler
     private final DbManager db;
     private final Context context;
     private final ProgressBar progressBar;
+    protected final FragmentManager supportFragmentManager;
 
-    public RecyclerViewAdapterFlashcards(DbManager db, List<FlashCard> items, OnFragmentInteractionListenerFlashcard listener, boolean isUpToDate, Context context, ProgressBar progressBar) {
+    public RecyclerViewAdapterFlashcards(DbManager db, List<FlashCard> items, OnFragmentInteractionListenerFlashcard listener, boolean isUpToDate, Context context, ProgressBar progressBar, FragmentManager supportFragmentManager) {
         flashCards = items;
         mListener = listener;
         this.isUpToDate = isUpToDate;
         this.db = db;
         this.context = context;
         this.progressBar = progressBar;
+        this.supportFragmentManager = supportFragmentManager;
     }
 
     @Override
@@ -107,6 +115,19 @@ public class RecyclerViewAdapterFlashcards extends RecyclerView.Adapter<Recycler
                 public void onClick(View v) {
 
                     Log.d("click add", "start fragment");
+
+                    FragmentFlashCard fragment = new FragmentFlashCard();
+                    fragment.setProgressBar(progressBar);
+                    fragment.setDb(db);
+                    fragment.setItem(null);
+                    fragment.setUpToDate(isUpToDate);
+                    fragment.setCarddeckId(db.getCardParentID(flashCards.get(0).getId()));
+
+                    android.support.v4.app.FragmentTransaction fragmentTransaction =
+                            supportFragmentManager.beginTransaction();
+
+                    fragmentTransaction.replace(R.id.fragment_container_main, fragment);
+                    fragmentTransaction.commit();
                 }
             });
 
