@@ -526,14 +526,53 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onFlashcardListFragmentInteraction(FlashCard item) {
 
-        breadCrumbs.add("Flashcard #" + item.getId());
+        if (item == null) {
+
+            Log.d("start fragment", "create card");
+            createFragmentFlashCardCreate();
+        } else {
+
+            breadCrumbs.add("Flashcard #" + item.getId());
+            toolbarTextViewTitle.setText(breadCrumbs.get(breadCrumbs.size() - 1));
+
+            this.parentIds.add(this.childrenId);
+            this.childrenId = item.getId();
+
+            createFragmentFlashCard(item, false);
+        }
+
+    }
+
+
+    /**
+     * Creates the Fragment to create a new flashcard with answers
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     * @since 2017-01-05
+     */
+    private void createFragmentFlashCardCreate() {
+
+        breadCrumbs.add("new Flashcard");
         toolbarTextViewTitle.setText(breadCrumbs.get(breadCrumbs.size() - 1));
 
         this.parentIds.add(this.childrenId);
-        this.childrenId = item.getId();
 
-        createFragmentFlashCard(item, false);
+        this.currentFlashCard = null;
+        this.catalogueState = Constants.FLASH_CARD_DETAIL;
 
+        // TODO Start new fragment to create a card with answer
+        FragmentFlashCard fragment = new FragmentFlashCard();
+        fragment.setProgressBar(progressBar);
+        fragment.setDb(db);
+        fragment.setItem(null);
+        fragment.setUpToDate(false);
+        fragment.setCarddeckId(this.childrenId);
+
+        android.support.v4.app.FragmentTransaction fragmentTransaction =
+                getSupportFragmentManager().beginTransaction();
+
+        fragmentTransaction.replace(R.id.fragment_container_main, fragment);
+        fragmentTransaction.commit();
     }
 
     private void setFlashcardList(boolean backPressed) {

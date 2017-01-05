@@ -114,20 +114,11 @@ public class RecyclerViewAdapterFlashcards extends RecyclerView.Adapter<Recycler
                 @Override
                 public void onClick(View v) {
 
-                    Log.d("click add", "start fragment");
-
-                    FragmentFlashCard fragment = new FragmentFlashCard();
-                    fragment.setProgressBar(progressBar);
-                    fragment.setDb(db);
-                    fragment.setItem(null);
-                    fragment.setUpToDate(isUpToDate);
-                    fragment.setCarddeckId(db.getCardParentID(flashCards.get(0).getId()));
-
-                    android.support.v4.app.FragmentTransaction fragmentTransaction =
-                            supportFragmentManager.beginTransaction();
-
-                    fragmentTransaction.replace(R.id.fragment_container_main, fragment);
-                    fragmentTransaction.commit();
+                    if (null != mListener) {
+                        // Notify the active callbacks interface (the activity, if the
+                        // fragment is attached to one) that an item has been selected.
+                        mListener.onFlashcardListFragmentInteraction(null);
+                    }
                 }
             });
 
@@ -158,6 +149,7 @@ public class RecyclerViewAdapterFlashcards extends RecyclerView.Adapter<Recycler
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 if (null != mListener) {
                     // Notify the active callbacks interface (the activity, if the
                     // fragment is attached to one) that an item has been selected.
