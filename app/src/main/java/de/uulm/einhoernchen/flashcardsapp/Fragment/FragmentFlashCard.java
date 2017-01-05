@@ -591,6 +591,10 @@ public class FragmentFlashCard extends Fragment implements View.OnClickListener 
                 String newUri = editTextQuestionUri.getText().toString();
                 String newQuestionText = editTextQuestionText.getText().toString();
 
+                // sets the new values to the flashcard
+                flashCard.getQuestion().setQuestionText(newQuestionText);
+                flashCard.getQuestion().setUri(Uri.parse(newUri));
+
                 mContentView.setText(editTextQuestionText.getText());
 
                 mContentView.setVisibility(View.VISIBLE);

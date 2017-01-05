@@ -66,18 +66,15 @@ public class RecyclerViewAdapterFlashcards extends RecyclerView.Adapter<Recycler
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
-        View view = null;
+        View view;
 
-        Log.d("view typ", viewType + "");
-
+        // Normal card layout for a card
         if (viewType == VIEW_TYPE_CELL) {
 
             view = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.list_item_card, parent, false);
-        }
-        else {
+        } else {
 
-            Log.d("view", "inlfate 1");
             view = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.add_flashcard, parent, false);
         }
