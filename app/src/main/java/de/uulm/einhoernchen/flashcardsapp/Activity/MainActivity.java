@@ -619,7 +619,11 @@ public class MainActivity extends AppCompatActivity
         isServerAlive();
 
         if (isNetworkAvailable() && isAlive) {
+
             new  ContentFlashCard().collectItemFromServer(flashCard.getId(), getSupportFragmentManager(), progressBar, backPressed, db);
+        } else {
+
+            new  ContentFlashCard().collectItemFromDb(flashCard.getId(), getSupportFragmentManager(), progressBar, backPressed, db);
         }
 
         this.currentFlashCard = flashCard;
