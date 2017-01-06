@@ -53,6 +53,7 @@ import de.uulm.einhoernchen.flashcardsapp.Models.FlashCard;
 import de.uulm.einhoernchen.flashcardsapp.Models.User;
 import de.uulm.einhoernchen.flashcardsapp.R;
 import de.uulm.einhoernchen.flashcardsapp.Consts.Constants;
+import de.uulm.einhoernchen.flashcardsapp.Util.Globals;
 import de.uulm.einhoernchen.flashcardsapp.Util.ProcessConnectivity;
 import de.uulm.einhoernchen.flashcardsapp.Util.ProcessorImage;
 import de.uulm.einhoernchen.flashcardsapp.Util.PermissionManager;
@@ -188,6 +189,9 @@ public class MainActivity extends AppCompatActivity
 
         });
 
+
+        // init Globals
+        Globals.initGlobals(context, progressBar, db, getSupportFragmentManager());
 
     }
 
@@ -579,10 +583,10 @@ public class MainActivity extends AppCompatActivity
     private void setFlashcardList(boolean backPressed) {
 
         isServerAlive();
-        new ContentFlashCards().collectItemsFromDb(this.childrenId, getSupportFragmentManager(), progressBar, backPressed, db, context);
+        new ContentFlashCards().collectItemsFromDb(this.childrenId, backPressed);
 
         if (isNetworkAvailable() && isAlive) {
-            new ContentFlashCards().collectItemsFromServer(this.childrenId, getSupportFragmentManager(), progressBar, backPressed, db, context);
+            new ContentFlashCards().collectItemsFromServer(this.childrenId, backPressed);
         }
 
         catalogueState = Constants.FLASH_CARD_LIST;
