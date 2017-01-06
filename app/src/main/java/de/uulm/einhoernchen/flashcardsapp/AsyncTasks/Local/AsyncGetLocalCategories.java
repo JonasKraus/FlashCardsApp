@@ -8,28 +8,17 @@ import java.util.List;
 
 import de.uulm.einhoernchen.flashcardsapp.Database.DbManager;
 import de.uulm.einhoernchen.flashcardsapp.Models.Category;
+import de.uulm.einhoernchen.flashcardsapp.Util.Globals;
 
 /**
  * Created by jonas-uni on 17.08.2016.
  */
 public class AsyncGetLocalCategories extends AsyncTask<Long, Long, List<Category>> {
 
-    private ProgressBar progressBar;
-    private DbManager db;
-
-
-    public void setProgressbar(ProgressBar progressBar) {
-        this.progressBar = progressBar;
-    }
-
-    public void setDbManager(DbManager dbManager) {
-        this.db = dbManager;
-    }
-
     @Override
     protected void onPreExecute() {
         super.onPreExecute();
-        progressBar.setVisibility(View.VISIBLE);
+        Globals.getProgressBar().setVisibility(View.VISIBLE);
     }
 
     /**
@@ -50,14 +39,14 @@ public class AsyncGetLocalCategories extends AsyncTask<Long, Long, List<Category
     @Override
     protected List<Category> doInBackground(Long... params) {
 
-        return  db.getCategories(parentId);
+        return  Globals.getDb().getCategories(parentId);
     }
 
     @Override
     protected void onPostExecute(List<Category> categories) {
         super.onPostExecute(categories);
 
-        progressBar.setVisibility(View.GONE);
+        Globals.getProgressBar().setVisibility(View.GONE);
         delegate.processFinish(categories);
 
     }

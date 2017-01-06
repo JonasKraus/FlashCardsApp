@@ -12,13 +12,12 @@ import com.amulyakhare.textdrawable.util.ColorGenerator;
 
 import java.util.List;
 
-import de.uulm.einhoernchen.flashcardsapp.Fragment.Dataset.DummyContent.DummyItem;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.Interfaces.OnFragmentInteractionListenerCategory;
 import de.uulm.einhoernchen.flashcardsapp.Models.Category;
 import de.uulm.einhoernchen.flashcardsapp.R;
 
 /**
- * {@link RecyclerView.Adapter} that can display a {@link DummyItem} and makes a call to the
+ * {@link RecyclerView.Adapter} that can display a {@link de.uulm.einhoernchen.flashcardsapp.Fragment.Dataset.ContentCategories} and makes a call to the
  * TODO: Replace the implementation with code for your data type.
  */
 public class RecyclerViewAdapterCategories extends RecyclerView.Adapter<RecyclerViewAdapterCategories.ViewHolder> {

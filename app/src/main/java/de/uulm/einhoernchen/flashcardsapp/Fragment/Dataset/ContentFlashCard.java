@@ -15,6 +15,7 @@ import de.uulm.einhoernchen.flashcardsapp.Fragment.FragmentFlashCard;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.FragmentFlashcards;
 import de.uulm.einhoernchen.flashcardsapp.Models.FlashCard;
 import de.uulm.einhoernchen.flashcardsapp.R;
+import de.uulm.einhoernchen.flashcardsapp.Util.Globals;
 import de.uulm.einhoernchen.flashcardsapp.Util.ProcessConnectivity;
 
 /**
@@ -29,7 +30,7 @@ public class ContentFlashCard {
     public static FragmentFlashCard fragment;
 
     private static boolean isUpToDate = false;
-    private static DbManager db;
+    private static DbManager db = Globals.getDb();
 
 
 
@@ -38,10 +39,9 @@ public class ContentFlashCard {
      * @since 2016.08.25
      *
      * @param flashcardId
-     * @param fragmentManager
-     * @param progressBarMain
+     * @param backPressed
      */
-    public void collectItemFromServer(final long flashcardId, final FragmentManager fragmentManager, final ProgressBar progressBarMain, final boolean backPressed, final DbManager db, Context context) {
+    public void collectItemFromServer(final long flashcardId, final boolean backPressed) {
 
         this.db = db;
 
@@ -57,16 +57,13 @@ public class ContentFlashCard {
                 }
 
                 AsyncSaveLocalFlashCards asyncSaveFlashCardLocal = new AsyncSaveLocalFlashCards(flashcardId);
-                asyncSaveFlashCardLocal.setDbManager(db);
                 asyncSaveFlashCardLocal.setFlashCard(flashCard);
                 asyncSaveFlashCardLocal.execute();
 
                 isUpToDate = true;
 
                 FragmentFlashCard fragment = new FragmentFlashCard();
-                fragment.setProgressBar(progressBarMain);
                 fragment.setItem(flashCard);
-                fragment.setDb(db);
                 fragment.setUpToDate(isUpToDate);
 
                 Bundle args = new Bundle();
@@ -74,7 +71,7 @@ public class ContentFlashCard {
                 fragment.setArguments(args);
 
                 android.support.v4.app.FragmentTransaction fragmentTransaction =
-                        fragmentManager.beginTransaction();
+                        Globals.getFragmentManager().beginTransaction();
 
                 // TODO delete if always loaded from local db
                 /*
@@ -94,9 +91,8 @@ public class ContentFlashCard {
 
         });
 
-        asyncGetFlashCard.setProgressbar(progressBarMain);
 
-        if (ProcessConnectivity.isOk(context)) {
+        if (ProcessConnectivity.isOk(Globals.getContext())) {
 
             asyncGetFlashCard.execute();
         }
@@ -111,14 +107,9 @@ public class ContentFlashCard {
      * @since 2016-12-02
      *
      * @param flashcardId
-     * @param supportFragmentManager
-     * @param progressBar
      * @param backPressed
-     * @param db
      */
-    public void collectItemFromDb(final long flashcardId, final FragmentManager supportFragmentManager, final ProgressBar progressBar, final boolean backPressed, final DbManager db) {
-
-        this.db = db;
+    public void collectItemFromDb(final long flashcardId, final boolean backPressed) {
 
         AsyncGetLocalFlashCard asyncGetFlashCardLocal = new AsyncGetLocalFlashCard(flashcardId, new AsyncGetLocalFlashCard.AsyncResponseLocalFlashCard() {
 
@@ -130,16 +121,14 @@ public class ContentFlashCard {
 
                 FragmentFlashCard fragment = new FragmentFlashCard();
                 fragment.setItem(flashCard);
-                fragment.setDb(db);
                 fragment.setUpToDate(isUpToDate);
-                fragment.setProgressBar(progressBar);
 
                 Bundle args = new Bundle();
                 args.putLong(FragmentFlashcards.ARG_PARENT_ID, flashcardId);
                 fragment.setArguments(args);
 
                 android.support.v4.app.FragmentTransaction fragmentTransaction =
-                        supportFragmentManager.beginTransaction();
+                        Globals.getFragmentManager().beginTransaction();
 
                 // TODO delete if always loaded from local db
                 /*
@@ -158,8 +147,6 @@ public class ContentFlashCard {
 
         });
 
-        asyncGetFlashCardLocal.setProgressbar(progressBar);
-        asyncGetFlashCardLocal.setDbManager(db);
         asyncGetFlashCardLocal.execute();
 
     }

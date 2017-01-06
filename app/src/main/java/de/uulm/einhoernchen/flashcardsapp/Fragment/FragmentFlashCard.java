@@ -41,6 +41,7 @@ import de.uulm.einhoernchen.flashcardsapp.Fragment.Dataset.ContentFlashCardAnswe
 import de.uulm.einhoernchen.flashcardsapp.Models.FlashCard;
 import de.uulm.einhoernchen.flashcardsapp.Models.Question;
 import de.uulm.einhoernchen.flashcardsapp.R;
+import de.uulm.einhoernchen.flashcardsapp.Util.Globals;
 import de.uulm.einhoernchen.flashcardsapp.Util.JsonKeys;
 import de.uulm.einhoernchen.flashcardsapp.Util.ProcessConnectivity;
 import de.uulm.einhoernchen.flashcardsapp.Util.ProcessorImage;
@@ -62,12 +63,13 @@ public class FragmentFlashCard extends Fragment implements View.OnClickListener 
 
     private FlashCard flashCard;
 
+    private DbManager db = Globals.getDb();
+
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
 
     private OnFlashCardFragmentInteractionListener mListener;
-    private DbManager db;
     private boolean isUpToDate;
     private TextView mIdView;
     private TextView mContentView;
@@ -102,22 +104,10 @@ public class FragmentFlashCard extends Fragment implements View.OnClickListener 
     private RadioButton radioButtonAnswerCorrect;
     private RadioButton radioButtonAnswerIncorrect;
 
-    private ProgressBar progressBar;
-    private ProgressDialog progressBarWebView;
     private long carddeckId;
 
     public FragmentFlashCard() {
         // Required empty public constructor
-    }
-
-
-    /**
-     * Sets the progressbar
-     *
-     * @param progressBar
-     */
-    public void setProgressBar(ProgressBar progressBar) {
-        this.progressBar = progressBar;
     }
 
     /**
@@ -153,24 +143,10 @@ public class FragmentFlashCard extends Fragment implements View.OnClickListener 
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_flashcard_parallax, container, false);
 
-        /*
-        ListView listview =(ListView) view.findViewById(R.id.listview_answers);
-
-        if (view instanceof RecyclerView) {
-            Log.d("recycler", view.toString());
-        }
-        String[] items = new String[] {"Item 1", "Item 2", "Item 3","Item 1", "Item 2", "Item 3","Item 1", "Item 2", "Item 3","Item 1", "Item 2", "Item 3","Item 1", "Item 2", "Item 3","Item 1", "Item 2", "Item 3"};
-        ArrayAdapter<String> adapter =
-                new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, items);
-
-        listview.setAdapter(adapter);
-        */
-
-
         if (flashCard != null) {
 
-            new ContentFlashCardAnswers().collectItemsFromDb(flashCard.getId(), getFragmentManager(), progressBar, false, db);
-            new ContentFlashCardAnswers().collectItemsFromServer(flashCard.getId(), getFragmentManager(), progressBar, false, db, getContext());
+            new ContentFlashCardAnswers().collectItemsFromDb(flashCard.getId(), false);
+            new ContentFlashCardAnswers().collectItemsFromServer(flashCard.getId(), false);
         } else {
 
             this.flashCard = new FlashCard(db.getLoggedInUser(),null,new Question("","",db.getLoggedInUser()),false);
@@ -326,7 +302,7 @@ public class FragmentFlashCard extends Fragment implements View.OnClickListener 
                 settings.setJavaScriptEnabled(true);
                 webViewUri.setScrollBarStyle(WebView.SCROLLBARS_OUTSIDE_OVERLAY);
 
-                progressBar.setVisibility(View.VISIBLE);
+                Globals.getProgressBar().setVisibility(View.VISIBLE);
 
                 webViewUri.setWebViewClient(new WebViewClient() {
 
@@ -338,8 +314,8 @@ public class FragmentFlashCard extends Fragment implements View.OnClickListener 
 
                     public void onPageFinished(WebView view, String url) {
 
-                        if (progressBar.isShown()) {
-                            progressBar.setVisibility(View.GONE);
+                        if (Globals.getProgressBar().isShown()) {
+                            Globals.getProgressBar().setVisibility(View.GONE);
                         }
                     }
 
@@ -495,13 +471,6 @@ public class FragmentFlashCard extends Fragment implements View.OnClickListener 
         this.flashCard = flashCard;
     }
 
-    /**
-     * Important do call this bevore setItem
-     * @param db
-     */
-    public void setDb(DbManager db) {
-        this.db = db;
-    }
 
     public void setUpToDate(boolean isUpToDate) {
         this.isUpToDate = isUpToDate;
@@ -573,8 +542,8 @@ public class FragmentFlashCard extends Fragment implements View.OnClickListener 
                 }
 
 
-                new ContentFlashCardAnswers().collectItemsFromDb(flashCard.getId(), getFragmentManager(), progressBar, false, db);
-                new ContentFlashCardAnswers().collectItemsFromServer(flashCard.getId(), getFragmentManager(), progressBar, false, db, getContext());
+                new ContentFlashCardAnswers().collectItemsFromDb(flashCard.getId(), false);
+                new ContentFlashCardAnswers().collectItemsFromServer(flashCard.getId(), false);
 
 
                 editTextAnswerText.setText(null);

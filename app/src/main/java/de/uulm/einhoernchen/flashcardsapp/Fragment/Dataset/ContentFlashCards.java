@@ -53,7 +53,6 @@ public class ContentFlashCards {
                 }
 
                 AsyncSaveLocalFlashCards asyncSaveFlashCardLocal = new AsyncSaveLocalFlashCards(parentId);
-                asyncSaveFlashCardLocal.setDbManager(Globals.getDb());
                 asyncSaveFlashCardLocal.setFlashCards(flashCards);
                 asyncSaveFlashCardLocal.execute();
 
@@ -62,9 +61,7 @@ public class ContentFlashCards {
 
                 FragmentFlashcards fragment = new FragmentFlashcards();
                 fragment.setItemList(flashCards);
-                fragment.setDb(Globals.getDb());
                 fragment.setUpToDate(isUpToDate);
-                fragment.setProgressBar(Globals.getProgressBar());
 
                 Bundle args = new Bundle();
                 args.putLong(FragmentFlashcards.ARG_PARENT_ID, parentId);
@@ -90,8 +87,6 @@ public class ContentFlashCards {
             }
 
         });
-
-        asyncGetFlashCard.setProgressbar(Globals.getProgressBar());
 
         if (ProcessConnectivity.isOk(Globals.getContext())) {
 
@@ -120,9 +115,7 @@ public class ContentFlashCards {
 
                 FragmentFlashcards fragment = new FragmentFlashcards();
                 fragment.setItemList(flashCards);
-                fragment.setDb(Globals.getDb());
                 fragment.setUpToDate(isUpToDate);
-                fragment.setProgressBar(Globals.getProgressBar());
 
                 Bundle args = new Bundle();
                 args.putLong(FragmentFlashcards.ARG_PARENT_ID, parentId);
@@ -148,8 +141,6 @@ public class ContentFlashCards {
 
         });
 
-        asyncGetFlashCardLocal.setProgressbar(Globals.getProgressBar());
-        asyncGetFlashCardLocal.setDbManager(Globals.getDb());
         asyncGetFlashCardLocal.execute();
 
     }

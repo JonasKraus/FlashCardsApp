@@ -25,7 +25,6 @@ import com.amulyakhare.textdrawable.TextDrawable;
 import com.amulyakhare.textdrawable.util.ColorGenerator;
 
 import de.uulm.einhoernchen.flashcardsapp.Database.DbManager;
-import de.uulm.einhoernchen.flashcardsapp.Fragment.Dataset.DummyContent.DummyItem;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.FragmentFlashCard;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.FragmentFlashcards;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.Interfaces.OnFragmentInteractionListenerFlashcard;
@@ -38,7 +37,7 @@ import de.uulm.einhoernchen.flashcardsapp.Util.ProcessorImage;
 import java.util.List;
 
 /**
- * {@link RecyclerView.Adapter} that can display a {@link DummyItem} and makes a call to the
+ * {@link RecyclerView.Adapter} that can display a {@link de.uulm.einhoernchen.flashcardsapp.Fragment.Dataset.ContentFlashCards} and makes a call to the
  * TODO: Replace the implementation with code for your data type.
  */
 public class RecyclerViewAdapterFlashcards extends RecyclerView.Adapter<RecyclerViewAdapterFlashcards.ViewHolder> {

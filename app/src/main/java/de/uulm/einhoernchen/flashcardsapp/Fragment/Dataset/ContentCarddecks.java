@@ -16,6 +16,7 @@ import de.uulm.einhoernchen.flashcardsapp.Database.DbManager;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.FragmentCarddecks;
 import de.uulm.einhoernchen.flashcardsapp.Models.CardDeck;
 import de.uulm.einhoernchen.flashcardsapp.R;
+import de.uulm.einhoernchen.flashcardsapp.Util.Globals;
 import de.uulm.einhoernchen.flashcardsapp.Util.ProcessConnectivity;
 
 /**
@@ -27,18 +28,17 @@ public class ContentCarddecks {
 
     private static List<CardDeck> cardDecks = new ArrayList<>();
     private static boolean isUpToDate = false;
-    private static DbManager db;
-    private static Context context;
+    private static DbManager db = Globals.getDb();
 
     /**
      * @author Jonas Kraus jonas.kraus@uni-ulm.de
      * @since 2016.08.21
      *
      * @param parentId given by the main activity
-     * @param fragmentManager given by main activity
+     * @param backPressed
      *
      */
-    public void collectItemsFromServer(final long parentId, final FragmentManager fragmentManager, ProgressBar progressBarMain, final boolean backPressed, final DbManager db, Context context) {
+    public void collectItemsFromServer(final long parentId, final boolean backPressed) {
 
         this.db = db;
 
@@ -49,7 +49,6 @@ public class ContentCarddecks {
 
                 // Saving the collected categories localy
                 AsyncSaveLocalCardDecks asyncSaveLocalCarddeck = new AsyncSaveLocalCardDecks(parentId);
-                asyncSaveLocalCarddeck.setDbManager(db);
                 asyncSaveLocalCarddeck.setCardDecks(cardDecks);
                 asyncSaveLocalCarddeck.execute();
 
@@ -58,7 +57,6 @@ public class ContentCarddecks {
                 ContentCarddecks.cardDecks = cardDecks;
                 FragmentCarddecks fragment = new FragmentCarddecks();
                 fragment.setItemList(cardDecks);
-                fragment.setDb(db);
                 fragment.setUpToDate(isUpToDate);
 
                 Bundle args = new Bundle();
@@ -66,7 +64,7 @@ public class ContentCarddecks {
                 fragment.setArguments(args);
 
                 android.support.v4.app.FragmentTransaction fragmentTransaction =
-                        fragmentManager.beginTransaction();
+                        Globals.getFragmentManager().beginTransaction();
 
                 /*
                 if (backPressed) {
@@ -82,9 +80,7 @@ public class ContentCarddecks {
 
         });
 
-        asyncGetCarddeck.setProgressbar(progressBarMain);
-
-        if (ProcessConnectivity.isOk(context)) {
+        if (ProcessConnectivity.isOk(Globals.getContext())) {
 
             asyncGetCarddeck.execute();
         }
@@ -99,14 +95,9 @@ public class ContentCarddecks {
      * @since 2016-12-02
      *
      * @param parentId
-     * @param supportFragmentManager
-     * @param progressBar
      * @param backPressed
-     * @param db
      */
-    public void collectItemsFromDb(final long parentId, final FragmentManager supportFragmentManager, final ProgressBar progressBar, final boolean backPressed, final DbManager db, Context context) {
-
-        this.db = db;
+    public void collectItemsFromDb(final long parentId,final boolean backPressed) {
 
         AsyncGetLocalCarddecks asyncGetLocalCardDeck = new AsyncGetLocalCarddecks(parentId, new AsyncGetLocalCarddecks.AsyncResponseLocalCarddecks() {
 
@@ -119,7 +110,6 @@ public class ContentCarddecks {
 
                 FragmentCarddecks fragment = new FragmentCarddecks();
                 fragment.setItemList(cardDecks);
-                fragment.setDb(db);
                 fragment.setUpToDate(isUpToDate);
 
                 Bundle args = new Bundle();
@@ -127,7 +117,7 @@ public class ContentCarddecks {
                 fragment.setArguments(args);
 
                 android.support.v4.app.FragmentTransaction fragmentTransaction =
-                        supportFragmentManager.beginTransaction();
+                        Globals.getFragmentManager().beginTransaction();
 
                 // TODO delete if always loaded from local db
                 /*
@@ -146,8 +136,6 @@ public class ContentCarddecks {
 
         });
 
-        asyncGetLocalCardDeck.setProgressbar(progressBar);
-        asyncGetLocalCardDeck.setDbManager(db);
         asyncGetLocalCardDeck.execute();
 
 

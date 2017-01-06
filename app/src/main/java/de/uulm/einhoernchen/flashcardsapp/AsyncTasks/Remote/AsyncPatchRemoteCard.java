@@ -77,7 +77,7 @@ public class AsyncPatchRemoteCard extends AsyncTask<Long, Long, Long> {
 
         } catch (Exception e) {
 
-            Log.e("doInBack card patch", e.toString());
+            Log.e("doInBack card " + urlConnection.getRequestMethod(), e.toString() + " body: " + jsonObject.toString());
             System.out.println(e.toString());
             return null;
 

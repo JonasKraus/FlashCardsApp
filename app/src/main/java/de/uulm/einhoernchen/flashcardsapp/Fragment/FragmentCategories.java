@@ -17,6 +17,7 @@ import de.uulm.einhoernchen.flashcardsapp.Fragment.Adapter.RecyclerViewAdapterCa
 import de.uulm.einhoernchen.flashcardsapp.Fragment.Interfaces.OnFragmentInteractionListenerCategory;
 import de.uulm.einhoernchen.flashcardsapp.Models.Category;
 import de.uulm.einhoernchen.flashcardsapp.R;
+import de.uulm.einhoernchen.flashcardsapp.Util.Globals;
 
 /**
  * A fragment representing a list of Category Items.
@@ -30,7 +31,6 @@ public class FragmentCategories extends Fragment {
     private int mColumnCount = 1;
     private OnFragmentInteractionListenerCategory mListener;
     private List<Category> itemList;
-    private DbManager db;
     private boolean isUpToDate;
 
     /**
@@ -104,9 +104,6 @@ public class FragmentCategories extends Fragment {
         this.itemList = itemList;
     }
 
-    public void setDb(DbManager db) {
-        this.db = db;
-    }
 
     public void setUpToDate(boolean isUpToDate) {
         this.isUpToDate = isUpToDate;

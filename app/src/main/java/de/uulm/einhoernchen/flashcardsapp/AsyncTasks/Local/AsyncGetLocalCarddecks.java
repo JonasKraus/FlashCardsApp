@@ -8,28 +8,18 @@ import java.util.List;
 
 import de.uulm.einhoernchen.flashcardsapp.Database.DbManager;
 import de.uulm.einhoernchen.flashcardsapp.Models.CardDeck;
+import de.uulm.einhoernchen.flashcardsapp.Util.Globals;
 
 /**
  * Created by jonas-uni on 17.08.2016.
  */
 public class AsyncGetLocalCarddecks extends AsyncTask<Long, Long, List<CardDeck>> {
 
-    private ProgressBar progressBar;
-    private DbManager db;
-
-
-    public void setProgressbar(ProgressBar progressBar) {
-        this.progressBar = progressBar;
-    }
-
-    public void setDbManager(DbManager dbManager) {
-        this.db = dbManager;
-    }
 
     @Override
     protected void onPreExecute() {
         super.onPreExecute();
-        progressBar.setVisibility(View.VISIBLE);
+        Globals.getProgressBar().setVisibility(View.VISIBLE);
     }
 
     /**
@@ -50,14 +40,14 @@ public class AsyncGetLocalCarddecks extends AsyncTask<Long, Long, List<CardDeck>
     @Override
     protected List<CardDeck> doInBackground(Long... params) {
 
-        return  db.getCardDecks(parentId);
+        return  Globals.getDb().getCardDecks(parentId);
     }
 
     @Override
     protected void onPostExecute(List<CardDeck> cardDecks) {
         super.onPostExecute(cardDecks);
 
-        progressBar.setVisibility(View.GONE);
+        Globals.getProgressBar().setVisibility(View.GONE);
         delegate.processFinish(cardDecks);
 
     }

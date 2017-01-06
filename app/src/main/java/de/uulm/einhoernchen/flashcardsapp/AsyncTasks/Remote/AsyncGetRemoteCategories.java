@@ -11,6 +11,7 @@ import java.util.List;
 
 import de.uulm.einhoernchen.flashcardsapp.Consts.Routes;
 import de.uulm.einhoernchen.flashcardsapp.Models.Category;
+import de.uulm.einhoernchen.flashcardsapp.Util.Globals;
 import de.uulm.einhoernchen.flashcardsapp.Util.JsonParser;
 
 /**
@@ -18,11 +19,7 @@ import de.uulm.einhoernchen.flashcardsapp.Util.JsonParser;
  */
 public class AsyncGetRemoteCategories extends AsyncTask<Long, Long, List<Category>> {
 
-    private ProgressBar progressBar;
-
-    public void setProgressbar(ProgressBar progressBar) {
-        this.progressBar = progressBar;
-    }
+    private ProgressBar progressBar = Globals.getProgressBar();
 
     @Override
     protected void onPreExecute() {

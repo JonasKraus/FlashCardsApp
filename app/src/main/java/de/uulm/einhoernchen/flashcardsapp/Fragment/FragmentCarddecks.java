@@ -17,6 +17,7 @@ import de.uulm.einhoernchen.flashcardsapp.Fragment.Adapter.RecyclerViewAdapterCa
 import de.uulm.einhoernchen.flashcardsapp.Fragment.Interfaces.OnFragmentInteractionListenerCarddeck;
 import de.uulm.einhoernchen.flashcardsapp.Models.CardDeck;
 import de.uulm.einhoernchen.flashcardsapp.R;
+import de.uulm.einhoernchen.flashcardsapp.Util.Globals;
 
 /**
  * A fragment representing a list of Carddeck Items.
@@ -31,7 +32,6 @@ public class FragmentCarddecks extends Fragment {
     private int mColumnCount = 1;
     private OnFragmentInteractionListenerCarddeck mListener;
     private List<CardDeck> itemList;
-    private DbManager db;
     private boolean isUpToDate;
 
     /**
@@ -79,7 +79,7 @@ public class FragmentCarddecks extends Fragment {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
 
-            recyclerView.setAdapter(new RecyclerViewAdapterCarddecks(db, itemList, mListener, isUpToDate));
+            recyclerView.setAdapter(new RecyclerViewAdapterCarddecks(Globals.getDb(), itemList, mListener, isUpToDate));
         }
         return view;
     }
@@ -103,10 +103,6 @@ public class FragmentCarddecks extends Fragment {
 
     public void setItemList(List<CardDeck> itemList) {
         this.itemList = itemList;
-    }
-
-    public void setDb(DbManager db) {
-        this.db = db;
     }
 
     public void setUpToDate(boolean isUpToDate) {

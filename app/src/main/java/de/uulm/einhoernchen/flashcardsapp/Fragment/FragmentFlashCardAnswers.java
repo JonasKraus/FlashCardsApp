@@ -20,6 +20,7 @@ import de.uulm.einhoernchen.flashcardsapp.Fragment.Interfaces.OnFragmentInteract
 import de.uulm.einhoernchen.flashcardsapp.Models.Answer;
 import de.uulm.einhoernchen.flashcardsapp.Models.Category;
 import de.uulm.einhoernchen.flashcardsapp.R;
+import de.uulm.einhoernchen.flashcardsapp.Util.Globals;
 import de.uulm.einhoernchen.flashcardsapp.Util.ProcessorImage;
 
 /**
@@ -33,9 +34,9 @@ public class FragmentFlashCardAnswers extends Fragment {
     private int mColumnCount = 1;
     private OnFragmentInteractionListenerAnswer mListener;
     private List<Answer> itemList;
-    private DbManager db;
+    private DbManager db = Globals.getDb();
     private boolean isUpToDate;
-    private ProgressBar progressBar;
+    private ProgressBar progressBar = Globals.getProgressBar();
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -108,13 +109,8 @@ public class FragmentFlashCardAnswers extends Fragment {
         this.itemList = itemList;
     }
 
-    public void setDb(DbManager db) {
-        this.db = db;
-    }
-
     public void setUpToDate(boolean isUpToDate) {
         this.isUpToDate = isUpToDate;
     }
 
-    public void setProgressBar(ProgressBar progressBar) { this.progressBar = progressBar; }
 }

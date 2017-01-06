@@ -7,6 +7,7 @@ import java.util.List;
 import de.uulm.einhoernchen.flashcardsapp.Database.DbManager;
 import de.uulm.einhoernchen.flashcardsapp.Models.Category;
 import de.uulm.einhoernchen.flashcardsapp.Models.FlashCard;
+import de.uulm.einhoernchen.flashcardsapp.Util.Globals;
 
 /**
  * Created by jonas-uni on 17.08.2016.
@@ -14,16 +15,12 @@ import de.uulm.einhoernchen.flashcardsapp.Models.FlashCard;
 public class AsyncSaveLocalCategories extends AsyncTask<Long, Long, Void> {
 
     private List<Category> categories;
-    private DbManager db;
 
 
     public void setCategories(List<Category> categories) {
         this.categories = categories;
     }
 
-    public void setDbManager(DbManager dbManager) {
-        this.db = dbManager;
-    }
 
     @Override
     protected void onPreExecute() {
@@ -38,7 +35,7 @@ public class AsyncSaveLocalCategories extends AsyncTask<Long, Long, Void> {
 
     @Override
     protected Void doInBackground(Long... params) {
-        db.saveCategories(categories);
+        Globals.getDb().saveCategories(categories);
 
         return null;
     }

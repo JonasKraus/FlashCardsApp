@@ -23,7 +23,6 @@ import java.util.List;
 import de.uulm.einhoernchen.flashcardsapp.AsyncTasks.Remote.AsyncDeleteRemoteRating;
 import de.uulm.einhoernchen.flashcardsapp.AsyncTasks.Remote.AsyncPostRemoteRating;
 import de.uulm.einhoernchen.flashcardsapp.Database.DbManager;
-import de.uulm.einhoernchen.flashcardsapp.Fragment.Dataset.DummyContent.DummyItem;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.Interfaces.OnFragmentInteractionListenerAnswer;
 import de.uulm.einhoernchen.flashcardsapp.Models.Answer;
 import de.uulm.einhoernchen.flashcardsapp.R;
@@ -31,7 +30,7 @@ import de.uulm.einhoernchen.flashcardsapp.Util.ProcessConnectivity;
 import de.uulm.einhoernchen.flashcardsapp.Util.ProcessorImage;
 
 /**
- * {@link RecyclerView.Adapter} that can display a {@link DummyItem} and makes a call to the
+ * {@link RecyclerView.Adapter} that can display a {@link de.uulm.einhoernchen.flashcardsapp.Fragment.Dataset.ContentFlashCardAnswers} and makes a call to the
  * TODO: Replace the implementation with code for your data type.
  */
 public class RecyclerViewAdapterFlashCardAnswers extends RecyclerView.Adapter<RecyclerViewAdapterFlashCardAnswers.ViewHolder> {

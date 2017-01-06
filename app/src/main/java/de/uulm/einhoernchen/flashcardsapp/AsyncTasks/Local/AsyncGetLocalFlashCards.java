@@ -8,28 +8,18 @@ import java.util.List;
 
 import de.uulm.einhoernchen.flashcardsapp.Database.DbManager;
 import de.uulm.einhoernchen.flashcardsapp.Models.FlashCard;
+import de.uulm.einhoernchen.flashcardsapp.Util.Globals;
 
 /**
  * Created by jonas-uni on 17.08.2016.
  */
 public class AsyncGetLocalFlashCards extends AsyncTask<Long, Long, List<FlashCard>> {
 
-    private ProgressBar progressBar;
-    private DbManager db;
-
-
-    public void setProgressbar(ProgressBar progressBar) {
-        this.progressBar = progressBar;
-    }
-
-    public void setDbManager(DbManager dbManager) {
-        this.db = dbManager;
-    }
 
     @Override
     protected void onPreExecute() {
         super.onPreExecute();
-        progressBar.setVisibility(View.VISIBLE);
+        Globals.getProgressBar().setVisibility(View.VISIBLE);
     }
 
     /**
@@ -50,14 +40,14 @@ public class AsyncGetLocalFlashCards extends AsyncTask<Long, Long, List<FlashCar
     @Override
     protected List<FlashCard> doInBackground(Long... params) {
 
-        return  db.getFlashCards(parentId);
+        return  Globals.getDb().getFlashCards(parentId);
     }
 
     @Override
     protected void onPostExecute(List<FlashCard> flashCards) {
         super.onPostExecute(flashCards);
 
-        progressBar.setVisibility(View.GONE);
+        Globals.getProgressBar().setVisibility(View.GONE);
         delegate.processFinish(flashCards);
 
     }

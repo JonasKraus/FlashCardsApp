@@ -21,6 +21,7 @@ import de.uulm.einhoernchen.flashcardsapp.Fragment.Adapter.RecyclerViewAdapterFl
 import de.uulm.einhoernchen.flashcardsapp.Fragment.Interfaces.OnFragmentInteractionListenerFlashcard;
 import de.uulm.einhoernchen.flashcardsapp.Models.FlashCard;
 import de.uulm.einhoernchen.flashcardsapp.R;
+import de.uulm.einhoernchen.flashcardsapp.Util.Globals;
 
 /**
  * A fragment representing a list of Items.
@@ -38,9 +39,9 @@ public class FragmentFlashcards extends Fragment {
 
     private long parentId = -1;
     private List<FlashCard> itemList;
-    private DbManager db;
+    private DbManager db = Globals.getDb();
     private boolean isUpToDate;
-    private ProgressBar progressBar;
+    private ProgressBar progressBar = Globals.getProgressBar();
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -131,16 +132,8 @@ public class FragmentFlashcards extends Fragment {
         this.itemList = itemList;
     }
 
-    public void setDb(DbManager db) {
-        this.db = db;
-    }
-
     public void setUpToDate(boolean isUpToDate) {
         this.isUpToDate = isUpToDate;
-    }
-
-    public void setProgressBar(ProgressBar progressBar) {
-        this.progressBar = progressBar;
     }
 
 

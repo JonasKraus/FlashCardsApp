@@ -567,8 +567,6 @@ public class MainActivity extends AppCompatActivity
 
         // TODO Start new fragment to create a card with answer
         FragmentFlashCard fragment = new FragmentFlashCard();
-        fragment.setProgressBar(progressBar);
-        fragment.setDb(db);
         fragment.setItem(null);
         fragment.setUpToDate(false);
         fragment.setCarddeckId(this.childrenId);
@@ -595,10 +593,10 @@ public class MainActivity extends AppCompatActivity
     private void setCarddeckList(boolean backPressed) {
 
         isServerAlive();
-        new ContentCarddecks().collectItemsFromDb(this.childrenId, getSupportFragmentManager(), progressBar, backPressed, db, context);
+        new ContentCarddecks().collectItemsFromDb(this.childrenId, backPressed);
 
         if (isNetworkAvailable() && isAlive) {
-            new ContentCarddecks().collectItemsFromServer(this.childrenId, getSupportFragmentManager(), progressBar, backPressed, db, context);
+            new ContentCarddecks().collectItemsFromServer(this.childrenId, backPressed);
         }
 
         catalogueState = Constants.CARD_DECK_LIST;
@@ -607,10 +605,10 @@ public class MainActivity extends AppCompatActivity
     private void setCategoryList(boolean backPressed) {
 
         isServerAlive();
-        new ContentCategories().collectItemsFromDb(this.categoryLevel, this.childrenId, getSupportFragmentManager(), progressBar, backPressed, db, context);
+        new ContentCategories().collectItemsFromDb(this.categoryLevel, this.childrenId, backPressed);
 
         if (isNetworkAvailable() && isAlive) {
-            new ContentCategories().collectItemsFromServer(this.categoryLevel, this.childrenId, getSupportFragmentManager(), progressBar, backPressed, db, context);
+            new ContentCategories().collectItemsFromServer(this.categoryLevel, this.childrenId, backPressed);
 
         }
 
@@ -625,10 +623,10 @@ public class MainActivity extends AppCompatActivity
 
         if (isNetworkAvailable() && isAlive) {
 
-            new  ContentFlashCard().collectItemFromServer(flashCard.getId(), getSupportFragmentManager(), progressBar, backPressed, db, context);
+            new  ContentFlashCard().collectItemFromServer(flashCard.getId(), backPressed);
         } else {
 
-            new  ContentFlashCard().collectItemFromDb(flashCard.getId(), getSupportFragmentManager(), progressBar, backPressed, db);
+            new  ContentFlashCard().collectItemFromDb(flashCard.getId(), backPressed);
         }
 
         this.currentFlashCard = flashCard;

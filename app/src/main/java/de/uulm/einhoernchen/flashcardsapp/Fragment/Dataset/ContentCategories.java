@@ -16,6 +16,7 @@ import de.uulm.einhoernchen.flashcardsapp.Fragment.FragmentCarddecks;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.FragmentCategories;
 import de.uulm.einhoernchen.flashcardsapp.Models.Category;
 import de.uulm.einhoernchen.flashcardsapp.R;
+import de.uulm.einhoernchen.flashcardsapp.Util.Globals;
 import de.uulm.einhoernchen.flashcardsapp.Util.ProcessConnectivity;
 
 /**
@@ -29,7 +30,7 @@ public class ContentCategories {
     private static List<Category> categories = new ArrayList<>();
     private static boolean isUpToDate = false;
 
-    public void collectItemsFromServer(final int categoryLevel, final long parentId, final FragmentManager fragmentManager, ProgressBar progressBarMain, final boolean backPressed, final DbManager db, Context context) {
+    public void collectItemsFromServer(final int categoryLevel, final long parentId, final boolean backPressed) {
 
         AsyncGetRemoteCategories asyncGetCategory = new AsyncGetRemoteCategories(categoryLevel, parentId, new AsyncGetRemoteCategories.AsyncResponseRemoteCategories() {
 
@@ -38,7 +39,6 @@ public class ContentCategories {
 
                 // Saving the collected categories localy
                 AsyncSaveLocalCategories asyncSaveLocalCategory = new AsyncSaveLocalCategories(parentId);
-                asyncSaveLocalCategory.setDbManager(db);
                 asyncSaveLocalCategory.setCategories(categories);
                 asyncSaveLocalCategory.execute();
 
@@ -47,7 +47,6 @@ public class ContentCategories {
 
                 FragmentCategories fragment = new FragmentCategories();
                 fragment.setItemList(categories);
-                fragment.setDb(db);
                 fragment.setUpToDate(isUpToDate);
 
                 Bundle args = new Bundle();
@@ -55,7 +54,7 @@ public class ContentCategories {
                 fragment.setArguments(args);
 
                 android.support.v4.app.FragmentTransaction fragmentTransaction =
-                        fragmentManager.beginTransaction();
+                        Globals.getFragmentManager().beginTransaction();
 
                 /*
                 if (backPressed) {
@@ -72,16 +71,14 @@ public class ContentCategories {
 
         });
 
-        asyncGetCategory.setProgressbar(progressBarMain);
-
-        if (ProcessConnectivity.isOk(context)) {
+        if (ProcessConnectivity.isOk(Globals.getContext())) {
 
             asyncGetCategory.execute();
         }
     }
 
 
-    public void collectItemsFromDb(final int categoryLevel, final long parentId, final FragmentManager supportFragmentManager, final ProgressBar progressBar, final boolean backPressed, final DbManager db, Context context) {
+    public void collectItemsFromDb(final int categoryLevel, final long parentId, final boolean backPressed) {
 
         AsyncGetLocalCategories asyncGetLocalCategory = new AsyncGetLocalCategories(parentId, new AsyncGetLocalCategories.AsyncResponseLocalCategories() {
 
@@ -95,7 +92,6 @@ public class ContentCategories {
                 FragmentCategories fragment = new FragmentCategories();
 
                 fragment.setItemList(categories);
-                fragment.setDb(db);
                 fragment.setUpToDate(isUpToDate);
 
                 Bundle args = new Bundle();
@@ -103,7 +99,7 @@ public class ContentCategories {
                 fragment.setArguments(args);
 
                 android.support.v4.app.FragmentTransaction fragmentTransaction =
-                        supportFragmentManager.beginTransaction();
+                        Globals.getFragmentManager().beginTransaction();
 
                 // TODO delete if always loaded from local db
                 /*
@@ -122,8 +118,6 @@ public class ContentCategories {
 
         });
 
-        asyncGetLocalCategory.setProgressbar(progressBar);
-        asyncGetLocalCategory.setDbManager(db);
         asyncGetLocalCategory.execute();
 
     }
