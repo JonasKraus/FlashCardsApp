@@ -7,8 +7,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -33,10 +31,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.uulm.einhoernchen.flashcardsapp.AsyncTasks.Remote.AsyncGetRemoteHeartbeat;
 import de.uulm.einhoernchen.flashcardsapp.Database.DbManager;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.Dataset.ContentFlashCard;
-import de.uulm.einhoernchen.flashcardsapp.Fragment.Dataset.ContentFlashCardAnswers;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.Dataset.ContentFlashCards;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.FragmentFlashCard;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.FragmentHome;
@@ -75,74 +71,82 @@ public class MainActivity extends AppCompatActivity
     private Constants catalogueState = Constants.CATEGORY_LIST;
     private List<String> breadCrumbs;
     private ProgressBar progressBar;
-    private boolean isAlive;
     // the Flashcard that was loaded last in details fragment
     private FlashCard currentFlashCard;
 
     private static final int MY_INTENT_CLICK=302;
+    private DrawerLayout drawer;
+    private TextView profileName;
+    private TextView profileEmail;
+    private TextView profileRating;
+    private View header;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        this.context = this;
-
-        isServerAlive();
-
         setContentView(R.layout.activity_home);
 
+
+        // INIT View elements
         progressBar = (ProgressBar) findViewById(R.id.progressBarMain);
 
-        FragmentHome fragment = new FragmentHome();
-        android.support.v4.app.FragmentTransaction fragmentTransaction =
-                getSupportFragmentManager().beginTransaction();
-        fragmentTransaction.add(R.id.fragment_container_main, fragment);
-        fragmentTransaction.commit();
-
-        // Set the fragment initially
-
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-            this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.setDrawerListener(toggle);
-        toggle.syncState();
+        drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
 
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-        View header = navigationView.getHeaderView(0);
-
-        openDb();
-
-        user = db.getLocalAccountUser(); Log.d("user--->", user.toString());
-
+        header = navigationView.getHeaderView(0);
         profileImage = (ImageView) header.findViewById(R.id.imageViewProfilePhoto);
-        setProfileImage();
-
-        TextView profileName = (TextView) header.findViewById(R.id.textViewProfileName);
-        TextView profileEmail = (TextView) header.findViewById(R.id.textViewProfileEmail);
-        TextView profileRating = (TextView) header.findViewById(R.id.textViewProfileRating);
+        profileName = (TextView) header.findViewById(R.id.textViewProfileName);
+        profileEmail = (TextView) header.findViewById(R.id.textViewProfileEmail);
+        profileRating = (TextView) header.findViewById(R.id.textViewProfileRating);
 
         toolbarTextViewTitle = (TextView ) findViewById(R.id.toolbar_text_view_title);
-        breadCrumbs = new ArrayList<String>();
-        breadCrumbs.add("");
-        parentIds = new ArrayList<Long>();
 
+        createFloatingActionButton();
+        createToolbar();
+
+        initBreadCrumps();
+
+        // INIT variables
+        this.context = this;
+        openDb();
+
+        // init Globals
+        Globals.initGlobals(context, progressBar, db, getSupportFragmentManager());
+
+        setProfileView();
+        ProcessConnectivity.isServerAlive ();
+
+        setProfileImageClickListener();
+
+        createFragmentHome();
+    }
+
+
+    /**
+     * Sets the users data to the views objects
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     * @since 2017-01-06
+     */
+    private void setProfileView() {
+
+        user = db.getLocalAccountUser(); Log.d("user--->", user.toString());
         profileName.setText(user.getName());
         profileEmail.setText(user.getEmail());
         profileRating.setText(user.getRating()+"");
+        setProfileImage();
+    }
+
+
+    /**
+     * Adds a clicklistener to the profile image
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     * @since 2017-01-06
+     */
+    private void setProfileImageClickListener() {
 
         /**
          * Adds clicklistener to the profile image
@@ -188,11 +192,77 @@ public class MainActivity extends AppCompatActivity
             }
 
         });
+    }
 
 
-        // init Globals
-        Globals.initGlobals(context, progressBar, db, getSupportFragmentManager());
+    /**
+     * Init breadcrumps and navigtion
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     * @since 2017-01-06
+     */
+    private void initBreadCrumps() {
 
+        breadCrumbs = new ArrayList<String>();
+        breadCrumbs.add("");
+        parentIds = new ArrayList<Long>();
+    }
+
+
+    /**
+     * Creates the toolbar
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     * @since 2017-01-06
+     */
+    private void createToolbar() {
+
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.setDrawerListener(toggle);
+        toggle.syncState();
+    }
+
+
+    /**
+     * Creates the floating action button
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     * @since 2017-01-06
+     */
+    private void createFloatingActionButton() {
+
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
+            }
+        });
+    }
+
+
+    /**
+     * Inflates the home fragment
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     * @since 2017-01-06
+     */
+    private void createFragmentHome() {
+
+        FragmentHome fragment = new FragmentHome();
+        android.support.v4.app.FragmentTransaction fragmentTransaction =
+                getSupportFragmentManager().beginTransaction();
+
+        // Keep attention that this is replaced and not added
+        fragmentTransaction.replace(R.id.fragment_container_main, fragment);
+        fragmentTransaction.commit();
     }
 
 
@@ -274,8 +344,6 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onBackPressed() {
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
 
@@ -302,12 +370,14 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.home, menu);
         return true;
     }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -324,6 +394,7 @@ public class MainActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
+
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
@@ -332,18 +403,14 @@ public class MainActivity extends AppCompatActivity
 
         if (id == R.id.nav_home) {
 
-            FragmentHome fragment = new FragmentHome();
-            android.support.v4.app.FragmentTransaction fragmentTransaction =
-                    getSupportFragmentManager().beginTransaction();
-            //fragmentTransaction.setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left);
-            fragmentTransaction.replace(R.id.fragment_container_main, fragment);
-            fragmentTransaction.commit();
+            ProcessConnectivity.isServerAlive ();
+            createFragmentHome();
 
             toolbarTextViewTitle.setText(R.string.app_name);
 
         } else if (id == R.id.nav_catalogue) {
 
-            isServerAlive ();
+            ProcessConnectivity.isServerAlive ();
             moveToLastCatalogueState();
 
         } else if (id == R.id.nav_profile) {
@@ -359,11 +426,11 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_feedback) {
 
         } else if (id == R.id.nav_logout) {
+
             db.logoutUser();
             startActivity(new Intent(MainActivity.this, LoginActivity.class));
         }
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
@@ -371,36 +438,44 @@ public class MainActivity extends AppCompatActivity
 
     /**
      * When returning to the catalog drawer then set the last state
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
      */
     private void moveToLastCatalogueState() {
 
         switch (catalogueState) {
 
             case CATEGORY_LIST:
+
                 setCategoryList(false);
                 break;
-
             case CARD_DECK_LIST:
+
                 setCarddeckList(true);
                 break;
-
             case FLASH_CARD_LIST:
+
                 setFlashcardList(true);
                 break;
-
             case FLASH_CARD_DETAIL:
+
                 createFragmentFlashCard(this.currentFlashCard, true);
                 break;
-
             default:
+
                 //setCategoryList(true); TODO
                 break;
         }
 
         toolbarTextViewTitle.setText(breadCrumbs.get(breadCrumbs.size() - 1));
-
     }
 
+
+    /**
+     * Sets the catalogue like the history was
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     */
     private void moveBackwardsInCatalogue() {
 
         this.childrenId = parentIds.get(parentIds.size() - 1);
@@ -410,31 +485,26 @@ public class MainActivity extends AppCompatActivity
             case CATEGORY_LIST:
 
                 categoryLevel--;
-
                 setCategoryList(true);
                 break;
-
             case CARD_DECK_LIST:
 
                 categoryLevel--;
                 setCategoryList(true);
                 break;
-
             case FLASH_CARD_LIST:
 
                 setCarddeckList(true);
                 break;
-
             case FLASH_CARD_DETAIL:
 
                 setFlashcardList(true);
                 break;
-
             default:
+
                 setCategoryList(true);
                 break;
         }
-
 
         if (breadCrumbs.size() > 1) {
 
@@ -451,17 +521,18 @@ public class MainActivity extends AppCompatActivity
 
 
     /**
-     * Instantiates the DatabesManager and opens a connection
+     * Instantiates the DatabaseManager and opens a connection
      *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
      */
     private void openDb() {
 
         try {
 
             if (db == null) {
+
                 db = new DbManager(this);
             }
-
             db.open();
 
         } catch (SQLException e) {
@@ -471,11 +542,15 @@ public class MainActivity extends AppCompatActivity
     }
 
 
+    /**
+     * Destroys the database object
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     */
     @Override
     protected void onDestroy() {
 
         super.onDestroy();
-
         db.close();
     }
 
@@ -486,7 +561,13 @@ public class MainActivity extends AppCompatActivity
     }
 
 
-
+    /**
+     * Click on Category
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     *
+     * @param item
+     */
     @Override
     public void onCategoryListFragmentInteraction(Category item) {
 
@@ -514,6 +595,14 @@ public class MainActivity extends AppCompatActivity
 
     }
 
+
+    /**
+     * Click on CardDeck
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     *
+     * @param item
+     */
     @Override
     public void onCarddeckListFragmentInteraction(CardDeck item) {
 
@@ -528,12 +617,19 @@ public class MainActivity extends AppCompatActivity
     }
 
 
+    /**
+     * Click on Flashcard or if null on add new FlashCard
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     *
+     * @param item
+     */
     @Override
     public void onFlashcardListFragmentInteraction(FlashCard item) {
 
+        // add a new flashcards
         if (item == null) {
 
-            Log.d("start fragment", "create card");
             createFragmentFlashCardCreate();
         } else {
 
@@ -578,112 +674,80 @@ public class MainActivity extends AppCompatActivity
         fragmentTransaction.commit();
     }
 
+
+    /**
+     * Sets the listview with content from db or server
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     *
+     * @param backPressed
+     */
     private void setFlashcardList(boolean backPressed) {
 
-        isServerAlive();
         new ContentFlashCards().collectItemsFromDb(this.childrenId, backPressed);
-
-        if (isNetworkAvailable() && isAlive) {
-            new ContentFlashCards().collectItemsFromServer(this.childrenId, backPressed);
-        }
+        new ContentFlashCards().collectItemsFromServer(this.childrenId, backPressed);
 
         catalogueState = Constants.FLASH_CARD_LIST;
     }
 
+
+    /**
+     * Sets the listview with content from db or server
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     *
+     * @param backPressed
+     */
     private void setCarddeckList(boolean backPressed) {
 
-        isServerAlive();
         new ContentCarddecks().collectItemsFromDb(this.childrenId, backPressed);
-
-        if (isNetworkAvailable() && isAlive) {
-            new ContentCarddecks().collectItemsFromServer(this.childrenId, backPressed);
-        }
+        new ContentCarddecks().collectItemsFromServer(this.childrenId, backPressed);
 
         catalogueState = Constants.CARD_DECK_LIST;
     }
 
+
+    /**
+     * Sets the listview with content from db or server
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     *
+     * @param backPressed
+     */
     private void setCategoryList(boolean backPressed) {
 
-        isServerAlive();
         new ContentCategories().collectItemsFromDb(this.categoryLevel, this.childrenId, backPressed);
-
-        if (isNetworkAvailable() && isAlive) {
-            new ContentCategories().collectItemsFromServer(this.categoryLevel, this.childrenId, backPressed);
-
-        }
+        new ContentCategories().collectItemsFromServer(this.categoryLevel, this.childrenId, backPressed);
 
         catalogueState = Constants.CATEGORY_LIST;
 
     }
 
-
+    /**
+     * Sets the flashCard details view with local or remote data
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     *
+     * @param backPressed
+     * @param flashCard
+     */
     private void createFragmentFlashCard (FlashCard flashCard, boolean backPressed) {
 
-        isServerAlive();
-
-        if (isNetworkAvailable() && isAlive) {
-
-            new  ContentFlashCard().collectItemFromServer(flashCard.getId(), backPressed);
-        } else {
-
-            new  ContentFlashCard().collectItemFromDb(flashCard.getId(), backPressed);
-        }
+        new  ContentFlashCard().collectItemFromServer(flashCard.getId(), backPressed);
+        new  ContentFlashCard().collectItemFromDb(flashCard.getId(), backPressed);
 
         this.currentFlashCard = flashCard;
         this.catalogueState = Constants.FLASH_CARD_DETAIL;
-
-        /*
-        FragmentFlashCard fragment = new FragmentFlashCard();
-        fragment.setItem(flashCard);
-        android.support.v4.app.FragmentTransaction fragmentTransaction =
-                getSupportFragmentManager().beginTransaction();
-                */
-        /*
-        fragmentTransaction.setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left);
-        */
-        /*
-        fragmentTransaction.replace(R.id.fragment_container_main, fragment);
-        fragmentTransaction.commit();
-        */
-    }
-
-    private boolean isNetworkAvailable() {
-
-        ConnectivityManager connectivityManager
-                = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
-
-        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 
 
     /**
-     * Call this before any async task that requests the server
+     * Click on answer
      *
      * @author Jonas Kraus jonas.kraus@uni-ulm.de
-     * @since 2016-12-03
+     *
+     * @param item
      */
-    private void isServerAlive () {
-
-        AsyncGetRemoteHeartbeat asyncGetRemoteHeartbeat = new AsyncGetRemoteHeartbeat(new AsyncGetRemoteHeartbeat.AsyncResponseHeartbeat() {
-            
-            @Override
-            public void processFinish(Boolean isAlive) {
-
-                setAlive(isAlive);
-            }
-        });
-
-        if (ProcessConnectivity.isOk(context)) {
-
-            asyncGetRemoteHeartbeat.execute();
-        }
-    }
-
-    private void setAlive (boolean isAlive) {
-        this.isAlive = isAlive;
-    }
-
     @Override
     public void onAnswerListFragmentInteraction(Answer item) {
         Log.d("click answer", item.toString());
