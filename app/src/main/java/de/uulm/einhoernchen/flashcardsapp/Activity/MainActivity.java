@@ -35,6 +35,7 @@ import de.uulm.einhoernchen.flashcardsapp.Database.DbManager;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.Dataset.ContentFlashCard;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.Dataset.ContentFlashCards;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.FragmentFlashCard;
+import de.uulm.einhoernchen.flashcardsapp.Fragment.FragmentFlashCardCreate;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.FragmentHome;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.Dataset.ContentCarddecks;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.Dataset.ContentCategories;
@@ -80,6 +81,7 @@ public class MainActivity extends AppCompatActivity
     private TextView profileEmail;
     private TextView profileRating;
     private View header;
+    private FloatingActionButton floatingActionButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -113,7 +115,7 @@ public class MainActivity extends AppCompatActivity
         openDb();
 
         // init Globals
-        Globals.initGlobals(context, progressBar, db, getSupportFragmentManager());
+        Globals.initGlobals(context, progressBar, db, getSupportFragmentManager(), floatingActionButton);
 
         setProfileView();
         ProcessConnectivity.isServerAlive ();
@@ -235,9 +237,10 @@ public class MainActivity extends AppCompatActivity
      */
     private void createFloatingActionButton() {
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        floatingActionButton = (FloatingActionButton) findViewById(R.id.fab);
 
-        fab.setOnClickListener(new View.OnClickListener() {
+        /* TODO Implement in fragment if necessary
+        floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
@@ -245,6 +248,7 @@ public class MainActivity extends AppCompatActivity
                         .setAction("Action", null).show();
             }
         });
+        */
     }
 
 
@@ -662,9 +666,7 @@ public class MainActivity extends AppCompatActivity
         this.catalogueState = Constants.FLASH_CARD_DETAIL;
 
         // TODO Start new fragment to create a card with answer
-        FragmentFlashCard fragment = new FragmentFlashCard();
-        fragment.setItem(null);
-        fragment.setUpToDate(false);
+        FragmentFlashCardCreate fragment = new FragmentFlashCardCreate();
         fragment.setCarddeckId(this.childrenId);
 
         android.support.v4.app.FragmentTransaction fragmentTransaction =

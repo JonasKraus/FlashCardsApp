@@ -1,6 +1,7 @@
 package de.uulm.einhoernchen.flashcardsapp.Util;
 
 import android.content.Context;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.FragmentManager;
 import android.util.Log;
 import android.widget.ProgressBar;
@@ -20,6 +21,7 @@ public class Globals {
     private static ProgressBar progressBar;
     private static DbManager db;
     private static FragmentManager fragmentManager;
+    private static FloatingActionButton floatingActionButton;
 
 
     /**
@@ -27,18 +29,29 @@ public class Globals {
      *
      * @author Jonas Kraus jonas.kraus@uni-ulm.de
      * @since 2017-01-06
-     *
-     * @param context
+     *@param context
      * @param progressBar
      * @param db
      * @param fragmentManager
+     * @param floatingActionButton
      */
-    public static void initGlobals(Context context, ProgressBar progressBar, DbManager db, FragmentManager fragmentManager) {
+    public static void initGlobals(Context context, ProgressBar progressBar, DbManager db, FragmentManager fragmentManager, FloatingActionButton floatingActionButton) {
 
         Globals.context = context;
         Globals.progressBar = progressBar;
         Globals.db = db;
         Globals.fragmentManager = fragmentManager;
+        Globals.floatingActionButton = floatingActionButton;
+    }
+
+    public static FloatingActionButton getFloatingActionButton() {
+
+        if (floatingActionButton == null) Log.e(TAG, "fab is NULL");
+        return floatingActionButton;
+    }
+
+    public static void setFloatingActionButton(FloatingActionButton floatingActionButton) {
+        Globals.floatingActionButton = floatingActionButton;
     }
 
     public static Context getContext() {
