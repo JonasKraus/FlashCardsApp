@@ -14,8 +14,8 @@ import com.amulyakhare.textdrawable.util.ColorGenerator;
 import java.util.List;
 
 import de.uulm.einhoernchen.flashcardsapp.Database.DbManager;
-import de.uulm.einhoernchen.flashcardsapp.Fragment.Interfaces.OnFragmentInteractionListenerCarddeck;
-import de.uulm.einhoernchen.flashcardsapp.Models.CardDeck;
+import de.uulm.einhoernchen.flashcardsapp.Fragment.Interface.OnFragmentInteractionListenerCarddeck;
+import de.uulm.einhoernchen.flashcardsapp.Model.CardDeck;
 import de.uulm.einhoernchen.flashcardsapp.R;
 
 /**

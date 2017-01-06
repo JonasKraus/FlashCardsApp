@@ -1,8 +1,5 @@
 package de.uulm.einhoernchen.flashcardsapp.Util;
 
-import android.net.Uri;
-
-import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
@@ -12,12 +9,12 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
-import de.uulm.einhoernchen.flashcardsapp.Models.Answer;
-import de.uulm.einhoernchen.flashcardsapp.Models.FlashCard;
-import de.uulm.einhoernchen.flashcardsapp.Models.Tag;
-import de.uulm.einhoernchen.flashcardsapp.Models.User;
-import de.uulm.einhoernchen.flashcardsapp.Models.rating.AnswerRating;
-import de.uulm.einhoernchen.flashcardsapp.Models.rating.CardRating;
+import de.uulm.einhoernchen.flashcardsapp.Model.Answer;
+import de.uulm.einhoernchen.flashcardsapp.Model.FlashCard;
+import de.uulm.einhoernchen.flashcardsapp.Model.Tag;
+import de.uulm.einhoernchen.flashcardsapp.Model.User;
+import de.uulm.einhoernchen.flashcardsapp.Model.rating.AnswerRating;
+import de.uulm.einhoernchen.flashcardsapp.Model.rating.CardRating;
 
 public class JsonUtil {
 //	public final static String dateformat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ";

@@ -1,20 +1,17 @@
 package de.uulm.einhoernchen.flashcardsapp.Fragment.Dataset;
 
-import android.content.Context;
 import android.os.Bundle;
-import android.support.v4.app.FragmentManager;
-import android.widget.ProgressBar;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import de.uulm.einhoernchen.flashcardsapp.AsyncTasks.Local.AsyncGetLocalCarddecks;
-import de.uulm.einhoernchen.flashcardsapp.AsyncTasks.Remote.AsyncGetRemoteCarddecks;
+import de.uulm.einhoernchen.flashcardsapp.AsyncTask.Local.AsyncGetLocalCarddecks;
+import de.uulm.einhoernchen.flashcardsapp.AsyncTask.Remote.AsyncGetRemoteCarddecks;
 
-import de.uulm.einhoernchen.flashcardsapp.AsyncTasks.Local.AsyncSaveLocalCardDecks;
+import de.uulm.einhoernchen.flashcardsapp.AsyncTask.Local.AsyncSaveLocalCardDecks;
 import de.uulm.einhoernchen.flashcardsapp.Database.DbManager;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.FragmentCarddecks;
-import de.uulm.einhoernchen.flashcardsapp.Models.CardDeck;
+import de.uulm.einhoernchen.flashcardsapp.Model.CardDeck;
 import de.uulm.einhoernchen.flashcardsapp.R;
 import de.uulm.einhoernchen.flashcardsapp.Util.Globals;
 import de.uulm.einhoernchen.flashcardsapp.Util.ProcessConnectivity;

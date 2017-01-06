@@ -21,14 +21,14 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-import de.uulm.einhoernchen.flashcardsapp.Models.Answer;
-import de.uulm.einhoernchen.flashcardsapp.Models.CardDeck;
-import de.uulm.einhoernchen.flashcardsapp.Models.Category;
-import de.uulm.einhoernchen.flashcardsapp.Models.FlashCard;
-import de.uulm.einhoernchen.flashcardsapp.Models.Question;
-import de.uulm.einhoernchen.flashcardsapp.Models.Tag;
-import de.uulm.einhoernchen.flashcardsapp.Models.User;
-import de.uulm.einhoernchen.flashcardsapp.Models.UserGroup;
+import de.uulm.einhoernchen.flashcardsapp.Model.Answer;
+import de.uulm.einhoernchen.flashcardsapp.Model.CardDeck;
+import de.uulm.einhoernchen.flashcardsapp.Model.Category;
+import de.uulm.einhoernchen.flashcardsapp.Model.FlashCard;
+import de.uulm.einhoernchen.flashcardsapp.Model.Question;
+import de.uulm.einhoernchen.flashcardsapp.Model.Tag;
+import de.uulm.einhoernchen.flashcardsapp.Model.User;
+import de.uulm.einhoernchen.flashcardsapp.Model.UserGroup;
 
 /**
  * @author Jonas Kraus jonas.kraus@uni-ulm.de

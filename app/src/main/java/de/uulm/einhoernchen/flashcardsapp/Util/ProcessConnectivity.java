@@ -3,10 +3,9 @@ package de.uulm.einhoernchen.flashcardsapp.Util;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.util.Log;
 import android.widget.Toast;
 
-import de.uulm.einhoernchen.flashcardsapp.AsyncTasks.Remote.AsyncGetRemoteHeartbeat;
+import de.uulm.einhoernchen.flashcardsapp.AsyncTask.Remote.AsyncGetRemoteHeartbeat;
 import de.uulm.einhoernchen.flashcardsapp.R;
 
 /**

@@ -45,10 +45,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.lang.*;
 
-import de.uulm.einhoernchen.flashcardsapp.AsyncTasks.Remote.AsyncGetRemoteUser;
-import de.uulm.einhoernchen.flashcardsapp.Consts.Routes;
+import de.uulm.einhoernchen.flashcardsapp.AsyncTask.Remote.AsyncGetRemoteUser;
+import de.uulm.einhoernchen.flashcardsapp.Const.Routes;
 import de.uulm.einhoernchen.flashcardsapp.Database.DbManager;
-import de.uulm.einhoernchen.flashcardsapp.Models.User;
+import de.uulm.einhoernchen.flashcardsapp.Model.User;
 import de.uulm.einhoernchen.flashcardsapp.R;
 import de.uulm.einhoernchen.flashcardsapp.Util.ProcessConnectivity;
 
