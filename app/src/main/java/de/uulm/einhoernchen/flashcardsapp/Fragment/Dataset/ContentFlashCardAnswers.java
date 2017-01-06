@@ -25,7 +25,7 @@ public class ContentFlashCardAnswers {
 
     private static List<Answer> answers = new ArrayList<Answer>();
 
-    public static FragmentFlashcards fragment;
+    public static FragmentFlashCardAnswers fragment;
 
     private static boolean isUpToDate = false;
     private static DbManager db = Globals.getDb();

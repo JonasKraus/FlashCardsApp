@@ -82,7 +82,7 @@ public class AsyncPostRemoteCard extends AsyncTask<Long, Long, Long> {
 
             } catch (Exception e) {
 
-                Log.e("doInBack card post", e.toString());
+                Log.e("doInBack card " + urlConnection.getRequestMethod(), e.toString() + jsonObject.toString());
                 System.out.println(e.toString());
                 return null;
             }

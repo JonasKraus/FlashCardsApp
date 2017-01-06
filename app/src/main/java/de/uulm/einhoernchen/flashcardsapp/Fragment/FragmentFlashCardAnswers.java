@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import de.uulm.einhoernchen.flashcardsapp.Database.DbManager;
@@ -31,10 +32,14 @@ public class FragmentFlashCardAnswers extends Fragment {
     private static final String ARG_COLUMN_COUNT = "column-count";
     private int mColumnCount = 1;
     private OnFragmentInteractionListenerAnswer mListener;
-    private List<Answer> itemList;
+    private List<Answer> itemList = new ArrayList<>();
     private DbManager db = Globals.getDb();
     private boolean isUpToDate;
-    private ProgressBar progressBar = Globals.getProgressBar();
+    private RecyclerView recyclerView;
+
+    public RecyclerView getRecyclerView() {
+        return recyclerView;
+    }
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -73,7 +78,7 @@ public class FragmentFlashCardAnswers extends Fragment {
         // Set the adapter
         if (view instanceof RecyclerView) {
             Context context = view.getContext();
-            RecyclerView recyclerView = (RecyclerView) view;
+            recyclerView = (RecyclerView) view;
 
             if (mColumnCount <= 1) {
                 recyclerView.setLayoutManager(new LinearLayoutManager(context));
@@ -81,7 +86,7 @@ public class FragmentFlashCardAnswers extends Fragment {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
 
-            recyclerView.setAdapter(new RecyclerViewAdapterFlashCardAnswers(db, itemList, mListener, isUpToDate, context, progressBar));
+            recyclerView.setAdapter(new RecyclerViewAdapterFlashCardAnswers(itemList, mListener, isUpToDate));
         }
         return view;
     }

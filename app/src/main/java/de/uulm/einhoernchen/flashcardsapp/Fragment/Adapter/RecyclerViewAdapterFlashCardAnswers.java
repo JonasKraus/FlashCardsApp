@@ -25,6 +25,7 @@ import de.uulm.einhoernchen.flashcardsapp.Database.DbManager;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.Interface.OnFragmentInteractionListenerAnswer;
 import de.uulm.einhoernchen.flashcardsapp.Model.Answer;
 import de.uulm.einhoernchen.flashcardsapp.R;
+import de.uulm.einhoernchen.flashcardsapp.Util.Globals;
 import de.uulm.einhoernchen.flashcardsapp.Util.ProcessConnectivity;
 import de.uulm.einhoernchen.flashcardsapp.Util.ProcessorImage;
 
@@ -37,17 +38,14 @@ public class RecyclerViewAdapterFlashCardAnswers extends RecyclerView.Adapter<Re
     private final List<Answer> answers;
     private final OnFragmentInteractionListenerAnswer mListener;
     private final boolean isUpToDate;
-    private final Context context;
-    private final DbManager db;
-    private final ProgressBar progressBar;
+    private final Context context = Globals.getContext();
+    private final DbManager db = Globals.getDb();
+    private final ProgressBar progressBar = Globals.getProgressBar();
 
-    public RecyclerViewAdapterFlashCardAnswers(DbManager db, List<Answer> items, OnFragmentInteractionListenerAnswer listener, boolean isUpToDate, Context context, ProgressBar progressBar) {
+    public RecyclerViewAdapterFlashCardAnswers(List<Answer> items, OnFragmentInteractionListenerAnswer listener, boolean isUpToDate) {
         answers = items;
         mListener = listener;
         this.isUpToDate = isUpToDate;
-        this.context = context;
-        this.db = db;
-        this.progressBar = progressBar;
     }
 
     @Override

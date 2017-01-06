@@ -18,6 +18,7 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -28,12 +29,17 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import de.uulm.einhoernchen.flashcardsapp.AsyncTask.Remote.AsyncDeleteRemoteRating;
 import de.uulm.einhoernchen.flashcardsapp.AsyncTask.Remote.AsyncPatchRemoteCard;
 import de.uulm.einhoernchen.flashcardsapp.AsyncTask.Remote.AsyncPostRemoteCard;
 import de.uulm.einhoernchen.flashcardsapp.AsyncTask.Remote.AsyncPostRemoteRating;
 import de.uulm.einhoernchen.flashcardsapp.Database.DbManager;
+import de.uulm.einhoernchen.flashcardsapp.Fragment.Adapter.RecyclerViewAdapterFlashCardAnswers;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.Dataset.ContentFlashCardAnswers;
+import de.uulm.einhoernchen.flashcardsapp.Model.Answer;
 import de.uulm.einhoernchen.flashcardsapp.Model.FlashCard;
 import de.uulm.einhoernchen.flashcardsapp.Model.Question;
 import de.uulm.einhoernchen.flashcardsapp.R;
@@ -43,6 +49,7 @@ import de.uulm.einhoernchen.flashcardsapp.Util.ProcessConnectivity;
 import de.uulm.einhoernchen.flashcardsapp.Util.ProcessorImage;
 
 import static com.google.android.gms.analytics.internal.zzy.v;
+import static de.uulm.einhoernchen.flashcardsapp.Fragment.Dataset.ContentFlashCardAnswers.fragment;
 
 
 /**
@@ -75,8 +82,7 @@ public class FragmentFlashCardCreate extends Fragment implements View.OnClickLis
 
     private WebView webViewUri;
 
-    private Button buttonAddAnswer;
-    private Button buttonAnswerEditorSave;
+    private ImageButton buttonAnswerEditorAdd;
 
     private EditText editTextAnswerText;
     private EditText editTextAnswerHint;
@@ -93,6 +99,9 @@ public class FragmentFlashCardCreate extends Fragment implements View.OnClickLis
     private RadioButton radioButtonAnswerIncorrect;
 
     private long carddeckId;
+
+    private FragmentFlashCardAnswers fragmentAnswers;
+    private ArrayList<Answer> answers;
 
     public FragmentFlashCardCreate() {
         // Required empty public constructor
@@ -142,8 +151,11 @@ public class FragmentFlashCardCreate extends Fragment implements View.OnClickLis
 
         webViewUri = (WebView) view.findViewById(R.id.webview_card_question);
 
-        buttonAddAnswer = (Button) view.findViewById(R.id.button_add_answer);
-        buttonAnswerEditorSave = (Button) view.findViewById(R.id.button_answer_editor_save);
+        buttonAnswerEditorAdd = (ImageButton) view.findViewById(R.id.button_answer_editor_add);
+        buttonAnswerEditorAdd.setVisibility(View.VISIBLE);
+        Button buttonSaveAnswer = (Button) view.findViewById(R.id.button_answer_editor_save);
+        buttonSaveAnswer.setVisibility(View.GONE);
+        buttonAnswerEditorAdd.setOnClickListener(this);
 
         editTextAnswerText = (EditText) view.findViewById(R.id.edittext_answer_text);
         editTextAnswerHint = (EditText) view.findViewById(R.id.edittext_answer_hint);
@@ -160,12 +172,22 @@ public class FragmentFlashCardCreate extends Fragment implements View.OnClickLis
         radioButtonAnswerCorrect = (RadioButton) view.findViewById(R.id.radio_button_answer_editor_correct);
         radioButtonAnswerIncorrect = (RadioButton) view.findViewById(R.id.radio_button_answer_editor_incorrect);
 
-        buttonAnswerEditorSave.setOnClickListener(this);
 
         editTextQuestionText.setText(flashCard.getQuestion().getQuestionText());
         editTextQuestionUri.setText(flashCard.getQuestion().getUri().toString());
 
         setMedia();
+
+        fragmentAnswers = new FragmentFlashCardAnswers();
+        answers = new ArrayList<Answer>();
+
+        fragmentAnswers.setUpToDate(false);
+
+        android.support.v4.app.FragmentTransaction fragmentTransaction =
+                Globals.getFragmentManager().beginTransaction();
+
+        fragmentTransaction.replace(R.id.fragment_container_card_answer, fragmentAnswers);
+        fragmentTransaction.commit();
 
         radioGroupAnswerCorrect.setVisibility(View.VISIBLE);
 
@@ -286,17 +308,24 @@ public class FragmentFlashCardCreate extends Fragment implements View.OnClickLis
 
         switch (v.getId()) {
 
+            case R.id.button_answer_editor_add:
+
+                addAnswerToListView();
+
+                break;
+
             //save answer
             case R.id.fab:
 
+                String answerText = editTextAnswerText.getText().toString();
+                // Check if the text is not empty
+                if (answerText != null && !answerText.equals("")) {
+
+                    addAnswerToListView();
+                }
 
                 saveQuestion();
-                //saveAnswerAndReload(v);
 
-
-                // hides the softkeyboard
-                InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-                imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
                 break;
             case R.id.imageview_card_media_play:
 
@@ -304,6 +333,71 @@ public class FragmentFlashCardCreate extends Fragment implements View.OnClickLis
                 getContext().startActivity(new Intent(Intent.ACTION_VIEW,flashCard.getQuestion().getUri()));
                 break;
         }
+
+
+        hideSoftKeyboard(v);
+    }
+
+
+    /**
+     * hides the softkeyboard
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     * @since 2017-01-06
+     *
+     * @param v
+     */
+    private void hideSoftKeyboard(View v) {
+
+        // hides the softkeyboard
+        InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+    }
+
+
+    /**
+     * Adds the answer from the editor to the list view
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     * @since 2017-01-06
+     *
+     */
+    private void addAnswerToListView() {
+
+        String answerText = editTextAnswerText.getText().toString();
+
+        if (answerText == null || answerText.equals("")) {
+
+            Toast.makeText(getContext(), getContext().getText(R.string.insert_text), Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        editTextAnswerText.setText(null);
+        String answerHint = editTextAnswerHint.getText().toString();
+        editTextAnswerHint.setText(null);
+        String answerUri = editTextAnswerUri.getText().toString();
+        editTextAnswerUri.setText(null);
+
+
+        Boolean isCorrect = true;
+
+        if (this.flashCard.isMultipleChoice()) {
+
+            isCorrect = radioButtonAnswerCorrect.isChecked();
+        }
+
+        answers.add(new Answer(answerText, answerHint, answerUri, isCorrect, db.getLoggedInUser()));
+        fragmentAnswers.setItemList(answers);
+
+        android.support.v4.app.FragmentTransaction fragmentTransaction =
+                Globals.getFragmentManager().beginTransaction();
+
+        fragmentTransaction.replace(R.id.fragment_container_card_answer, fragmentAnswers);
+        fragmentTransaction.commit();
+
+        RecyclerViewAdapterFlashCardAnswers recyclerViewAdapterFlashCardAnswers = new RecyclerViewAdapterFlashCardAnswers(answers, null, false);
+
+        fragmentAnswers.getRecyclerView().setAdapter(recyclerViewAdapterFlashCardAnswers);
     }
 
 
@@ -342,7 +436,6 @@ public class FragmentFlashCardCreate extends Fragment implements View.OnClickLis
         JSONObject author = new JSONObject();
         JSONObject jsonUser = new JSONObject();
         JSONObject jsonObjectAnswers = new JSONObject();
-        JSONObject jsonObjectAnswer = new JSONObject();
 
         try {
 
@@ -354,18 +447,23 @@ public class FragmentFlashCardCreate extends Fragment implements View.OnClickLis
             jsonObjectQuestion.put(JsonKeys.AUTHOR, jsonUser);
             questionData.put(JsonKeys.AUTHOR, jsonUser);
 
-            jsonObjectAnswer.put("answerText", answerText);
-            jsonObjectAnswer.put("answerHint", answerHint);
-            jsonObjectAnswer.put("mediaURI", answerUri);
-            jsonObjectAnswer.put("answerCorrect", isCorrect);
-
             JSONObject jsonObjectAuthor = new JSONObject();
             jsonObjectAuthor.put("userId", db.getLoggedInUser().getId());
 
-            jsonObjectAnswer.put("author", jsonObjectAuthor);
-
             JSONArray jsonArray = new JSONArray();
-            jsonArray.put(jsonObjectAnswer);
+
+            // Iterates over all temporary saved answers
+            for (Answer a : answers) {
+
+                JSONObject jsonObjectAnswer = new JSONObject();
+                jsonObjectAnswer.put("answerText", a.getAnswerText());
+                jsonObjectAnswer.put("answerHint", a.getHintText());
+                jsonObjectAnswer.put("mediaURI", a.getUri());
+                jsonObjectAnswer.put("answerCorrect", a.isCorrect());
+                jsonObjectAnswer.put("author", jsonObjectAuthor);
+
+                jsonArray.put(jsonObjectAnswer);
+            }
 
             jsonObjectQuestion.put("answers", jsonArray);
 
@@ -375,7 +473,7 @@ public class FragmentFlashCardCreate extends Fragment implements View.OnClickLis
             e.printStackTrace();
         }
 
-        Log.d("create", "new flashcard");
+        Log.d("create", "new flashcard " + jsonObjectQuestion.toString());
         AsyncPostRemoteCard task = new AsyncPostRemoteCard(jsonObjectQuestion);
 
         if (ProcessConnectivity.isOk(getContext(), true)) {
