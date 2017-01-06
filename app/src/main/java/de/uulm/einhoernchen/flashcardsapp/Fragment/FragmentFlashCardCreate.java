@@ -473,15 +473,12 @@ public class FragmentFlashCardCreate extends Fragment implements View.OnClickLis
             e.printStackTrace();
         }
 
-        Log.d("create", "new flashcard " + jsonObjectQuestion.toString());
         AsyncPostRemoteCard task = new AsyncPostRemoteCard(jsonObjectQuestion);
 
         if (ProcessConnectivity.isOk(getContext(), true)) {
 
             task.execute(this.carddeckId);
         }
-
-        // TODO new ContentFlashCard().collectItemFromServer(flashCard.getId(), getFragmentManager(), progressBar, false, db);    }
 
     }
 

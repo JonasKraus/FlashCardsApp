@@ -38,8 +38,6 @@ public class ContentFlashCard {
      */
     public void collectItemFromServer(final long flashcardId, final boolean backPressed) {
 
-        this.db = db;
-
         AsyncGetRemoteFlashCard asyncGetFlashCard = new AsyncGetRemoteFlashCard(flashcardId, new AsyncGetRemoteFlashCard.AsyncResponseFlashCard() {
 
             @Override

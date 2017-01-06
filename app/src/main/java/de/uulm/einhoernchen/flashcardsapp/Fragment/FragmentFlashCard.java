@@ -138,14 +138,9 @@ public class FragmentFlashCard extends Fragment implements View.OnClickListener 
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_flashcard_parallax, container, false);
 
-        if (flashCard != null) {
-
-            new ContentFlashCardAnswers().collectItemsFromDb(flashCard.getId(), false);
-            new ContentFlashCardAnswers().collectItemsFromServer(flashCard.getId(), false);
-        } else {
-
-            this.flashCard = new FlashCard(db.getLoggedInUser(),null,new Question("","",db.getLoggedInUser()),false);
-        }
+        // Load answers
+        new ContentFlashCardAnswers().collectItemsFromDb(flashCard.getId(), false);
+        new ContentFlashCardAnswers().collectItemsFromServer(flashCard.getId(), false);
 
         mIdView = (TextView) view.findViewById(R.id.id);
         mContentView = (TextView) view.findViewById(R.id.content);
@@ -457,12 +452,6 @@ public class FragmentFlashCard extends Fragment implements View.OnClickListener 
 
     public void setItem(FlashCard flashCard) {
 
-        if (flashCard == null) {
-            this.flashCard = new FlashCard(db.getLoggedInUser(),null,new Question("","",db.getLoggedInUser()),false);
-        }
-
-        Log.d("set fla", (this.flashCard == null) + "");
-
         this.flashCard = flashCard;
     }
 
@@ -615,27 +604,13 @@ public class FragmentFlashCard extends Fragment implements View.OnClickListener 
                     e.printStackTrace();
                 }
 
-                if (flashCard.getId() == 0) {
 
-                    Log.d("create", "new flashcard");
-                    AsyncPostRemoteCard task = new AsyncPostRemoteCard(jsonObjectQuestion);
+                AsyncPatchRemoteCard task = new AsyncPatchRemoteCard(jsonObjectQuestion, flashCard.getId());
 
-                    if (ProcessConnectivity.isOk(getContext(), true)) {
+                if (ProcessConnectivity.isOk(getContext())) {
 
-                        task.execute(this.carddeckId);
-                    }
-
-                } else {
-
-                    AsyncPatchRemoteCard task = new AsyncPatchRemoteCard(jsonObjectQuestion, flashCard.getId());
-
-                    if (ProcessConnectivity.isOk(getContext())) {
-
-                        task.execute();
-                    }
+                    task.execute();
                 }
-
-                // TODO new ContentFlashCard().collectItemFromServer(flashCard.getId(), getFragmentManager(), progressBar, false, db);
 
                 break;
         }

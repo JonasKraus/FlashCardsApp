@@ -741,6 +741,21 @@ public class MainActivity extends AppCompatActivity
         this.currentFlashCard = flashCard;
         this.catalogueState = Constants.FLASH_CARD_DETAIL;
     }
+    /**
+     * Sets the flashCard details view with local or remote data
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     *
+     * @param backPressed
+     * @param flashCardId
+     */
+    public void createFragmentFlashCardById (long flashCardId, boolean backPressed) {
+
+        new  ContentFlashCard().collectItemFromServer(flashCardId, backPressed);
+
+        this.currentFlashCard = null;
+        this.catalogueState = Constants.FLASH_CARD_DETAIL;
+    }
 
 
     /**

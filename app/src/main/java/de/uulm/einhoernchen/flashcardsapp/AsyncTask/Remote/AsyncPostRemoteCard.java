@@ -1,5 +1,6 @@
 package de.uulm.einhoernchen.flashcardsapp.AsyncTask.Remote;
 
+import android.app.Activity;
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -11,7 +12,9 @@ import java.io.DataOutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+import de.uulm.einhoernchen.flashcardsapp.Activity.MainActivity;
 import de.uulm.einhoernchen.flashcardsapp.Const.Routes;
+import de.uulm.einhoernchen.flashcardsapp.Util.Globals;
 import de.uulm.einhoernchen.flashcardsapp.Util.JsonKeys;
 import de.uulm.einhoernchen.flashcardsapp.Util.JsonParser;
 
@@ -76,7 +79,7 @@ public class AsyncPostRemoteCard extends AsyncTask<Long, Long, Long> {
                 wr.writeBytes(jsonObject.toString());
                 wr.flush();
 
-                Log.d(urlConnection.getRequestMethod() + " json", jsonObject.toString());
+                //Log.d(urlConnection.getRequestMethod() + " json", jsonObject.toString());
 
                 return JsonParser.readResponse(urlConnection.getInputStream());
 
@@ -113,6 +116,9 @@ public class AsyncPostRemoteCard extends AsyncTask<Long, Long, Long> {
             //patch carddeck mit carddeckid und cardid
             AsyncPatchRemoteCarddeck task = new AsyncPatchRemoteCarddeck(jsonObjectCards);
             task.execute(this.carddeckId);
+
+            MainActivity mainActivity = (MainActivity) Globals.getContext();
+            mainActivity.createFragmentFlashCardById(id,false);
 
         } else {
             Log.w("POST CARD", "FAILED");
