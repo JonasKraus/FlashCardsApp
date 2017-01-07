@@ -23,6 +23,7 @@ public class Globals {
     private static FragmentManager fragmentManager;
     private static FloatingActionButton floatingActionButton;
     private static FloatingActionButton floatingActionButtonAdd;
+    private static int scrollX;
 
 
     /**
@@ -106,5 +107,13 @@ public class Globals {
 
     public static void setFragmentManager(FragmentManager fragmentManager) {
         Globals.fragmentManager = fragmentManager;
+    }
+
+    public static void setScrollX(int scrollX) {
+        Globals.scrollX = scrollX;
+    }
+
+    public static int getScrollX() {
+        return scrollX;
     }
 }

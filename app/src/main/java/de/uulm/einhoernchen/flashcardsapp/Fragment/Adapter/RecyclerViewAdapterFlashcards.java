@@ -74,8 +74,6 @@ public class RecyclerViewAdapterFlashcards extends RecyclerView.Adapter<Recycler
                     .inflate(R.layout.add_flashcard, parent, false);
         }
 
-
-
         return new ViewHolder(view);
     }
 
@@ -99,8 +97,14 @@ public class RecyclerViewAdapterFlashcards extends RecyclerView.Adapter<Recycler
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
 
+
+        //TODO Jonas delete if unused
         if (position >= flashCards.size()) {
 
+            //TODO Jonas delete if unused
+            holder.buttonAddCard.setVisibility(View.GONE);
+
+            //TODO Jonas delete if unused
             holder.buttonAddCard.setOnClickListener(new View.OnClickListener(){
 
                 @Override
@@ -350,6 +354,8 @@ public class RecyclerViewAdapterFlashcards extends RecyclerView.Adapter<Recycler
             mediaPlay = (ImageView) view.findViewById(R.id.imageview_card_media_play);
 
             buttonAddCard = (Button) view.findViewById(R.id.button_card_add);
+
+
         }
 
         @Override
