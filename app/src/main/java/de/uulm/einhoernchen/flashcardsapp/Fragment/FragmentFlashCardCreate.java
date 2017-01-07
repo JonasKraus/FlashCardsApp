@@ -144,8 +144,9 @@ public class FragmentFlashCardCreate extends Fragment implements View.OnClickLis
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment TODO
-        View view = inflater.inflate(R.layout.fragment_flashcard_parallax_create, container, false);
+        final View view = inflater.inflate(R.layout.fragment_flashcard_parallax_create, container, false);
 
+        // create dummy card
         this.flashCard = new FlashCard(db.getLoggedInUser(), null, new Question("","",db.getLoggedInUser()),false);
 
         mIdView = (TextView) view.findViewById(R.id.id);
@@ -167,10 +168,23 @@ public class FragmentFlashCardCreate extends Fragment implements View.OnClickLis
         editTextAnswerHint = (EditText) view.findViewById(R.id.edittext_answer_hint);
         editTextAnswerUri = (EditText) view.findViewById(R.id.edittext_answer_uri);
 
+
         textInputLayoutUri = (TextInputLayout) view.findViewById(R.id.textInputLayout_uri);
         textInputLayoutContent = (TextInputLayout) view.findViewById(R.id.textInputLayout_content);
 
         editTextQuestionUri = (EditText) view.findViewById(R.id.edittext_uri);
+        editTextQuestionUri.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+
+                if(!hasFocus && ValidatorInput.isValidUri(editTextQuestionUri)) {
+
+                    setMedia(editTextQuestionUri.getText().toString());
+                }
+            }
+        });
+
         editTextQuestionText = (EditText) view.findViewById(R.id.edittext_content);
 
         imageViewPlay = (ImageView) view.findViewById(R.id.imageview_card_media_play);
@@ -206,8 +220,6 @@ public class FragmentFlashCardCreate extends Fragment implements View.OnClickLis
         editTextQuestionText.setText(flashCard.getQuestion().getQuestionText());
         editTextQuestionUri.setText(flashCard.getQuestion().getUri().toString());
 
-        setMedia();
-
         fragmentAnswers = new FragmentFlashCardAnswers();
         answers = new ArrayList<Answer>();
 
@@ -234,66 +246,64 @@ public class FragmentFlashCardCreate extends Fragment implements View.OnClickLis
      * @author Jonas Kraus jonas.kraus@uni-ulm.de
      * @since 2017-01-03
      */
-    private void setMedia() {
+    private void setMedia(String uriString) {
 
-        if (flashCard.getQuestion().getUri() != null && flashCard.getQuestion().getUri().toString() != "") {
+        Globals.getProgressBar().setVisibility(View.VISIBLE);
 
-            String uriString = flashCard.getQuestion().getUri().toString().toLowerCase();
+        if (uriString.contains("youtube")) {
 
-            if (uriString.contains("youtube")) {
-
-                imageViewPlay.setVisibility(View.VISIBLE);
-                imageViewPlay.setOnClickListener(this);
-            }
-
-            if (uriString.endsWith("jpg") || uriString.endsWith(".png") || uriString.contains("youtube")) {
-
-                ProcessorImage.download(flashCard.getQuestion().getUri().toString(), imageViewUri, flashCard.getQuestion().getId(), "_question");
-                webViewUri.setVisibility(View.GONE);
-                imageViewPlay.setVisibility(uriString.contains("youtube") ? View.VISIBLE : View.GONE);
-                imageViewUri.setVisibility(View.VISIBLE);
-
-            } else {
-
-                webViewUri.setVisibility(View.VISIBLE);
-                imageViewPlay.setVisibility(View.GONE);
-                imageViewUri.setVisibility(View.GONE);
-
-                if (!uriString.startsWith("https://") && !uriString.startsWith("http://") && !uriString.equals("")) {
-
-                    uriString = "https://" + uriString;
-
-                } else if (uriString.equals("")) {
-
-                    uriString = "http://134.60.51.72:9000/";
-                }
-
-                WebSettings settings = webViewUri.getSettings();
-                settings.setJavaScriptEnabled(true);
-                webViewUri.setScrollBarStyle(WebView.SCROLLBARS_OUTSIDE_OVERLAY);
-
-                Globals.getProgressBar().setVisibility(View.VISIBLE);
-
-                webViewUri.setWebViewClient(new WebViewClient() {
-
-                    public boolean shouldOverrideUrlLoading(WebView view, String url) {
-
-                        view.loadUrl(url);
-                        return true;
-                    }
-
-                    public void onPageFinished(WebView view, String url) {
-
-                        if (Globals.getProgressBar().isShown()) {
-                            Globals.getProgressBar().setVisibility(View.GONE);
-                        }
-                    }
-
-                });
-                webViewUri.loadUrl(uriString);
-            }
+            imageViewPlay.setVisibility(View.VISIBLE);
+            imageViewPlay.setOnClickListener(this);
         }
 
+        if (uriString.endsWith("jpg") || uriString.endsWith(".png") || uriString.contains("youtube")) {
+
+            ProcessorImage.download(flashCard.getQuestion().getUri().toString(), imageViewUri, flashCard.getQuestion().getId(), "_question");
+            webViewUri.setVisibility(View.GONE);
+            imageViewPlay.setVisibility(uriString.contains("youtube") ? View.VISIBLE : View.GONE);
+            imageViewUri.setVisibility(View.VISIBLE);
+
+        } else {
+
+            webViewUri.setVisibility(View.VISIBLE);
+            imageViewPlay.setVisibility(View.GONE);
+            imageViewUri.setVisibility(View.GONE);
+
+            if (!uriString.startsWith("https://") && !uriString.startsWith("http://") && !uriString.equals("")) {
+
+                uriString = "https://" + uriString;
+
+            } else if (uriString.equals("")) {
+
+                uriString = "http://134.60.51.72:9000/";
+            }
+
+
+            WebSettings settings = webViewUri.getSettings();
+            settings.setJavaScriptEnabled(true);
+            webViewUri.setScrollBarStyle(WebView.SCROLLBARS_OUTSIDE_OVERLAY);
+
+
+            webViewUri.setWebViewClient(new WebViewClient() {
+
+                public boolean shouldOverrideUrlLoading(WebView view, String url) {
+
+                    view.loadUrl(url);
+                    return true;
+                }
+
+                public void onPageFinished(WebView view, String url) {
+
+                    if (Globals.getProgressBar().isShown()) {
+
+                        Globals.getProgressBar().setVisibility(View.GONE);
+                    }
+                }
+
+            });
+
+            webViewUri.loadUrl(uriString);
+        }
     }
 
 
@@ -535,9 +545,7 @@ public class FragmentFlashCardCreate extends Fragment implements View.OnClickLis
      */
     private boolean validateQuestion() {
 
-        String color = Globals.getContext().getString(R.string.white);
-
-        return ValidatorInput.isNotEmpty(editTextQuestionText, color) && ValidatorInput.isValidUri(editTextQuestionUri, color);
+        return ValidatorInput.isNotEmpty(editTextQuestionText) && ValidatorInput.isValidUri(editTextQuestionUri);
     }
 
 

@@ -14,6 +14,9 @@ import de.uulm.einhoernchen.flashcardsapp.R;
 public class ValidatorInput {
 
 
+    private static final String WHITE = Globals.getContext().getString(R.string.white);
+
+
     /**
      * Sets the message and a text color if default is not enough
      *
@@ -91,7 +94,7 @@ public class ValidatorInput {
 
             if (!URLUtil.isValidUrl(uri)) {
 
-                setErrorTextAndColor(editText, msg, null);
+                setErrorTextAndColor(editText, msg, ValidatorInput.WHITE);
 
                 isValid = false;
             }
@@ -120,7 +123,7 @@ public class ValidatorInput {
 
         if (text == null || text.equals("")) {
 
-            setErrorTextAndColor(editText, msg, null);
+            setErrorTextAndColor(editText, msg, ValidatorInput.WHITE);
 
             isValid = false;
         }

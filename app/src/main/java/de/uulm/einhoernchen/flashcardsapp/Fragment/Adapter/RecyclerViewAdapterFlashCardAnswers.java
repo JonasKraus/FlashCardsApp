@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -269,13 +270,20 @@ public class RecyclerViewAdapterFlashCardAnswers extends RecyclerView.Adapter<Re
             holder.mediaPlay.setVisibility(View.GONE);
             holder.mediaImage.setVisibility(View.GONE);
 
-            if (!uriString.startsWith("https://") && !uriString.startsWith("http://") && !uriString.equals("")) {
+            Log.d("uri", uriString);
+
+            // empty string do nothing
+            if (uriString.equals("")) {
+
+                holder.relativeLayoutWebview.setVisibility(View.GONE);
+                return;
+            }
+
+            // add protocoll if needed
+            if (!uriString.toLowerCase().startsWith("http")) {
 
                 uriString = "https://" + uriString;
 
-            } else {
-
-                holder.relativeLayoutWebview.setVisibility(View.GONE);
             }
 
             WebSettings settings = holder.webViewUri.getSettings();
