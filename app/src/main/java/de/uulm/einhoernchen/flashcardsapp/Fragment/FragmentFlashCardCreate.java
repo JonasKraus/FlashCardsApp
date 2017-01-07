@@ -2,12 +2,9 @@ package de.uulm.einhoernchen.flashcardsapp.Fragment;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -15,7 +12,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
-import android.webkit.URLUtil;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -35,15 +31,10 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.List;
 
-import de.uulm.einhoernchen.flashcardsapp.AsyncTask.Remote.AsyncDeleteRemoteRating;
-import de.uulm.einhoernchen.flashcardsapp.AsyncTask.Remote.AsyncPatchRemoteCard;
 import de.uulm.einhoernchen.flashcardsapp.AsyncTask.Remote.AsyncPostRemoteCard;
-import de.uulm.einhoernchen.flashcardsapp.AsyncTask.Remote.AsyncPostRemoteRating;
 import de.uulm.einhoernchen.flashcardsapp.Database.DbManager;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.Adapter.RecyclerViewAdapterFlashCardAnswers;
-import de.uulm.einhoernchen.flashcardsapp.Fragment.Dataset.ContentFlashCardAnswers;
 import de.uulm.einhoernchen.flashcardsapp.Model.Answer;
 import de.uulm.einhoernchen.flashcardsapp.Model.FlashCard;
 import de.uulm.einhoernchen.flashcardsapp.Model.Question;
@@ -53,9 +44,6 @@ import de.uulm.einhoernchen.flashcardsapp.Util.JsonKeys;
 import de.uulm.einhoernchen.flashcardsapp.Util.ProcessConnectivity;
 import de.uulm.einhoernchen.flashcardsapp.Util.ProcessorImage;
 import de.uulm.einhoernchen.flashcardsapp.Util.ValidatorInput;
-
-import static com.google.android.gms.analytics.internal.zzy.v;
-import static de.uulm.einhoernchen.flashcardsapp.Fragment.Dataset.ContentFlashCardAnswers.fragment;
 
 
 /**
@@ -111,7 +99,10 @@ public class FragmentFlashCardCreate extends Fragment implements View.OnClickLis
     private FragmentFlashCardAnswers fragmentAnswers;
     private ArrayList<Answer> answers;
 
-    private FloatingActionButton floatingActionButton;
+    private FloatingActionButton floatingActionButtonCardCreate;
+    private FloatingActionButton floatingActionButtonAnswerAdd;
+    private FloatingActionButton floatingActionButtonAnswerSave;
+    private FloatingActionButton floatingActionButtonCardAnswerAdd;
 
     public FragmentFlashCardCreate() {
         // Required empty public constructor
@@ -163,7 +154,8 @@ public class FragmentFlashCardCreate extends Fragment implements View.OnClickLis
         webViewUri = (WebView) view.findViewById(R.id.webview_card_question);
 
         buttonAnswerEditorAdd = (ImageButton) view.findViewById(R.id.button_answer_editor_add);
-        buttonAnswerEditorAdd.setVisibility(View.VISIBLE);
+        buttonAnswerEditorAdd.setVisibility(View.GONE);
+
         Button buttonSaveAnswer = (Button) view.findViewById(R.id.button_answer_editor_save);
         buttonSaveAnswer.setVisibility(View.GONE);
         buttonAnswerEditorAdd.setOnClickListener(this);
@@ -225,7 +217,13 @@ public class FragmentFlashCardCreate extends Fragment implements View.OnClickLis
         editTextQuestionUri.setText(flashCard.getQuestion().getUri().toString());
 
         // the header action button to save the card
-        floatingActionButton = (FloatingActionButton) view.findViewById(R.id.fab_card_create);
+        floatingActionButtonCardCreate = (FloatingActionButton) view.findViewById(R.id.fab_card_create);
+        floatingActionButtonCardAnswerAdd = (FloatingActionButton) view.findViewById(R.id.fab_card_answer_add);
+        floatingActionButtonCardAnswerAdd.setVisibility(View.VISIBLE);
+        floatingActionButtonAnswerAdd = (FloatingActionButton) view.findViewById(R.id.fab_answer_add);
+        floatingActionButtonAnswerAdd.setVisibility(View.GONE);
+        floatingActionButtonAnswerSave = (FloatingActionButton) view.findViewById(R.id.fab_answer_save);
+        floatingActionButtonAnswerSave.setVisibility(View.GONE);
 
         fragmentAnswers = new FragmentFlashCardAnswers();
         answers = new ArrayList<Answer>();
@@ -245,8 +243,11 @@ public class FragmentFlashCardCreate extends Fragment implements View.OnClickLis
         */
 
         Globals.getFloatingActionButton().setVisibility(View.GONE);
+        Globals.getFloatingActionButtonAdd().setVisibility(View.GONE);
 
-        floatingActionButton.setOnClickListener(this);
+        floatingActionButtonCardCreate.setOnClickListener(this);
+        floatingActionButtonAnswerAdd.setOnClickListener(this);
+        floatingActionButtonCardAnswerAdd.setOnClickListener(this);
 
 
         return view;
@@ -363,6 +364,8 @@ public class FragmentFlashCardCreate extends Fragment implements View.OnClickLis
 
         switch (v.getId()) {
 
+            case R.id.fab_answer_add:
+            case R.id.fab_card_answer_add:
             case R.id.button_answer_editor_add:
 
                 addAnswerToListView();

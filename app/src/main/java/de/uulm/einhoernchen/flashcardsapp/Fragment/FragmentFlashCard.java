@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -100,9 +101,14 @@ public class FragmentFlashCard extends Fragment implements View.OnClickListener 
     private RadioButton radioButtonAnswerIncorrect;
 
     private long carddeckId;
+    private FloatingActionButton floatingActionButtonSave;
+    private FloatingActionButton floatingActionButtonAdd;
 
     public FragmentFlashCard() {
         // Required empty public constructor
+
+        Globals.getFloatingActionButtonAdd().setOnClickListener(null);
+        Globals.getFloatingActionButtonAdd().setVisibility(View.GONE);
     }
 
     /**
@@ -180,7 +186,13 @@ public class FragmentFlashCard extends Fragment implements View.OnClickListener 
         radioButtonAnswerCorrect = (RadioButton) view.findViewById(R.id.radio_button_answer_editor_correct);
         radioButtonAnswerIncorrect = (RadioButton) view.findViewById(R.id.radio_button_answer_editor_incorrect);
 
+        floatingActionButtonSave = (FloatingActionButton) view.findViewById(R.id.fab_answer_save);
+        floatingActionButtonAdd = (FloatingActionButton) view.findViewById(R.id.fab_answer_add);
+
         buttonAnswerEditorSave.setOnClickListener(this);
+        buttonAnswerEditorSave.setVisibility(View.GONE);
+        floatingActionButtonAdd.setVisibility(View.GONE);
+        floatingActionButtonSave.setOnClickListener(this);
 
         mContentView.setText(flashCard.getQuestion().getQuestionText());
         mAuthorView.setText(flashCard.getQuestion().getAuthor().getName());
@@ -473,6 +485,7 @@ public class FragmentFlashCard extends Fragment implements View.OnClickListener 
         switch (v.getId()) {
 
             //save answer
+            case R.id.fab_answer_save:
             case R.id.button_answer_editor_save:
 
                 String text = editTextAnswerText.getText().toString();

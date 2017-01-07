@@ -18,11 +18,13 @@ import android.widget.TextView;
 import com.amulyakhare.textdrawable.TextDrawable;
 import com.amulyakhare.textdrawable.util.ColorGenerator;
 
+import de.uulm.einhoernchen.flashcardsapp.Activity.MainActivity;
 import de.uulm.einhoernchen.flashcardsapp.Database.DbManager;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.Interface.OnFragmentInteractionListenerFlashcard;
 import de.uulm.einhoernchen.flashcardsapp.Model.FlashCard;
 import de.uulm.einhoernchen.flashcardsapp.Model.Question;
 import de.uulm.einhoernchen.flashcardsapp.R;
+import de.uulm.einhoernchen.flashcardsapp.Util.Globals;
 import de.uulm.einhoernchen.flashcardsapp.Util.ProcessorImage;
 
 import java.util.List;
@@ -31,7 +33,7 @@ import java.util.List;
  * {@link RecyclerView.Adapter} that can display a {@link de.uulm.einhoernchen.flashcardsapp.Fragment.Dataset.ContentFlashCards} and makes a call to the
  * TODO: Replace the implementation with code for your data type.
  */
-public class RecyclerViewAdapterFlashcards extends RecyclerView.Adapter<RecyclerViewAdapterFlashcards.ViewHolder> {
+public class RecyclerViewAdapterFlashcards extends RecyclerView.Adapter<RecyclerViewAdapterFlashcards.ViewHolder> implements View.OnClickListener {
 
     private static final int VIEW_TYPE_FOOTER = 1;
     private static final int VIEW_TYPE_CELL = 2;
@@ -51,6 +53,9 @@ public class RecyclerViewAdapterFlashcards extends RecyclerView.Adapter<Recycler
         this.context = context;
         this.progressBar = progressBar;
         this.supportFragmentManager = supportFragmentManager;
+
+        Globals.getFloatingActionButtonAdd().setVisibility(View.VISIBLE);
+        Globals.getFloatingActionButtonAdd().setOnClickListener(this);
     }
 
     @Override
@@ -282,6 +287,30 @@ public class RecyclerViewAdapterFlashcards extends RecyclerView.Adapter<Recycler
     public int getItemCount() {
 
         return flashCards.size() +1;
+    }
+
+
+    /**
+     * Implementing on click
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     * @since 2017-01-07
+     *
+     * @param v
+     */
+    @Override
+    public void onClick(View v) {
+
+        switch (v.getId()) {
+
+            case R.id.fab_add:
+
+                MainActivity mainActivity = (MainActivity) Globals.getContext();
+                mainActivity.onFlashcardListFragmentInteraction(null);
+
+                break;
+        }
+
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {

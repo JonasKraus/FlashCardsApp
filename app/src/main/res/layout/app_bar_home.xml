@@ -93,7 +93,8 @@
         android:layout_height="wrap_content"
         android:layout_gravity="end|top"
         android:layout_margin="16dp"
-        android:src="@android:drawable/ic_menu_add"
+        android:visibility="gone"
+        android:src="@drawable/ic_action_add"
         app:layout_anchor="@id/dummy"
         app:layout_anchorGravity="top|right|end" />
 
