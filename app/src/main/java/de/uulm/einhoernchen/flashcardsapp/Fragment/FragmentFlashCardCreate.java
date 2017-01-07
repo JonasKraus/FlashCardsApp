@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.webkit.URLUtil;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -49,6 +50,7 @@ import de.uulm.einhoernchen.flashcardsapp.Util.Globals;
 import de.uulm.einhoernchen.flashcardsapp.Util.JsonKeys;
 import de.uulm.einhoernchen.flashcardsapp.Util.ProcessConnectivity;
 import de.uulm.einhoernchen.flashcardsapp.Util.ProcessorImage;
+import de.uulm.einhoernchen.flashcardsapp.Util.ValidatorInput;
 
 import static com.google.android.gms.analytics.internal.zzy.v;
 import static de.uulm.einhoernchen.flashcardsapp.Fragment.Dataset.ContentFlashCardAnswers.fragment;
@@ -390,6 +392,9 @@ public class FragmentFlashCardCreate extends Fragment implements View.OnClickLis
      */
     private void addAnswerToListView() {
 
+        // check if values ar valid else return and do nothing
+        if (!validateAnswer()) return;
+
         String answerText = editTextAnswerText.getText().toString();
 
         if (answerText == null || answerText.equals("")) {
@@ -440,6 +445,9 @@ public class FragmentFlashCardCreate extends Fragment implements View.OnClickLis
      * @since 2017-01-06
      */
     private void saveQuestion() {
+
+        // return if non valid values
+        if (!validateQuestion()) return;
 
         String newUri = editTextQuestionUri.getText().toString();
         String newQuestionText = editTextQuestionText.getText().toString();
@@ -504,75 +512,34 @@ public class FragmentFlashCardCreate extends Fragment implements View.OnClickLis
 
 
     /**
-     * @author Jonas Kraus jonas.kraus@uni-ulm.de
-     * @since 2017-01-06
+     * Validates the values
      *
-     * Saves and reloads the answers
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     * @since 2017-01-07
+     *
+     * @return
      */
-    private void saveAnswerAndReload(View view) {
+    private boolean validateAnswer() {
 
-        String answerText = editTextAnswerText.getText().toString();
-        String answerHint = editTextAnswerHint.getText().toString();
-        String answerUri = editTextAnswerUri.getText().toString();
-
-        // Check if edittext is empty
-        if (answerText.equals("")) {
-
-            Snackbar.make(view, getContext().getResources().getText(R.string.insert_text), Snackbar.LENGTH_LONG)
-                    .setAction("Action", null).show();
-
-            return;
-        }
-
-        boolean isCorrect = true;
-
-        if (this.flashCard.isMultipleChoice()) {
-
-            isCorrect = radioButtonAnswerCorrect.isChecked();
-        }
-
-        try {
-
-            JSONObject jsonObject = new JSONObject();
-
-            JSONObject jsonObjectAnswer = new JSONObject();
-
-            jsonObjectAnswer.put("answerText", answerText);
-            jsonObjectAnswer.put("answerHint", answerHint);
-            jsonObjectAnswer.put("mediaURI", answerUri);
-            jsonObjectAnswer.put("answerCorrect", isCorrect);
-
-            JSONObject jsonObjectAuthor = new JSONObject();
-            jsonObjectAuthor.put("userId", db.getLoggedInUser().getId());
-
-            jsonObjectAnswer.put("author", jsonObjectAuthor);
-
-            JSONArray jsonArray = new JSONArray();
-            jsonArray.put(jsonObjectAnswer);
-
-            jsonObject.put("answers", jsonArray);
-
-            AsyncPatchRemoteCard task = new AsyncPatchRemoteCard(jsonObject, this.flashCard.getId());
-
-            if (ProcessConnectivity.isOk(getContext())) {
-
-                task.execute();
-            }
-
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-
-        new ContentFlashCardAnswers().collectItemsFromDb(flashCard.getId(), false);
-        new ContentFlashCardAnswers().collectItemsFromServer(flashCard.getId(), false);
-
-
-        editTextAnswerText.setText(null);
-        editTextAnswerHint.setText(null);
-        editTextAnswerUri.setText(null);
-
+        return ValidatorInput.isNotEmpty(editTextAnswerText) && ValidatorInput.isValidUri(editTextAnswerUri);
     }
+
+
+    /**
+     * Validates the values
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     * @since 2017-01-07
+     *
+     * @return
+     */
+    private boolean validateQuestion() {
+
+        String color = Globals.getContext().getString(R.string.white);
+
+        return ValidatorInput.isNotEmpty(editTextQuestionText, color) && ValidatorInput.isValidUri(editTextQuestionUri, color);
+    }
+
 
     public void setCarddeckId(long carddeckId) {
         this.carddeckId = carddeckId;

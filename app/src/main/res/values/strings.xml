@@ -11,6 +11,7 @@
     <string name="error_invalid_password">This password is too short</string>
     <string name="error_invalid_username">This user name is too short</string>
     <string name="error_incorrect_password">This password is incorrect</string>
+    <string name="error_invalid_uri">This uri is invalid</string>+
     <string name="error_field_required">This field is required</string>
     <string name="permission_rationale">"Contacts permissions are needed for providing email
         completions."
@@ -76,9 +77,8 @@
     <string name="no_connection">You have no internet connection. Check either your wifi settings or your mobile data.</string>
     <string name="service_unavailable">The service is currently unavailable.</string>
     <string name="multiple_choice">multiple choice</string>
-    <string name="set_is_correct">Set if the answer is correct.</string>+
-
-
+    <string name="set_is_correct">Set if the answer is correct.</string>
+    <string name="white">#ffffff</string>
 
 
 </resources>
