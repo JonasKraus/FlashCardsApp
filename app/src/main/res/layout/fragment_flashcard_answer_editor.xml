@@ -89,6 +89,7 @@
             android:layout_height="wrap_content"
             android:id="@+id/fab_answer_save"
             android:src="@drawable/ic_save"
+            android:visibility="gone"
             android:text="@string/save"/>
 
         <ImageButton

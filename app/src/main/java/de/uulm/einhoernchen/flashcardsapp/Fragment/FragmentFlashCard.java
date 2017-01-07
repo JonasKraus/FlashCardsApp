@@ -188,6 +188,7 @@ public class FragmentFlashCard extends Fragment implements View.OnClickListener 
 
         floatingActionButtonSave = (FloatingActionButton) view.findViewById(R.id.fab_answer_save);
         floatingActionButtonAdd = (FloatingActionButton) view.findViewById(R.id.fab_answer_add);
+        floatingActionButtonSave = (FloatingActionButton) view.findViewById(R.id.fab_card_details_answer_add);
 
         buttonAnswerEditorSave.setOnClickListener(this);
         buttonAnswerEditorSave.setVisibility(View.GONE);
@@ -485,6 +486,7 @@ public class FragmentFlashCard extends Fragment implements View.OnClickListener 
         switch (v.getId()) {
 
             //save answer
+            case R.id.fab_card_details_answer_add:
             case R.id.fab_answer_save:
             case R.id.button_answer_editor_save:
 

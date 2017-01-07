@@ -65,14 +65,38 @@
 
             </FrameLayout>
 
-
-            <View
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:id="@+id/view_separator_horizontal"
-                android:layout_height="1dp"
-                android:background="@android:color/darker_gray"/>
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="@dimen/activity_vertical_margin">
 
-            <include layout="@layout/fragment_flashcard_answer_editor"/>
+                <View
+                    android:layout_width="wrap_content"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="29dp"
+                    android:background="@color/colorPrimary"
+                    android:layout_weight=".3"/>
+
+                <android.support.design.widget.FloatingActionButton
+                    android:id="@+id/fab_card_details_answer_add"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:clickable="true"
+                    android:src="@drawable/ic_action_add"
+                    android:layout_marginBottom="@dimen/activity_vertical_margin"
+                    />
+
+                <View
+                    android:layout_width="wrap_content"
+                    android:layout_height="1dp"
+                    android:background="@color/colorPrimary"
+                    android:layout_marginTop="29dp"
+                    android:layout_weight=".3"/>
+
+            </LinearLayout>
+
+            <include layout="@layout/fragment_flashcard_answer_editor" android:id="@+id/include_answer_editor"/>
 
 
         </LinearLayout>
