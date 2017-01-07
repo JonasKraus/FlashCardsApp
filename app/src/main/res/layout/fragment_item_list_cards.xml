@@ -19,7 +19,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layoutManager="LinearLayoutManager"
-        android:paddingBottom="@dimen/padding_list_bottom"
+        android:paddingBottom="@dimen/padding_list_bottom_two_fabs"
         android:layout_weight="1"
         android:clipToPadding="false">
 
