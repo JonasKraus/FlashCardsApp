@@ -17,6 +17,8 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -98,6 +100,8 @@ public class FragmentFlashCardCreate extends Fragment implements View.OnClickLis
     private RadioButton radioButtonAnswerCorrect;
     private RadioButton radioButtonAnswerIncorrect;
 
+    private CheckBox checkBoxMultipleChoice;
+
     private long carddeckId;
 
     private FragmentFlashCardAnswers fragmentAnswers;
@@ -171,7 +175,31 @@ public class FragmentFlashCardCreate extends Fragment implements View.OnClickLis
         radioGroupAnswerCorrect = (RadioGroup) view.findViewById(R.id.radio_buttongroup_answer_editor);
         radioButtonAnswerCorrect = (RadioButton) view.findViewById(R.id.radio_button_answer_editor_correct);
         radioButtonAnswerIncorrect = (RadioButton) view.findViewById(R.id.radio_button_answer_editor_incorrect);
+        radioButtonAnswerCorrect.setEnabled(false);
+        radioButtonAnswerIncorrect.setEnabled(false);
 
+        checkBoxMultipleChoice = (CheckBox) view.findViewById(R.id.checkbox_multiplechoice);
+
+        checkBoxMultipleChoice.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+
+                radioGroupAnswerCorrect.setEnabled(isChecked);
+
+                if(!isChecked) {
+
+                    radioButtonAnswerCorrect.setChecked(true);
+                    radioButtonAnswerCorrect.setEnabled(false);
+                    radioButtonAnswerIncorrect.setEnabled(false);
+                } else {
+
+                    radioButtonAnswerCorrect.setEnabled(true);
+                    radioButtonAnswerIncorrect.setEnabled(true);
+                }
+
+            }
+        });
 
         editTextQuestionText.setText(flashCard.getQuestion().getQuestionText());
         editTextQuestionUri.setText(flashCard.getQuestion().getUri().toString());
@@ -188,8 +216,6 @@ public class FragmentFlashCardCreate extends Fragment implements View.OnClickLis
 
         fragmentTransaction.replace(R.id.fragment_container_card_answer, fragmentAnswers);
         fragmentTransaction.commit();
-
-        radioGroupAnswerCorrect.setVisibility(View.VISIBLE);
 
         Globals.getFloatingActionButton().setOnClickListener(this);
 
@@ -381,7 +407,13 @@ public class FragmentFlashCardCreate extends Fragment implements View.OnClickLis
 
         Boolean isCorrect = true;
 
-        if (this.flashCard.isMultipleChoice()) {
+        if (checkBoxMultipleChoice.isChecked()) {
+
+            if (!radioButtonAnswerCorrect.isChecked() && !radioButtonAnswerIncorrect.isChecked()) {
+
+                Toast.makeText(getContext(), getContext().getText(R.string.set_is_correct), Toast.LENGTH_SHORT).show();
+                return;
+            }
 
             isCorrect = radioButtonAnswerCorrect.isChecked();
         }
@@ -412,21 +444,9 @@ public class FragmentFlashCardCreate extends Fragment implements View.OnClickLis
         String newUri = editTextQuestionUri.getText().toString();
         String newQuestionText = editTextQuestionText.getText().toString();
 
-        String answerText = editTextAnswerText.getText().toString();
-        String answerHint = editTextAnswerHint.getText().toString();
-        String answerUri = editTextAnswerUri.getText().toString();
-
-        Boolean isCorrect = true;
-
-        if (this.flashCard.isMultipleChoice()) {
-
-            isCorrect = radioButtonAnswerCorrect.isChecked();
-        }
-
         // sets the new values to the flashcard
         flashCard.getQuestion().setQuestionText(newQuestionText);
         flashCard.getQuestion().setUri(Uri.parse(newUri));
-
 
         // TODO Start async task to save answer
         // TODO reload question
