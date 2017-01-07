@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:paddingBottom="-20dp"
     android:orientation="vertical">
 
     <RelativeLayout
@@ -103,6 +104,8 @@
         </android.support.design.widget.TextInputLayout>
 
     </LinearLayout>
+
+
 
 
 

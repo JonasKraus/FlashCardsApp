@@ -78,4 +78,24 @@
         android:layout_margin="@dimen/fab_margin"
         android:src="@drawable/ic_school" />
 
+    <View
+        android:id="@+id/dummy"
+        android:layout_width="1dp"
+        android:layout_height="16dp"
+        app:layout_anchor="@id/fab"
+        app:layout_anchorGravity="top|right|end" />
+
+
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab_add"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end|top"
+        android:layout_margin="16dp"
+        android:src="@android:drawable/ic_menu_add"
+        app:layout_anchor="@id/dummy"
+        app:layout_anchorGravity="top|right|end" />
+
+
 </android.support.design.widget.CoordinatorLayout>

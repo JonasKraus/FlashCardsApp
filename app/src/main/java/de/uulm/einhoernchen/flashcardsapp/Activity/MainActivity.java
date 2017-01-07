@@ -82,6 +82,7 @@ public class MainActivity extends AppCompatActivity
     private TextView profileRating;
     private View header;
     private FloatingActionButton floatingActionButton;
+    private FloatingActionButton floatingActionButtonAdd;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -115,7 +116,7 @@ public class MainActivity extends AppCompatActivity
         openDb();
 
         // init Globals
-        Globals.initGlobals(context, progressBar, db, getSupportFragmentManager(), floatingActionButton);
+        Globals.initGlobals(context, progressBar, db, getSupportFragmentManager(), floatingActionButton, floatingActionButtonAdd);
 
         setProfileView();
         ProcessConnectivity.isServerAlive ();
@@ -238,8 +239,8 @@ public class MainActivity extends AppCompatActivity
     private void createFloatingActionButton() {
 
         floatingActionButton = (FloatingActionButton) findViewById(R.id.fab);
+        floatingActionButtonAdd = (FloatingActionButton) findViewById(R.id.fab_add);
 
-        /* TODO Implement in fragment if necessary
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -248,7 +249,7 @@ public class MainActivity extends AppCompatActivity
                         .setAction("Action", null).show();
             }
         });
-        */
+
     }
 
 

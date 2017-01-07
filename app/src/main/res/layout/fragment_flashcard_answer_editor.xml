@@ -6,11 +6,6 @@
     android:layout_height="match_parent"
     android:padding="@dimen/activity_horizontal_margin">
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@android:color/darker_gray"/>
-
     <android.support.design.widget.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -100,6 +95,12 @@
             android:textColor="@color/white"
             android:src="@drawable/ic_note_add"
             android:drawableTint="@color/white"/>
+
+        <android.support.design.widget.FloatingActionButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/fab_answer_add"
+            android:src="@drawable/ic_note_add"/>
     </LinearLayout>
 
 

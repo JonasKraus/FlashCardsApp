@@ -66,6 +66,12 @@
             </FrameLayout>
 
 
+            <View
+                android:layout_width="match_parent"
+                android:id="@+id/view_separator_horizontal"
+                android:layout_height="1dp"
+                android:background="@android:color/darker_gray"/>
+
             <include layout="@layout/fragment_flashcard_answer_editor"/>
 
 

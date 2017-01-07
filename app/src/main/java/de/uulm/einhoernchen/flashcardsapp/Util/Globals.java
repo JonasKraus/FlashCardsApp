@@ -22,6 +22,7 @@ public class Globals {
     private static DbManager db;
     private static FragmentManager fragmentManager;
     private static FloatingActionButton floatingActionButton;
+    private static FloatingActionButton floatingActionButtonAdd;
 
 
     /**
@@ -29,19 +30,32 @@ public class Globals {
      *
      * @author Jonas Kraus jonas.kraus@uni-ulm.de
      * @since 2017-01-06
-     *@param context
+     *
+     * @param context
      * @param progressBar
      * @param db
      * @param fragmentManager
      * @param floatingActionButton
+     * @param floatingActionButtonAdd
      */
-    public static void initGlobals(Context context, ProgressBar progressBar, DbManager db, FragmentManager fragmentManager, FloatingActionButton floatingActionButton) {
+    public static void initGlobals(Context context, ProgressBar progressBar, DbManager db, FragmentManager fragmentManager, FloatingActionButton floatingActionButton, FloatingActionButton floatingActionButtonAdd) {
 
         Globals.context = context;
         Globals.progressBar = progressBar;
         Globals.db = db;
         Globals.fragmentManager = fragmentManager;
         Globals.floatingActionButton = floatingActionButton;
+        Globals.floatingActionButtonAdd = floatingActionButtonAdd;
+    }
+
+    public static FloatingActionButton getFloatingActionButtonAdd() {
+
+        if (floatingActionButtonAdd == null) Log.e(TAG, "fab_add is NULL");
+        return floatingActionButtonAdd;
+    }
+
+    public static void setFloatingActionButtonAdd(FloatingActionButton floatingActionButtonAdd) {
+        Globals.floatingActionButtonAdd = floatingActionButtonAdd;
     }
 
     public static FloatingActionButton getFloatingActionButton() {

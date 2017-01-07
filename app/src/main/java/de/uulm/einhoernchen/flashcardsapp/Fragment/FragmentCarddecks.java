@@ -2,6 +2,7 @@ package de.uulm.einhoernchen.flashcardsapp.Fragment;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -24,7 +25,7 @@ import de.uulm.einhoernchen.flashcardsapp.Util.Globals;
  * Activities containing this fragment MUST implement the {@link OnFragmentInteractionListenerCarddeck}
  * interface.
  */
-public class FragmentCarddecks extends Fragment {
+public class FragmentCarddecks extends Fragment implements View.OnClickListener{
 
     private static final String ARG_COLUMN_COUNT = "column-count";
     public static final String ARG_PARENT_ID = "parentId";
@@ -38,6 +39,9 @@ public class FragmentCarddecks extends Fragment {
      * fragment (e.g. upon screen orientation changes).
      */
     public FragmentCarddecks() {
+
+        Globals.getFloatingActionButtonAdd().setVisibility(View.VISIBLE);
+        Globals.getFloatingActionButtonAdd().setOnClickListener(this);
     }
 
 
@@ -97,6 +101,10 @@ public class FragmentCarddecks extends Fragment {
     @Override
     public void onDetach() {
         super.onDetach();
+
+        // reset action button
+        Globals.getFloatingActionButtonAdd().setVisibility(View.GONE);
+        Globals.getFloatingActionButtonAdd().setOnClickListener(null);
         mListener = null;
     }
 
@@ -106,5 +114,29 @@ public class FragmentCarddecks extends Fragment {
 
     public void setUpToDate(boolean isUpToDate) {
         this.isUpToDate = isUpToDate;
+    }
+
+
+    /**
+     * Implements the onClick method
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     * @since 2017-01-07
+     *
+     * @param v
+     */
+    @Override
+    public void onClick(View v) {
+
+        switch (v.getId()) {
+
+            case R.id.fab_add:
+
+                //TODO jonas implement
+                Snackbar.make(v, " TODO add Carddeck", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
+
+                break;
+        }
     }
 }

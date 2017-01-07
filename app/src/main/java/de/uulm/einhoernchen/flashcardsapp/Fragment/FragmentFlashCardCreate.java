@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.Settings;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
@@ -108,6 +110,8 @@ public class FragmentFlashCardCreate extends Fragment implements View.OnClickLis
 
     private FragmentFlashCardAnswers fragmentAnswers;
     private ArrayList<Answer> answers;
+
+    private FloatingActionButton floatingActionButton;
 
     public FragmentFlashCardCreate() {
         // Required empty public constructor
@@ -220,6 +224,9 @@ public class FragmentFlashCardCreate extends Fragment implements View.OnClickLis
         editTextQuestionText.setText(flashCard.getQuestion().getQuestionText());
         editTextQuestionUri.setText(flashCard.getQuestion().getUri().toString());
 
+        // the header action button to save the card
+        floatingActionButton = (FloatingActionButton) view.findViewById(R.id.fab_card_create);
+
         fragmentAnswers = new FragmentFlashCardAnswers();
         answers = new ArrayList<Answer>();
 
@@ -231,9 +238,16 @@ public class FragmentFlashCardCreate extends Fragment implements View.OnClickLis
         fragmentTransaction.replace(R.id.fragment_container_card_answer, fragmentAnswers);
         fragmentTransaction.commit();
 
+        /*
         Globals.getFloatingActionButton().setOnClickListener(this);
 
         Globals.getFloatingActionButton().setImageDrawable(Globals.getContext().getResources().getDrawable(R.drawable.ic_save));
+        */
+
+        Globals.getFloatingActionButton().setVisibility(View.GONE);
+
+        floatingActionButton.setOnClickListener(this);
+
 
         return view;
 
@@ -330,8 +344,11 @@ public class FragmentFlashCardCreate extends Fragment implements View.OnClickLis
         super.onDetach();
 
         // reset action button
+        /*
         Globals.getFloatingActionButton().setOnClickListener(null);
         Globals.getFloatingActionButton().setImageDrawable(Globals.getContext().getResources().getDrawable(R.drawable.ic_school));
+        */
+        Globals.getFloatingActionButton().setVisibility(View.VISIBLE);
     }
 
     
@@ -353,6 +370,7 @@ public class FragmentFlashCardCreate extends Fragment implements View.OnClickLis
                 break;
 
             //save answer
+            case  R.id.fab_card_create:
             case R.id.fab:
 
                 String answerText = editTextAnswerText.getText().toString();
