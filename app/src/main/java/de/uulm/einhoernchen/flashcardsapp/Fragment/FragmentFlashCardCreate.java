@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -381,6 +382,12 @@ public class FragmentFlashCardCreate extends Fragment implements View.OnClickLis
                 if (answerText != null && !answerText.equals("")) {
 
                     addAnswerToListView();
+                }
+
+                // Check if multiple choice - so you need to set two answers
+                if (checkBoxMultipleChoice.isChecked() && answers.size() < 2) {
+
+                    Snackbar.make(v, getContext().getString(R.string.add_second_answer), Snackbar.LENGTH_LONG).show();
                 }
 
                 saveQuestion();
