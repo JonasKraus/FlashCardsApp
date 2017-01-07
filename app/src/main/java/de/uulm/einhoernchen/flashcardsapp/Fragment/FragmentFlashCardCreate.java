@@ -461,6 +461,7 @@ public class FragmentFlashCardCreate extends Fragment implements View.OnClickLis
 
         String newUri = editTextQuestionUri.getText().toString();
         String newQuestionText = editTextQuestionText.getText().toString();
+        boolean isMultiplyChoice = checkBoxMultipleChoice.isChecked();
 
         // sets the new values to the flashcard
         flashCard.getQuestion().setQuestionText(newQuestionText);
@@ -482,6 +483,7 @@ public class FragmentFlashCardCreate extends Fragment implements View.OnClickLis
             questionData.put(JsonKeys.QUESTION_TEXT, newQuestionText);
             questionData.put(JsonKeys.URI, newUri);
             jsonObjectQuestion.put(JsonKeys.FLASHCARD_QUESTION, questionData);
+            jsonObjectQuestion.put(JsonKeys.FLASHCARD_MULTIPLE_CHOICE, isMultiplyChoice);
             jsonObjectQuestion.put(JsonKeys.AUTHOR, jsonUser);
             questionData.put(JsonKeys.AUTHOR, jsonUser);
 
