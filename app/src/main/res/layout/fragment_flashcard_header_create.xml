@@ -35,7 +35,7 @@
             android:layout_marginTop="56dp"
             android:scaleType="centerInside"
             android:visibility="gone"
-            android:src="@drawable/ic_play_circle_outline"
+            android:src="@drawable/quantum_ic_play_circle_filled_white_36"
             android:id="@+id/imageview_card_media_play"/>
     </RelativeLayout>
 
