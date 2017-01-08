@@ -257,8 +257,10 @@ public class FragmentFlashCard extends Fragment implements View.OnClickListener 
         // check if the question was created by the current user - so set the edit button enabled
         if (flashCard.getQuestion().getAuthor().getId() == db.getLoggedInUser().getId()) {
 
+            /* TODO Jonas delete if unsused
             imageViewEditQuestion.setAlpha(1f);
             imageViewEditQuestion.setOnClickListener(this);
+            */
 
             Globals.getFloatingActionButtonAdd().setVisibility(View.VISIBLE);
             Globals.getFloatingActionButtonAdd().setTag("mode_edit");
@@ -266,7 +268,10 @@ public class FragmentFlashCard extends Fragment implements View.OnClickListener 
             Globals.getFloatingActionButtonAdd().setOnClickListener(this);
 
         } else {
+
+            /* TODO Jonas delete if unused
             imageViewEditQuestion.setAlpha(.1f);
+            */
 
         }
     }
@@ -628,8 +633,11 @@ public class FragmentFlashCard extends Fragment implements View.OnClickListener 
         mContentView.setVisibility(View.VISIBLE);
         textInputLayoutContent.setVisibility(View.GONE);
         textInputLayoutUri.setVisibility(View.GONE);
+
+        /* TODO Jonas delete if unused
         imageViewEditQuestion.setVisibility(View.VISIBLE);
         imageViewSaveQuestion.setVisibility(View.GONE);
+        */
 
 
         // TODO Start async task to save answer
@@ -679,8 +687,11 @@ public class FragmentFlashCard extends Fragment implements View.OnClickListener 
         mContentView.setVisibility(View.GONE);
         textInputLayoutContent.setVisibility(View.VISIBLE);
         textInputLayoutUri.setVisibility(View.VISIBLE);
+
+        /* TODO Jonas delete if unused
         imageViewEditQuestion.setVisibility(View.GONE);
         imageViewSaveQuestion.setVisibility(View.VISIBLE);
+        */
 
         imageViewSaveQuestion.setOnClickListener(this);
 

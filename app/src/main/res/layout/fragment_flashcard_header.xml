@@ -197,8 +197,9 @@
             android:layout_height="wrap_content"
             android:tint="@color/white"
             android:alpha=".1"
+            android:visibility="gone"
             android:id="@+id/imageview_question_edit"
-            android:src="@drawable/ic_menu_manage"/>
+            android:src="@drawable/ic_mode_edit"/>
 
         <ImageView
             android:visibility="gone"
