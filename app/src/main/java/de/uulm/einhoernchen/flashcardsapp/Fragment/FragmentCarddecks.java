@@ -1,15 +1,22 @@
 package de.uulm.einhoernchen.flashcardsapp.Fragment;
 
+import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
+import android.widget.EditText;
 
 import java.util.List;
 
@@ -33,6 +40,7 @@ public class FragmentCarddecks extends Fragment implements View.OnClickListener{
     private OnFragmentInteractionListenerCarddeck mListener;
     private List<CardDeck> itemList;
     private boolean isUpToDate;
+    private View viewFragment;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -69,12 +77,12 @@ public class FragmentCarddecks extends Fragment implements View.OnClickListener{
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_item_list, container, false);
+        viewFragment = inflater.inflate(R.layout.fragment_item_list, container, false);
 
         // Set the adapter
-        if (view instanceof RecyclerView) {
-            Context context = view.getContext();
-            RecyclerView recyclerView = (RecyclerView) view;
+        if (viewFragment instanceof RecyclerView) {
+            Context context = viewFragment.getContext();
+            RecyclerView recyclerView = (RecyclerView) viewFragment;
 
             if (mColumnCount <= 1) {
                 recyclerView.setLayoutManager(new LinearLayoutManager(context));
@@ -84,7 +92,7 @@ public class FragmentCarddecks extends Fragment implements View.OnClickListener{
 
             recyclerView.setAdapter(new RecyclerViewAdapterCarddecks(Globals.getDb(), itemList, mListener, isUpToDate));
         }
-        return view;
+        return viewFragment;
     }
 
     @Override
@@ -132,11 +140,60 @@ public class FragmentCarddecks extends Fragment implements View.OnClickListener{
 
             case R.id.fab_add:
 
+                createDialog();
                 //TODO jonas implement
                 Snackbar.make(v, " TODO add Carddeck", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
 
                 break;
         }
+    }
+
+
+    /**
+     * Creates a custom dialog for creating an new carddeck
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     * @since 2017-01-08
+     *
+     */
+    private void createDialog() {
+
+        final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+
+        final LayoutInflater inflater = getActivity().getLayoutInflater();
+
+        final View view = inflater.inflate(R.layout.dialog_edittext_carddeck, null);
+
+        final EditText text = (EditText) view.findViewById(R.id.carddeck_name);
+
+        final View v = viewFragment;
+
+        text.requestFocus();
+
+        builder.setView(view)
+
+                // Add action buttons
+                .setPositiveButton(R.string.save, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int id) {
+
+                        String textString = text.getText().toString();
+
+                        if (textString == null || textString.equals("")) {
+
+                            Snackbar.make(v, R.string.insert_text, Snackbar.LENGTH_SHORT).show();
+
+                        } else {
+
+                            // TODO save
+                        }
+
+                        Log.d("dialog " + id, text.getText().toString());
+
+                    }
+                });
+
+        builder.create().show();
     }
 }
