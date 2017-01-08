@@ -70,7 +70,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:layout_marginTop="-56dp"
-                android:layout_marginBottom="-42dp">
+                android:layout_marginBottom="-26dp">
 
                 <View
                     android:layout_width="wrap_content"
