@@ -842,6 +842,14 @@ public class DbManager {
         return categories;
     }
 
+    /**
+     * Collects all Carddecks by the given parent id
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     *
+     * @param parentId
+     * @return
+     */
     public List<CardDeck> getCardDecks(Long parentId) {
 
         SQLiteQueryBuilder qb = new SQLiteQueryBuilder();
@@ -850,13 +858,12 @@ public class DbManager {
                 " LEFT JOIN " + DbHelper.TABLE_SELECTION + " ON "
                 + DbHelper.TABLE_CARD_DECK + "." + DbHelper.COLUMN_CARD_DECK_ID + " = " +  DbHelper.TABLE_SELECTION + "." + DbHelper.COLUMN_SELECTION_CARD_DECK_ID
                 + " AND " + DbHelper.TABLE_SELECTION + "." + DbHelper.COLUMN_SELECTION_USER_ID + " = " + loggedInUser.getId()
+                + " WHERE " + DbHelper.COLUMN_CARD_DECK_PARENT + " = " + parentId
         );
 
         Cursor cursor = qb.query(database, null, null, null, null, null, null);
 
-        List<CardDeck> cardDecks = new ArrayList<CardDeck>();
-
-        //Cursor cursor = database.query(DbHelper.TABLE_CARD_DECK, allCardDeckColumns, DbHelper.COLUMN_CARD_DECK_PARENT + " = " + parentId, null, null, null, null);
+        List<CardDeck> cardDecks = new ArrayList<CardDeck>();s
 
         if (cursor.moveToFirst()) {
             do {
@@ -875,6 +882,8 @@ public class DbManager {
 
             } while (cursor.moveToNext());
         }
+
+
         return cardDecks;
     }
 
