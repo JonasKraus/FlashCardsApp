@@ -94,6 +94,9 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_home);
 
 
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
         // INIT View elements
         progressBar = (ProgressBar) findViewById(R.id.progressBarMain);
 

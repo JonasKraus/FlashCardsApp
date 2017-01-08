@@ -105,6 +105,7 @@ public class FragmentFlashCard extends Fragment implements View.OnClickListener 
     private long carddeckId;
     private FloatingActionButton floatingActionButtonSave;
     private FloatingActionButton floatingActionButtonAdd;
+    private FloatingActionButton fabEdit;
 
     public FragmentFlashCard() {
         // Required empty public constructor
@@ -201,6 +202,10 @@ public class FragmentFlashCard extends Fragment implements View.OnClickListener 
         mCardRatingView.setText(flashCard.getRatingForView());
         mDateView.setText(flashCard.getLastUpdatedString());
 
+        fabEdit = (FloatingActionButton) view.findViewById(R.id.fab_card_edit);
+        fabEdit.setVisibility(View.GONE);
+
+
         //misCorrectView =; TODO
 
         checkIfEditable();
@@ -260,12 +265,17 @@ public class FragmentFlashCard extends Fragment implements View.OnClickListener 
             /* TODO Jonas delete if unsused
             imageViewEditQuestion.setAlpha(1f);
             imageViewEditQuestion.setOnClickListener(this);
-            */
 
             Globals.getFloatingActionButtonAdd().setVisibility(View.VISIBLE);
             Globals.getFloatingActionButtonAdd().setTag("mode_edit");
             Globals.getFloatingActionButtonAdd().setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_mode_edit));
             Globals.getFloatingActionButtonAdd().setOnClickListener(this);
+            */
+
+            fabEdit.setVisibility(View.VISIBLE);
+            fabEdit.setTag("mode_edit");
+            fabEdit.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_mode_edit));
+            fabEdit.setOnClickListener(this);
 
         } else {
 
@@ -477,11 +487,17 @@ public class FragmentFlashCard extends Fragment implements View.OnClickListener 
     public void onDetach() {
         super.onDetach();
 
-        // Reset add button
+        /* TODO Delete Jonas if unused Reset add button
         Globals.getFloatingActionButtonAdd().setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_action_add));
         Globals.getFloatingActionButtonAdd().setOnClickListener(null);
         Globals.getFloatingActionButtonAdd().setVisibility(View.GONE);
         Globals.getFloatingActionButtonAdd().setTag(null);
+        */
+
+        fabEdit.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_mode_edit));
+        fabEdit.setOnClickListener(null);
+        fabEdit.setVisibility(View.GONE);
+        fabEdit.setTag(null);
         mListener = null;
     }
 
@@ -507,19 +523,20 @@ public class FragmentFlashCard extends Fragment implements View.OnClickListener 
 
         switch (v.getId()) {
 
-            case R.id.fab_add:
 
-                if (Globals.getFloatingActionButtonAdd().getTag().equals("mode_edit")) {
+            case R.id.fab_card_edit:
 
-                    Globals.getFloatingActionButtonAdd().setTag("mode_save");
-                    Globals.getFloatingActionButtonAdd().setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_check));
+                if (fabEdit.getTag().equals("mode_edit")) {
+
+                    fabEdit.setTag("mode_save");
+                    fabEdit.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_check));
                     setQuestionInEditMode();
 
-                } else if (Globals.getFloatingActionButtonAdd().getTag().equals("mode_save")){
+                } else if (fabEdit.getTag().equals("mode_save")){
 
                     saveQuestion();
-                    Globals.getFloatingActionButtonAdd().setTag("mode_edit");
-                    Globals.getFloatingActionButtonAdd().setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_mode_edit));
+                    fabEdit.setTag("mode_edit");
+                    fabEdit.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_mode_edit));
                 }
 
                 break;
