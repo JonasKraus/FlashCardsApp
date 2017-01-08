@@ -175,6 +175,8 @@
     <string name="dialog_message_carddeck_create">name</string>
     <string name="dialog_title_carddeck_create">Create new carddeck</string>
     <string name="prompt_carddeck_name">name</string>
+    <string name="prompt_carddeck_description">description</string>
+    <string name="failed_to_save">failed to save</string>
 
 
 </resources>

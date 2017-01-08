@@ -1,6 +1,5 @@
 package de.uulm.einhoernchen.flashcardsapp.Fragment;
 
-import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -10,21 +9,25 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.Button;
 import android.widget.EditText;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.List;
 
+import de.uulm.einhoernchen.flashcardsapp.AsyncTask.Remote.AsyncPutRemoteCategory;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.Adapter.RecyclerViewAdapterCarddecks;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.Interface.OnFragmentInteractionListenerCarddeck;
 import de.uulm.einhoernchen.flashcardsapp.Model.CardDeck;
 import de.uulm.einhoernchen.flashcardsapp.R;
 import de.uulm.einhoernchen.flashcardsapp.Util.Globals;
+import de.uulm.einhoernchen.flashcardsapp.Util.JsonKeys;
+import de.uulm.einhoernchen.flashcardsapp.Util.ProcessConnectivity;
 
 /**
  * A fragment representing a list of Carddeck Items.
@@ -41,6 +44,7 @@ public class FragmentCarddecks extends Fragment implements View.OnClickListener{
     private List<CardDeck> itemList;
     private boolean isUpToDate;
     private View viewFragment;
+    private long parentId;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -48,8 +52,6 @@ public class FragmentCarddecks extends Fragment implements View.OnClickListener{
      */
     public FragmentCarddecks() {
 
-        Globals.getFloatingActionButtonAdd().setVisibility(View.VISIBLE);
-        Globals.getFloatingActionButtonAdd().setOnClickListener(this);
     }
 
 
@@ -78,6 +80,9 @@ public class FragmentCarddecks extends Fragment implements View.OnClickListener{
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         viewFragment = inflater.inflate(R.layout.fragment_item_list, container, false);
+
+        Globals.getFloatingActionButtonAdd().setVisibility(View.VISIBLE);
+        Globals.getFloatingActionButtonAdd().setOnClickListener(this);
 
         // Set the adapter
         if (viewFragment instanceof RecyclerView) {
@@ -118,6 +123,10 @@ public class FragmentCarddecks extends Fragment implements View.OnClickListener{
 
     public void setItemList(List<CardDeck> itemList) {
         this.itemList = itemList;
+    }
+
+    public void setParentId(long parentId) {
+        this.parentId = parentId;
     }
 
     public void setUpToDate(boolean isUpToDate) {
@@ -166,6 +175,7 @@ public class FragmentCarddecks extends Fragment implements View.OnClickListener{
         final View view = inflater.inflate(R.layout.dialog_edittext_carddeck, null);
 
         final EditText text = (EditText) view.findViewById(R.id.carddeck_name);
+        final EditText description = (EditText) view.findViewById(R.id.carddeck_description);
 
         final View v = viewFragment;
 
@@ -179,18 +189,41 @@ public class FragmentCarddecks extends Fragment implements View.OnClickListener{
                     public void onClick(DialogInterface dialog, int id) {
 
                         String textString = text.getText().toString();
+                        String descriptionString = description.getText().toString();
 
                         if (textString == null || textString.equals("")) {
 
                             Snackbar.make(v, R.string.insert_text, Snackbar.LENGTH_SHORT).show();
 
+                        } else if (!ProcessConnectivity.isOk(getContext(), true)){
+                            // Do nothing
                         } else {
 
+                            JSONObject jsonObject = new JSONObject();
+                            JSONObject jsonObjectCarddeck = new JSONObject();
+                            JSONArray jsonArrayCarddecks = new JSONArray();
+
+                            try {
+
+                                jsonObject.put(JsonKeys.CATEGORY_NAME, Globals.getDb().getCategoryNameById(parentId));
+                                jsonObject.put(JsonKeys.CATEGORY_CARDDECKS, jsonArrayCarddecks);
+                                jsonObject.put(JsonKeys.CATEGORY_PARENT, parentId);
+                                jsonObjectCarddeck.put(JsonKeys.CARDDECK_NAME, textString);
+                                jsonObjectCarddeck.put(JsonKeys.CARDDECK_DESCRIPTION, descriptionString);
+                                jsonArrayCarddecks.put(jsonObjectCarddeck);
+
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+
                             // TODO save
+                            AsyncPutRemoteCategory task = new AsyncPutRemoteCategory(jsonObject);
+
+                            if (ProcessConnectivity.isOk(Globals.getContext())) {
+
+                                task.execute(parentId);
+                            }
                         }
-
-                        Log.d("dialog " + id, text.getText().toString());
-
                     }
                 });
 

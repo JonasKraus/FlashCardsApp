@@ -54,6 +54,7 @@ public class ContentCarddecks {
                 ContentCarddecks.cardDecks = cardDecks;
                 FragmentCarddecks fragment = new FragmentCarddecks();
                 fragment.setItemList(cardDecks);
+                fragment.setParentId(parentId);
                 fragment.setUpToDate(isUpToDate);
 
                 Bundle args = new Bundle();
@@ -107,6 +108,7 @@ public class ContentCarddecks {
 
                 FragmentCarddecks fragment = new FragmentCarddecks();
                 fragment.setItemList(cardDecks);
+                fragment.setParentId(parentId);
                 fragment.setUpToDate(isUpToDate);
 
                 Bundle args = new Bundle();

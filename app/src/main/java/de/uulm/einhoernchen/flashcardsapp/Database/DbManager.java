@@ -1563,4 +1563,27 @@ public class DbManager {
         database.updateWithOnConflict(DbHelper.TABLE_VOTING, values, DbHelper.COLUMN_VOTING_USER_ID + "=" + loggedInUser.getId() + " AND " + DbHelper.COLUMN_VOTING_ANSWER_ID + "=" + answerId, null, SQLiteDatabase.CONFLICT_ABORT);
 
     }
+
+    /**
+     * Returns the name of category
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     * @since 2017-0108
+     *
+     * @param id
+     * @return
+     */
+    public String getCategoryNameById(long id) {
+
+        Cursor cursor = database.query(DbHelper.TABLE_CATEGORY, allCategoryColumns, DbHelper.COLUMN_CATEGORY_ID + " = " + id, null, null, null, null);
+
+        String categoryName = "";
+
+        if (cursor.moveToFirst()) {
+
+            categoryName = cursor.getString(1);
+        }
+
+        return categoryName;
+    }
 }

@@ -733,7 +733,7 @@ public class MainActivity extends AppCompatActivity
      *
      * @param backPressed
      */
-    private void setCarddeckList(boolean backPressed) {
+    public void setCarddeckList(boolean backPressed) {
 
         new ContentCarddecks().collectItemsFromDb(this.childrenId, backPressed);
         new ContentCarddecks().collectItemsFromServer(this.childrenId, backPressed);
