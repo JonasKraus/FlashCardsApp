@@ -80,6 +80,8 @@
     <string name="set_is_correct">Set if the answer is correct.</string>
     <string name="white">#ffffff</string>
     <string name="add_second_answer">\"You have to add at least two answers.\"</string>
+    <string name="action_sync">sync</string>
+    <string name="action_search">search</string>
 
 
 </resources>

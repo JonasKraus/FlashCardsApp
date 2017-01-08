@@ -8,6 +8,8 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -250,7 +252,6 @@ public class FragmentFlashCardCreate extends Fragment implements View.OnClickLis
         floatingActionButtonAnswerAdd.setOnClickListener(this);
         floatingActionButtonCardAnswerAdd.setOnClickListener(this);
 
-
         return view;
 
     }
@@ -351,6 +352,10 @@ public class FragmentFlashCardCreate extends Fragment implements View.OnClickLis
         Globals.getFloatingActionButton().setImageDrawable(Globals.getContext().getResources().getDrawable(R.drawable.ic_school));
         */
         Globals.getFloatingActionButton().setVisibility(View.VISIBLE);
+
+
+        ((AppCompatActivity) getActivity()).getSupportActionBar().show();
+
     }
 
     
