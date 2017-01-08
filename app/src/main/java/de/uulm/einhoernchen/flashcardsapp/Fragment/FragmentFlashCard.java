@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -41,6 +42,7 @@ import de.uulm.einhoernchen.flashcardsapp.Util.Globals;
 import de.uulm.einhoernchen.flashcardsapp.Util.JsonKeys;
 import de.uulm.einhoernchen.flashcardsapp.Util.ProcessConnectivity;
 import de.uulm.einhoernchen.flashcardsapp.Util.ProcessorImage;
+import de.uulm.einhoernchen.flashcardsapp.Util.ValidatorInput;
 
 
 /**
@@ -494,13 +496,6 @@ public class FragmentFlashCard extends Fragment implements View.OnClickListener 
                 String hint = editTextAnswerHint.getText().toString();
                 String uri = editTextAnswerUri.getText().toString();
 
-                // Check if edittext is empty
-                if (text.equals("")) {
-
-                    Toast.makeText(getContext(), getContext().getResources().getText(R.string.insert_text), Toast.LENGTH_SHORT).show();
-                    break;
-                }
-
                 boolean isCorrect = true;
 
                 if (this.flashCard.isMultipleChoice()) {
@@ -534,6 +529,10 @@ public class FragmentFlashCard extends Fragment implements View.OnClickListener 
                     if (ProcessConnectivity.isOk(getContext())) {
 
                         task.execute();
+                    } else {
+
+                        Snackbar.make(v, getContext().getString(R.string.service_unavailable), Snackbar.LENGTH_LONG).show();
+                        return;
                     }
 
                 } catch (JSONException e) {
