@@ -537,6 +537,10 @@ public class FragmentFlashCard extends Fragment implements View.OnClickListener 
                     saveQuestion();
                     fabEdit.setTag("mode_edit");
                     fabEdit.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_mode_edit));
+
+                    // hides the softkeyboard
+                    InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
                 }
 
                 break;
