@@ -863,7 +863,7 @@ public class DbManager {
 
         Cursor cursor = qb.query(database, null, null, null, null, null, null);
 
-        List<CardDeck> cardDecks = new ArrayList<CardDeck>();s
+        List<CardDeck> cardDecks = new ArrayList<CardDeck>();
 
         if (cursor.moveToFirst()) {
             do {
