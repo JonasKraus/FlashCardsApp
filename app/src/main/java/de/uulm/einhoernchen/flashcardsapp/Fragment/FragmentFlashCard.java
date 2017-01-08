@@ -109,7 +109,6 @@ public class FragmentFlashCard extends Fragment implements View.OnClickListener 
     public FragmentFlashCard() {
         // Required empty public constructor
 
-        Globals.getFloatingActionButtonAdd().setOnClickListener(null);
         Globals.getFloatingActionButtonAdd().setVisibility(View.GONE);
     }
 
@@ -204,16 +203,7 @@ public class FragmentFlashCard extends Fragment implements View.OnClickListener 
 
         //misCorrectView =; TODO
 
-        // check if the question was created by the current user - so set the edit button enabled
-        if (flashCard.getQuestion().getAuthor().getId() == db.getLoggedInUser().getId()) {
-
-            imageViewEditQuestion.setAlpha(1f);
-            imageViewEditQuestion.setOnClickListener(this);
-
-        } else {
-            imageViewEditQuestion.setAlpha(.1f);
-
-        }
+        checkIfEditable();
 
         setMedia();
 
@@ -260,6 +250,25 @@ public class FragmentFlashCard extends Fragment implements View.OnClickListener 
 
         return view;
 
+    }
+
+    private void checkIfEditable() {
+
+        // check if the question was created by the current user - so set the edit button enabled
+        if (flashCard.getQuestion().getAuthor().getId() == db.getLoggedInUser().getId()) {
+
+            imageViewEditQuestion.setAlpha(1f);
+            imageViewEditQuestion.setOnClickListener(this);
+
+            Globals.getFloatingActionButtonAdd().setVisibility(View.VISIBLE);
+            Globals.getFloatingActionButtonAdd().setTag("mode_edit");
+            Globals.getFloatingActionButtonAdd().setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_mode_edit));
+            Globals.getFloatingActionButtonAdd().setOnClickListener(this);
+
+        } else {
+            imageViewEditQuestion.setAlpha(.1f);
+
+        }
     }
 
 
@@ -462,6 +471,12 @@ public class FragmentFlashCard extends Fragment implements View.OnClickListener 
     @Override
     public void onDetach() {
         super.onDetach();
+
+        // Reset add button
+        Globals.getFloatingActionButtonAdd().setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_action_add));
+        Globals.getFloatingActionButtonAdd().setOnClickListener(null);
+        Globals.getFloatingActionButtonAdd().setVisibility(View.GONE);
+        Globals.getFloatingActionButtonAdd().setTag(null);
         mListener = null;
     }
 
@@ -486,6 +501,23 @@ public class FragmentFlashCard extends Fragment implements View.OnClickListener 
     public void onClick(View v) {
 
         switch (v.getId()) {
+
+            case R.id.fab_add:
+
+                if (Globals.getFloatingActionButtonAdd().getTag().equals("mode_edit")) {
+
+                    Globals.getFloatingActionButtonAdd().setTag("mode_save");
+                    Globals.getFloatingActionButtonAdd().setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_check));
+                    setQuestionInEditMode();
+
+                } else if (Globals.getFloatingActionButtonAdd().getTag().equals("mode_save")){
+
+                    saveQuestion();
+                    Globals.getFloatingActionButtonAdd().setTag("mode_edit");
+                    Globals.getFloatingActionButtonAdd().setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_mode_edit));
+                }
+
+                break;
 
             //save answer
             case R.id.fab_card_details_answer_add:
@@ -562,72 +594,98 @@ public class FragmentFlashCard extends Fragment implements View.OnClickListener 
 
             case R.id.imageview_question_edit:
 
-                mContentView.setVisibility(View.GONE);
-                textInputLayoutContent.setVisibility(View.VISIBLE);
-                textInputLayoutUri.setVisibility(View.VISIBLE);
-                imageViewEditQuestion.setVisibility(View.GONE);
-                imageViewSaveQuestion.setVisibility(View.VISIBLE);
-
-                imageViewSaveQuestion.setOnClickListener(this);
-
-                editTextQuestionText.setText(flashCard.getQuestion().getQuestionText());
-                editTextQuestionUri.setText(flashCard.getQuestion().getUri().toString());
+                setQuestionInEditMode();
 
                 break;
 
             case R.id.imageview_question_save:
 
-                String newUri = editTextQuestionUri.getText().toString();
-                String newQuestionText = editTextQuestionText.getText().toString();
-
-                // sets the new values to the flashcard
-                flashCard.getQuestion().setQuestionText(newQuestionText);
-                flashCard.getQuestion().setUri(Uri.parse(newUri));
-
-                mContentView.setText(editTextQuestionText.getText());
-
-                mContentView.setVisibility(View.VISIBLE);
-                textInputLayoutContent.setVisibility(View.GONE);
-                textInputLayoutUri.setVisibility(View.GONE);
-                imageViewEditQuestion.setVisibility(View.VISIBLE);
-                imageViewSaveQuestion.setVisibility(View.GONE);
-
-
-                // TODO Start async task to save answer
-                // TODO reload question
-
-                JSONObject jsonObjectQuestion = new JSONObject();
-                JSONObject questionData = new JSONObject();
-                JSONObject author = new JSONObject();
-                JSONObject jsonUser = new JSONObject();
-
-
-                try {
-
-                    jsonUser.put(JsonKeys.USER_ID, db.getLoggedInUser().getId());
-                    //author.put(JsonKeys.AUTHOR, jsonUser);
-                    questionData.put(JsonKeys.QUESTION_TEXT, newQuestionText);
-                    questionData.put(JsonKeys.URI, newUri);
-                    jsonObjectQuestion.put(JsonKeys.FLASHCARD_QUESTION, questionData);
-                    jsonObjectQuestion.put(JsonKeys.AUTHOR, jsonUser);
-                    questionData.put(JsonKeys.AUTHOR, jsonUser);
-
-                } catch (JSONException e) {
-
-                    Log.d("Flascard", "init json for question update");
-                    e.printStackTrace();
-                }
-
-
-                AsyncPatchRemoteCard task = new AsyncPatchRemoteCard(jsonObjectQuestion, flashCard.getId());
-
-                if (ProcessConnectivity.isOk(getContext())) {
-
-                    task.execute();
-                }
+                saveQuestion();
 
                 break;
         }
+    }
+
+
+    /**
+     * Saves a question
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     * @since 2017-01-08
+     *
+     */
+    private void saveQuestion() {
+
+        String newUri = editTextQuestionUri.getText().toString();
+        String newQuestionText = editTextQuestionText.getText().toString();
+
+        // sets the new values to the flashcard
+        flashCard.getQuestion().setQuestionText(newQuestionText);
+        flashCard.getQuestion().setUri(Uri.parse(newUri));
+
+        mContentView.setText(editTextQuestionText.getText());
+
+        mContentView.setVisibility(View.VISIBLE);
+        textInputLayoutContent.setVisibility(View.GONE);
+        textInputLayoutUri.setVisibility(View.GONE);
+        imageViewEditQuestion.setVisibility(View.VISIBLE);
+        imageViewSaveQuestion.setVisibility(View.GONE);
+
+
+        // TODO Start async task to save answer
+        // TODO reload question
+
+        JSONObject jsonObjectQuestion = new JSONObject();
+        JSONObject questionData = new JSONObject();
+        JSONObject author = new JSONObject();
+        JSONObject jsonUser = new JSONObject();
+
+
+        try {
+
+            jsonUser.put(JsonKeys.USER_ID, db.getLoggedInUser().getId());
+            //author.put(JsonKeys.AUTHOR, jsonUser);
+            questionData.put(JsonKeys.QUESTION_TEXT, newQuestionText);
+            questionData.put(JsonKeys.URI, newUri);
+            jsonObjectQuestion.put(JsonKeys.FLASHCARD_QUESTION, questionData);
+            jsonObjectQuestion.put(JsonKeys.AUTHOR, jsonUser);
+            questionData.put(JsonKeys.AUTHOR, jsonUser);
+
+        } catch (JSONException e) {
+
+            Log.d("Flascard", "init json for question update");
+            e.printStackTrace();
+        }
+
+
+        AsyncPatchRemoteCard task = new AsyncPatchRemoteCard(jsonObjectQuestion, flashCard.getId());
+
+        if (ProcessConnectivity.isOk(getContext())) {
+
+            task.execute();
+        }
+
+    }
+
+
+    /**
+     * Sets the question in edit mode
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     * @since 2017-01-08
+     */
+    private void setQuestionInEditMode() {
+
+        mContentView.setVisibility(View.GONE);
+        textInputLayoutContent.setVisibility(View.VISIBLE);
+        textInputLayoutUri.setVisibility(View.VISIBLE);
+        imageViewEditQuestion.setVisibility(View.GONE);
+        imageViewSaveQuestion.setVisibility(View.VISIBLE);
+
+        imageViewSaveQuestion.setOnClickListener(this);
+
+        editTextQuestionText.setText(flashCard.getQuestion().getQuestionText());
+        editTextQuestionUri.setText(flashCard.getQuestion().getUri().toString());
     }
 
     public void setCarddeckId(long carddeckId) {
