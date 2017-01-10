@@ -46,6 +46,7 @@ import de.uulm.einhoernchen.flashcardsapp.Fragment.Interface.OnFragmentInteracti
 import de.uulm.einhoernchen.flashcardsapp.Fragment.Interface.OnFragmentInteractionListenerCarddeck;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.Interface.OnFragmentInteractionListenerCategory;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.Interface.OnFragmentInteractionListenerFlashcard;
+import de.uulm.einhoernchen.flashcardsapp.Fragment.SimpleRTEditor;
 import de.uulm.einhoernchen.flashcardsapp.Model.Answer;
 import de.uulm.einhoernchen.flashcardsapp.Model.CardDeck;
 import de.uulm.einhoernchen.flashcardsapp.Model.Category;
@@ -461,6 +462,15 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_share) {
 
         } else if (id == R.id.nav_feedback) {
+
+            //TODO Jonas rteditor
+            SimpleRTEditor fragment = new SimpleRTEditor();
+            android.support.v4.app.FragmentTransaction fragmentTransaction =
+                    getSupportFragmentManager().beginTransaction();
+
+            // Keep attention that this is replaced and not added
+            fragmentTransaction.replace(R.id.fragment_container_main, fragment);
+            fragmentTransaction.commit();
 
         } else if (id == R.id.nav_logout) {
 

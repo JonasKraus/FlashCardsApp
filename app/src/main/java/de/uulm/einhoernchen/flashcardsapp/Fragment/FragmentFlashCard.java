@@ -9,6 +9,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
+import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -197,7 +198,7 @@ public class FragmentFlashCard extends Fragment implements View.OnClickListener 
         floatingActionButtonAdd.setVisibility(View.GONE);
         floatingActionButtonSave.setOnClickListener(this);
 
-        mContentView.setText(flashCard.getQuestion().getQuestionText());
+        mContentView.setText(Html.fromHtml(flashCard.getQuestion().getQuestionText()));
         mAuthorView.setText(flashCard.getQuestion().getAuthor().getName());
         mCardRatingView.setText(flashCard.getRatingForView());
         mDateView.setText(flashCard.getLastUpdatedString());
@@ -649,7 +650,7 @@ public class FragmentFlashCard extends Fragment implements View.OnClickListener 
         flashCard.getQuestion().setQuestionText(newQuestionText);
         flashCard.getQuestion().setUri(Uri.parse(newUri));
 
-        mContentView.setText(editTextQuestionText.getText());
+        mContentView.setText(Html.fromHtml(editTextQuestionText.getText().toString()));
 
         mContentView.setVisibility(View.VISIBLE);
         textInputLayoutContent.setVisibility(View.GONE);
