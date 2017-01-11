@@ -13,6 +13,7 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
@@ -98,9 +99,13 @@ public class SimpleRTEditor extends Fragment implements CompoundButton.OnChecked
         editTextEditor = (EditText) view.findViewById(R.id.edittext_editor);
         editTextEditor.addTextChangedListener(this);
 
-        rawText = editTextEditor.getText().toString();
+        InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.showSoftInput(editTextEditor, InputMethodManager.SHOW_IMPLICIT);
+
+        rawText = toHtml(fromHtml(editTextEditor.getText().toString()));
         htmlText = fromHtml(rawText);
 
+        editTextEditor.setText(rawText);
         return view;
     }
 
@@ -118,7 +123,6 @@ public class SimpleRTEditor extends Fragment implements CompoundButton.OnChecked
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 
-        Log.d("click", buttonView.getId() + " " +isChecked);
         String tagStart = "";
         String tagEnd = "";
 
@@ -126,7 +130,6 @@ public class SimpleRTEditor extends Fragment implements CompoundButton.OnChecked
 
             case R.id.button_bold:
 
-                Log.d("click", "bold");
                 if (isChecked) {
 
                     tagStart = HtmlTags.BOLD_START;
@@ -185,8 +188,11 @@ public class SimpleRTEditor extends Fragment implements CompoundButton.OnChecked
             if (isChecked) {
 
                 editTextEditor.setText(rawText);
+                pos = editTextEditor.getSelectionStart();
             } else {
+
                 editTextEditor.setText(htmlText);
+                pos = editTextEditor.getSelectionStart();
             }
 
         } else {
@@ -195,9 +201,15 @@ public class SimpleRTEditor extends Fragment implements CompoundButton.OnChecked
         }
     }
 
+
+    private void setCursor() {
+
+        editTextEditor.setSelection(pos);
+    }
+
     private void setCursorToEnd() {
 
-        editTextEditor.setSelection(editTextEditor.getText().length());
+        //editTextEditor.setSelection(editTextEditor.getText().length());
 
     }
 
@@ -205,12 +217,16 @@ public class SimpleRTEditor extends Fragment implements CompoundButton.OnChecked
 
         pos = editTextEditor.getSelectionEnd();
 
-        String text = editTextEditor.getText().toString();
         int selectionStart = editTextEditor.getSelectionStart();
         int selectionEnd = editTextEditor.getSelectionEnd();
+        String textSart = "";
+        String textEnd = "";
 
-        String textSart = text.substring(0, selectionStart);
-        String textEnd = text.substring(selectionEnd, text.length());
+        if (rawText.length() > 0) {
+
+            textSart = rawText.substring(0, selectionStart);
+            textEnd  = rawText.substring(selectionEnd, rawText.length());
+        }
 
         boolean surroundSelection = false;
 
@@ -220,10 +236,23 @@ public class SimpleRTEditor extends Fragment implements CompoundButton.OnChecked
         }
 
 
+
         rawText = textSart + tagStart + tagEnd + textEnd;
         htmlText = fromHtml(rawText);
-        editTextEditor.setSelection((textSart + tagStart).length());
-        //editTextEditor.setText(htmlText);
+
+
+        if (checkBoxCode.isChecked()) {
+
+            editTextEditor.setText(rawText);
+        } else {
+
+            editTextEditor.setText(htmlText);
+        }
+
+        Log.d("select", selectionStart + " " +selectionEnd + " length: " + rawText.length() + " select " + selectionEnd + tagStart.length());
+        editTextEditor.setSelection(selectionStart + tagStart.length());
+
+
 
         Log.d("text", rawText);
         Log.d("textHtml", htmlText.toString());
@@ -244,9 +273,21 @@ public class SimpleRTEditor extends Fragment implements CompoundButton.OnChecked
         return result;
     }
 
+    @SuppressWarnings("deprecation")
+    public static String toHtml(Spanned html){
+        String result;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+            result = Html.toHtml(html,Html.FROM_HTML_MODE_LEGACY);
+        } else {
+            result = Html.toHtml(html);
+        }
+        return result;
+    }
+
     @Override
     public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
+        pos = editTextEditor.getSelectionStart();
     }
 
     @Override
@@ -257,8 +298,17 @@ public class SimpleRTEditor extends Fragment implements CompoundButton.OnChecked
     @Override
     public void afterTextChanged(Editable s) {
 
-        rawText = editTextEditor.getText().toString();
-        htmlText = fromHtml(rawText);
+
+        if (!checkBoxCode.isChecked()) {
+
+            rawText = toHtml(editTextEditor.getText());
+            htmlText = fromHtml(rawText);
+
+        } else {
+
+            rawText = editTextEditor.getText().toString();
+            htmlText = fromHtml(rawText);
+        }
 
     }
 }
