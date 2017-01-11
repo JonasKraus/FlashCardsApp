@@ -54,8 +54,6 @@ public class RecyclerViewAdapterFlashcards extends RecyclerView.Adapter<Recycler
         this.progressBar = progressBar;
         this.supportFragmentManager = supportFragmentManager;
 
-        Globals.getFloatingActionButtonAdd().setVisibility(View.VISIBLE);
-        Globals.getFloatingActionButtonAdd().setOnClickListener(this);
     }
 
     @Override
@@ -97,6 +95,9 @@ public class RecyclerViewAdapterFlashcards extends RecyclerView.Adapter<Recycler
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
 
+
+        Globals.getFloatingActionButtonAdd().setVisibility(View.VISIBLE);
+        Globals.getFloatingActionButtonAdd().setOnClickListener(this);
 
         //TODO Jonas delete if unused
         if (position >= flashCards.size()) {
@@ -290,7 +291,7 @@ public class RecyclerViewAdapterFlashcards extends RecyclerView.Adapter<Recycler
     @Override
     public int getItemCount() {
 
-        return flashCards.size() +1;
+        return flashCards.size() +1; // +1 to add a buttton at the end of the list
     }
 
 
