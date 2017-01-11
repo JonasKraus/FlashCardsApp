@@ -17,6 +17,7 @@ import de.uulm.einhoernchen.flashcardsapp.Database.DbManager;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.Interface.OnFragmentInteractionListenerCarddeck;
 import de.uulm.einhoernchen.flashcardsapp.Model.CardDeck;
 import de.uulm.einhoernchen.flashcardsapp.R;
+import de.uulm.einhoernchen.flashcardsapp.Util.Globals;
 
 /**
  * {@link RecyclerView.Adapter} that can display a {@link de.uulm.einhoernchen.flashcardsapp.Fragment.Dataset.ContentCarddecks} and makes a call to the
@@ -26,13 +27,12 @@ public class RecyclerViewAdapterCarddecks extends RecyclerView.Adapter<RecyclerV
     private final List<CardDeck> cardDecks;
     private final OnFragmentInteractionListenerCarddeck mListener;
     private final boolean isUpToDate;
-    private final DbManager db;
+    private final DbManager db = Globals.getDb();
 
-    public RecyclerViewAdapterCarddecks(DbManager db, List<CardDeck> items, OnFragmentInteractionListenerCarddeck listener, boolean isUpToDate) {
+    public RecyclerViewAdapterCarddecks(List<CardDeck> items, OnFragmentInteractionListenerCarddeck listener, boolean isUpToDate) {
         cardDecks = items;
         mListener = listener;
         this.isUpToDate = isUpToDate;
-        this.db = db;
     }
 
     @Override

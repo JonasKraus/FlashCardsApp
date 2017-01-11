@@ -1,6 +1,5 @@
-package de.uulm.einhoernchen.flashcardsapp.AsyncTask.Remote;
+package de.uulm.einhoernchen.flashcardsapp.AsyncTask.Remote.POST;
 
-import android.app.Activity;
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -13,6 +12,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 import de.uulm.einhoernchen.flashcardsapp.Activity.MainActivity;
+import de.uulm.einhoernchen.flashcardsapp.AsyncTask.Remote.PATCH.AsyncPatchRemoteCarddeck;
 import de.uulm.einhoernchen.flashcardsapp.Const.Routes;
 import de.uulm.einhoernchen.flashcardsapp.Util.Globals;
 import de.uulm.einhoernchen.flashcardsapp.Util.JsonKeys;

@@ -20,8 +20,8 @@ import android.widget.Toast;
 
 import java.util.List;
 
-import de.uulm.einhoernchen.flashcardsapp.AsyncTask.Remote.AsyncDeleteRemoteRating;
-import de.uulm.einhoernchen.flashcardsapp.AsyncTask.Remote.AsyncPostRemoteRating;
+import de.uulm.einhoernchen.flashcardsapp.AsyncTask.Remote.DELETE.AsyncDeleteRemoteRating;
+import de.uulm.einhoernchen.flashcardsapp.AsyncTask.Remote.POST.AsyncPostRemoteRating;
 import de.uulm.einhoernchen.flashcardsapp.Database.DbManager;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.Interface.OnFragmentInteractionListenerAnswer;
 import de.uulm.einhoernchen.flashcardsapp.Model.Answer;

@@ -1,4 +1,4 @@
-package de.uulm.einhoernchen.flashcardsapp.AsyncTask.Remote;
+package de.uulm.einhoernchen.flashcardsapp.AsyncTask.Remote.PUT;
 
 import android.os.AsyncTask;
 import android.util.Log;
@@ -15,7 +15,7 @@ import de.uulm.einhoernchen.flashcardsapp.Util.JsonParser;
 /**
  * Created by jonas-uni on 17.08.2016.
  */
-public class AsyncPatchRemoteCard extends AsyncTask<Long, Long, Long> {
+public class AsyncPutRemoteCard extends AsyncTask<Long, Long, Long> {
 
     private JSONObject jsonObject;
     private long cardId;
@@ -27,7 +27,7 @@ public class AsyncPatchRemoteCard extends AsyncTask<Long, Long, Long> {
      *
      * @param jsonObject
      */
-    public AsyncPatchRemoteCard(JSONObject jsonObject, long cardId) {
+    public AsyncPutRemoteCard(JSONObject jsonObject, long cardId) {
 
         this.jsonObject = jsonObject;
         this.cardId = cardId;
@@ -54,12 +54,11 @@ public class AsyncPatchRemoteCard extends AsyncTask<Long, Long, Long> {
 
             urlConnection = (HttpURLConnection) url.openConnection();
 
-            urlConnection.setDoOutput(false); // Important for delete request
-            //urlConnection.setDoInput(true); // Important for delete request
+            urlConnection.setDoOutput(false);
             urlConnection.setChunkedStreamingMode(0);
             urlConnection.setRequestProperty("Accept", "application/json");
             urlConnection.setRequestProperty("Content-Type", "application/json");
-            urlConnection.setRequestMethod("PATCH");
+            urlConnection.setRequestMethod("PUT");
 
             urlConnection.connect();
 
@@ -71,13 +70,11 @@ public class AsyncPatchRemoteCard extends AsyncTask<Long, Long, Long> {
 
             //Log.d("json", jsonObject.toString());
 
-            //Log.d("resp", urlConnection.getResponseCode()+"");
-
             return JsonParser.readResponse(urlConnection.getInputStream());
 
         } catch (Exception e) {
 
-            Log.e("doInBack card " + urlConnection.getRequestMethod(), e.toString() + " body: " + jsonObject.toString());
+            Log.e("doInBack card put", e.toString());
             System.out.println(e.toString());
             return null;
 

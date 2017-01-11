@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.uulm.einhoernchen.flashcardsapp.AsyncTask.Local.AsyncGetLocalCarddecks;
-import de.uulm.einhoernchen.flashcardsapp.AsyncTask.Remote.AsyncGetRemoteCarddecks;
+import de.uulm.einhoernchen.flashcardsapp.AsyncTask.Remote.GET.AsyncGetRemoteCarddecks;
 
 import de.uulm.einhoernchen.flashcardsapp.AsyncTask.Local.AsyncSaveLocalCardDecks;
 import de.uulm.einhoernchen.flashcardsapp.Database.DbManager;

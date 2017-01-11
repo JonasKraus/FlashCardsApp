@@ -35,5 +35,17 @@
             android:hint="@string/prompt_carddeck_description" />
 
     </android.support.design.widget.TextInputLayout>
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <CheckBox
+            android:id="@+id/checkbox_carddeck_visible"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:checked="true"
+            android:hint="@string/prompt_carddeck_visible" />
+
+    </android.support.design.widget.TextInputLayout>
 
 </LinearLayout>

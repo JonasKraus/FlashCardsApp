@@ -1,4 +1,4 @@
-package de.uulm.einhoernchen.flashcardsapp.AsyncTask.Remote;
+package de.uulm.einhoernchen.flashcardsapp.AsyncTask.Remote.GET;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;

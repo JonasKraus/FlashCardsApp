@@ -1,37 +1,43 @@
-package de.uulm.einhoernchen.flashcardsapp.AsyncTask.Remote;
+package de.uulm.einhoernchen.flashcardsapp.AsyncTask.Remote.PUT;
 
 import android.os.AsyncTask;
 import android.util.Log;
+import android.widget.Toast;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.DataOutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+import de.uulm.einhoernchen.flashcardsapp.Activity.MainActivity;
 import de.uulm.einhoernchen.flashcardsapp.Const.Routes;
+import de.uulm.einhoernchen.flashcardsapp.R;
+import de.uulm.einhoernchen.flashcardsapp.Util.Globals;
+import de.uulm.einhoernchen.flashcardsapp.Util.JsonKeys;
 import de.uulm.einhoernchen.flashcardsapp.Util.JsonParser;
 
 /**
- * @author Jonas Kraus jonas.kraus@uni-ulm.de
- * @since 2017-01-05
+ * Created by jonas-uni on 17.08.2016.
  */
-public class AsyncPatchRemoteCarddeck extends AsyncTask<Long, Long, Long> {
+public class AsyncPutRemoteCategory extends AsyncTask<Long, Long, Long> {
 
     private JSONObject jsonObject;
 
 
+
     /**
      * @author Jonas Kraus jonas.kraus@uni-ulm.de
-     * @since 2017-01-05
+     * @since 2016-12-30
      *
      * @param jsonObject
      */
-    public AsyncPatchRemoteCarddeck(JSONObject jsonObject) {
+    public AsyncPutRemoteCategory(JSONObject jsonObject) {
 
         this.jsonObject = jsonObject;
     }
-
 
     @Override
     protected void onPreExecute() {
@@ -42,10 +48,9 @@ public class AsyncPatchRemoteCarddeck extends AsyncTask<Long, Long, Long> {
     @Override
     protected Long doInBackground(Long... params) {
 
-        for (Long carddeckId : params) {
+        for (long carddeckId: params) {
 
-            String urlString = Routes.URL + Routes.SLASH + Routes.CARD_DECKS + Routes.SLASH + carddeckId + Routes.QUESTION_MARK + Routes.APPEND + Routes.EQUAL + Routes.BOOL_TRUE;
-
+            String urlString = Routes.URL + Routes.SLASH + Routes.CATEGORIES + Routes.SLASH + carddeckId;
             Log.d("back call to", urlString);
 
             HttpURLConnection urlConnection = null;
@@ -60,7 +65,7 @@ public class AsyncPatchRemoteCarddeck extends AsyncTask<Long, Long, Long> {
                 urlConnection.setChunkedStreamingMode(0);
                 urlConnection.setRequestProperty("Accept", "application/json");
                 urlConnection.setRequestProperty("Content-Type", "application/json");
-                urlConnection.setRequestMethod("PATCH");
+                urlConnection.setRequestMethod("PUT");
 
                 urlConnection.connect();
 
@@ -70,15 +75,13 @@ public class AsyncPatchRemoteCarddeck extends AsyncTask<Long, Long, Long> {
                 wr.writeBytes(jsonObject.toString());
                 wr.flush();
 
-                Log.d(urlConnection.getRequestMethod() + " json", jsonObject.toString());
-
-                //Log.d("resp", urlConnection.getResponseCode()+"");
+                //Log.d(urlConnection.getRequestMethod() + " json", jsonObject.toString());
 
                 return JsonParser.readResponse(urlConnection.getInputStream());
 
             } catch (Exception e) {
 
-                Log.e("doInBack carddeck patch", e.toString());
+                Log.e("doInBack categories " + urlConnection.getRequestMethod(), e.toString() + jsonObject.toString());
                 System.out.println(e.toString());
                 return null;
             }
@@ -86,19 +89,21 @@ public class AsyncPatchRemoteCarddeck extends AsyncTask<Long, Long, Long> {
         return null;
     }
 
-
     @Override
     protected void onPostExecute(Long id) {
         super.onPostExecute(id);
 
         if (id != null) {
 
+            MainActivity mainActivity = (MainActivity) Globals.getContext();
+            mainActivity.setCarddeckList(false);
+
         } else {
-            Log.w("PATCH DECK", "FAILED");
+
+            Toast.makeText(Globals.getContext(), R.string.failed_to_save, Toast.LENGTH_SHORT).show();
         }
 
     }
-
 
     @Override
     protected void onProgressUpdate(Long... values) {

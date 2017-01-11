@@ -5,7 +5,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.widget.Toast;
 
-import de.uulm.einhoernchen.flashcardsapp.AsyncTask.Remote.AsyncGetRemoteHeartbeat;
+import de.uulm.einhoernchen.flashcardsapp.AsyncTask.Remote.GET.AsyncGetRemoteHeartbeat;
 import de.uulm.einhoernchen.flashcardsapp.R;
 
 /**

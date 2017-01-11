@@ -1,4 +1,4 @@
-package de.uulm.einhoernchen.flashcardsapp.AsyncTask.Remote;
+package de.uulm.einhoernchen.flashcardsapp.AsyncTask.Remote.PATCH;
 
 import android.os.AsyncTask;
 import android.util.Log;
@@ -15,7 +15,7 @@ import de.uulm.einhoernchen.flashcardsapp.Util.JsonParser;
 /**
  * Created by jonas-uni on 17.08.2016.
  */
-public class AsyncPutRemoteCard extends AsyncTask<Long, Long, Long> {
+public class AsyncPatchRemoteCard extends AsyncTask<Long, Long, Long> {
 
     private JSONObject jsonObject;
     private long cardId;
@@ -27,7 +27,7 @@ public class AsyncPutRemoteCard extends AsyncTask<Long, Long, Long> {
      *
      * @param jsonObject
      */
-    public AsyncPutRemoteCard(JSONObject jsonObject, long cardId) {
+    public AsyncPatchRemoteCard(JSONObject jsonObject, long cardId) {
 
         this.jsonObject = jsonObject;
         this.cardId = cardId;
@@ -54,11 +54,12 @@ public class AsyncPutRemoteCard extends AsyncTask<Long, Long, Long> {
 
             urlConnection = (HttpURLConnection) url.openConnection();
 
-            urlConnection.setDoOutput(false);
+            urlConnection.setDoOutput(false); // Important for delete request
+            //urlConnection.setDoInput(true); // Important for delete request
             urlConnection.setChunkedStreamingMode(0);
             urlConnection.setRequestProperty("Accept", "application/json");
             urlConnection.setRequestProperty("Content-Type", "application/json");
-            urlConnection.setRequestMethod("PUT");
+            urlConnection.setRequestMethod("PATCH");
 
             urlConnection.connect();
 
@@ -70,11 +71,13 @@ public class AsyncPutRemoteCard extends AsyncTask<Long, Long, Long> {
 
             //Log.d("json", jsonObject.toString());
 
+            //Log.d("resp", urlConnection.getResponseCode()+"");
+
             return JsonParser.readResponse(urlConnection.getInputStream());
 
         } catch (Exception e) {
 
-            Log.e("doInBack card put", e.toString());
+            Log.e("doInBack card " + urlConnection.getRequestMethod(), e.toString() + " body: " + jsonObject.toString());
             System.out.println(e.toString());
             return null;
 

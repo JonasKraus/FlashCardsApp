@@ -18,7 +18,7 @@ import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.util.Random;
 
-import de.uulm.einhoernchen.flashcardsapp.AsyncTask.Remote.AsyncGetRemoteBitmap;
+import de.uulm.einhoernchen.flashcardsapp.AsyncTask.Remote.GET.AsyncGetRemoteBitmap;
 import de.uulm.einhoernchen.flashcardsapp.R;
 
 public class ProcessorImage {

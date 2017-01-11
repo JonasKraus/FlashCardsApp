@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.uulm.einhoernchen.flashcardsapp.AsyncTask.Local.AsyncGetLocalCategories;
-import de.uulm.einhoernchen.flashcardsapp.AsyncTask.Remote.AsyncGetRemoteCategories;
+import de.uulm.einhoernchen.flashcardsapp.AsyncTask.Remote.GET.AsyncGetRemoteCategories;
 import de.uulm.einhoernchen.flashcardsapp.AsyncTask.Local.AsyncSaveLocalCategories;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.FragmentCarddecks;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.FragmentCategories;

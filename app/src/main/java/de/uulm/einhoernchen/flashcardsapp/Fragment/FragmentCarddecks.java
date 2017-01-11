@@ -12,6 +12,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.EditText;
 
 import org.json.JSONArray;
@@ -20,7 +21,8 @@ import org.json.JSONObject;
 
 import java.util.List;
 
-import de.uulm.einhoernchen.flashcardsapp.AsyncTask.Remote.AsyncPutRemoteCategory;
+import de.uulm.einhoernchen.flashcardsapp.AsyncTask.Remote.POST.AsyncPostRemoteCarddeck;
+import de.uulm.einhoernchen.flashcardsapp.AsyncTask.Remote.PUT.AsyncPutRemoteCategory;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.Adapter.RecyclerViewAdapterCarddecks;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.Interface.OnFragmentInteractionListenerCarddeck;
 import de.uulm.einhoernchen.flashcardsapp.Model.CardDeck;
@@ -95,7 +97,7 @@ public class FragmentCarddecks extends Fragment implements View.OnClickListener{
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
 
-            recyclerView.setAdapter(new RecyclerViewAdapterCarddecks(Globals.getDb(), itemList, mListener, isUpToDate));
+            recyclerView.setAdapter(new RecyclerViewAdapterCarddecks(itemList, mListener, isUpToDate));
         }
         return viewFragment;
     }
@@ -115,9 +117,6 @@ public class FragmentCarddecks extends Fragment implements View.OnClickListener{
     public void onDetach() {
         super.onDetach();
 
-        // reset action button
-        Globals.getFloatingActionButtonAdd().setVisibility(View.GONE);
-        Globals.getFloatingActionButtonAdd().setOnClickListener(null);
         mListener = null;
     }
 
@@ -150,9 +149,6 @@ public class FragmentCarddecks extends Fragment implements View.OnClickListener{
             case R.id.fab_add:
 
                 createDialog();
-                //TODO jonas implement
-                Snackbar.make(v, " TODO add Carddeck", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
 
                 break;
         }
@@ -176,6 +172,7 @@ public class FragmentCarddecks extends Fragment implements View.OnClickListener{
 
         final EditText text = (EditText) view.findViewById(R.id.carddeck_name);
         final EditText description = (EditText) view.findViewById(R.id.carddeck_description);
+        final CheckBox visible = (CheckBox) view.findViewById(R.id.checkbox_carddeck_visible);
 
         final View v = viewFragment;
 
@@ -190,6 +187,7 @@ public class FragmentCarddecks extends Fragment implements View.OnClickListener{
 
                         String textString = text.getText().toString();
                         String descriptionString = description.getText().toString();
+                        boolean isVisible = visible.isChecked();
 
                         if (textString == null || textString.equals("")) {
 
@@ -200,24 +198,22 @@ public class FragmentCarddecks extends Fragment implements View.OnClickListener{
                         } else {
 
                             JSONObject jsonObject = new JSONObject();
-                            JSONObject jsonObjectCarddeck = new JSONObject();
-                            JSONArray jsonArrayCarddecks = new JSONArray();
+                            JSONObject jsonObjectGroup = new JSONObject();
 
                             try {
 
-                                jsonObject.put(JsonKeys.CATEGORY_NAME, Globals.getDb().getCategoryNameById(parentId));
-                                jsonObject.put(JsonKeys.CATEGORY_CARDDECKS, jsonArrayCarddecks);
-                                jsonObject.put(JsonKeys.CATEGORY_PARENT, parentId);
-                                jsonObjectCarddeck.put(JsonKeys.CARDDECK_NAME, textString);
-                                jsonObjectCarddeck.put(JsonKeys.CARDDECK_DESCRIPTION, descriptionString);
-                                jsonArrayCarddecks.put(jsonObjectCarddeck);
+                                jsonObject.put(JsonKeys.CARDDECK_NAME, textString);
+                                jsonObject.put(JsonKeys.CARDDECK_DESCRIPTION, descriptionString);
+                                jsonObject.put(JsonKeys.CARDDECK_VISIBLE, isVisible);
+                                jsonObjectGroup.put(JsonKeys.GROUP_ID, null); // TODO jonas Add group
+                                jsonObject.put(JsonKeys.CARDDECK_GROUP, jsonObjectGroup);
 
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
 
                             // TODO save
-                            AsyncPutRemoteCategory task = new AsyncPutRemoteCategory(jsonObject);
+                            AsyncPostRemoteCarddeck task = new AsyncPostRemoteCarddeck(jsonObject);
 
                             if (ProcessConnectivity.isOk(Globals.getContext())) {
 

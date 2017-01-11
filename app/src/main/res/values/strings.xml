@@ -177,6 +177,7 @@
     <string name="prompt_carddeck_name">name</string>
     <string name="prompt_carddeck_description">description</string>
     <string name="failed_to_save">failed to save</string>
+    <string name="prompt_carddeck_visible">visible</string>
 
 
 </resources>

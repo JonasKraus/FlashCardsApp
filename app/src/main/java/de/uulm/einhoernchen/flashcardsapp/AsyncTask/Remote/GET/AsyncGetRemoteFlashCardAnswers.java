@@ -1,4 +1,4 @@
-package de.uulm.einhoernchen.flashcardsapp.AsyncTask.Remote;
+package de.uulm.einhoernchen.flashcardsapp.AsyncTask.Remote.GET;
 
 import android.os.AsyncTask;
 import android.util.Log;
@@ -10,44 +10,45 @@ import java.net.URL;
 import java.util.List;
 
 import de.uulm.einhoernchen.flashcardsapp.Const.Routes;
-import de.uulm.einhoernchen.flashcardsapp.Model.FlashCard;
+import de.uulm.einhoernchen.flashcardsapp.Model.Answer;
 import de.uulm.einhoernchen.flashcardsapp.Util.Globals;
 import de.uulm.einhoernchen.flashcardsapp.Util.JsonParser;
 
 /**
  * Created by jonas-uni on 17.08.2016.
  */
-public class AsyncGetRemoteFlashCards extends AsyncTask<Long, Long, List<FlashCard>> {
+public class AsyncGetRemoteFlashCardAnswers extends AsyncTask<Long, Long, List<Answer>> {
 
     private ProgressBar progressBar = Globals.getProgressBar();
 
     @Override
     protected void onPreExecute() {
         super.onPreExecute();
-        progressBar.setVisibility(View.VISIBLE);
+        if (progressBar != null )progressBar.setVisibility(View.VISIBLE);
     }
 
     /**
-     * Interface to receive the carddecks in the activity that called this async task
+     * Interface to receive the a flashcard in the activity that called this async task
      */
-    public interface AsyncResponseFlashCards {
-        void processFinish(List<FlashCard> flashCards);
+    public interface AsyncResponseFlashCardAnswers {
+        void processFinish(List<Answer> answers);
     }
 
-    public AsyncResponseFlashCards delegate = null;
+    public AsyncResponseFlashCardAnswers delegate = null;
     private final Long parentId;
 
-    public AsyncGetRemoteFlashCards(Long parentId, AsyncResponseFlashCards delegate) {
+    public AsyncGetRemoteFlashCardAnswers(Long parentId, AsyncResponseFlashCardAnswers delegate) {
         this.parentId = parentId;
         this.delegate = delegate;
     }
 
     @Override
-    protected List<FlashCard> doInBackground(Long... params) {
+    protected List<Answer> doInBackground(Long... params) {
 
 
-        String urlString = Routes.URL + Routes.SLASH + Routes.CARD_DECKS + Routes.SLASH
-                + parentId + Routes.SLASH + Routes.FLASH_CARDS;
+        String urlString = Routes.URL + Routes.SLASH + Routes.FLASH_CARDS + Routes.SLASH
+                + parentId + Routes.SLASH + Routes.ANSWERS;
+
         Log.d("back call to ", urlString);
         HttpURLConnection urlConnection = null;
 
@@ -64,7 +65,7 @@ public class AsyncGetRemoteFlashCards extends AsyncTask<Long, Long, List<FlashCa
 
             urlConnection.connect();
 
-            return JsonParser.readFlashCards(urlConnection.getInputStream());
+            return JsonParser.readAnswers(urlConnection.getInputStream());
 
         } catch (Exception e) {
 
@@ -77,19 +78,19 @@ public class AsyncGetRemoteFlashCards extends AsyncTask<Long, Long, List<FlashCa
     }
 
     @Override
-    protected void onPostExecute(List<FlashCard> flashCards) {
-        super.onPostExecute(flashCards);
+    protected void onPostExecute(List<Answer> answers) {
+        super.onPostExecute(answers);
 
         // TODO for testing only
         // Should collect data from db
-        if (flashCards == null || flashCards.size() == 0) {
+        if (answers == null) {
 
-            Log.d("AsyncGetRemoteCards", "no flashcards");
+            Log.d("AsyncGetRemoteFlashCard", "no flashcard");
 
         }
 
-        progressBar.setVisibility(View.GONE);
-        delegate.processFinish(flashCards);
+        if (progressBar != null) progressBar.setVisibility(View.GONE);
+        delegate.processFinish(answers);
 
     }
 

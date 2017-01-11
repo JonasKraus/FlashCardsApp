@@ -1,4 +1,4 @@
-package de.uulm.einhoernchen.flashcardsapp.AsyncTask.Remote;
+package de.uulm.einhoernchen.flashcardsapp.AsyncTask.Remote.GET;
 
 import android.os.AsyncTask;
 import android.util.Log;

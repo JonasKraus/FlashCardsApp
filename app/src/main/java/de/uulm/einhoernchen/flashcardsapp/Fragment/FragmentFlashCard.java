@@ -30,20 +30,17 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import de.uulm.einhoernchen.flashcardsapp.AsyncTask.Remote.AsyncDeleteRemoteRating;
-import de.uulm.einhoernchen.flashcardsapp.AsyncTask.Remote.AsyncPatchRemoteCard;
-import de.uulm.einhoernchen.flashcardsapp.AsyncTask.Remote.AsyncPostRemoteCard;
-import de.uulm.einhoernchen.flashcardsapp.AsyncTask.Remote.AsyncPostRemoteRating;
+import de.uulm.einhoernchen.flashcardsapp.AsyncTask.Remote.DELETE.AsyncDeleteRemoteRating;
+import de.uulm.einhoernchen.flashcardsapp.AsyncTask.Remote.PATCH.AsyncPatchRemoteCard;
+import de.uulm.einhoernchen.flashcardsapp.AsyncTask.Remote.POST.AsyncPostRemoteRating;
 import de.uulm.einhoernchen.flashcardsapp.Database.DbManager;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.Dataset.ContentFlashCardAnswers;
 import de.uulm.einhoernchen.flashcardsapp.Model.FlashCard;
-import de.uulm.einhoernchen.flashcardsapp.Model.Question;
 import de.uulm.einhoernchen.flashcardsapp.R;
 import de.uulm.einhoernchen.flashcardsapp.Util.Globals;
 import de.uulm.einhoernchen.flashcardsapp.Util.JsonKeys;
 import de.uulm.einhoernchen.flashcardsapp.Util.ProcessConnectivity;
 import de.uulm.einhoernchen.flashcardsapp.Util.ProcessorImage;
-import de.uulm.einhoernchen.flashcardsapp.Util.ValidatorInput;
 
 
 /**
