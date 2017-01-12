@@ -43,6 +43,7 @@ import de.uulm.einhoernchen.flashcardsapp.Fragment.FragmentFlashCardCreate;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.FragmentHome;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.Dataset.ContentCarddecks;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.Dataset.ContentCategories;
+import de.uulm.einhoernchen.flashcardsapp.Fragment.FragmentPlay;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.Interface.OnFragmentInteractionListenerAnswer;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.Interface.OnFragmentInteractionListenerCarddeck;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.Interface.OnFragmentInteractionListenerCategory;
@@ -259,8 +260,15 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onClick(View view) {
 
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                FragmentPlay fragment = new FragmentPlay();
+                android.support.v4.app.FragmentTransaction fragmentTransaction =
+                        getSupportFragmentManager().beginTransaction();
+
+                // Keep attention that this is replaced and not added
+                fragmentTransaction.replace(R.id.fragment_container_main, fragment);
+                fragmentTransaction.commit();
+
+                catalogueState = Constants.PLAY;
             }
         });
 
@@ -559,7 +567,7 @@ public class MainActivity extends AppCompatActivity
                 break;
             default:
 
-                //setCategoryList(true); TODO
+                setCategoryList(true);
                 break;
         }
 
@@ -575,7 +583,10 @@ public class MainActivity extends AppCompatActivity
      */
     private void moveBackwardsInCatalogue() {
 
-        this.childrenId = parentIds.get(parentIds.size() - 1);
+        if (catalogueState != Constants.FLASH_CARD_CREATE && catalogueState != Constants.PLAY) {
+
+            this.childrenId = parentIds.get(parentIds.size() - 1);
+        }
 
         switch (this.catalogueState) {
 

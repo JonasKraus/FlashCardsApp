@@ -21,6 +21,24 @@ import de.uulm.einhoernchen.flashcardsapp.Model.Tag;
 import de.uulm.einhoernchen.flashcardsapp.Model.User;
 import de.uulm.einhoernchen.flashcardsapp.Model.UserGroup;
 
+import static de.uulm.einhoernchen.flashcardsapp.Database.DbHelper.COLUMN_FLASHCARD_CARDDECK_ID;
+import static de.uulm.einhoernchen.flashcardsapp.Database.DbHelper.COLUMN_FLASHCARD_CREATED;
+import static de.uulm.einhoernchen.flashcardsapp.Database.DbHelper.COLUMN_FLASHCARD_ID;
+import static de.uulm.einhoernchen.flashcardsapp.Database.DbHelper.COLUMN_FLASHCARD_LAST_UPDATED;
+import static de.uulm.einhoernchen.flashcardsapp.Database.DbHelper.COLUMN_FLASHCARD_MULTIPLE_CHOICE;
+import static de.uulm.einhoernchen.flashcardsapp.Database.DbHelper.COLUMN_FLASHCARD_QUESTION_ID;
+import static de.uulm.einhoernchen.flashcardsapp.Database.DbHelper.COLUMN_FLASHCARD_RATING;
+import static de.uulm.einhoernchen.flashcardsapp.Database.DbHelper.COLUMN_FLASHCARD_USER_ID;
+import static de.uulm.einhoernchen.flashcardsapp.Database.DbHelper.COLUMN_SELECTION_CARD_DECK_ID;
+import static de.uulm.einhoernchen.flashcardsapp.Database.DbHelper.COLUMN_SELECTION_CARD_ID;
+import static de.uulm.einhoernchen.flashcardsapp.Database.DbHelper.COLUMN_SELECTION_DATE;
+import static de.uulm.einhoernchen.flashcardsapp.Database.DbHelper.COLUMN_SELECTION_USER_ID;
+import static de.uulm.einhoernchen.flashcardsapp.Database.DbHelper.COLUMN_USER_ID;
+import static de.uulm.einhoernchen.flashcardsapp.Database.DbHelper.COLUMN_USER_IS_LOGGED_IN;
+import static de.uulm.einhoernchen.flashcardsapp.Database.DbHelper.TABLE_FLASHCARD;
+import static de.uulm.einhoernchen.flashcardsapp.Database.DbHelper.TABLE_SELECTION;
+import static de.uulm.einhoernchen.flashcardsapp.Database.DbHelper.TABLE_USER;
+
 /**
  * Created by Jonas on 02.07.2016.
  */
@@ -147,7 +165,7 @@ public class DbManager {
             DbHelper.COLUMN_SELECTION_ID,             //0
             DbHelper.COLUMN_SELECTION_USER_ID,        //1
             DbHelper.COLUMN_SELECTION_CARD_DECK_ID,   //2
-            DbHelper.COLUMN_SELECTION_CARD_ID,        //3
+            COLUMN_SELECTION_CARD_ID,        //3
             DbHelper.COLUMN_SELECTION_DATE            //4
     };
 
@@ -160,6 +178,7 @@ public class DbManager {
             DbHelper.COLUMN_VOTING_DATE,              //5
             DbHelper.COLUMN_VOTING_RATING_ID          //6
     };
+    private List<FlashCard> selectedFlashcards;
 
     /**
      * Constructor
@@ -357,7 +376,7 @@ public class DbManager {
     public List<FlashCard> getFlashCards(long parentId) {
         List<FlashCard> flashCards = new ArrayList<FlashCard>();
 
-        Cursor cursor = database.query(DbHelper.TABLE_FLASHCARD, allFlashCardColumns, DbHelper.COLUMN_FLASHCARD_CARDDECK_ID + " = " + parentId, null, null, null, null);
+        Cursor cursor = database.query(TABLE_FLASHCARD, allFlashCardColumns, DbHelper.COLUMN_FLASHCARD_CARDDECK_ID + " = " + parentId, null, null, null, null);
 
         if (cursor.moveToFirst()) {
             do {
@@ -400,7 +419,7 @@ public class DbManager {
 
         FlashCard flashCard = null;
 
-        Cursor cursor = database.query(DbHelper.TABLE_FLASHCARD, allFlashCardColumns, DbHelper.COLUMN_FLASHCARD_ID + " = " + flashCardId, null, null, null, null);
+        Cursor cursor = database.query(TABLE_FLASHCARD, allFlashCardColumns, DbHelper.COLUMN_FLASHCARD_ID + " = " + flashCardId, null, null, null, null);
 
         if (cursor.moveToFirst()) {
             do {
@@ -712,7 +731,7 @@ public class DbManager {
             values.put(DbHelper.COLUMN_FLASHCARD_LAST_UPDATED , card.getLastUpdated().getTime());
         }
 
-        database.insertWithOnConflict(DbHelper.TABLE_FLASHCARD, null, values, SQLiteDatabase.CONFLICT_REPLACE);
+        database.insertWithOnConflict(TABLE_FLASHCARD, null, values, SQLiteDatabase.CONFLICT_REPLACE);
     }
 
 
@@ -1070,7 +1089,7 @@ public class DbManager {
         values.put(DbHelper.COLUMN_FLASHCARD_RATING, + rating);
 
         // Executes the query
-        database.updateWithOnConflict(DbHelper.TABLE_FLASHCARD, values, DbHelper.COLUMN_FLASHCARD_ID + "=" + cardId, null, SQLiteDatabase.CONFLICT_REPLACE);
+        database.updateWithOnConflict(TABLE_FLASHCARD, values, DbHelper.COLUMN_FLASHCARD_ID + "=" + cardId, null, SQLiteDatabase.CONFLICT_REPLACE);
 
     }
 
@@ -1253,7 +1272,7 @@ public class DbManager {
      */
     public void deselectCard(long cardID, long parentID) {
 
-        database.delete(DbHelper.TABLE_SELECTION, DbHelper.COLUMN_SELECTION_CARD_ID + "=" + cardID
+        database.delete(DbHelper.TABLE_SELECTION, COLUMN_SELECTION_CARD_ID + "=" + cardID
                 + " AND " + DbHelper.COLUMN_SELECTION_USER_ID + "=" + loggedInUser.getId(), null);
 
         //deselectCarddeck(parentID);
@@ -1298,7 +1317,7 @@ public class DbManager {
     public void selectCard(long cardID, long parentID) {
 
         ContentValues values = new ContentValues();
-        values.put(DbHelper.COLUMN_SELECTION_CARD_ID, cardID);
+        values.put(COLUMN_SELECTION_CARD_ID, cardID);
         values.put(DbHelper.COLUMN_SELECTION_USER_ID, loggedInUser.getId());
         values.put(DbHelper.COLUMN_SELECTION_DATE,  System.currentTimeMillis());
 
@@ -1320,7 +1339,7 @@ public class DbManager {
      */
     public long getCardSelectionDate(long cardID) {
 
-        Cursor cursor = database.query(DbHelper.TABLE_SELECTION, allSelectionColumns, DbHelper.COLUMN_SELECTION_CARD_ID + " = " + cardID
+        Cursor cursor = database.query(DbHelper.TABLE_SELECTION, allSelectionColumns, COLUMN_SELECTION_CARD_ID + " = " + cardID
                         + " AND " + DbHelper.COLUMN_SELECTION_USER_ID + " = " + loggedInUser.getId()
                 , null, null, null, null);
 
@@ -1483,7 +1502,7 @@ public class DbManager {
 
     public long getCardParentID(long cardID) {
 
-        Cursor cursor = database.query(DbHelper.TABLE_FLASHCARD, allFlashCardColumns, DbHelper.COLUMN_FLASHCARD_ID + " = " + cardID
+        Cursor cursor = database.query(TABLE_FLASHCARD, allFlashCardColumns, DbHelper.COLUMN_FLASHCARD_ID + " = " + cardID
                 , null, null, null, null);
 
         long parentId = -1;
@@ -1594,5 +1613,96 @@ public class DbManager {
         }
 
         return categoryName;
+    }
+
+
+    /**
+     * Gets all selected flashcards for the logged in user
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     * @since 2017-01-12
+     *
+     * @return
+     */
+    public List<FlashCard> getSelectedFlashcards() {
+        List<FlashCard> flashCards = new ArrayList<FlashCard>();
+
+
+        SQLiteQueryBuilder qb = new SQLiteQueryBuilder();
+
+        qb.setTables(TABLE_FLASHCARD +
+                " JOIN " + TABLE_SELECTION + " ON "
+                + TABLE_SELECTION + "." + COLUMN_SELECTION_CARD_ID + "=" + TABLE_FLASHCARD + "." + COLUMN_FLASHCARD_ID
+                + " JOIN " + TABLE_USER + " ON "
+                + TABLE_SELECTION + "." + COLUMN_SELECTION_USER_ID + "=" + TABLE_USER + "." + COLUMN_USER_ID
+                );
+
+        qb.appendWhere(COLUMN_USER_IS_LOGGED_IN + "=" + 1 + " AND " + COLUMN_SELECTION_DATE + "NOT NULL");
+        Cursor cursor = qb.query(database, null, null, null, null, null, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+
+                long cardId = cursor.getLong(cursor.getColumnIndex(COLUMN_FLASHCARD_ID));
+                long carddeckId = cursor.getLong(cursor.getColumnIndex(COLUMN_FLASHCARD_CARDDECK_ID));
+                int rating = cursor.getInt(cursor.getColumnIndex(COLUMN_FLASHCARD_RATING));
+                long questionId = cursor.getLong(cursor.getColumnIndex(COLUMN_FLASHCARD_QUESTION_ID));
+                boolean multipleChoice = cursor.getInt(cursor.getColumnIndex(COLUMN_FLASHCARD_MULTIPLE_CHOICE)) > 0;
+                long created = cursor.getLong(cursor.getColumnIndex(COLUMN_FLASHCARD_CREATED));
+                long lastUpdated = cursor.getLong(cursor.getColumnIndex(COLUMN_FLASHCARD_LAST_UPDATED));
+                long userId = cursor.getLong(cursor.getColumnIndex(COLUMN_FLASHCARD_USER_ID));
+                User author = getUser(userId);
+                List<Tag> tags = getTags(cardId);
+                Question question = getQuestion(questionId);
+                List<Answer> answers = getAnswers(cardId);
+
+                FlashCard flashCard = new FlashCard(cardId, tags, rating, new Date(created), new Date(lastUpdated), question, answers, author, multipleChoice);
+
+                flashCards.add(flashCard);
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+
+        return flashCards;
+    }
+
+
+    /**
+     * Gets all selected flashcard ids for the logged in user
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     * @since 2017-01-12
+     *
+     * @return
+     */
+    public List<Long> getSelectedFlashcardIDs() {
+        List<Long> ids = new ArrayList<Long>();
+
+
+        SQLiteQueryBuilder qb = new SQLiteQueryBuilder();
+
+        qb.setTables(
+                TABLE_SELECTION
+                + " JOIN " + TABLE_USER + " ON "
+                + TABLE_SELECTION + "." + COLUMN_SELECTION_USER_ID + "=" + TABLE_USER + "." + COLUMN_USER_ID
+                );
+
+        qb.appendWhere(COLUMN_USER_IS_LOGGED_IN + "=" + 1 + " AND " + COLUMN_SELECTION_DATE + " NOT NULL"
+                + " AND " + COLUMN_SELECTION_CARD_ID + " NOT NULL");
+
+        Cursor cursor = qb.query(database, null, null, null, null, null, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+
+                long cardId = cursor.getLong(cursor.getColumnIndex(COLUMN_SELECTION_CARD_ID));
+
+                ids.add(cardId);
+
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+
+        return ids;
     }
 }

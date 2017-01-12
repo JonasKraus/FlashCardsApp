@@ -130,97 +130,101 @@ public class RecyclerViewAdapterFlashCardAnswers extends RecyclerView.Adapter<Re
             }
         });
 
+
         /**
          * Listener to downwote an answer
          */
-        holder.mDownvote.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        if (isUpToDate) {
+            holder.mDownvote.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
 
-                int lastVoting = db.getAnswerVoting(answerId);
+                    int lastVoting = db.getAnswerVoting(answerId);
 
-                if (!db.saveAnswerVoting(answerId, -1)) {
+                    if (!db.saveAnswerVoting(answerId, -1)) {
 
-                    Toast.makeText(context, context.getResources().getText(R.string.voting_already_voted), Toast.LENGTH_SHORT).show();
-                } else {
+                        Toast.makeText(context, context.getResources().getText(R.string.voting_already_voted), Toast.LENGTH_SHORT).show();
+                    } else {
 
-                    Long ratingId = db.getAnswerVotingRatingId(answerId);
+                        Long ratingId = db.getAnswerVotingRatingId(answerId);
 
-                    // Check if ratingExists and deletes it
-                    if (ratingId != null) {
-                        AsyncDeleteRemoteRating taskDelete = new AsyncDeleteRemoteRating(ratingId);
+                        // Check if ratingExists and deletes it
+                        if (ratingId != null) {
+                            AsyncDeleteRemoteRating taskDelete = new AsyncDeleteRemoteRating(ratingId);
+
+                            if (ProcessConnectivity.isOk(context)) {
+
+                                taskDelete.execute();
+                            }
+
+                        }
+
+
+                        AsyncPostRemoteRating task = new AsyncPostRemoteRating("answer", answerId, db.getLoggedInUser().getId(), -1, db);
 
                         if (ProcessConnectivity.isOk(context)) {
 
-                            taskDelete.execute();
+                            task.execute();
                         }
 
+                        int rating = Integer.parseInt(holder.mCardRatingView.getText().toString());
+                        rating -= 1 + lastVoting;
+
+                        holder.mCardRatingView.setText(rating + "");
+                        holder.mDownvote.setColorFilter(context.getResources().getColor(R.color.colorAccent));
+                        holder.mUpvote.setColorFilter(Color.BLACK);
+                        holder.mCardRatingView.setTextColor(context.getResources().getColor(R.color.colorAccent));
                     }
-
-
-                    AsyncPostRemoteRating task = new AsyncPostRemoteRating("answer", answerId, db.getLoggedInUser().getId(), -1, db);
-
-                    if (ProcessConnectivity.isOk(context)) {
-
-                        task.execute();
-                    }
-
-                    int rating = Integer.parseInt(holder.mCardRatingView.getText().toString());
-                    rating -= 1 + lastVoting;
-
-                    holder.mCardRatingView.setText(rating + "");
-                    holder.mDownvote.setColorFilter(context.getResources().getColor(R.color.colorAccent));
-                    holder.mUpvote.setColorFilter(Color.BLACK);
-                    holder.mCardRatingView.setTextColor(context.getResources().getColor(R.color.colorAccent));
                 }
-            }
-        });
+            });
+        }
 
         /**
          * Listener to up vote an answer
          */
-        holder.mUpvote.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        if (isUpToDate) {
+            holder.mUpvote.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
 
-                int lastVoting = db.getAnswerVoting(answerId);
+                    int lastVoting = db.getAnswerVoting(answerId);
 
-                if (!db.saveAnswerVoting(answerId, +1)) {
+                    if (!db.saveAnswerVoting(answerId, +1)) {
 
-                    Toast.makeText(context, context.getResources().getText(R.string.voting_already_voted), Toast.LENGTH_SHORT).show();
-                } else {
+                        Toast.makeText(context, context.getResources().getText(R.string.voting_already_voted), Toast.LENGTH_SHORT).show();
+                    } else {
 
-                    Long ratingId = db.getAnswerVotingRatingId(answerId);
+                        Long ratingId = db.getAnswerVotingRatingId(answerId);
 
-                    // Check if ratingExists and deletes it
-                    if (ratingId != null) {
+                        // Check if ratingExists and deletes it
+                        if (ratingId != null) {
 
-                        AsyncDeleteRemoteRating taskDelete = new AsyncDeleteRemoteRating(ratingId);
+                            AsyncDeleteRemoteRating taskDelete = new AsyncDeleteRemoteRating(ratingId);
+
+                            if (ProcessConnectivity.isOk(context)) {
+
+                                taskDelete.execute();
+                            }
+                        }
+
+                        AsyncPostRemoteRating task = new AsyncPostRemoteRating("answer", answerId, db.getLoggedInUser().getId(), 1, db);
 
                         if (ProcessConnectivity.isOk(context)) {
 
-                            taskDelete.execute();
+                            task.execute();
                         }
+
+                        int rating = Integer.parseInt(holder.mCardRatingView.getText().toString());
+                        rating += 1 - lastVoting;
+
+                        holder.mCardRatingView.setText(rating + "");
+                        holder.mUpvote.setColorFilter(context.getResources().getColor(R.color.colorAccent));
+                        holder.mDownvote.setColorFilter(Color.BLACK);
+                        holder.mCardRatingView.setTextColor(context.getResources().getColor(R.color.colorAccent));
                     }
-
-                    AsyncPostRemoteRating task = new AsyncPostRemoteRating("answer", answerId, db.getLoggedInUser().getId(), 1, db);
-
-                    if (ProcessConnectivity.isOk(context)) {
-
-                        task.execute();
-                    }
-
-                    int rating = Integer.parseInt(holder.mCardRatingView.getText().toString());
-                    rating += 1 - lastVoting;
-
-                    holder.mCardRatingView.setText(rating + "");
-                    holder.mUpvote.setColorFilter(context.getResources().getColor(R.color.colorAccent));
-                    holder.mDownvote.setColorFilter(Color.BLACK);
-                    holder.mCardRatingView.setTextColor(context.getResources().getColor(R.color.colorAccent));
                 }
-            }
-        });
-
+            });
+        }
     }
 
 
