@@ -596,12 +596,15 @@ public class MainActivity extends AppCompatActivity
             case FLASH_CARD_DETAIL:
 
                 setFlashcardList(true);
+
+                collapsingToolbar.setVisibility(View.VISIBLE);
                 break;
 
             case FLASH_CARD_CREATE:
 
                 confirmBackPressedToCardList();
 
+                collapsingToolbar.setVisibility(View.VISIBLE);
                 break;
             default:
 
