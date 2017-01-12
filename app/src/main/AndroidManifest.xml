@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     package="de.uulm.einhoernchen.flashcardsapp">
 
     <!-- To auto-complete the email text field in the login form with the user's emails -->
@@ -32,7 +33,9 @@
         <activity
             android:name=".Activity.MainActivity"
             android:label="@string/title_activity_home"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme">
+
+        </activity>
     </application>
 
 </manifest>

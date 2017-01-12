@@ -75,7 +75,7 @@ public class AsyncPatchRemoteCategory extends AsyncTask<Long, Long, Long> {
                 wr.writeBytes(jsonObject.toString());
                 wr.flush();
 
-                //Log.d(urlConnection.getRequestMethod() + " json", jsonObject.toString());
+                //kLog.d(urlConnection.getRequestMethod() + " json", jsonObject.toString());
 
                 //Log.d("resp", urlConnection.getResponseCode()+"");
 

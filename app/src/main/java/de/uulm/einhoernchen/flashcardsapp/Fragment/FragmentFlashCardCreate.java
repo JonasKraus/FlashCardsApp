@@ -148,8 +148,12 @@ public class FragmentFlashCardCreate extends Fragment implements View.OnClickLis
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
         // Inflate the layout for this fragment TODO
         final View view = inflater.inflate(R.layout.fragment_flashcard_parallax_create, container, false);
+
+        // Make toolbar of activity main invisible
+        Globals.setVisibilityToolbarMain(View.GONE);
 
         // create dummy card
         this.flashCard = new FlashCard(db.getLoggedInUser(), null, new Question("","",db.getLoggedInUser()),false);
@@ -235,16 +239,13 @@ public class FragmentFlashCardCreate extends Fragment implements View.OnClickLis
         floatingActionButtonAnswerSave = (FloatingActionButton) view.findViewById(R.id.fab_answer_save);
         floatingActionButtonAnswerSave.setVisibility(View.GONE);
 
+        // List for newly added answers
         fragmentAnswers = new FragmentFlashCardAnswers();
         answers = new ArrayList<Answer>();
 
         fragmentAnswers.setUpToDate(false);
 
-        android.support.v4.app.FragmentTransaction fragmentTransaction =
-                Globals.getFragmentManager().beginTransaction();
-
-        fragmentTransaction.replace(R.id.fragment_container_card_answer, fragmentAnswers);
-        fragmentTransaction.commit();
+        inflateFragmentAnswer();
 
         /*
         Globals.getFloatingActionButton().setOnClickListener(this);
@@ -261,6 +262,22 @@ public class FragmentFlashCardCreate extends Fragment implements View.OnClickLis
 
         return view;
 
+    }
+
+    /**
+     * Creates the answer fragment
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     * @since 2017-01-12
+     *
+     */
+    private void inflateFragmentAnswer() {
+
+        android.support.v4.app.FragmentTransaction fragmentTransaction =
+                Globals.getFragmentManager().beginTransaction();
+
+        fragmentTransaction.replace(R.id.fragment_container_card_answer, fragmentAnswers);
+        fragmentTransaction.commit();
     }
 
 
@@ -381,6 +398,7 @@ public class FragmentFlashCardCreate extends Fragment implements View.OnClickLis
             case R.id.fab_card_answer_add:
             case R.id.button_answer_editor_add:
 
+                Log.d("add", "answer");
                 addAnswerToListView();
 
                 break;
@@ -476,15 +494,28 @@ public class FragmentFlashCardCreate extends Fragment implements View.OnClickLis
         answers.add(new Answer(answerText, answerHint, answerUri, isCorrect, db.getLoggedInUser()));
         fragmentAnswers.setItemList(answers);
 
-        android.support.v4.app.FragmentTransaction fragmentTransaction =
-                Globals.getFragmentManager().beginTransaction();
+        createNewAnswerAdapter(answers, null, false);
 
-        fragmentTransaction.replace(R.id.fragment_container_card_answer, fragmentAnswers);
-        fragmentTransaction.commit();
+        inflateFragmentAnswer();
+    }
+
+
+    /**
+     * Creates a new adapter to update fragment
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     * @since 2017-01-12
+     *
+     * @param answers
+     * @param mListener
+     * @param isUpToDate
+     */
+    private void createNewAnswerAdapter(ArrayList<Answer> answers, FragmentHome.OnFragmentInteractionListener mListener, boolean isUpToDate) {
 
         RecyclerViewAdapterFlashCardAnswers recyclerViewAdapterFlashCardAnswers = new RecyclerViewAdapterFlashCardAnswers(answers, null, false);
 
         fragmentAnswers.getRecyclerView().setAdapter(recyclerViewAdapterFlashCardAnswers);
+
     }
 
 

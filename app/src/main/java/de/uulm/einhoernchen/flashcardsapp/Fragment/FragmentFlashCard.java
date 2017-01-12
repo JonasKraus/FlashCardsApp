@@ -30,6 +30,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import de.uulm.einhoernchen.flashcardsapp.Activity.MainActivity;
 import de.uulm.einhoernchen.flashcardsapp.AsyncTask.Remote.DELETE.AsyncDeleteRemoteRating;
 import de.uulm.einhoernchen.flashcardsapp.AsyncTask.Remote.PATCH.AsyncPatchRemoteCard;
 import de.uulm.einhoernchen.flashcardsapp.AsyncTask.Remote.POST.AsyncPostRemoteRating;
@@ -147,6 +148,9 @@ public class FragmentFlashCard extends Fragment implements View.OnClickListener 
         // Load answers
         new ContentFlashCardAnswers().collectItemsFromDb(flashCard.getId(), false);
         new ContentFlashCardAnswers().collectItemsFromServer(flashCard.getId(), false);
+
+        // Make toolbar of activity main invisible
+        Globals.setVisibilityToolbarMain(View.GONE);
 
         mIdView = (TextView) view.findViewById(R.id.id);
         mContentView = (TextView) view.findViewById(R.id.content);
@@ -737,4 +741,5 @@ public class FragmentFlashCard extends Fragment implements View.OnClickListener 
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
     }
-}
+
+ }

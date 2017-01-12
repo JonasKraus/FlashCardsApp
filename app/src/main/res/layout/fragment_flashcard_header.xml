@@ -3,6 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:theme="@style/AppTheme.NoActionBar"
+    android:paddingBottom="-20dp"
     android:orientation="vertical">
 
     <RelativeLayout
@@ -18,7 +20,6 @@
 
 
     <RelativeLayout
-        android:layout_marginTop="56dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" >
 

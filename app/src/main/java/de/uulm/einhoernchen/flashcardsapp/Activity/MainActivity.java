@@ -10,11 +10,13 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.SearchView;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.MenuInflater;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -25,6 +27,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -87,6 +90,7 @@ public class MainActivity extends AppCompatActivity
     private View header;
     private FloatingActionButton floatingActionButton;
     private FloatingActionButton floatingActionButtonAdd;
+    private CollapsingToolbarLayout collapsingToolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,9 +98,6 @@ public class MainActivity extends AppCompatActivity
 
         setContentView(R.layout.activity_home);
 
-
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
 
         // INIT View elements
         progressBar = (ProgressBar) findViewById(R.id.progressBarMain);
@@ -112,9 +113,9 @@ public class MainActivity extends AppCompatActivity
         profileRating = (TextView) header.findViewById(R.id.textViewProfileRating);
 
         toolbarTextViewTitle = (TextView ) findViewById(R.id.toolbar_text_view_title);
+        collapsingToolbar = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
 
         createFloatingActionButton();
-        createToolbar();
 
         initBreadCrumps();
 
@@ -131,6 +132,9 @@ public class MainActivity extends AppCompatActivity
         setProfileImageClickListener();
 
         createFragmentHome();
+
+
+        createToolbar();
     }
 
 
@@ -229,6 +233,12 @@ public class MainActivity extends AppCompatActivity
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        collapsingToolbar =
+                (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
+        collapsingToolbar.setTitle("My Toolbar Tittle");
+        toolbar.setTitle("asdasd");
 
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -445,6 +455,7 @@ public class MainActivity extends AppCompatActivity
             createFragmentHome();
 
             toolbarTextViewTitle.setText(R.string.app_name);
+            collapsingToolbar.setTitle(getResources().getString(R.string.app_name));
 
         } else if (id == R.id.nav_catalogue) {
 
@@ -515,6 +526,7 @@ public class MainActivity extends AppCompatActivity
         }
 
         toolbarTextViewTitle.setText(breadCrumbs.get(breadCrumbs.size() - 1));
+        collapsingToolbar.setTitle(breadCrumbs.get(breadCrumbs.size() - 1));
     }
 
 
@@ -557,6 +569,7 @@ public class MainActivity extends AppCompatActivity
 
             breadCrumbs.remove(breadCrumbs.size() - 1);
             toolbarTextViewTitle.setText(breadCrumbs.get(breadCrumbs.size() - 1));
+            collapsingToolbar.setTitle(breadCrumbs.get(breadCrumbs.size() - 1));
         }
 
         if (parentIds.size() > 0) {
@@ -629,6 +642,7 @@ public class MainActivity extends AppCompatActivity
         // add text to breadcrump list and display it
         breadCrumbs.add(item.getName());
         toolbarTextViewTitle.setText(breadCrumbs.get(breadCrumbs.size() - 1));
+        collapsingToolbar.setTitle(breadCrumbs.get(breadCrumbs.size() - 1));
 
         // 4 is the maximal depth of categories
         // check if go deeper in categories or to load carddecks
@@ -655,6 +669,7 @@ public class MainActivity extends AppCompatActivity
 
         breadCrumbs.add(item.getName());
         toolbarTextViewTitle.setText(breadCrumbs.get(breadCrumbs.size() - 1));
+        collapsingToolbar.setTitle(breadCrumbs.get(breadCrumbs.size() - 1));
 
         this.parentIds.add(this.childrenId);
         this.childrenId = item.getId();
@@ -682,6 +697,7 @@ public class MainActivity extends AppCompatActivity
 
             breadCrumbs.add("Flashcard #" + item.getId());
             toolbarTextViewTitle.setText(breadCrumbs.get(breadCrumbs.size() - 1));
+            collapsingToolbar.setTitle(breadCrumbs.get(breadCrumbs.size() - 1));
 
             this.parentIds.add(this.childrenId);
             this.childrenId = item.getId();
@@ -702,6 +718,7 @@ public class MainActivity extends AppCompatActivity
 
         breadCrumbs.add("new Flashcard");
         toolbarTextViewTitle.setText(breadCrumbs.get(breadCrumbs.size() - 1));
+        collapsingToolbar.setTitle(breadCrumbs.get(breadCrumbs.size() - 1));
 
         this.parentIds.add(this.childrenId);
 

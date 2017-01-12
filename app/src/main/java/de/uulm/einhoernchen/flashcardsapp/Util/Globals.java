@@ -6,7 +6,9 @@ import android.support.v4.app.FragmentManager;
 import android.util.Log;
 import android.widget.ProgressBar;
 
+import de.uulm.einhoernchen.flashcardsapp.Activity.MainActivity;
 import de.uulm.einhoernchen.flashcardsapp.Database.DbManager;
+import de.uulm.einhoernchen.flashcardsapp.R;
 
 /**
  * @author Jonas Kraus jonas.kraus@uni-ulm.de
@@ -115,5 +117,18 @@ public class Globals {
 
     public static int getScrollX() {
         return scrollX;
+    }
+
+
+    /**
+     * sets visibility of toolbar of main activity
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     * @since 2017-01-11
+     */
+    public static void setVisibilityToolbarMain(int visibility) {
+
+        MainActivity mainActivity = (MainActivity) Globals.getContext();
+        mainActivity.findViewById(R.id.collapsing_toolbar).setVisibility(visibility);
     }
 }
