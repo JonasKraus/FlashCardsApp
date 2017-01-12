@@ -9,7 +9,7 @@
     <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
         android:id="@+id/card_view"
         android:layout_width="match_parent"
-        android:layout_height="330dp"
+        android:layout_height="wrap_content"
         android:layout_gravity="center"
 
         android:layout_marginTop="5dp"
@@ -18,6 +18,11 @@
         android:layout_marginRight="3dp"
         android:padding="5dp"
         card_view:cardCornerRadius="5dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -39,12 +44,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:layout_weight="1"
                 android:id="@+id/ll_answer_media">
 
                 <ImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="242dp"
+                    android:layout_height="wrap_content"
+                    android:layout_width="fill_parent"
+                    android:adjustViewBounds="true"
+                    android:scaleType="fitCenter"
                     android:visibility="gone"
                     android:id="@+id/image_view_question_uri"/>
                 <ImageView
@@ -63,7 +69,6 @@
             android:layout_margin="5dp"
             android:layout_marginTop="@dimen/activity_horizontal_margin"
             android:clipToPadding="false"
-            android:paddingTop="253dp"
             android:orientation="horizontal">
 
             <TextView
@@ -186,6 +191,7 @@
                     android:layout_marginLeft="5dp"
                     android:tag="false"/>
                     -->
+        </LinearLayout>
         </LinearLayout>
 
     </android.support.v7.widget.CardView>
