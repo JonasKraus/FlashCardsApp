@@ -18,6 +18,7 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -29,8 +30,10 @@ import java.util.List;
 import de.uulm.einhoernchen.flashcardsapp.Activity.MainActivity;
 import de.uulm.einhoernchen.flashcardsapp.AsyncTask.Remote.DELETE.AsyncDeleteRemoteRating;
 import de.uulm.einhoernchen.flashcardsapp.AsyncTask.Remote.POST.AsyncPostRemoteRating;
+import de.uulm.einhoernchen.flashcardsapp.Const.Constants;
 import de.uulm.einhoernchen.flashcardsapp.Database.DbHelper;
 import de.uulm.einhoernchen.flashcardsapp.Database.DbManager;
+import de.uulm.einhoernchen.flashcardsapp.Fragment.Dataset.ContentFlashCardAnswers;
 import de.uulm.einhoernchen.flashcardsapp.Model.FlashCard;
 import de.uulm.einhoernchen.flashcardsapp.R;
 import de.uulm.einhoernchen.flashcardsapp.Util.Globals;
@@ -65,6 +68,8 @@ public class FragmentPlayQuestion extends Fragment implements View.OnClickListen
     private ImageView imageViewEditQuestion;
     private ImageView imageViewSaveQuestion;
 
+    private FrameLayout frameLayoutAnswers;
+
     private WebView webViewUri;
 
     private Button buttonAddAnswer;
@@ -73,20 +78,30 @@ public class FragmentPlayQuestion extends Fragment implements View.OnClickListen
     private RadioButton radioButtonAnswerCorrect;
     private RadioButton radioButtonAnswerIncorrect;
 
+    private FloatingActionButton fab = Globals.getFloatingActionButton();
+
     private List<Long> cardIds;
     private DbManager db = Globals.getDb();
     private FlashCard currentFlashcard;
     private int position = 0;
+    private Constants state = Constants.PLAY_QUESTION;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
     private View content;
+    private View view;
+    private FragmentFlashCardAnswers fragmentAnswers;
 
 
     public FragmentPlayQuestion() {
         // Required empty public constructor
+
         Globals.getFloatingActionButtonAdd().setVisibility(View.GONE);
+
+        fab.setImageDrawable(Globals.getContext().getResources().getDrawable(R.drawable.ic_list));
+        fab.setOnClickListener(this);
+
         cardIds = db.getSelectedFlashcardIDs();
 
         if (cardIds.size() == 0) {
@@ -95,6 +110,7 @@ public class FragmentPlayQuestion extends Fragment implements View.OnClickListen
             // TODO return to catalogue
             MainActivity mainActivity = (MainActivity) Globals.getContext();
             mainActivity.onBackPressed();
+
         } else if (position < cardIds.size()){
 
             currentFlashcard = db.getFlashCard(cardIds.get(position));
@@ -136,9 +152,9 @@ public class FragmentPlayQuestion extends Fragment implements View.OnClickListen
      * @author Jonas Kraus jonas.kraus@uni-ulm.de
      * @since 2017-01-12
      *
-     * @param view
      */
-    private void initView(View view) {
+    private void initView() {
+
         mIdView = (TextView) view.findViewById(R.id.id);
         mContentView = (TextView) view.findViewById(R.id.content);
         mAuthorView = (TextView) view.findViewById(R.id.textView_listItem_author);
@@ -166,19 +182,24 @@ public class FragmentPlayQuestion extends Fragment implements View.OnClickListen
         radioButtonAnswerCorrect = (RadioButton) view.findViewById(R.id.radio_button_answer_editor_correct);
         radioButtonAnswerIncorrect = (RadioButton) view.findViewById(R.id.radio_button_answer_editor_incorrect);
 
+        frameLayoutAnswers = (FrameLayout) view.findViewById(R.id.fragment_container_card_answer);
+        frameLayoutAnswers.setVisibility(View.GONE);
+
     }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_fragment_play_question, container, false);
 
-        initView(view);
+        // Inflate the layout for this fragment
+        view = inflater.inflate(R.layout.fragment_fragment_play_question, container, false);
+
+        initView();
 
         setMedia();
 
-        setContent(view);
+        setContent();
 
         setListener();
 
@@ -197,7 +218,15 @@ public class FragmentPlayQuestion extends Fragment implements View.OnClickListen
         super.onDetach();
     }
 
-    public void setContent(View content) {
+
+    /**
+     * Sets the content for teh view
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     * @since 2017-01-12
+     *
+     */
+    public void setContent() {
 
         mContentView.setText(Html.fromHtml(currentFlashcard.getQuestion().getQuestionText()));
         mAuthorView.setText(currentFlashcard.getQuestion().getAuthor().getName());
@@ -239,6 +268,7 @@ public class FragmentPlayQuestion extends Fragment implements View.OnClickListen
         }
 
     }
+
 
     /**
      * Sets the mediatype and content
@@ -307,6 +337,7 @@ public class FragmentPlayQuestion extends Fragment implements View.OnClickListen
         }
 
     }
+
 
     /**
      * Sets the listeners for the view
@@ -412,6 +443,59 @@ public class FragmentPlayQuestion extends Fragment implements View.OnClickListen
     }
 
 
+    /**
+     * Sets the icon for the fab
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     * @since 2017-01-12
+     *
+     */
+    private void toggleFabIcon() {
+
+
+        switch (state) {
+
+            case PLAY_QUESTION:
+
+                fab.setImageDrawable(Globals.getContext().getResources().getDrawable(R.drawable.ic_check));
+                // TODO load answers
+
+                state = Constants.PLAY_ANSWER;
+
+                Toast.makeText(getContext(), "antworten laden", Toast.LENGTH_SHORT).show();
+
+
+                new ContentFlashCardAnswers().collectItemsFromDb(currentFlashcard.getId(), false);
+                new ContentFlashCardAnswers().collectItemsFromServer(currentFlashcard.getId(), false);
+
+                frameLayoutAnswers.setVisibility(View.VISIBLE);
+
+                break;
+
+            case PLAY_ANSWER:
+
+                frameLayoutAnswers.setVisibility(View.GONE);
+
+                fab.setImageDrawable(Globals.getContext().getResources().getDrawable(R.drawable.ic_list));
+
+                state = Constants.PLAY_QUESTION;
+
+                position++;
+
+                position %= cardIds.size();
+
+                currentFlashcard = db.getFlashCard(cardIds.get(position));
+
+                setMedia();
+
+                setContent();
+
+                setListener();
+        }
+
+    }
+
+
 
     @Override
     public void onClick(View v) {
@@ -423,7 +507,30 @@ public class FragmentPlayQuestion extends Fragment implements View.OnClickListen
                 // starts the youtube player
                 getContext().startActivity(new Intent(Intent.ACTION_VIEW,currentFlashcard.getQuestion().getUri()));
                 break;
+
+            case R.id.fab:
+
+                toggleFabIcon();
+                break;
         }
 
+    }
+
+
+
+    /**
+     * Creates the answer fragment
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     * @since 2017-01-12
+     *
+     */
+    private void inflateFragmentAnswer() {
+
+        android.support.v4.app.FragmentTransaction fragmentTransaction =
+                Globals.getFragmentManager().beginTransaction();
+
+        fragmentTransaction.replace(R.id.fragment_container_card_answer, fragmentAnswers);
+        fragmentTransaction.commit();
     }
 }

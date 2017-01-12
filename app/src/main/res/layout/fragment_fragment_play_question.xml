@@ -2,18 +2,27 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:paddingTop="48dp"
     tools:context="de.uulm.einhoernchen.flashcardsapp.Fragment.FragmentPlayQuestion">
 
     <!-- TODO: Update blank fragment layout -->
-    <LinearLayout
+    <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:layout_height="wrap_content">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
-        <include layout="@layout/fragment_flashcard_header" />
+            <include layout="@layout/fragment_flashcard_header" />
 
-        <include layout="@layout/fragment_flashcard_answer_editor"/>
-    </LinearLayout>
+            <include layout="@layout/content_scrolling_answers" />
+
+
+        </LinearLayout>
+
+    </android.support.v4.widget.NestedScrollView>
+
 
 </FrameLayout>
