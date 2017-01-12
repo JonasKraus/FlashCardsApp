@@ -2,9 +2,18 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:paddingTop="48dp"
     tools:context="de.uulm.einhoernchen.flashcardsapp.Fragment.FragmentPlayQuestion">
 
     <!-- TODO: Update blank fragment layout -->
-    <include layout="@layout/fragment_flashcard_header" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <include layout="@layout/fragment_flashcard_header" />
+
+        <include layout="@layout/fragment_flashcard_answer_editor"/>
+    </LinearLayout>
 
 </FrameLayout>

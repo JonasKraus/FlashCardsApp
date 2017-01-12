@@ -1,6 +1,8 @@
 package de.uulm.einhoernchen.flashcardsapp.Fragment;
 
 import android.content.Context;
+import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -11,7 +13,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebSettings;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -23,11 +27,15 @@ import android.widget.Toast;
 import java.util.List;
 
 import de.uulm.einhoernchen.flashcardsapp.Activity.MainActivity;
+import de.uulm.einhoernchen.flashcardsapp.AsyncTask.Remote.DELETE.AsyncDeleteRemoteRating;
+import de.uulm.einhoernchen.flashcardsapp.AsyncTask.Remote.POST.AsyncPostRemoteRating;
 import de.uulm.einhoernchen.flashcardsapp.Database.DbHelper;
 import de.uulm.einhoernchen.flashcardsapp.Database.DbManager;
 import de.uulm.einhoernchen.flashcardsapp.Model.FlashCard;
 import de.uulm.einhoernchen.flashcardsapp.R;
 import de.uulm.einhoernchen.flashcardsapp.Util.Globals;
+import de.uulm.einhoernchen.flashcardsapp.Util.ProcessConnectivity;
+import de.uulm.einhoernchen.flashcardsapp.Util.ProcessorImage;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -36,7 +44,7 @@ import de.uulm.einhoernchen.flashcardsapp.Util.Globals;
  * Use the {@link FragmentPlayQuestion#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class FragmentPlayQuestion extends Fragment {
+public class FragmentPlayQuestion extends Fragment implements View.OnClickListener {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -73,16 +81,13 @@ public class FragmentPlayQuestion extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+    private View content;
 
 
     public FragmentPlayQuestion() {
         // Required empty public constructor
         Globals.getFloatingActionButtonAdd().setVisibility(View.GONE);
         cardIds = db.getSelectedFlashcardIDs();
-
-        for (int i = 0; i < cardIds.size(); i++) {
-            Log.d("card", " " + cardIds.get(i));
-        }
 
         if (cardIds.size() == 0) {
 
@@ -171,15 +176,16 @@ public class FragmentPlayQuestion extends Fragment {
 
         initView(view);
 
-        mContentView.setText(Html.fromHtml(currentFlashcard.getQuestion().getQuestionText()));
-        mAuthorView.setText(currentFlashcard.getQuestion().getAuthor().getName());
-        mCardRatingView.setText(currentFlashcard.getRatingForView());
-        mDateView.setText(currentFlashcard.getLastUpdatedString());
+        setMedia();
 
+        setContent(view);
 
+        setListener();
 
         return view;
     }
+
+
 
     @Override
     public void onAttach(Context context) {
@@ -191,4 +197,233 @@ public class FragmentPlayQuestion extends Fragment {
         super.onDetach();
     }
 
+    public void setContent(View content) {
+
+        mContentView.setText(Html.fromHtml(currentFlashcard.getQuestion().getQuestionText()));
+        mAuthorView.setText(currentFlashcard.getQuestion().getAuthor().getName());
+        mCardRatingView.setText(currentFlashcard.getRatingForView());
+        mDateView.setText(currentFlashcard.getLastUpdatedString());
+
+        if (!isUpToDate) {
+
+            mLocalView.setVisibility(View.GONE);
+        } else {
+
+            mLocalView.setVisibility(View.VISIBLE);
+        }
+
+        if (currentFlashcard.isMultipleChoice()) {
+
+            radioButtonAnswerCorrect.setChecked(true);
+            radioButtonAnswerIncorrect.setChecked(false);
+            radioGroupAnswerCorrect.setVisibility(View.VISIBLE);
+        } else {
+
+            radioButtonAnswerCorrect.setChecked(true);
+            radioButtonAnswerIncorrect.setChecked(false);
+            radioGroupAnswerCorrect.setVisibility(View.GONE);
+        }
+
+        int voting = db.getCardVoting(currentFlashcard.getId());
+
+        switch (voting) {
+            case -1:
+                imageViewVoteDown.setColorFilter(getResources().getColor(R.color.colorAccent));
+                mCardRatingView.setTextColor(getResources().getColor(R.color.colorAccent));
+                break;
+            case 1:
+                imageViewVoteUp.setColorFilter(getResources().getColor(R.color.colorAccent));
+                mCardRatingView.setTextColor(getResources().getColor(R.color.colorAccent));
+                break;
+
+        }
+
+    }
+
+    /**
+     * Sets the mediatype and content
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     * @since 2017-01-03
+     */
+    private void setMedia() {
+
+        if (currentFlashcard.getQuestion().getUri() != null && currentFlashcard.getQuestion().getUri().toString() != "") {
+
+            String uriString = currentFlashcard.getQuestion().getUri().toString().toLowerCase();
+
+            if (uriString.contains("youtube")) {
+
+                imageViewPlay.setVisibility(View.VISIBLE);
+                imageViewPlay.setOnClickListener(this);
+            }
+
+            if (uriString.endsWith("jpg") || uriString.endsWith(".png") || uriString.contains("youtube")) {
+
+                ProcessorImage.download(currentFlashcard.getQuestion().getUri().toString(), imageViewUri, currentFlashcard.getQuestion().getId(), "_question");
+                webViewUri.setVisibility(View.GONE);
+                imageViewPlay.setVisibility(uriString.contains("youtube") ? View.VISIBLE : View.GONE);
+                imageViewUri.setVisibility(View.VISIBLE);
+
+            } else {
+
+                webViewUri.setVisibility(View.VISIBLE);
+                imageViewPlay.setVisibility(View.GONE);
+                imageViewUri.setVisibility(View.GONE);
+
+                if (!uriString.startsWith("https://") && !uriString.startsWith("http://") && !uriString.equals("")) {
+
+                    uriString = "http://" + uriString;
+
+                } else if (uriString.equals("")) {
+
+                    uriString = "http://134.60.51.72:9000/";
+                }
+
+                WebSettings settings = webViewUri.getSettings();
+                settings.setJavaScriptEnabled(true);
+                webViewUri.setScrollBarStyle(WebView.SCROLLBARS_OUTSIDE_OVERLAY);
+
+                Globals.getProgressBar().setVisibility(View.VISIBLE);
+
+                webViewUri.setWebViewClient(new WebViewClient() {
+
+                    public boolean shouldOverrideUrlLoading(WebView view, String url) {
+
+                        view.loadUrl(url);
+                        return true;
+                    }
+
+                    public void onPageFinished(WebView view, String url) {
+
+                        if (Globals.getProgressBar().isShown()) {
+                            Globals.getProgressBar().setVisibility(View.GONE);
+                        }
+                    }
+
+                });
+                webViewUri.loadUrl(uriString);
+            }
+        }
+
+    }
+
+    /**
+     * Sets the listeners for the view
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     * @since 2016-12-29
+     */
+    private void setListener() {
+
+        final long cardID = cardIds.get(position);
+
+        /**
+         * Sets the clicklistener to vote a cards rating down
+         */
+        imageViewVoteDown.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                int lastVoting = db.getCardVoting(cardID);
+
+                if (!db.saveCardVoting(cardID, -1)) {
+
+                    Toast.makeText(getContext(), getResources().getText(R.string.voting_already_voted), Toast.LENGTH_SHORT).show();
+                } else {
+
+                    Long ratingId = db.getCardVotingRatingId(cardID);
+
+                    // Check if ratingExists and deletes it
+                    if (ratingId != null) {
+
+                        AsyncDeleteRemoteRating taskDelete = new AsyncDeleteRemoteRating(ratingId);
+
+                        if (ProcessConnectivity.isOk(getContext())) {
+
+                            taskDelete.execute();
+                        }
+                    }
+
+                    AsyncPostRemoteRating task = new AsyncPostRemoteRating("flashcard", cardID, db.getLoggedInUser().getId(), -1, db);
+
+                    if (ProcessConnectivity.isOk(getContext())) {
+
+                        task.execute();
+                    }
+
+                    int rating = Integer.parseInt(mCardRatingView.getText().toString());
+                    rating -= 1 + lastVoting;
+                    mCardRatingView.setText(rating + "");
+                    imageViewVoteDown.setColorFilter(getResources().getColor(R.color.colorAccent));
+                    imageViewVoteUp.setColorFilter(Color.BLACK);
+                    mCardRatingView.setTextColor(getResources().getColor(R.color.colorAccent));
+                }
+
+            }
+        });
+
+        /**
+         * Sets the clicklistener to vote a cards rating up
+         */
+        imageViewVoteUp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                int lastVoting = db.getCardVoting(cardID);
+                if (!db.saveCardVoting(cardID, +1)) {
+
+                    Toast.makeText(getContext(), getResources().getText(R.string.voting_already_voted), Toast.LENGTH_SHORT).show();
+                } else {
+
+                    Long ratingId = db.getCardVotingRatingId(cardID);
+
+                    // Check if ratingExists and deletes it
+                    if (ratingId != null) {
+
+                        AsyncDeleteRemoteRating taskDelete = new AsyncDeleteRemoteRating(ratingId);
+
+                        if (ProcessConnectivity.isOk(getContext())) {
+
+                            taskDelete.execute();
+                        }
+                    }
+
+                    AsyncPostRemoteRating task = new AsyncPostRemoteRating("flashcard", cardID, db.getLoggedInUser().getId(), 1, db);
+
+                    if (ProcessConnectivity.isOk(getContext())) {
+
+                        task.execute();
+                    }
+
+                    int rating = Integer.parseInt(mCardRatingView.getText().toString());
+                    rating += 1 - lastVoting;
+                    mCardRatingView.setText(rating + "");
+                    imageViewVoteUp.setColorFilter(getResources().getColor(R.color.colorAccent));
+                    imageViewVoteDown.setColorFilter(Color.BLACK);
+                    mCardRatingView.setTextColor(getResources().getColor(R.color.colorAccent));
+                }
+
+
+
+            }
+        });
+
+    }
+
+
+
+    @Override
+    public void onClick(View v) {
+
+        switch (v.getId()) {
+
+            case R.id.imageview_card_media_play:
+
+                // starts the youtube player
+                getContext().startActivity(new Intent(Intent.ACTION_VIEW,currentFlashcard.getQuestion().getUri()));
+                break;
+        }
+
+    }
 }
