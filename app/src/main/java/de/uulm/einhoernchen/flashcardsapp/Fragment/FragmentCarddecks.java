@@ -179,49 +179,49 @@ public class FragmentCarddecks extends Fragment implements View.OnClickListener{
         text.requestFocus();
 
         builder.setView(view)
+            // Add action buttons
+            .setPositiveButton(R.string.save, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int id) {
 
-                // Add action buttons
-                .setPositiveButton(R.string.save, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int id) {
+                    String textString = text.getText().toString();
+                    String descriptionString = description.getText().toString();
+                    boolean isVisible = visible.isChecked();
 
-                        String textString = text.getText().toString();
-                        String descriptionString = description.getText().toString();
-                        boolean isVisible = visible.isChecked();
+                    if (textString == null || textString.equals("")) {
 
-                        if (textString == null || textString.equals("")) {
+                        Snackbar.make(v, R.string.insert_text, Snackbar.LENGTH_SHORT).show();
 
-                            Snackbar.make(v, R.string.insert_text, Snackbar.LENGTH_SHORT).show();
+                    } else if (!ProcessConnectivity.isOk(getContext(), true)){
+                        // Do nothing
+                    } else {
 
-                        } else if (!ProcessConnectivity.isOk(getContext(), true)){
-                            // Do nothing
-                        } else {
+                        JSONObject jsonObject = new JSONObject();
+                        JSONObject jsonObjectGroup = new JSONObject();
 
-                            JSONObject jsonObject = new JSONObject();
-                            JSONObject jsonObjectGroup = new JSONObject();
+                        try {
 
-                            try {
+                            jsonObject.put(JsonKeys.CARDDECK_NAME, textString);
+                            jsonObject.put(JsonKeys.CARDDECK_DESCRIPTION, descriptionString);
+                            jsonObject.put(JsonKeys.CARDDECK_VISIBLE, isVisible);
+                            jsonObjectGroup.put(JsonKeys.GROUP_ID, null); // TODO jonas Add group
+                            jsonObject.put(JsonKeys.CARDDECK_GROUP, jsonObjectGroup);
 
-                                jsonObject.put(JsonKeys.CARDDECK_NAME, textString);
-                                jsonObject.put(JsonKeys.CARDDECK_DESCRIPTION, descriptionString);
-                                jsonObject.put(JsonKeys.CARDDECK_VISIBLE, isVisible);
-                                jsonObjectGroup.put(JsonKeys.GROUP_ID, null); // TODO jonas Add group
-                                jsonObject.put(JsonKeys.CARDDECK_GROUP, jsonObjectGroup);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
 
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
+                        // TODO save
+                        AsyncPostRemoteCarddeck task = new AsyncPostRemoteCarddeck(jsonObject);
 
-                            // TODO save
-                            AsyncPostRemoteCarddeck task = new AsyncPostRemoteCarddeck(jsonObject);
+                        if (ProcessConnectivity.isOk(Globals.getContext())) {
 
-                            if (ProcessConnectivity.isOk(Globals.getContext())) {
-
-                                task.execute(parentId);
-                            }
+                            task.execute(parentId);
                         }
                     }
-                });
+                }
+            })
+            .setNegativeButton(R.string.cancel, null);
 
         builder.create().show();
     }

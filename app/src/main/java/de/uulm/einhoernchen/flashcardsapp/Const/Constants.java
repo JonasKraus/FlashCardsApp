@@ -5,5 +5,5 @@ package de.uulm.einhoernchen.flashcardsapp.Const;
  * @since 2016.08.22
  */
 public enum Constants {
-    ROOT_LIST, CATEGORY_LIST, CARD_DECK_LIST, FLASH_CARD_LIST, FLASH_CARD_DETAIL
+    ROOT_LIST, CATEGORY_LIST, CARD_DECK_LIST, FLASH_CARD_LIST, FLASH_CARD_DETAIL, FLASH_CARD_CREATE
 }

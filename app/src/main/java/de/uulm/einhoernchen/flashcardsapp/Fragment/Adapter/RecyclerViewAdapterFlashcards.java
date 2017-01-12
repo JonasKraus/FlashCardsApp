@@ -19,6 +19,7 @@ import com.amulyakhare.textdrawable.TextDrawable;
 import com.amulyakhare.textdrawable.util.ColorGenerator;
 
 import de.uulm.einhoernchen.flashcardsapp.Activity.MainActivity;
+import de.uulm.einhoernchen.flashcardsapp.Const.Constants;
 import de.uulm.einhoernchen.flashcardsapp.Database.DbManager;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.Interface.OnFragmentInteractionListenerFlashcard;
 import de.uulm.einhoernchen.flashcardsapp.Model.FlashCard;
@@ -312,6 +313,7 @@ public class RecyclerViewAdapterFlashcards extends RecyclerView.Adapter<Recycler
 
                 MainActivity mainActivity = (MainActivity) Globals.getContext();
                 mainActivity.onFlashcardListFragmentInteraction(null);
+                mainActivity.setCatalogueState(Constants.FLASH_CARD_CREATE);
 
                 break;
         }

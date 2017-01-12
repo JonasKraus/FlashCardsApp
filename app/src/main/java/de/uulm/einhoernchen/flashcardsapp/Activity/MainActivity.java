@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.design.widget.CollapsingToolbarLayout;
@@ -16,8 +17,6 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.SearchView;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.MenuInflater;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -27,7 +26,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -132,7 +130,6 @@ public class MainActivity extends AppCompatActivity
         setProfileImageClickListener();
 
         createFragmentHome();
-
 
         createToolbar();
     }
@@ -379,6 +376,7 @@ public class MainActivity extends AppCompatActivity
                 if (categoryLevel > 0) {
 
                     moveBackwardsInCatalogue();
+
                 } else {
 
                     drawer.openDrawer(GravityCompat.START);
@@ -390,6 +388,40 @@ public class MainActivity extends AppCompatActivity
 
             }
         }
+    }
+
+
+    /**
+     * Confirmdialog
+     *
+     * TODO customice by adding params as text and header
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     * @since 2017-01-12
+     */
+    private void confirmDialogCardCreate() {
+
+        final android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(this);
+
+        final View view = (View) findViewById(R.id.drawer_layout);
+
+        final MainActivity mainActivity = this;
+
+
+        builder.setView(view.getRootView())
+                // Add action buttons
+                .setPositiveButton(R.string.save, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int id) {
+
+                        mainActivity.catalogueState = Constants.FLASH_CARD_LIST;
+                        mainActivity.onBackPressed();
+                    }
+                })
+                .setNegativeButton(R.string.cancel, null);
+
+        builder.create().show();
+
     }
 
 
@@ -517,7 +549,13 @@ public class MainActivity extends AppCompatActivity
                 break;
             case FLASH_CARD_DETAIL:
 
-                createFragmentFlashCard(this.currentFlashCard, true);
+                createFragmentFlashCardDetails(this.currentFlashCard, true);
+                break;
+            case FLASH_CARD_CREATE:
+
+                // TODO
+                setFlashcardList(true);
+
                 break;
             default:
 
@@ -559,6 +597,12 @@ public class MainActivity extends AppCompatActivity
 
                 setFlashcardList(true);
                 break;
+
+            case FLASH_CARD_CREATE:
+
+                confirmBackPressedToCardList();
+
+                break;
             default:
 
                 setCategoryList(true);
@@ -577,6 +621,35 @@ public class MainActivity extends AppCompatActivity
             parentIds.remove(parentIds.size() - 1);
         }
 
+    }
+
+
+    /**
+     * Confirm if to move backwards without saving
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     * @since 2017-01-12
+     *
+     */
+    private void confirmBackPressedToCardList() {
+
+        // Use the Builder class for convenient dialog construction
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        builder.setTitle(R.string.dialog_header_confirm);
+        builder.setMessage(R.string.dialog_content_unsaved)
+                .setPositiveButton(R.string.prompt_ok, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+
+                        setFlashcardList(true);
+                    }
+                })
+                .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+
+                    }
+                });
+        builder.create().show();
     }
 
 
@@ -692,6 +765,9 @@ public class MainActivity extends AppCompatActivity
         // add a new flashcards
         if (item == null) {
 
+            // Create new flashcard
+
+            catalogueState = Constants.FLASH_CARD_CREATE;
             createFragmentFlashCardCreate();
         } else {
 
@@ -702,7 +778,7 @@ public class MainActivity extends AppCompatActivity
             this.parentIds.add(this.childrenId);
             this.childrenId = item.getId();
 
-            createFragmentFlashCard(item, false);
+            createFragmentFlashCardDetails(item, false);
         }
 
     }
@@ -793,7 +869,7 @@ public class MainActivity extends AppCompatActivity
      * @param backPressed
      * @param flashCard
      */
-    private void createFragmentFlashCard (FlashCard flashCard, boolean backPressed) {
+    private void createFragmentFlashCardDetails(FlashCard flashCard, boolean backPressed) {
 
         new  ContentFlashCard().collectItemFromServer(flashCard.getId(), backPressed);
         new  ContentFlashCard().collectItemFromDb(flashCard.getId(), backPressed);
@@ -828,5 +904,18 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onAnswerListFragmentInteraction(Answer item) {
         Log.d("click answer", item.toString());
+    }
+
+
+    /**
+     * Set the state
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     * @since 2017-01-12
+     *
+     * @param catalogueState
+     */
+    public void setCatalogueState(Constants catalogueState) {
+        this.catalogueState = catalogueState;
     }
 }
