@@ -5,6 +5,7 @@ import android.graphics.BitmapFactory;
 import android.net.http.AndroidHttpClient;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.view.View;
 import android.widget.ImageView;
 
 import org.apache.http.HttpEntity;
@@ -15,6 +16,7 @@ import org.apache.http.client.methods.HttpGet;
 import java.io.InputStream;
 import java.lang.ref.WeakReference;
 
+import de.uulm.einhoernchen.flashcardsapp.Util.Globals;
 import de.uulm.einhoernchen.flashcardsapp.Util.ProcessorImage;
 
 /**
@@ -35,11 +37,13 @@ public class AsyncGetRemoteBitmap extends AsyncTask<String, Void, Bitmap> {
     }
 
     @Override
-    // Actual download method, run in the task thread
     protected Bitmap doInBackground(String... params) {
-        // params comes from the execute() call: params[0] is the url.
-        return downloadBitmap(params[0]);
+
+        Bitmap bitmap = downloadBitmap(params[0]);
+        ProcessorImage.savebitmap(bitmap, id, appendix);
+        return bitmap;
     }
+
 
     @Override
     // Once the image is downloaded, associates it to the imageView
@@ -53,7 +57,6 @@ public class AsyncGetRemoteBitmap extends AsyncTask<String, Void, Bitmap> {
             if (imageView != null) {
                 imageView.setImageBitmap(bitmap);
                 Log.d("set bitmap", "");
-                ProcessorImage.savebitmap(bitmap, id, appendix);
             }
         }
     }
@@ -73,7 +76,9 @@ public class AsyncGetRemoteBitmap extends AsyncTask<String, Void, Bitmap> {
         try {
             HttpResponse response = client.execute(getRequest); // TODO Connectivity check
             final int statusCode = response.getStatusLine().getStatusCode();
+
             if (statusCode != HttpStatus.SC_OK) {
+
                 Log.w("ImageDownloader", "Error " + statusCode + " while retrieving bitmap from " + url);
                 return null;
             }

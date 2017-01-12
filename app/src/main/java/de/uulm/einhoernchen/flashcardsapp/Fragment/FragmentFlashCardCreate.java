@@ -312,7 +312,7 @@ public class FragmentFlashCardCreate extends Fragment implements View.OnClickLis
 
             if (!uriString.startsWith("https://") && !uriString.startsWith("http://") && !uriString.equals("")) {
 
-                uriString = "https://" + uriString;
+                uriString = "http://" + uriString;
 
             } else if (uriString.equals("")) {
 
@@ -382,7 +382,7 @@ public class FragmentFlashCardCreate extends Fragment implements View.OnClickLis
 
     }
 
-    
+
     /**
      * @author Jonas Kraus jonas.kraus@uni-ulm.de
      * @since 2016-12-30

@@ -258,7 +258,7 @@ public class RecyclerViewAdapterFlashcards extends RecyclerView.Adapter<Recycler
 
             if (!uriString.startsWith("https://") && !uriString.startsWith("http://") && !uriString.equals("")) {
 
-                uriString = "https://" + uriString;
+                uriString = "http://" + uriString;
 
             } else if (uriString == null || uriString.equals("")) {
                 uriString = "http://134.60.51.72:9000/";

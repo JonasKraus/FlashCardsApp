@@ -271,8 +271,6 @@ public class RecyclerViewAdapterFlashCardAnswers extends RecyclerView.Adapter<Re
             holder.mediaPlay.setVisibility(View.GONE);
             holder.mediaImage.setVisibility(View.GONE);
 
-            Log.d("uri", uriString);
-
             // empty string do nothing
             if (uriString.equals("")) {
 
@@ -283,7 +281,7 @@ public class RecyclerViewAdapterFlashCardAnswers extends RecyclerView.Adapter<Re
             // add protocoll if needed
             if (!uriString.toLowerCase().startsWith("http")) {
 
-                uriString = "https://" + uriString;
+                uriString = "http://" + uriString;
 
             }
 
