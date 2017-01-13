@@ -91,10 +91,10 @@ public class FragmentPlayQuestion extends Fragment implements View.OnClickListen
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
-    private View content;
+
     private View view;
-    private FragmentFlashCardAnswers fragmentAnswers;
     private NestedScrollView nsContentAnswers;
+    private ContentFlashCardAnswers contentAnswers;
 
 
     public FragmentPlayQuestion() {
@@ -540,18 +540,17 @@ public class FragmentPlayQuestion extends Fragment implements View.OnClickListen
      */
     private void toggleFabIcon() {
 
-
         switch (state) {
 
             case PLAY_QUESTION:
 
                 fab.setImageDrawable(Globals.getContext().getResources().getDrawable(R.drawable.ic_check));
-                // TODO load answers
 
                 state = Constants.PLAY_ANSWER;
 
-                new ContentFlashCardAnswers().collectItemsFromDb(currentFlashcard.getId(), false);
-                new ContentFlashCardAnswers().collectItemsFromServer(currentFlashcard.getId(), false);
+                contentAnswers = new ContentFlashCardAnswers();
+                contentAnswers.collectItemsFromDb(currentFlashcard.getId(), false);
+                contentAnswers.collectItemsFromServer(currentFlashcard.getId(), false);
 
                 break;
 
@@ -579,7 +578,14 @@ public class FragmentPlayQuestion extends Fragment implements View.OnClickListen
     }
 
 
-
+    /**
+     * contentAnswers
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     * @since 2017-01-13
+     *x
+     * @param v
+     */
     @Override
     public void onClick(View v) {
 
@@ -599,21 +605,4 @@ public class FragmentPlayQuestion extends Fragment implements View.OnClickListen
 
     }
 
-
-
-    /**
-     * Creates the answer fragment
-     *
-     * @author Jonas Kraus jonas.kraus@uni-ulm.de
-     * @since 2017-01-12
-     *
-     */
-    private void inflateFragmentAnswer() {
-
-        android.support.v4.app.FragmentTransaction fragmentTransaction =
-                Globals.getFragmentManager().beginTransaction();
-
-        fragmentTransaction.replace(R.id.fragment_container_card_answer, fragmentAnswers);
-        fragmentTransaction.commit();
-    }
 }
