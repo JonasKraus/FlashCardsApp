@@ -48,7 +48,7 @@ public class RecyclerViewAdapterCategories extends RecyclerView.Adapter<Recycler
         // holder.mGroupRatingView.setVisibility(View.INVISIBLE);
         holder.mCardRatingView.setVisibility(View.INVISIBLE);
         holder.mDateView.setVisibility(View.INVISIBLE);
-        holder.mBookmarkView.setVisibility(View.INVISIBLE);
+        holder.mBookmarkView.setVisibility(View.GONE);
 
         if (!isUpToDate) {
 

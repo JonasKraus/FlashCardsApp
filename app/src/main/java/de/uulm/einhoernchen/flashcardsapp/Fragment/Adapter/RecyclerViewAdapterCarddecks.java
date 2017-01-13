@@ -53,7 +53,7 @@ public class RecyclerViewAdapterCarddecks extends RecyclerView.Adapter<RecyclerV
         holder.mCardRatingView.setText(holder.mItem.getRatingForView());
         //holder.mDateView.setText(cardDecks.get(position).getLastUpdatedString());
         holder.mDateView.setVisibility(View.INVISIBLE);
-        holder.mBookmarkView.setVisibility(View.INVISIBLE);
+        holder.mBookmarkView.setVisibility(View.GONE);
 
         if (!isUpToDate) {
 

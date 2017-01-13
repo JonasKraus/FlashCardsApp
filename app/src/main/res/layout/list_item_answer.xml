@@ -55,14 +55,6 @@
 
         </LinearLayout>
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:id="@+id/ll_answer_play_check"
-            android:visibility="gone"
-            android:orientation="vertical">
-
-        </LinearLayout>
 
         <!-- content -->
         <LinearLayout
@@ -133,7 +125,7 @@
             <ImageView
                 android:layout_width="30dp"
                 android:layout_height="30dp"
-                android:visibility="visible"
+                android:visibility="gone"
                 android:src="@drawable/ic_check"
                 android:id="@+id/image_view_iscorrect"/>
 
@@ -141,6 +133,7 @@
             <CheckBox
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:visibility="gone"
                 android:id="@+id/answer_checkbox_play"/>
 
             <LinearLayout

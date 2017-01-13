@@ -55,7 +55,7 @@ public class FragmentPlayQuestion extends Fragment implements View.OnClickListen
     private TextView mAuthorView;
     private TextView mCardRatingView;
     private TextView mDateView;
-    private ImageView mBookmarkView;
+    private ImageView mIsCorrect;
     private ImageView mLocalView;
     private ImageView imageViewUri;
     private ImageView imageViewPlay;
@@ -171,7 +171,9 @@ public class FragmentPlayQuestion extends Fragment implements View.OnClickListen
         // mGroupRatingView = (TextView) view.findViewById(R.id.text_view_listItem_group_rating);
         mCardRatingView = (TextView) view.findViewById(R.id.text_view_listItem_card_rating);
         mDateView = (TextView) view.findViewById(R.id.text_view_listItem_date);
-        mBookmarkView = (ImageView) view.findViewById(R.id.image_view_iscorrect);
+        mIsCorrect = (ImageView) view.findViewById(R.id.image_view_iscorrect);
+        mIsCorrect.setVisibility(currentFlashcard.isMultipleChoice() ? View.VISIBLE : View.GONE);
+
         mLocalView = (ImageView) view.findViewById(R.id.image_view_offline);
 
         imageViewUri = (ImageView) view.findViewById(R.id.image_view_question_uri);
@@ -593,6 +595,9 @@ public class FragmentPlayQuestion extends Fragment implements View.OnClickListen
                 if (currentFlashcard.isMultipleChoice()) {
 
                     Toast.makeText(getContext(), "validate answers", Toast.LENGTH_SHORT).show();
+
+                    contentAnswers.validateAnswers();
+
                     //TODO check if answers are correct
                 } else {
 

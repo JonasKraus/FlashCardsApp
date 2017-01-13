@@ -55,7 +55,7 @@ public class ContentFlashCardAnswers {
                 ContentFlashCardAnswers.answers = answers;
                 isUpToDate = true;
 
-                FragmentFlashCardAnswers fragment = new FragmentFlashCardAnswers();
+                fragment = new FragmentFlashCardAnswers();
                 fragment.setItemList(answers);
                 fragment.setUpToDate(isUpToDate);
                 fragment.setPlayMultiplyChoiceMode(isPlayMode);
@@ -112,7 +112,7 @@ public class ContentFlashCardAnswers {
                 ContentFlashCardAnswers.answers = answers;
                 isUpToDate = false;
 
-                FragmentFlashCardAnswers fragment = new FragmentFlashCardAnswers();
+                fragment = new FragmentFlashCardAnswers();
                 fragment.setItemList(answers);
                 fragment.setUpToDate(isUpToDate);
                 fragment.setPlayMultiplyChoiceMode(isPlayMultiplyChoiceMode);
@@ -146,5 +146,8 @@ public class ContentFlashCardAnswers {
     }
 
 
+    public void validateAnswers() {
 
+        fragment.validateAnswers();
+    }
 }

@@ -30,7 +30,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import de.uulm.einhoernchen.flashcardsapp.Activity.MainActivity;
 import de.uulm.einhoernchen.flashcardsapp.AsyncTask.Remote.DELETE.AsyncDeleteRemoteRating;
 import de.uulm.einhoernchen.flashcardsapp.AsyncTask.Remote.PATCH.AsyncPatchRemoteCard;
 import de.uulm.einhoernchen.flashcardsapp.AsyncTask.Remote.POST.AsyncPostRemoteRating;
@@ -73,7 +72,7 @@ public class FragmentFlashCard extends Fragment implements View.OnClickListener 
     private TextView mAuthorView;
     private TextView mCardRatingView;
     private TextView mDateView;
-    private ImageView mBookmarkView;
+    private ImageView mIsCorrect;
     private ImageView mLocalView;
     private ImageView imageViewUri;
     private ImageView imageViewPlay;
@@ -160,7 +159,9 @@ public class FragmentFlashCard extends Fragment implements View.OnClickListener 
         // mGroupRatingView = (TextView) view.findViewById(R.id.text_view_listItem_group_rating);
         mCardRatingView = (TextView) view.findViewById(R.id.text_view_listItem_card_rating);
         mDateView = (TextView) view.findViewById(R.id.text_view_listItem_date);
-        mBookmarkView = (ImageView) view.findViewById(R.id.image_view_iscorrect);
+        mIsCorrect = (ImageView) view.findViewById(R.id.image_view_iscorrect);
+        mIsCorrect.setVisibility(flashCard.isMultipleChoice() ? View.VISIBLE : View.GONE);
+
         mLocalView = (ImageView) view.findViewById(R.id.image_view_offline);
 
         imageViewUri = (ImageView) view.findViewById(R.id.image_view_question_uri);
@@ -209,7 +210,7 @@ public class FragmentFlashCard extends Fragment implements View.OnClickListener 
         fabEdit.setVisibility(View.GONE);
 
 
-        //misCorrectView =; TODO
+        //mIsCorrect =; TODO
 
         checkIfEditable();
 

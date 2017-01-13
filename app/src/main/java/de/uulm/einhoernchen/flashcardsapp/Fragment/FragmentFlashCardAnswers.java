@@ -36,6 +36,7 @@ public class FragmentFlashCardAnswers extends Fragment {
     private boolean isUpToDate;
     private RecyclerView recyclerView;
     private boolean isPlayMultiplyChoiceMode;
+    private RecyclerViewAdapterFlashCardAnswers recyclerViewAdapterFlashCardAnswers;
 
     public RecyclerView getRecyclerView() {
         return recyclerView;
@@ -86,7 +87,10 @@ public class FragmentFlashCardAnswers extends Fragment {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
 
-            recyclerView.setAdapter(new RecyclerViewAdapterFlashCardAnswers(itemList, mListener, isUpToDate, isPlayMultiplyChoiceMode));
+            recyclerViewAdapterFlashCardAnswers =
+                    new RecyclerViewAdapterFlashCardAnswers(itemList, mListener, isUpToDate, isPlayMultiplyChoiceMode);
+
+            recyclerView.setAdapter(recyclerViewAdapterFlashCardAnswers);
         }
         return view;
     }
@@ -127,5 +131,11 @@ public class FragmentFlashCardAnswers extends Fragment {
      */
     public void setPlayMultiplyChoiceMode(boolean playMode) {
         this.isPlayMultiplyChoiceMode = playMode;
+    }
+
+    public void validateAnswers() {
+
+        recyclerViewAdapterFlashCardAnswers.validateAnswers();
+
     }
 }

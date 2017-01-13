@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +20,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import de.uulm.einhoernchen.flashcardsapp.AsyncTask.Remote.DELETE.AsyncDeleteRemoteRating;
@@ -39,6 +41,7 @@ public class RecyclerViewAdapterFlashCardAnswers extends RecyclerView.Adapter<Re
 
 
     private final List<Answer> answers;
+    private final List<ViewHolder> holders = new ArrayList<ViewHolder>();
     private final OnFragmentInteractionListenerAnswer mListener;
     private final boolean isUpToDate;
     private final boolean isPlayMultiplyChoiceMode;
@@ -204,6 +207,8 @@ public class RecyclerViewAdapterFlashCardAnswers extends RecyclerView.Adapter<Re
                 }
             });
         }
+
+        holders.add(holder);
     }
 
 
@@ -218,11 +223,11 @@ public class RecyclerViewAdapterFlashCardAnswers extends RecyclerView.Adapter<Re
      */
     private void setViewState(ViewHolder holder, int position) {
 
-        holder.llAnswerCheck.setVisibility(isPlayMultiplyChoiceMode ? View.VISIBLE : View.GONE);
         holder.llAnswerRating.setVisibility(isPlayMultiplyChoiceMode ? View.INVISIBLE : View.VISIBLE);
         holder.llAnswerUserDateRating.setVisibility(isPlayMultiplyChoiceMode ? View.INVISIBLE : View.VISIBLE);
         holder.llAnswerProfile.setVisibility(isPlayMultiplyChoiceMode ? View.INVISIBLE : View.VISIBLE);
-        holder.misCorrectView.setVisibility(isPlayMultiplyChoiceMode ? View.GONE : View.VISIBLE);
+        holder.checkBoxPlay.setVisibility(isPlayMultiplyChoiceMode ? View.VISIBLE : View.INVISIBLE);
+        holder.mIsCorrect.setVisibility(isPlayMultiplyChoiceMode ? View.GONE : View.VISIBLE);
 
 
         // Sets the hint to the list item
@@ -236,10 +241,10 @@ public class RecyclerViewAdapterFlashCardAnswers extends RecyclerView.Adapter<Re
 
         if (answers.get(position).isCorrect()) {
 
-            holder.misCorrectView.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_check));
+            holder.mIsCorrect.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_check));
         } else {
 
-            holder.misCorrectView.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_close));
+            holder.mIsCorrect.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_close));
         }
 
         /**
@@ -380,6 +385,39 @@ public class RecyclerViewAdapterFlashCardAnswers extends RecyclerView.Adapter<Re
 
 
     /**
+     * Validates if the answeres have been correct
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     * @since 2017-01-13
+     *
+     */
+    public void validateAnswers() {
+
+        for (int i = 0; i < answers.size(); i++) {
+
+            holders.get(i).mIsCorrect.setVisibility(View.VISIBLE);
+            holders.get(i).llAnswerProfile.setVisibility(View.VISIBLE);
+            holders.get(i).llAnswerUserDateRating.setVisibility(View.VISIBLE);
+            holders.get(i).llAnswerRating.setVisibility(View.VISIBLE);
+            holders.get(i).checkBoxPlay.setVisibility(View.GONE);
+
+            boolean shouldBeChecked = answers.get(i).isCorrect();
+            boolean userChecked = holders.get(i).checkBoxPlay.isChecked();
+
+            if (shouldBeChecked != userChecked) {
+
+                holders.get(i).mIsCorrect.setBackgroundColor(Color.RED);
+            } else {
+
+                holders.get(i).mIsCorrect.setBackgroundColor(Color.GREEN);
+            }
+        }
+
+        Log.d("recycler", "validate");
+    }
+
+
+    /**
      * Gets the view elements and sets them to the holder
      *
      * @author Jonas Kraus jonas.kraus@uni-ulm.de
@@ -394,7 +432,7 @@ public class RecyclerViewAdapterFlashCardAnswers extends RecyclerView.Adapter<Re
         // public final TextView mGroupRatingView;
         public final TextView mCardRatingView;
         public final TextView mDateView;
-        public final ImageView misCorrectView;
+        public final ImageView mIsCorrect;
         public final ImageView mLocalView;
         public final ImageView imageView; // Text icon
         public final ImageView mDownvote; // Text icon
@@ -406,7 +444,6 @@ public class RecyclerViewAdapterFlashCardAnswers extends RecyclerView.Adapter<Re
         protected WebView webViewUri;
 
         // View for playmode
-        public final LinearLayout llAnswerCheck;
         public final LinearLayout llAnswerRating;
         public final LinearLayout llAnswerUserDateRating;
         public final LinearLayout llAnswerProfile;
@@ -431,7 +468,7 @@ public class RecyclerViewAdapterFlashCardAnswers extends RecyclerView.Adapter<Re
             // mGroupRatingView = (TextView) view.findViewById(R.id.text_view_listItem_group_rating);
             mCardRatingView = (TextView) view.findViewById(R.id.text_view_listItem_card_rating);
             mDateView = (TextView) view.findViewById(R.id.text_view_listItem_date);
-            misCorrectView = (ImageView) view.findViewById(R.id.image_view_iscorrect);
+            mIsCorrect = (ImageView) view.findViewById(R.id.image_view_iscorrect);
             mLocalView = (ImageView) view.findViewById(R.id.image_view_offline);
 
             imageView = (ImageView) view.findViewById(R.id.image_view_round_icon);
@@ -445,7 +482,6 @@ public class RecyclerViewAdapterFlashCardAnswers extends RecyclerView.Adapter<Re
             relativeLayoutWebview = (RelativeLayout) view.findViewById(R.id.rl_answer_webview);
 
             //view for playmode
-            llAnswerCheck = (LinearLayout) view.findViewById(R.id.ll_answer_play_check);
             llAnswerRating = (LinearLayout) view.findViewById(R.id.ll_answer_Rating);
             llAnswerProfile = (LinearLayout) view.findViewById(R.id.ll_answer_profile);
             llAnswerUserDateRating = (LinearLayout) view.findViewById(R.id.ll_answer_user_date_rating);

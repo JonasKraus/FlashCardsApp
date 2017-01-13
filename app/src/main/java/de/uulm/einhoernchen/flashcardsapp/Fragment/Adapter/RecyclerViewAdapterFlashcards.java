@@ -132,7 +132,7 @@ public class RecyclerViewAdapterFlashcards extends RecyclerView.Adapter<Recycler
         holder.mCardRatingView.setText(flashCards.get(position).getRatingForView());
         holder.mDateView.setText(flashCards.get(position).getLastUpdatedString());
         holder.mBookmarkView.setVisibility(View.VISIBLE);
-        // holder.misCorrectView.setImageDrawable(// TODO set if marked);
+        // holder.mIsCorrect.setImageDrawable(// TODO set if marked);
 
         checkAnswerMediatype(holder, flashCards.get(position).getQuestion());
 
