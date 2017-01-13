@@ -181,6 +181,7 @@
     <string name="dialog_header_confirm">confirm</string>
     <string name="dialog_content_unsaved">Do you really want to go back? Unsaved changes will be lost.</string>
     <string name="select_card">select at least one flashcard</string>
+    <string name="nav_play">learn</string>
 
 
 </resources>

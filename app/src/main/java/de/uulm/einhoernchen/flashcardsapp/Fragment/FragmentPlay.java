@@ -7,6 +7,7 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -70,10 +71,11 @@ public class FragmentPlay extends Fragment {
     // Add Fragments to Tabs
     private void setupViewPager(ViewPager viewPager) {
 
-        FragmentPagerAdapterPlay adapter = new FragmentPagerAdapterPlay(Globals.getFragmentManager());
+        FragmentPagerAdapterPlay adapter = new FragmentPagerAdapterPlay(getChildFragmentManager());
 
         adapter.addFragment(new FragmentPlayQuestion(), "PLAY");
         adapter.addFragment(new FragmentHome(), "HOME");
+
         viewPager.setAdapter(adapter);
     }
 

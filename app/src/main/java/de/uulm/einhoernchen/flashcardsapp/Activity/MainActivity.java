@@ -90,6 +90,7 @@ public class MainActivity extends AppCompatActivity
     private FloatingActionButton floatingActionButton;
     private FloatingActionButton floatingActionButtonAdd;
     private CollapsingToolbarLayout collapsingToolbar;
+    private FragmentPlay fragmentPlay;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -253,24 +254,56 @@ public class MainActivity extends AppCompatActivity
      */
     private void createFloatingActionButton() {
 
-        floatingActionButton = (FloatingActionButton) findViewById(R.id.fab);
+
         floatingActionButtonAdd = (FloatingActionButton) findViewById(R.id.fab_add);
+
+        resetFabPlay();
+
+    }
+
+
+    /**
+     * Sets or resets the main fab
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     * @since 2017-01-13
+     *
+     */
+    public void resetFabPlay () {
+
+        floatingActionButton = (FloatingActionButton) findViewById(R.id.fab);
+        floatingActionButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_school));
 
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                FragmentPlay fragment = new FragmentPlay();
-                android.support.v4.app.FragmentTransaction fragmentTransaction =
-                        getSupportFragmentManager().beginTransaction();
-
-                // Keep attention that this is replaced and not added
-                fragmentTransaction.replace(R.id.fragment_container_main, fragment);
-                fragmentTransaction.commit();
-
-                catalogueState = Constants.PLAY;
+                inflateFragmentPlay();
             }
         });
+    }
+
+
+    /**
+     * Inflates the fragment for playing selected cards
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     * @since 2017-01-13
+     *
+     */
+    private void inflateFragmentPlay() {
+
+        catalogueState = Constants.PLAY;
+
+        Log.d("frag", (fragmentPlay == null) + "");
+
+        fragmentPlay = fragmentPlay == null ? new FragmentPlay() : fragmentPlay;
+        android.support.v4.app.FragmentTransaction fragmentTransaction =
+                getSupportFragmentManager().beginTransaction();
+
+        // Keep attention that this is replaced and not added
+        fragmentTransaction.replace(R.id.fragment_container_main, fragmentPlay);
+        fragmentTransaction.commit();
 
     }
 
@@ -371,6 +404,8 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onBackPressed() {
 
+        resetFabPlay();
+
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
 
@@ -387,13 +422,15 @@ public class MainActivity extends AppCompatActivity
 
                 } else {
 
-                    drawer.openDrawer(GravityCompat.START);
+                    createFragmentHome();
                     getFragmentManager().popBackStack();
                 }
 
 
             } else {
 
+                drawer.openDrawer(GravityCompat.START);
+                getFragmentManager().popBackStack();
             }
         }
     }
@@ -489,6 +526,10 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
+        item.setChecked(true);
+
+        resetFabPlay();
+
         if (id == R.id.nav_home) {
 
             ProcessConnectivity.isServerAlive ();
@@ -501,6 +542,10 @@ public class MainActivity extends AppCompatActivity
 
             ProcessConnectivity.isServerAlive ();
             moveToLastCatalogueState();
+
+        } else if (id == R.id.nav_play) {
+
+            inflateFragmentPlay();
 
         } else if (id == R.id.nav_profile) {
 

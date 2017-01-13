@@ -11,6 +11,10 @@
             android:icon="@drawable/ic_list"
             android:title="@string/nav_catalogue" />
         <item
+            android:id="@+id/nav_play"
+            android:icon="@drawable/ic_school"
+            android:title="@string/nav_play" />
+        <item
             android:id="@+id/nav_challenge"
             android:icon="@drawable/ic_trophy"
             android:title="@string/nav_challenge" />

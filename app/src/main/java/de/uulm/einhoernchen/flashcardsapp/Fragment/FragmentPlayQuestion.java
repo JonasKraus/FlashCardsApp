@@ -8,6 +8,8 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.NestedScrollingChild;
+import android.support.v4.widget.NestedScrollView;
 import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -92,29 +94,12 @@ public class FragmentPlayQuestion extends Fragment implements View.OnClickListen
     private View content;
     private View view;
     private FragmentFlashCardAnswers fragmentAnswers;
+    private NestedScrollView nsContentAnswers;
 
 
     public FragmentPlayQuestion() {
         // Required empty public constructor
 
-        Globals.getFloatingActionButtonAdd().setVisibility(View.GONE);
-
-        fab.setImageDrawable(Globals.getContext().getResources().getDrawable(R.drawable.ic_list));
-        fab.setOnClickListener(this);
-
-        cardIds = db.getSelectedFlashcardIDs();
-
-        if (cardIds.size() == 0) {
-
-            Toast.makeText(getContext(), R.string.select_card, Toast.LENGTH_SHORT).show();
-            // TODO return to catalogue
-            MainActivity mainActivity = (MainActivity) Globals.getContext();
-            mainActivity.onBackPressed();
-
-        } else if (position < cardIds.size()){
-
-            currentFlashcard = db.getFlashCard(cardIds.get(position));
-        }
     }
 
     /**
@@ -143,6 +128,36 @@ public class FragmentPlayQuestion extends Fragment implements View.OnClickListen
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
 
+    }
+
+
+    /**
+     * Inits the class variables
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     * @since 2017-01-13
+     *
+     */
+    private void initVariables() {
+
+        Globals.getFloatingActionButtonAdd().setVisibility(View.GONE);
+
+        fab.setImageDrawable(Globals.getContext().getResources().getDrawable(R.drawable.ic_list));
+        fab.setOnClickListener(this);
+
+        cardIds = db.getSelectedFlashcardIDs();
+
+        if (cardIds.size() == 0) {
+
+            Toast.makeText(getContext(), R.string.select_card, Toast.LENGTH_SHORT).show();
+            // TODO return to catalogue
+            MainActivity mainActivity = (MainActivity) Globals.getContext();
+            mainActivity.onBackPressed();
+
+        } else if (position < cardIds.size()){
+
+            currentFlashcard = db.getFlashCard(cardIds.get(position));
+        }
     }
 
 
@@ -182,9 +197,40 @@ public class FragmentPlayQuestion extends Fragment implements View.OnClickListen
         radioButtonAnswerCorrect = (RadioButton) view.findViewById(R.id.radio_button_answer_editor_correct);
         radioButtonAnswerIncorrect = (RadioButton) view.findViewById(R.id.radio_button_answer_editor_incorrect);
 
-        frameLayoutAnswers = (FrameLayout) view.findViewById(R.id.fragment_container_card_answer);
-        frameLayoutAnswers.setVisibility(View.GONE);
+        //frameLayoutAnswers = (FrameLayout) view.findViewById(R.id.fragment_container_card_answer);
+        //frameLayoutAnswers.setVisibility(View.GONE);
 
+        nsContentAnswers = (NestedScrollView) view.findViewById(R.id.nested_scrollview_content_answers);
+        nsContentAnswers.setVisibility(View.GONE);
+
+    }
+
+
+    /**
+     * toggels the visibility of the card's answers
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     * @since 2017-01-13
+     *
+     */
+    private void toggleVisibilityAnswers() {
+
+        int mode = View.VISIBLE;
+
+        switch (nsContentAnswers.getVisibility()) {
+
+            case View.VISIBLE:
+
+                mode = View.GONE;
+                break;
+
+            case View.GONE:
+
+                mode = View.VISIBLE;
+                break;
+        }
+
+        nsContentAnswers.setVisibility(mode);
     }
 
 
@@ -194,6 +240,8 @@ public class FragmentPlayQuestion extends Fragment implements View.OnClickListen
 
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_fragment_play_question, container, false);
+
+        initVariables();
 
         initView();
 
@@ -213,11 +261,53 @@ public class FragmentPlayQuestion extends Fragment implements View.OnClickListen
         super.onAttach(context);
     }
 
+
+    /**
+     * Keep attention to reset Listeners and add listener of main activity to the fab
+     * After this method the fragment will be destroyed
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     * @since 2017-01-13
+     *
+     */
     @Override
     public void onDetach() {
         super.onDetach();
+
+        fab.setOnClickListener(null);
+        resetFabPlay();
     }
 
+
+    /**
+     * Reset the listener of the ffab becouse thos method is called in the lifecycle
+     * when the fragment returns to te back stack
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     * @since 2017-01-13
+     *
+     */
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+
+        fab.setOnClickListener(null);
+        resetFabPlay();
+    }
+
+
+    /**
+     * Gets the MainActivity and uses its method to reset the fab
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     * @since 2017-01-13
+     *
+     */
+    private void resetFabPlay() {
+
+        MainActivity mainActivity = (MainActivity) Globals.getContext();
+        mainActivity.resetFabPlay();
+    }
 
     /**
      * Sets the content for teh view
@@ -435,8 +525,6 @@ public class FragmentPlayQuestion extends Fragment implements View.OnClickListen
                     mCardRatingView.setTextColor(getResources().getColor(R.color.colorAccent));
                 }
 
-
-
             }
         });
 
@@ -462,19 +550,12 @@ public class FragmentPlayQuestion extends Fragment implements View.OnClickListen
 
                 state = Constants.PLAY_ANSWER;
 
-                Toast.makeText(getContext(), "antworten laden", Toast.LENGTH_SHORT).show();
-
-
                 new ContentFlashCardAnswers().collectItemsFromDb(currentFlashcard.getId(), false);
                 new ContentFlashCardAnswers().collectItemsFromServer(currentFlashcard.getId(), false);
-
-                frameLayoutAnswers.setVisibility(View.VISIBLE);
 
                 break;
 
             case PLAY_ANSWER:
-
-                frameLayoutAnswers.setVisibility(View.GONE);
 
                 fab.setImageDrawable(Globals.getContext().getResources().getDrawable(R.drawable.ic_list));
 
@@ -492,6 +573,8 @@ public class FragmentPlayQuestion extends Fragment implements View.OnClickListen
 
                 setListener();
         }
+
+        toggleVisibilityAnswers();
 
     }
 
