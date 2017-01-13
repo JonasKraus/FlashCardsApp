@@ -228,6 +228,7 @@ public class RecyclerViewAdapterFlashCardAnswers extends RecyclerView.Adapter<Re
         holder.llAnswerProfile.setVisibility(isPlayMultiplyChoiceMode ? View.INVISIBLE : View.VISIBLE);
         holder.checkBoxPlay.setVisibility(isPlayMultiplyChoiceMode ? View.VISIBLE : View.INVISIBLE);
         holder.mIsCorrect.setVisibility(isPlayMultiplyChoiceMode ? View.GONE : View.VISIBLE);
+        holder.llAnswerCheck.setVisibility(isPlayMultiplyChoiceMode ? View.GONE : View.VISIBLE);
 
 
         // Sets the hint to the list item
@@ -253,6 +254,7 @@ public class RecyclerViewAdapterFlashCardAnswers extends RecyclerView.Adapter<Re
         if (!isPlayMultiplyChoiceMode && !Globals.getDb().isAnswerOfTypeMultiplyChoice(answers.get(position).getId())) {
 
             holder.mIsCorrect.setVisibility(View.GONE);
+            holder.llAnswerCheck.setVisibility(View.GONE);
         }
 
         /**
@@ -404,6 +406,7 @@ public class RecyclerViewAdapterFlashCardAnswers extends RecyclerView.Adapter<Re
         for (int i = 0; i < answers.size(); i++) {
 
             holders.get(i).mIsCorrect.setVisibility(View.VISIBLE);
+            holders.get(i).llAnswerCheck.setVisibility(View.VISIBLE);
             holders.get(i).llAnswerProfile.setVisibility(View.VISIBLE);
             holders.get(i).llAnswerUserDateRating.setVisibility(View.VISIBLE);
             holders.get(i).llAnswerRating.setVisibility(View.VISIBLE);
@@ -415,9 +418,10 @@ public class RecyclerViewAdapterFlashCardAnswers extends RecyclerView.Adapter<Re
             if (shouldBeChecked != userChecked) {
 
                 holders.get(i).mIsCorrect.setBackgroundColor(Color.RED);
+                holders.get(i).llAnswerCheck.setBackgroundColor(Color.RED);
             } else {
 
-                holders.get(i).mIsCorrect.setBackgroundColor(Color.GREEN);
+                holders.get(i).llAnswerCheck.setBackgroundColor(Color.GREEN);
             }
         }
 
@@ -455,6 +459,7 @@ public class RecyclerViewAdapterFlashCardAnswers extends RecyclerView.Adapter<Re
         public final LinearLayout llAnswerRating;
         public final LinearLayout llAnswerUserDateRating;
         public final LinearLayout llAnswerProfile;
+        public final LinearLayout llAnswerCheck;
         public final CheckBox checkBoxPlay;
 
 
@@ -492,6 +497,7 @@ public class RecyclerViewAdapterFlashCardAnswers extends RecyclerView.Adapter<Re
             //view for playmode
             llAnswerRating = (LinearLayout) view.findViewById(R.id.ll_answer_Rating);
             llAnswerProfile = (LinearLayout) view.findViewById(R.id.ll_answer_profile);
+            llAnswerCheck = (LinearLayout) view.findViewById(R.id.ll_answer_check);
             llAnswerUserDateRating = (LinearLayout) view.findViewById(R.id.ll_answer_user_date_rating);
 
             checkBoxPlay = (CheckBox) view.findViewById(R.id.answer_checkbox_play);
