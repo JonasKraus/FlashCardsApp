@@ -512,7 +512,7 @@ public class FragmentFlashCardCreate extends Fragment implements View.OnClickLis
      */
     private void createNewAnswerAdapter(ArrayList<Answer> answers, FragmentHome.OnFragmentInteractionListener mListener, boolean isUpToDate) {
 
-        RecyclerViewAdapterFlashCardAnswers recyclerViewAdapterFlashCardAnswers = new RecyclerViewAdapterFlashCardAnswers(answers, null, false);
+        RecyclerViewAdapterFlashCardAnswers recyclerViewAdapterFlashCardAnswers = new RecyclerViewAdapterFlashCardAnswers(answers, null, false, false);
 
         fragmentAnswers.getRecyclerView().setAdapter(recyclerViewAdapterFlashCardAnswers);
 

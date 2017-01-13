@@ -40,7 +40,7 @@ public class ContentFlashCardAnswers {
      * @param backPressed
      *
      */
-    public void collectItemsFromServer(final long parentId, final boolean backPressed) {
+    public void collectItemsFromServer(final long parentId, final boolean backPressed, final boolean isPlayMode) {
 
         AsyncGetRemoteFlashCardAnswers asyncGetFlashCardAnswers = new AsyncGetRemoteFlashCardAnswers(parentId, new AsyncGetRemoteFlashCardAnswers.AsyncResponseFlashCardAnswers() {
 
@@ -58,6 +58,7 @@ public class ContentFlashCardAnswers {
                 FragmentFlashCardAnswers fragment = new FragmentFlashCardAnswers();
                 fragment.setItemList(answers);
                 fragment.setUpToDate(isUpToDate);
+                fragment.setPlayMultiplyChoiceMode(isPlayMode);
 
                 Bundle args = new Bundle();
                 args.putLong(FragmentFlashcards.ARG_PARENT_ID, parentId);
@@ -101,7 +102,7 @@ public class ContentFlashCardAnswers {
      * @param parentId
      * @param backPressed
      */
-    public void collectItemsFromDb(final long parentId, final boolean backPressed) {
+    public void collectItemsFromDb(final long parentId, final boolean backPressed, final boolean isPlayMultiplyChoiceMode) {
 
         AsyncGetLocalFlashCardAnswers asyncGetAnswersLocal = new AsyncGetLocalFlashCardAnswers(parentId, new AsyncGetLocalFlashCardAnswers.AsyncResponseLocalFlashCardAnswers() {
 
@@ -114,6 +115,7 @@ public class ContentFlashCardAnswers {
                 FragmentFlashCardAnswers fragment = new FragmentFlashCardAnswers();
                 fragment.setItemList(answers);
                 fragment.setUpToDate(isUpToDate);
+                fragment.setPlayMultiplyChoiceMode(isPlayMultiplyChoiceMode);
 
                 Bundle args = new Bundle();
                 args.putLong(FragmentFlashcards.ARG_PARENT_ID, parentId);

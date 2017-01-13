@@ -3,15 +3,11 @@ package de.uulm.einhoernchen.flashcardsapp.Fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
-import android.support.v4.view.NestedScrollingChild;
 import android.support.v4.widget.NestedScrollView;
 import android.text.Html;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,7 +15,6 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RadioButton;
@@ -33,7 +28,6 @@ import de.uulm.einhoernchen.flashcardsapp.Activity.MainActivity;
 import de.uulm.einhoernchen.flashcardsapp.AsyncTask.Remote.DELETE.AsyncDeleteRemoteRating;
 import de.uulm.einhoernchen.flashcardsapp.AsyncTask.Remote.POST.AsyncPostRemoteRating;
 import de.uulm.einhoernchen.flashcardsapp.Const.Constants;
-import de.uulm.einhoernchen.flashcardsapp.Database.DbHelper;
 import de.uulm.einhoernchen.flashcardsapp.Database.DbManager;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.Dataset.ContentFlashCardAnswers;
 import de.uulm.einhoernchen.flashcardsapp.Model.FlashCard;
@@ -168,7 +162,7 @@ public class FragmentPlayQuestion extends Fragment implements View.OnClickListen
      * @since 2017-01-12
      *
      */
-    private void initView() {
+    private void initViewQuestion() {
 
         mIdView = (TextView) view.findViewById(R.id.id);
         mContentView = (TextView) view.findViewById(R.id.content);
@@ -201,7 +195,10 @@ public class FragmentPlayQuestion extends Fragment implements View.OnClickListen
         //frameLayoutAnswers.setVisibility(View.GONE);
 
         nsContentAnswers = (NestedScrollView) view.findViewById(R.id.nested_scrollview_content_answers);
-        nsContentAnswers.setVisibility(View.GONE);
+
+
+        // Initially set visibility of answers
+        toggleStateAndFabIcon(true);
 
     }
 
@@ -243,11 +240,9 @@ public class FragmentPlayQuestion extends Fragment implements View.OnClickListen
 
         initVariables();
 
-        initView();
+        initViewQuestion();
 
         setMedia();
-
-        setContent();
 
         setListener();
 
@@ -309,6 +304,21 @@ public class FragmentPlayQuestion extends Fragment implements View.OnClickListen
         mainActivity.resetFabPlay();
     }
 
+
+    /**
+     * Collects the answers and creates the list view in its recyclerview
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     * @since 2017-01-13
+     *
+     */
+    private void setAnswers() {
+
+        contentAnswers = new ContentFlashCardAnswers();
+        contentAnswers.collectItemsFromDb(currentFlashcard.getId(), false, currentFlashcard.isMultipleChoice());
+        contentAnswers.collectItemsFromServer(currentFlashcard.getId(), false, currentFlashcard.isMultipleChoice());
+    }
+
     /**
      * Sets the content for teh view
      *
@@ -317,6 +327,16 @@ public class FragmentPlayQuestion extends Fragment implements View.OnClickListen
      *
      */
     public void setContent() {
+
+        setAnswers();
+
+        if (currentFlashcard.isMultipleChoice()) {
+
+            nsContentAnswers.setVisibility(View.VISIBLE);
+        } else {
+
+            nsContentAnswers.setVisibility(View.GONE);
+        }
 
         mContentView.setText(Html.fromHtml(currentFlashcard.getQuestion().getQuestionText()));
         mAuthorView.setText(currentFlashcard.getQuestion().getAuthor().getName());
@@ -491,39 +511,39 @@ public class FragmentPlayQuestion extends Fragment implements View.OnClickListen
             @Override
             public void onClick(View v) {
 
-                int lastVoting = db.getCardVoting(cardID);
-                if (!db.saveCardVoting(cardID, +1)) {
+            int lastVoting = db.getCardVoting(cardID);
+            if (!db.saveCardVoting(cardID, +1)) {
 
-                    Toast.makeText(getContext(), getResources().getText(R.string.voting_already_voted), Toast.LENGTH_SHORT).show();
-                } else {
+                Toast.makeText(getContext(), getResources().getText(R.string.voting_already_voted), Toast.LENGTH_SHORT).show();
+            } else {
 
-                    Long ratingId = db.getCardVotingRatingId(cardID);
+                Long ratingId = db.getCardVotingRatingId(cardID);
 
-                    // Check if ratingExists and deletes it
-                    if (ratingId != null) {
+                // Check if ratingExists and deletes it
+                if (ratingId != null) {
 
-                        AsyncDeleteRemoteRating taskDelete = new AsyncDeleteRemoteRating(ratingId);
-
-                        if (ProcessConnectivity.isOk(getContext())) {
-
-                            taskDelete.execute();
-                        }
-                    }
-
-                    AsyncPostRemoteRating task = new AsyncPostRemoteRating("flashcard", cardID, db.getLoggedInUser().getId(), 1, db);
+                    AsyncDeleteRemoteRating taskDelete = new AsyncDeleteRemoteRating(ratingId);
 
                     if (ProcessConnectivity.isOk(getContext())) {
 
-                        task.execute();
+                        taskDelete.execute();
                     }
-
-                    int rating = Integer.parseInt(mCardRatingView.getText().toString());
-                    rating += 1 - lastVoting;
-                    mCardRatingView.setText(rating + "");
-                    imageViewVoteUp.setColorFilter(getResources().getColor(R.color.colorAccent));
-                    imageViewVoteDown.setColorFilter(Color.BLACK);
-                    mCardRatingView.setTextColor(getResources().getColor(R.color.colorAccent));
                 }
+
+                AsyncPostRemoteRating task = new AsyncPostRemoteRating("flashcard", cardID, db.getLoggedInUser().getId(), 1, db);
+
+                if (ProcessConnectivity.isOk(getContext())) {
+
+                    task.execute();
+                }
+
+                int rating = Integer.parseInt(mCardRatingView.getText().toString());
+                rating += 1 - lastVoting;
+                mCardRatingView.setText(rating + "");
+                imageViewVoteUp.setColorFilter(getResources().getColor(R.color.colorAccent));
+                imageViewVoteDown.setColorFilter(Color.BLACK);
+                mCardRatingView.setTextColor(getResources().getColor(R.color.colorAccent));
+            }
 
             }
         });
@@ -538,42 +558,65 @@ public class FragmentPlayQuestion extends Fragment implements View.OnClickListen
      * @since 2017-01-12
      *
      */
-    private void toggleFabIcon() {
+    private void toggleStateAndFabIcon(boolean isInital) {
+
 
         switch (state) {
 
             case PLAY_QUESTION:
 
-                fab.setImageDrawable(Globals.getContext().getResources().getDrawable(R.drawable.ic_check));
+                setContent();
 
+                setMedia();
+
+                setListener();
+
+                if (currentFlashcard.isMultipleChoice()) {
+
+                    fab.setImageDrawable(Globals.getContext().getResources().getDrawable(R.drawable.ic_check));
+
+                } else {
+
+                    fab.setImageDrawable(Globals.getContext().getResources().getDrawable(R.drawable.ic_list));
+                }
+
+                // Next state will be to show answers if they aren't
+                // already visible because they are of type multiple choice
                 state = Constants.PLAY_ANSWER;
-
-                contentAnswers = new ContentFlashCardAnswers();
-                contentAnswers.collectItemsFromDb(currentFlashcard.getId(), false);
-                contentAnswers.collectItemsFromServer(currentFlashcard.getId(), false);
 
                 break;
 
             case PLAY_ANSWER:
 
-                fab.setImageDrawable(Globals.getContext().getResources().getDrawable(R.drawable.ic_list));
+                fab.setImageDrawable(Globals.getContext().getResources().getDrawable(R.drawable.ic_forward));
 
+                if (currentFlashcard.isMultipleChoice()) {
+
+                    Toast.makeText(getContext(), "validate answers", Toast.LENGTH_SHORT).show();
+                    //TODO check if answers are correct
+                } else {
+
+                    // Do nothing else just show the answers
+                    nsContentAnswers.setVisibility(View.VISIBLE);
+                }
+
+                // Next state will be to play next card
                 state = Constants.PLAY_QUESTION;
 
+                // count ups
                 position++;
 
+                // get loop if end is reached
                 position %= cardIds.size();
 
+                // get flashcard
+                // TODO sync with server
                 currentFlashcard = db.getFlashCard(cardIds.get(position));
 
-                setMedia();
-
-                setContent();
-
-                setListener();
         }
 
-        toggleVisibilityAnswers();
+        //toggleVisibilityAnswers();
+
 
     }
 
@@ -599,7 +642,7 @@ public class FragmentPlayQuestion extends Fragment implements View.OnClickListen
 
             case R.id.fab:
 
-                toggleFabIcon();
+                toggleStateAndFabIcon(false);
                 break;
         }
 

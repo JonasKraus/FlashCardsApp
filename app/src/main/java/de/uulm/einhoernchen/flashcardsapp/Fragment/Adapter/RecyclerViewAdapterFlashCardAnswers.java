@@ -5,20 +5,20 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.CheckBox;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import de.uulm.einhoernchen.flashcardsapp.AsyncTask.Remote.DELETE.AsyncDeleteRemoteRating;
@@ -37,17 +37,30 @@ import de.uulm.einhoernchen.flashcardsapp.Util.ProcessorImage;
  */
 public class RecyclerViewAdapterFlashCardAnswers extends RecyclerView.Adapter<RecyclerViewAdapterFlashCardAnswers.ViewHolder> {
 
+
     private final List<Answer> answers;
     private final OnFragmentInteractionListenerAnswer mListener;
     private final boolean isUpToDate;
+    private final boolean isPlayMultiplyChoiceMode;
     private final Context context = Globals.getContext();
     private final DbManager db = Globals.getDb();
     private final ProgressBar progressBar = Globals.getProgressBar();
 
-    public RecyclerViewAdapterFlashCardAnswers(List<Answer> items, OnFragmentInteractionListenerAnswer listener, boolean isUpToDate) {
+    /**
+     * Constructs the recycler views
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     *
+     * @param items
+     * @param listener
+     * @param isUpToDate
+     * @param isPlayMultiplyChoiceMode
+     */
+    public RecyclerViewAdapterFlashCardAnswers(List<Answer> items, OnFragmentInteractionListenerAnswer listener, boolean isUpToDate, boolean isPlayMultiplyChoiceMode) {
         answers = items;
         mListener = listener;
         this.isUpToDate = isUpToDate;
+        this.isPlayMultiplyChoiceMode = isPlayMultiplyChoiceMode;
     }
 
     @Override
@@ -69,55 +82,21 @@ public class RecyclerViewAdapterFlashCardAnswers extends RecyclerView.Adapter<Re
         holder.mCardRatingView.setText(answers.get(position).getRating() + "");
         holder.mDateView.setVisibility(View.VISIBLE);
         holder.mDateView.setText(answers.get(position).getLastUpdatedString());
-        holder.misCorrectView.setVisibility(View.VISIBLE);
         holder.mDownvote.setVisibility(View.VISIBLE);
         holder.mUpvote.setVisibility(View.VISIBLE);
-        final long answerId = answers.get(position).getId();
 
-        // Sets the hint to the list item
-        if (answers.get(position).getHintText() != null && !answers.get(position).getHintText().equals("")) {
-
-            holder.mHintView.setVisibility(View.VISIBLE);
-            holder.mHintView.setText(answers.get(position).getHintText());
-        } else {
-            holder.mHintView.setVisibility(View.GONE);
-        }
-
-        if (answers.get(position).isCorrect()) {
-            holder.misCorrectView.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_check));
-        } else {
-            holder.misCorrectView.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_close));
-        }
+        setViewState(holder, position);
 
         checkAnswerMediatype(holder, answers.get(position));
 
-        /**
-         * Check if the data is from the server or from the local db
-         */
-        if (!isUpToDate) {
-
-            holder.mLocalView.setVisibility(View.INVISIBLE);
-        } else {
-
-            holder.mLocalView.setVisibility(View.VISIBLE);
-        }
-
-        // Set votings of logged in user
-        int voting = db.getAnswerVoting(answers.get(position).getId());
-        switch (voting) {
-            case -1:
-                holder.mDownvote.setColorFilter(context.getResources().getColor(R.color.colorAccent));
-                holder.mCardRatingView.setTextColor(context.getResources().getColor(R.color.colorAccent));
-                break;
-            case 1:
-                holder.mUpvote.setColorFilter(context.getResources().getColor(R.color.colorAccent));
-                holder.mCardRatingView.setTextColor(context.getResources().getColor(R.color.colorAccent));
-                break;
-
-        }
+        final long answerId = answers.get(position).getId();
 
         /**
          * Sets the clicklistener for clicking a list item (answer)
+         * gives this click to the mainActivit by passing the Interface
+         *
+         * @author Jonas Kraus jonas.kraus@uni-ulm.de
+         *
          */
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -229,6 +208,66 @@ public class RecyclerViewAdapterFlashCardAnswers extends RecyclerView.Adapter<Re
 
 
     /**
+     * Sets the visibilities and states of the gui elements
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     * @since 2017-01-13
+     *
+     * @param holder
+     * @param position
+     */
+    private void setViewState(ViewHolder holder, int position) {
+
+        holder.llAnswerCheck.setVisibility(isPlayMultiplyChoiceMode ? View.VISIBLE : View.GONE);
+        holder.llAnswerRating.setVisibility(isPlayMultiplyChoiceMode ? View.GONE : View.VISIBLE);
+        holder.misCorrectView.setVisibility(isPlayMultiplyChoiceMode ? View.GONE : View.VISIBLE);
+
+
+        // Sets the hint to the list item
+        if (answers.get(position).getHintText() != null && !answers.get(position).getHintText().equals("")) {
+
+            holder.mHintView.setVisibility(View.VISIBLE);
+            holder.mHintView.setText(answers.get(position).getHintText());
+        } else {
+            holder.mHintView.setVisibility(View.GONE);
+        }
+
+        if (answers.get(position).isCorrect()) {
+
+            holder.misCorrectView.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_check));
+        } else {
+
+            holder.misCorrectView.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_close));
+        }
+
+        /**
+         * Check if the data is from the server or from the local db
+         */
+        if (!isUpToDate) {
+
+            holder.mLocalView.setVisibility(View.INVISIBLE);
+        } else {
+
+            holder.mLocalView.setVisibility(View.VISIBLE);
+        }
+
+        // Set votings of logged in user
+        int voting = db.getAnswerVoting(answers.get(position).getId());
+        switch (voting) {
+            case -1:
+                holder.mDownvote.setColorFilter(context.getResources().getColor(R.color.colorAccent));
+                holder.mCardRatingView.setTextColor(context.getResources().getColor(R.color.colorAccent));
+                break;
+            case 1:
+                holder.mUpvote.setColorFilter(context.getResources().getColor(R.color.colorAccent));
+                holder.mCardRatingView.setTextColor(context.getResources().getColor(R.color.colorAccent));
+                break;
+
+        }
+    }
+
+
+    /**
      * Checks wich mediatype the answer has and sets its content
      *
      * @author Jonas Kraus jonas.kraus@uni-ulm.de
@@ -321,6 +360,14 @@ public class RecyclerViewAdapterFlashCardAnswers extends RecyclerView.Adapter<Re
 
     }
 
+
+    /**
+     * Counting how many items are in the view
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     *
+     * @return
+     */
     @Override
     public int getItemCount() {
         if (answers != null) {
@@ -329,6 +376,13 @@ public class RecyclerViewAdapterFlashCardAnswers extends RecyclerView.Adapter<Re
         return 0;
     }
 
+
+    /**
+     * Gets the view elements and sets them to the holder
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     *
+     */
     public class ViewHolder extends RecyclerView.ViewHolder {
         public final View mView;
         public final TextView mIdView;
@@ -349,6 +403,19 @@ public class RecyclerViewAdapterFlashCardAnswers extends RecyclerView.Adapter<Re
         public final RelativeLayout relativeLayoutWebview;
         protected WebView webViewUri;
 
+        // View for playmode
+        public final LinearLayout llAnswerCheck;
+        public final LinearLayout llAnswerRating;
+        public final CheckBox checkBoxPlay;
+
+
+        /**
+         * Gets the View elements by their ids
+         *
+         * @author Jonas Kraus jonas.kraus@uni-ulm.de
+         *
+         * @param view
+         */
         public ViewHolder(View view) {
             super(view);
             mView = view;
@@ -372,6 +439,12 @@ public class RecyclerViewAdapterFlashCardAnswers extends RecyclerView.Adapter<Re
 
             webViewUri = (WebView) view.findViewById(R.id.webview_answer_question);
             relativeLayoutWebview = (RelativeLayout) view.findViewById(R.id.rl_answer_webview);
+
+            //view for playmode
+            llAnswerCheck = (LinearLayout) view.findViewById(R.id.ll_answer_play_check);
+            llAnswerRating = (LinearLayout) view.findViewById(R.id.ll_answer_Rating);
+
+            checkBoxPlay = (CheckBox) view.findViewById(R.id.answer_checkbox_play);
         }
 
         @Override

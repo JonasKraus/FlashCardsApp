@@ -146,8 +146,9 @@ public class FragmentFlashCard extends Fragment implements View.OnClickListener 
         View view = inflater.inflate(R.layout.fragment_flashcard_parallax, container, false);
 
         // Load answers
-        new ContentFlashCardAnswers().collectItemsFromDb(flashCard.getId(), false);
-        new ContentFlashCardAnswers().collectItemsFromServer(flashCard.getId(), false);
+        ContentFlashCardAnswers contentFlashCardAnswers = new ContentFlashCardAnswers();
+        contentFlashCardAnswers.collectItemsFromDb(flashCard.getId(), false, false);
+        contentFlashCardAnswers.collectItemsFromServer(flashCard.getId(), false, false);
 
         // Make toolbar of activity main invisible
         Globals.setVisibilityToolbarMain(View.GONE);
@@ -600,8 +601,10 @@ public class FragmentFlashCard extends Fragment implements View.OnClickListener 
                 }
 
 
-                new ContentFlashCardAnswers().collectItemsFromDb(flashCard.getId(), false);
-                new ContentFlashCardAnswers().collectItemsFromServer(flashCard.getId(), false);
+                // Load answers
+                ContentFlashCardAnswers contentFlashCardAnswers = new ContentFlashCardAnswers();
+                contentFlashCardAnswers.collectItemsFromDb(flashCard.getId(), false, false);
+                contentFlashCardAnswers.collectItemsFromServer(flashCard.getId(), false, false);
 
 
                 editTextAnswerText.setText(null);

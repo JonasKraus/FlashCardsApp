@@ -9,7 +9,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ProgressBar;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,6 +35,7 @@ public class FragmentFlashCardAnswers extends Fragment {
     private DbManager db = Globals.getDb();
     private boolean isUpToDate;
     private RecyclerView recyclerView;
+    private boolean isPlayMultiplyChoiceMode;
 
     public RecyclerView getRecyclerView() {
         return recyclerView;
@@ -86,7 +86,7 @@ public class FragmentFlashCardAnswers extends Fragment {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
 
-            recyclerView.setAdapter(new RecyclerViewAdapterFlashCardAnswers(itemList, mListener, isUpToDate));
+            recyclerView.setAdapter(new RecyclerViewAdapterFlashCardAnswers(itemList, mListener, isUpToDate, isPlayMultiplyChoiceMode));
         }
         return view;
     }
@@ -116,4 +116,16 @@ public class FragmentFlashCardAnswers extends Fragment {
         this.isUpToDate = isUpToDate;
     }
 
+
+    /**
+     * Sets if the question is in playmode and the card is of type multiple choice
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     * @since 2017-01-13
+     *
+     * @param playMode
+     */
+    public void setPlayMultiplyChoiceMode(boolean playMode) {
+        this.isPlayMultiplyChoiceMode = playMode;
+    }
 }
