@@ -57,15 +57,11 @@
 
         <LinearLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:id="@+id/ll_answer_play_check"
             android:visibility="gone"
             android:orientation="vertical">
 
-            <CheckBox
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/answer_checkbox_play"/>
         </LinearLayout>
 
         <!-- content -->
@@ -141,6 +137,12 @@
                 android:src="@drawable/ic_check"
                 android:id="@+id/image_view_iscorrect"/>
 
+
+            <CheckBox
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/answer_checkbox_play"/>
+
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_weight="1"
@@ -160,6 +162,7 @@
         <LinearLayout
             android:layout_height="wrap_content"
             android:orientation="horizontal"
+            android:id="@+id/ll_answer_profile"
             android:layout_width="44dp">
 
             <de.hdodenhof.circleimageview.CircleImageView
@@ -187,6 +190,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:id="@+id/ll_answer_user_date_rating"
+            android:visibility="visible"
             android:layout_marginTop="10dp">
             <TextView
                 android:layout_width="wrap_content"

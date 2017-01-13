@@ -219,7 +219,9 @@ public class RecyclerViewAdapterFlashCardAnswers extends RecyclerView.Adapter<Re
     private void setViewState(ViewHolder holder, int position) {
 
         holder.llAnswerCheck.setVisibility(isPlayMultiplyChoiceMode ? View.VISIBLE : View.GONE);
-        holder.llAnswerRating.setVisibility(isPlayMultiplyChoiceMode ? View.GONE : View.VISIBLE);
+        holder.llAnswerRating.setVisibility(isPlayMultiplyChoiceMode ? View.INVISIBLE : View.VISIBLE);
+        holder.llAnswerUserDateRating.setVisibility(isPlayMultiplyChoiceMode ? View.INVISIBLE : View.VISIBLE);
+        holder.llAnswerProfile.setVisibility(isPlayMultiplyChoiceMode ? View.INVISIBLE : View.VISIBLE);
         holder.misCorrectView.setVisibility(isPlayMultiplyChoiceMode ? View.GONE : View.VISIBLE);
 
 
@@ -406,6 +408,8 @@ public class RecyclerViewAdapterFlashCardAnswers extends RecyclerView.Adapter<Re
         // View for playmode
         public final LinearLayout llAnswerCheck;
         public final LinearLayout llAnswerRating;
+        public final LinearLayout llAnswerUserDateRating;
+        public final LinearLayout llAnswerProfile;
         public final CheckBox checkBoxPlay;
 
 
@@ -443,6 +447,8 @@ public class RecyclerViewAdapterFlashCardAnswers extends RecyclerView.Adapter<Re
             //view for playmode
             llAnswerCheck = (LinearLayout) view.findViewById(R.id.ll_answer_play_check);
             llAnswerRating = (LinearLayout) view.findViewById(R.id.ll_answer_Rating);
+            llAnswerProfile = (LinearLayout) view.findViewById(R.id.ll_answer_profile);
+            llAnswerUserDateRating = (LinearLayout) view.findViewById(R.id.ll_answer_user_date_rating);
 
             checkBoxPlay = (CheckBox) view.findViewById(R.id.answer_checkbox_play);
         }
