@@ -73,8 +73,8 @@ public class FragmentPlay extends Fragment {
 
         FragmentPagerAdapterPlay adapter = new FragmentPagerAdapterPlay(getChildFragmentManager());
 
-        adapter.addFragment(new FragmentPlayQuestion(), "PLAY");
-        adapter.addFragment(new FragmentHome(), "HOME");
+        adapter.addFragment(new FragmentPlayQuestion(), getResources().getString(R.string.tab_play));
+        adapter.addFragment(new FragmentHome(), getResources().getString(R.string.tab_home));
 
         viewPager.setAdapter(adapter);
     }

@@ -182,6 +182,8 @@
     <string name="dialog_content_unsaved">Do you really want to go back? Unsaved changes will be lost.</string>
     <string name="select_card">select at least one flashcard</string>
     <string name="nav_play">learn</string>
+    <string name="tab_play">play</string>
+    <string name="tab_home">home</string>
 
 
 </resources>
