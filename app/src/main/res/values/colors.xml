@@ -33,4 +33,24 @@
     <color name="divider">#BDBDBD</color>
 
 
+    <color name="red_0">#AA3939</color>
+    <color name="red_1">#FFAAAA</color>
+    <color name="red_2">#D46A6A</color>
+    <color name="red_3">#801515</color>
+    <color name="red_4">#550000</color>
+
+    <color name="blue_0">#226666</color>
+    <color name="blue_1">#669999</color>
+    <color name="blue_2">#407F7F</color>
+    <color name="blue_3">#0D4D4D</color>
+    <color name="blue_4">#003333</color>
+
+    <color name="green_0">#7B9F35</color>
+    <color name="green_1">#D4EE9F</color>
+    <color name="green_5">#F2FFDD</color>
+    <color name="green_2">#A5C663</color>
+    <color name="green_3">#567714</color>
+    <color name="green_4">#354F00</color>
+
+
 </resources>
