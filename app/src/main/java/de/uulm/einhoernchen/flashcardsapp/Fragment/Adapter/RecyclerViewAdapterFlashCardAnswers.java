@@ -239,12 +239,20 @@ public class RecyclerViewAdapterFlashCardAnswers extends RecyclerView.Adapter<Re
             holder.mHintView.setVisibility(View.GONE);
         }
 
+
+        // Set kind of check icon
         if (answers.get(position).isCorrect()) {
 
             holder.mIsCorrect.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_check));
         } else {
 
             holder.mIsCorrect.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_close));
+        }
+
+        // Check if check icon should be visible
+        if (!isPlayMultiplyChoiceMode && !Globals.getDb().isAnswerOfTypeMultiplyChoice(answers.get(position).getId())) {
+
+            holder.mIsCorrect.setVisibility(View.GONE);
         }
 
         /**

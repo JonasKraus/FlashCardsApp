@@ -21,6 +21,8 @@ import de.uulm.einhoernchen.flashcardsapp.Model.Tag;
 import de.uulm.einhoernchen.flashcardsapp.Model.User;
 import de.uulm.einhoernchen.flashcardsapp.Model.UserGroup;
 
+import static de.uulm.einhoernchen.flashcardsapp.Database.DbHelper.COLUMN_ANSWER_ID;
+import static de.uulm.einhoernchen.flashcardsapp.Database.DbHelper.COLUMN_ANSWER_PARENT_CARD_ID;
 import static de.uulm.einhoernchen.flashcardsapp.Database.DbHelper.COLUMN_FLASHCARD_CARDDECK_ID;
 import static de.uulm.einhoernchen.flashcardsapp.Database.DbHelper.COLUMN_FLASHCARD_CREATED;
 import static de.uulm.einhoernchen.flashcardsapp.Database.DbHelper.COLUMN_FLASHCARD_ID;
@@ -35,6 +37,7 @@ import static de.uulm.einhoernchen.flashcardsapp.Database.DbHelper.COLUMN_SELECT
 import static de.uulm.einhoernchen.flashcardsapp.Database.DbHelper.COLUMN_SELECTION_USER_ID;
 import static de.uulm.einhoernchen.flashcardsapp.Database.DbHelper.COLUMN_USER_ID;
 import static de.uulm.einhoernchen.flashcardsapp.Database.DbHelper.COLUMN_USER_IS_LOGGED_IN;
+import static de.uulm.einhoernchen.flashcardsapp.Database.DbHelper.TABLE_ANSWER;
 import static de.uulm.einhoernchen.flashcardsapp.Database.DbHelper.TABLE_FLASHCARD;
 import static de.uulm.einhoernchen.flashcardsapp.Database.DbHelper.TABLE_SELECTION;
 import static de.uulm.einhoernchen.flashcardsapp.Database.DbHelper.TABLE_USER;
@@ -1704,5 +1707,42 @@ public class DbManager {
         cursor.close();
 
         return ids;
+    }
+
+
+    /**
+     * Checks if an answer is of type Multiple choice
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     * @since 2017-01-13
+     *
+     * @param id
+     * @return
+     */
+    public boolean isAnswerOfTypeMultiplyChoice(long id) {
+
+        boolean isMultipleChoice = false;
+
+
+        SQLiteQueryBuilder qb = new SQLiteQueryBuilder();
+
+        qb.setTables(
+                TABLE_FLASHCARD
+                        + " JOIN " + TABLE_ANSWER + " ON "
+                        + TABLE_FLASHCARD + "." + COLUMN_FLASHCARD_ID + "=" + TABLE_ANSWER + "." + COLUMN_ANSWER_PARENT_CARD_ID
+        );
+
+        qb.appendWhere(COLUMN_ANSWER_ID+ "=" + id);
+
+        Cursor cursor = qb.query(database, null, null, null, null, null, null);
+
+        if (cursor.moveToFirst()) {
+
+            isMultipleChoice = cursor.getLong(cursor.getColumnIndex(COLUMN_FLASHCARD_MULTIPLE_CHOICE)) > 0;
+
+        }
+        cursor.close();
+
+        return isMultipleChoice;
     }
 }
