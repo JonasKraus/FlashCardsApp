@@ -184,6 +184,7 @@
     <string name="nav_play">learn</string>
     <string name="tab_play">play</string>
     <string name="tab_home">home</string>
+    <string name="title_activity_settings">SettingsActivity</string>
 
 
 </resources>

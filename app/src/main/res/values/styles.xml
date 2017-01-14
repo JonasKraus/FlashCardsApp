@@ -8,7 +8,6 @@
         <item name="colorAccent">@color/colorAccent</item>
 
 
-
         <item name="android:textColorPrimary">@color/primary_text</item>
         <item name="actionMenuTextColor">@color/colorAccent</item>
         <item name="android:textColorSecondary">@color/colorAccent</item>

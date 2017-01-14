@@ -18,12 +18,14 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:contentScrim="?attr/colorPrimary"
-            app:layout_scrollFlags="scroll|exitUntilCollapsed"
-            android:fitsSystemWindows="true">
+            android:fitsSystemWindows="true"
+            android:scaleType="centerCrop"
+            app:layout_collapseMode="parallax">
 
             <include layout="@layout/fragment_flashcard_header_create"
                 android:id="@+id/parallax"
-                app:layout_collapseMode="parallax"/>
+                app:layout_collapseMode="pin"
+                app:popupTheme="@style/AppTheme.PopupOverlay"/>
 
 
 

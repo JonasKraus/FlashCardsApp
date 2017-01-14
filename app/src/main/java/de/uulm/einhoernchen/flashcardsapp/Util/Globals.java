@@ -131,4 +131,17 @@ public class Globals {
         MainActivity mainActivity = (MainActivity) Globals.getContext();
         mainActivity.findViewById(R.id.collapsing_toolbar).setVisibility(visibility);
     }
+
+
+    /**
+     * Sets the visibility of the main fab
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     * @since 2017-01-14
+     *
+     * @param visibilityFab
+     */
+    public static void setVisibilityFab(int visibilityFab) {
+        Globals.floatingActionButton.setVisibility(visibilityFab);
+    }
 }

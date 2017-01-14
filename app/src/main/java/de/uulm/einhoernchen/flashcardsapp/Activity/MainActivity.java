@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.media.audiofx.BassBoost;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -48,6 +49,7 @@ import de.uulm.einhoernchen.flashcardsapp.Fragment.Interface.OnFragmentInteracti
 import de.uulm.einhoernchen.flashcardsapp.Fragment.Interface.OnFragmentInteractionListenerCarddeck;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.Interface.OnFragmentInteractionListenerCategory;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.Interface.OnFragmentInteractionListenerFlashcard;
+import de.uulm.einhoernchen.flashcardsapp.Fragment.SettingsFragment;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.SimpleRTEditor;
 import de.uulm.einhoernchen.flashcardsapp.Model.Answer;
 import de.uulm.einhoernchen.flashcardsapp.Model.CardDeck;
@@ -552,6 +554,16 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_challenge) {
 
         } else if (id == R.id.nav_settings) {
+
+            SettingsFragment fragment = new SettingsFragment();
+            android.support.v4.app.FragmentTransaction fragmentTransaction =
+                    getSupportFragmentManager().beginTransaction();
+
+            // Keep attention that this is replaced and not added
+            fragmentTransaction.replace(R.id.fragment_container_main, fragment);
+            fragmentTransaction.commit();
+
+            //startActivity(new Intent(MainActivity.this, SettingsActivity.class));
 
         } else if (id == R.id.nav_help) {
 
