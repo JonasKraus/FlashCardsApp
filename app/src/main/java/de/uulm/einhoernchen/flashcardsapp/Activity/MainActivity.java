@@ -7,14 +7,11 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.media.audiofx.BassBoost;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.SearchView;
 import android.util.Log;
@@ -45,11 +42,11 @@ import de.uulm.einhoernchen.flashcardsapp.Fragment.FragmentHome;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.Dataset.ContentCarddecks;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.Dataset.ContentCategories;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.FragmentPlay;
+import de.uulm.einhoernchen.flashcardsapp.Fragment.FragmentSettings;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.Interface.OnFragmentInteractionListenerAnswer;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.Interface.OnFragmentInteractionListenerCarddeck;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.Interface.OnFragmentInteractionListenerCategory;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.Interface.OnFragmentInteractionListenerFlashcard;
-import de.uulm.einhoernchen.flashcardsapp.Fragment.SettingsFragment;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.SimpleRTEditor;
 import de.uulm.einhoernchen.flashcardsapp.Model.Answer;
 import de.uulm.einhoernchen.flashcardsapp.Model.CardDeck;
@@ -555,7 +552,7 @@ public class MainActivity extends AppCompatActivity
 
         } else if (id == R.id.nav_settings) {
 
-            SettingsFragment fragment = new SettingsFragment();
+            FragmentSettings fragment = new FragmentSettings();
             android.support.v4.app.FragmentTransaction fragmentTransaction =
                     getSupportFragmentManager().beginTransaction();
 

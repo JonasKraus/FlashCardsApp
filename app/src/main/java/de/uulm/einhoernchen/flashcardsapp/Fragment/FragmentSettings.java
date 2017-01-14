@@ -1,9 +1,7 @@
 package de.uulm.einhoernchen.flashcardsapp.Fragment;
 
 import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
-import android.preference.PreferenceFragment;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.Toolbar;
@@ -23,10 +21,10 @@ import de.uulm.einhoernchen.flashcardsapp.Util.Globals;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link SettingsFragment#newInstance} factory method to
+ * Use the {@link FragmentSettings#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class SettingsFragment extends Fragment implements CompoundButton.OnCheckedChangeListener, RadioGroup.OnCheckedChangeListener {
+public class FragmentSettings extends Fragment implements CompoundButton.OnCheckedChangeListener, RadioGroup.OnCheckedChangeListener {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -44,7 +42,7 @@ public class SettingsFragment extends Fragment implements CompoundButton.OnCheck
     private Switch switchShowLastDrawer;
 
 
-    public SettingsFragment() {
+    public FragmentSettings() {
         // Required empty public constructor
     }
 
@@ -54,11 +52,11 @@ public class SettingsFragment extends Fragment implements CompoundButton.OnCheck
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment SettingsFragment.
+     * @return A new instance of fragment FragmentSettings.
      */
     // TODO: Rename and change types and number of parameters
-    public static SettingsFragment newInstance(String param1, String param2) {
-        SettingsFragment fragment = new SettingsFragment();
+    public static FragmentSettings newInstance(String param1, String param2) {
+        FragmentSettings fragment = new FragmentSettings();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -109,7 +107,7 @@ public class SettingsFragment extends Fragment implements CompoundButton.OnCheck
      * @since 2017-01-14
      *@param set
      */
-    private void setViewElementsListener(SettingsFragment set) {
+    private void setViewElementsListener(FragmentSettings set) {
 
         switchSnyc.setOnCheckedChangeListener(set);
         switchAnswerMultiChoiceRandom.setOnCheckedChangeListener(set);

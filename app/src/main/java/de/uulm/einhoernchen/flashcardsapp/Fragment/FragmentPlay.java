@@ -5,17 +5,13 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import de.uulm.einhoernchen.flashcardsapp.Fragment.Adapter.FragmentPagerAdapterPlay;
-import de.uulm.einhoernchen.flashcardsapp.Model.FlashCard;
 import de.uulm.einhoernchen.flashcardsapp.R;
-import de.uulm.einhoernchen.flashcardsapp.Util.Globals;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -74,7 +70,7 @@ public class FragmentPlay extends Fragment {
         FragmentPagerAdapterPlay adapter = new FragmentPagerAdapterPlay(getChildFragmentManager());
 
         adapter.addFragment(new FragmentPlayQuestion(), getResources().getString(R.string.tab_play));
-        adapter.addFragment(new FragmentHome(), getResources().getString(R.string.tab_home));
+        adapter.addFragment(new FragmentSettings(), getResources().getString(R.string.toolbar_title_settings));
 
         viewPager.setAdapter(adapter);
     }
