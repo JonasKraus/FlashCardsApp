@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="de.uulm.einhoernchen.flashcardsapp.Activity.SettingsActivity"
     tools:showIn="@layout/fragment_settings">
@@ -26,7 +27,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingRight="@dimen/activity_horizontal_margin"
-                android:src="@drawable/ic_school"/>
+                android:src="@drawable/ic_sync"/>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -120,7 +121,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingRight="@dimen/activity_horizontal_margin"
-                android:src="@drawable/ic_school"/>
+                android:src="@drawable/ic_format_list_numbered"/>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -152,7 +153,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingRight="@dimen/activity_horizontal_margin"
-                android:src="@drawable/ic_school"/>
+                android:src="@drawable/ic_brightness_3"/>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -184,7 +185,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingRight="@dimen/activity_horizontal_margin"
-                android:src="@drawable/ic_school"/>
+                android:src="@drawable/ic_visibility"/>
 
             <TextView
                 android:layout_width="wrap_content"

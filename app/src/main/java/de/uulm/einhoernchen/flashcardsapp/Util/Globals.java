@@ -129,7 +129,7 @@ public class Globals {
     public static void setVisibilityToolbarMain(int visibility) {
 
         MainActivity mainActivity = (MainActivity) Globals.getContext();
-        mainActivity.findViewById(R.id.collapsing_toolbar).setVisibility(visibility);
+        mainActivity.findViewById(R.id.collapsing_toolbar_search).setVisibility(visibility);
     }
 
 
@@ -143,5 +143,18 @@ public class Globals {
      */
     public static void setVisibilityFab(int visibilityFab) {
         Globals.floatingActionButton.setVisibility(visibilityFab);
+    }
+
+
+    /**
+     * Sets the visibility of the add fab
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     * @since 2017-01-14
+     *
+     * @param visibilityFab
+     */
+    public static void setVisibilityFabAdd(int visibilityFab) {
+        Globals.floatingActionButtonAdd.setVisibility(visibilityFab);
     }
 }

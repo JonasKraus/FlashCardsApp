@@ -237,7 +237,7 @@ public class MainActivity extends AppCompatActivity
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         collapsingToolbar =
-                (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
+                (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar_search);
         collapsingToolbar.setTitle("My Toolbar Tittle");
         toolbar.setTitle("asdasd");
 
@@ -655,6 +655,8 @@ public class MainActivity extends AppCompatActivity
             case CARD_DECK_LIST:
 
                 categoryLevel--;
+
+                Globals.setVisibilityFabAdd(View.GONE);
                 setCategoryList(true);
                 break;
             case FLASH_CARD_LIST:
