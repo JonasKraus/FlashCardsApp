@@ -15,7 +15,7 @@
         android:theme="@style/AppTheme.AppBarOverlay">
 
         <android.support.design.widget.CollapsingToolbarLayout
-            android:id="@+id/toolbar_layout"
+            android:id="@+id/toolbar_layout_settings"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:fitsSystemWindows="true"
@@ -27,13 +27,13 @@
                 android:id="@+id/image_toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@drawable/test_cubic"
+                android:background="@drawable/side_nav_bar"
                 android:fitsSystemWindows="true"
                 android:scaleType="centerCrop"
                 app:layout_collapseMode="parallax" />
 
             <android.support.v7.widget.Toolbar
-                android:id="@+id/toolbar"
+                android:id="@+id/toolbar_settings"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 app:layout_collapseMode="pin"

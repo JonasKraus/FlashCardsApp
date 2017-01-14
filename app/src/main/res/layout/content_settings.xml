@@ -8,10 +8,205 @@
     tools:context="de.uulm.einhoernchen.flashcardsapp.Activity.SettingsActivity"
     tools:showIn="@layout/fragment_settings">
 
-    <TextView
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/text_margin"
-        android:text="@string/large_text" />
+        android:orientation="vertical">
+
+
+
+        <!-- START ITEM -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/activity_horizontal_margin"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingRight="@dimen/activity_horizontal_margin"
+                android:src="@drawable/ic_school"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/settings_sync"/>
+
+            <Switch
+                android:id="@+id/switch_settings_sync"
+                android:checked="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                />
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/divider"/>
+        <!-- END ITEM -->
+
+
+        <!-- START ITEM -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/activity_horizontal_margin"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingRight="@dimen/activity_horizontal_margin"
+                android:src="@drawable/ic_school"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/settings_learn_mode"/>
+
+            <RadioGroup
+                android:id="@+id/radio_group_learn_mode"
+                android:orientation="vertical"
+                android:layoutDirection="rtl"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+                <RadioButton
+                    android:id="@+id/radio_learn_mode_drawer"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/settings_learn_mode_drawer"/>
+
+                <RadioButton
+                    android:id="@+id/radio_learn_mode_knowledge"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/settings_learn_mode_knowledge"/>
+
+                <RadioButton
+                    android:id="@+id/radio_learn_mode_date"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/settings_learn_mode_date"/>
+
+                <RadioButton
+                    android:id="@+id/radio_learn_mode_random"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/settings_learn_mode_random"/>
+            </RadioGroup>
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/divider"/>
+        <!-- END ITEM -->
+
+
+        <!-- START ITEM -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/activity_horizontal_margin"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingRight="@dimen/activity_horizontal_margin"
+                android:src="@drawable/ic_school"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/settings_answer_multiplychoice_order"/>
+
+            <Switch
+                android:id="@+id/switch_settings_answer_multi_choice_random"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/divider"/>
+        <!-- END ITEM -->
+
+        <!-- START ITEM -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/activity_horizontal_margin"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingRight="@dimen/activity_horizontal_margin"
+                android:src="@drawable/ic_school"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/settings_nightmode"/>
+
+            <Switch
+                android:id="@+id/switch_settings_night_mode"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/divider"/>
+        <!-- END ITEM -->
+
+        <!-- START ITEM -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/activity_horizontal_margin"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingRight="@dimen/activity_horizontal_margin"
+                android:src="@drawable/ic_school"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/settings_view_last_drawer"/>
+
+            <Switch
+                android:id="@+id/switch_setting_show_last_drawer"
+                android:checked="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                />
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/divider"/>
+        <!-- END ITEM -->
+
+    </LinearLayout>
 
 </android.support.v4.widget.NestedScrollView>

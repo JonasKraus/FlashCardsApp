@@ -232,7 +232,7 @@ public class MainActivity extends AppCompatActivity
      */
     private void createToolbar() {
 
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar = (Toolbar) findViewById(R.id.toolbar_main);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 

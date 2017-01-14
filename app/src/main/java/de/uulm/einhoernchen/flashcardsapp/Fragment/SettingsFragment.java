@@ -3,6 +3,8 @@ package de.uulm.einhoernchen.flashcardsapp.Fragment;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceFragment;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
@@ -58,6 +60,7 @@ public class SettingsFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+
     }
 
     @Override
@@ -69,8 +72,12 @@ public class SettingsFragment extends Fragment {
         Globals.setVisibilityToolbarMain(View.GONE);
         Globals.setVisibilityFab(View.GONE);
 
-        Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
+        Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar_settings);
         ((MainActivity) Globals.getContext()).setSupportActionBar(toolbar);
+
+        CollapsingToolbarLayout collapsingToolbar =
+                (CollapsingToolbarLayout) view.findViewById(R.id.toolbar_layout_settings);
+        collapsingToolbar.setTitle(getResources().getString(R.string.toolbar_title_settings));
 
         return view;
     }
