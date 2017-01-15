@@ -3,7 +3,6 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:fitsSystemWindows="true"
-    app:theme="@style/AppTheme"
     android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
@@ -11,15 +10,13 @@
 <android.support.design.widget.CollapsingToolbarLayout
     android:id="@+id/collapsing_toolbar_search"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="?attr/actionBarSize"
     app:contentScrim="?attr/colorPrimary"
     app:layout_scrollFlags="scroll|exitUntilCollapsed"
     android:fitsSystemWindows="true">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar_main"
-        android:layout_marginTop="-30dp"
-        android:layout_marginBottom="20dp"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
 
