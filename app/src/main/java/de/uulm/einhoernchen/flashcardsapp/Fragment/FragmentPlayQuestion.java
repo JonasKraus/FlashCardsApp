@@ -30,6 +30,7 @@ import de.uulm.einhoernchen.flashcardsapp.AsyncTask.Remote.DELETE.AsyncDeleteRem
 import de.uulm.einhoernchen.flashcardsapp.AsyncTask.Remote.POST.AsyncPostRemoteRating;
 import de.uulm.einhoernchen.flashcardsapp.Const.Constants;
 import de.uulm.einhoernchen.flashcardsapp.Database.DbManager;
+import de.uulm.einhoernchen.flashcardsapp.Dialog.DialogKnowledge;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.Dataset.ContentFlashCardAnswers;
 import de.uulm.einhoernchen.flashcardsapp.Model.FlashCard;
 import de.uulm.einhoernchen.flashcardsapp.Model.Statistics;
@@ -579,6 +580,19 @@ public class FragmentPlayQuestion extends Fragment implements View.OnClickListen
 
             case PLAY_QUESTION:
 
+                if (!isInital) {
+
+                    // count ups
+                    position++;
+
+                    // get loop if end is reached
+                    position %= cardIds.size();
+
+                    // get flashcard
+                    // TODO sync with server
+                    currentFlashcard = db.getFlashCard(cardIds.get(position));
+                }
+
                 setContent();
 
                 setMedia();
@@ -618,15 +632,19 @@ public class FragmentPlayQuestion extends Fragment implements View.OnClickListen
                 // Next state will be to play next card
                 state = Constants.PLAY_QUESTION;
 
-                // count ups
-                position++;
+                if (!currentFlashcard.isMultipleChoice()) {
 
-                // get loop if end is reached
-                position %= cardIds.size();
+                    state = Constants.PLAY_DIALOG;
+                }
 
-                // get flashcard
-                // TODO sync with server
-                currentFlashcard = db.getFlashCard(cardIds.get(position));
+                break;
+
+            case PLAY_DIALOG:
+
+                // Custom Dialog which saves a statistic
+                new DialogKnowledge(getContext(), statistics).show();
+                state = Constants.PLAY_QUESTION;
+                break;
 
         }
 

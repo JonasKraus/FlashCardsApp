@@ -1,0 +1,78 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:id="@+id/dialog_knowledge"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content">
+
+
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="?android:attr/actionBarSize"
+        android:background="@drawable/side_nav_bar"
+        android:drawableStart="@drawable/ic_school"
+        android:drawableLeft="@drawable/ic_school"
+        android:drawableTint="@color/white"
+        android:drawablePadding="@dimen/activity_horizontal_margin"
+        android:text="@string/dialog_header_knowedge"
+        android:textColor="@color/white"
+        android:textAllCaps="true"
+        android:textStyle="bold"
+        android:padding="@dimen/activity_horizontal_margin"
+        android:id="@+id/textview_dialog_header"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/textview_dialog_content"
+        android:padding="@dimen/activity_horizontal_margin"
+        android:text="@string/dialog_content_knowledge" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/text_knowledge"
+        android:padding="@dimen/activity_horizontal_margin"
+        android:text="0%"
+        android:textSize="@dimen/text_size_app_bar"/>
+
+    <SeekBar
+        android:padding="@dimen/activity_horizontal_margin"
+        android:id="@+id/seek_bar_knowledge"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <android.support.v7.widget.ButtonBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="bottom"
+        android:layoutDirection="locale"
+        android:orientation="horizontal"
+        android:paddingBottom="4dp"
+        android:paddingLeft="12dp"
+        android:paddingRight="12dp"
+        android:paddingTop="4dp">
+        <Button
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/button_dialog_knowledge_incorrect"
+            android:textColor="@color/red_0"
+            android:layout_weight="1"
+            android:text="@string/prompt_incorrect"/>
+        <Button
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/button_dialog_knowledge_ok"
+            android:layout_weight="1"
+            android:text="@string/prompt_ok"/>
+        <Button
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/green_0"
+            android:layout_weight="1"
+            android:id="@+id/button_dialog_knowledge_correct"
+            android:text="@string/prompt_correct"/>
+    </android.support.v7.widget.ButtonBarLayout>
+</LinearLayout>

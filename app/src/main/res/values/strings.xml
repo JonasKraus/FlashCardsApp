@@ -195,6 +195,10 @@
     <string name="settings_view_last_drawer">hide last drawer</string>
     <string name="settings_sync">sync with server</string>
     <string name="toolbar_title_settings">settings</string>
+    <string name="dialog_header_knowedge">did you knew?</string>
+    <string name="dialog_content_knowledge">set your knowsledge in percent:</string>
+    <string name="prompt_incorrect">incorrect</string>
+    <string name="prompt_correct">correct</string>
 
 
 </resources>
