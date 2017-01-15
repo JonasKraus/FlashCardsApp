@@ -124,16 +124,25 @@ public class DbHelper extends SQLiteOpenHelper {
     public static final String TABLE_SETTINGS = "settings";
     public static final String COLUMN_SETTINGS_ID = "settingsId";                                   //0
     public static final String COLUMN_SETTINGS_USER_ID = "userId";                                  //1
-    public static final String COLUMN_SETTINGS_ALLOW_SYNC = "allowSync";                                //2
+    public static final String COLUMN_SETTINGS_ALLOW_SYNC = "allowSync";                            //2
     public static final String COLUMN_SETTINGS_LEARN_MODE = "learnmode";                            //3
     public static final String COLUMN_SETTINGS_ORDER_ANSWERS_MULTIPLY_CHOICE_RANDOM = "multiplyChoiceAnswersRandom"; //4
     public static final String COLUMN_SETTINGS_IS_NIGHT_MODE= "isNightMode";                        //5
     public static final String COLUMN_SETTINGS_SHOW_LAST_DRAWER = "showLastDrawer";                 //6
-    public static final String COLUMN_SETTINGS_DATE = "changeDate";                                 //7
+    public static final String COLUMN_SETTINGS_DATE = "changeDate";
+
+    public static final String TABLE_STATISTICS = "settings";
+    public static final String COLUMN_STATISTICS_ID = "statisticsId";                       //0
+    public static final String COLUMN_STATISTICS_USER_ID = "userId";                        //1
+    public static final String COLUMN_STATISTICS_CARD_ID = "cardId";                        //2
+    public static final String COLUMN_STATISTICS_KNOWLEDGE = "knoeledge";                   //3
+    public static final String COLUMN_STATISTICS_DRAWER = "drawer";                         //4
+    public static final String COLUMN_STATISTICS_START_DATE = "startDate";                  //5
+    public static final String COLUMN_STATISTICS_END_DATE = "endDate";                      //6
 
     // Database name and version - increase when existing table is altered
     private static final String DATABASE_NAME = "flashcardsDb.db";
-    private static final int DATABASE_VERSION = 18; // @TODO revert version before first release
+    private static final int DATABASE_VERSION = 19; // @TODO revert version before first release
 
     /**
      * Database creation sql statement for table user
@@ -328,7 +337,7 @@ public class DbHelper extends SQLiteOpenHelper {
             + COLUMN_VOTING_VALUE
             + " integer default 0, "
             + COLUMN_VOTING_DATE
-            + " INTEGER DEFAULT CURRENT_TIMESTAMP, "
+            + " LONG DEFAULT CURRENT_TIMESTAMP, "
             + COLUMN_VOTING_RATING_ID
             + " INTEGER DEFAULT null"
             + ");";
@@ -351,7 +360,26 @@ public class DbHelper extends SQLiteOpenHelper {
             + COLUMN_SETTINGS_SHOW_LAST_DRAWER
             + " integer default 1, "
             + COLUMN_SETTINGS_DATE
-            + " INTEGER DEFAULT CURRENT_TIMESTAMP"
+            + " LONG DEFAULT CURRENT_TIMESTAMP"
+            + ");";
+
+
+    private static final String STATISTICS_CREATE = "create table "
+            + TABLE_STATISTICS+ "("
+            + COLUMN_STATISTICS_ID
+            + " integer primary key AUTOINCREMENT NOT NULL, "
+            + COLUMN_STATISTICS_USER_ID
+            + " integer not null, "
+            + COLUMN_STATISTICS_CARD_ID
+            + " integer not null, "
+            + COLUMN_STATISTICS_KNOWLEDGE
+            + " float default 0, "
+            + COLUMN_STATISTICS_DRAWER
+            + " integer default 0, "
+            + COLUMN_STATISTICS_START_DATE
+            + " time timestamp default (strftime('%s', 'now')),"
+            + COLUMN_STATISTICS_END_DATE
+            + " time timestamp default (strftime('%s', 'now')),"
             + ");";
 
     private static final String VOTING_CREATE_UNIQUE_INDEX_1 =
@@ -388,6 +416,7 @@ public class DbHelper extends SQLiteOpenHelper {
         db.execSQL(SELECTION_CREATE);
         db.execSQL(SETTINGS_CREATE);
         db.execSQL(VOTING_CREATE);
+        db.execSQL(STATISTICS_CREATE);
         db.execSQL(VOTING_CREATE_UNIQUE_INDEX_1);
         db.execSQL(VOTING_CREATE_UNIQUE_INDEX_2);
     }
@@ -413,6 +442,7 @@ public class DbHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_SELECTION);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_VOTING);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_SETTINGS);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_STATISTICS);
 
         onCreate(db);
     }
@@ -555,6 +585,17 @@ public class DbHelper extends SQLiteOpenHelper {
             COLUMN_SETTINGS_IS_NIGHT_MODE,                         //5
             COLUMN_SETTINGS_SHOW_LAST_DRAWER,                      //6
             COLUMN_SETTINGS_DATE                                   //7
+    };
+
+
+    public static String[] allStatisticsColumns = {
+            COLUMN_STATISTICS_ID,            //0
+            COLUMN_STATISTICS_USER_ID,       //1
+            COLUMN_STATISTICS_CARD_ID,       //2
+            COLUMN_STATISTICS_KNOWLEDGE,     //3
+            COLUMN_STATISTICS_DRAWER,        //4
+            COLUMN_STATISTICS_START_DATE,    //5
+            COLUMN_STATISTICS_END_DATE       //6
     };
 }
 
