@@ -32,6 +32,7 @@ import de.uulm.einhoernchen.flashcardsapp.Const.Constants;
 import de.uulm.einhoernchen.flashcardsapp.Database.DbManager;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.Dataset.ContentFlashCardAnswers;
 import de.uulm.einhoernchen.flashcardsapp.Model.FlashCard;
+import de.uulm.einhoernchen.flashcardsapp.Model.Statistics;
 import de.uulm.einhoernchen.flashcardsapp.R;
 import de.uulm.einhoernchen.flashcardsapp.Util.Globals;
 import de.uulm.einhoernchen.flashcardsapp.Util.ProcessConnectivity;
@@ -90,6 +91,7 @@ public class FragmentPlayQuestion extends Fragment implements View.OnClickListen
     private View view;
     private NestedScrollView nsContentAnswers;
     private ContentFlashCardAnswers contentAnswers;
+    private Statistics statistics;
 
 
     public FragmentPlayQuestion() {
@@ -241,6 +243,10 @@ public class FragmentPlayQuestion extends Fragment implements View.OnClickListen
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_play_question, container, false);
 
+        // Create statistic Object
+
+        statistics = new Statistics();
+
         initVariables();
 
         initViewQuestion();
@@ -340,6 +346,11 @@ public class FragmentPlayQuestion extends Fragment implements View.OnClickListen
 
             nsContentAnswers.setVisibility(View.GONE);
         }
+
+        // Set the cardid to the statistic object
+        // save it after validating
+        statistics.setCardId(currentFlashcard.getId());
+        statistics.setStartDate(System.currentTimeMillis());
 
         mContentView.setText(Html.fromHtml(currentFlashcard.getQuestion().getQuestionText()));
         mAuthorView.setText(currentFlashcard.getQuestion().getAuthor().getName());
@@ -595,9 +606,7 @@ public class FragmentPlayQuestion extends Fragment implements View.OnClickListen
 
                 if (currentFlashcard.isMultipleChoice()) {
 
-                    Toast.makeText(getContext(), "validate answers", Toast.LENGTH_SHORT).show();
-
-                    contentAnswers.validateAnswers();
+                    contentAnswers.validateAnswers(statistics);
 
                     //TODO check if answers are correct
                 } else {

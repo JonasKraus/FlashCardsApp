@@ -18,6 +18,7 @@ import de.uulm.einhoernchen.flashcardsapp.Fragment.Adapter.RecyclerViewAdapterFl
 import de.uulm.einhoernchen.flashcardsapp.Fragment.Interface.OnFragmentInteractionListenerAnswer;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.Interface.OnFragmentInteractionListenerCategory;
 import de.uulm.einhoernchen.flashcardsapp.Model.Answer;
+import de.uulm.einhoernchen.flashcardsapp.Model.Statistics;
 import de.uulm.einhoernchen.flashcardsapp.R;
 import de.uulm.einhoernchen.flashcardsapp.Util.Globals;
 
@@ -133,9 +134,9 @@ public class FragmentFlashCardAnswers extends Fragment {
         this.isPlayMultiplyChoiceMode = playMode;
     }
 
-    public void validateAnswers() {
+    public void validateAnswers(Statistics statistics) {
 
-        recyclerViewAdapterFlashCardAnswers.validateAnswers();
+        recyclerViewAdapterFlashCardAnswers.validateAnswers(statistics);
 
     }
 }

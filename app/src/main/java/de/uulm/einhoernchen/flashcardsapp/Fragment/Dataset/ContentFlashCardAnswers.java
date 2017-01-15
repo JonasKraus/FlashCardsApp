@@ -12,6 +12,7 @@ import de.uulm.einhoernchen.flashcardsapp.Database.DbManager;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.FragmentFlashCardAnswers;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.FragmentFlashcards;
 import de.uulm.einhoernchen.flashcardsapp.Model.Answer;
+import de.uulm.einhoernchen.flashcardsapp.Model.Statistics;
 import de.uulm.einhoernchen.flashcardsapp.R;
 import de.uulm.einhoernchen.flashcardsapp.Util.Globals;
 import de.uulm.einhoernchen.flashcardsapp.Util.ProcessConnectivity;
@@ -146,8 +147,8 @@ public class ContentFlashCardAnswers {
     }
 
 
-    public void validateAnswers() {
+    public void validateAnswers(Statistics statistics) {
 
-        fragment.validateAnswers();
+        fragment.validateAnswers(statistics);
     }
 }

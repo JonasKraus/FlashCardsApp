@@ -1,28 +1,20 @@
 package de.uulm.einhoernchen.flashcardsapp.Model;
 
 import android.content.ContentValues;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.provider.*;
-import android.provider.Settings;
-import android.util.Log;
 
+import de.uulm.einhoernchen.flashcardsapp.Const.Constants;
+import de.uulm.einhoernchen.flashcardsapp.Database.DbHelper;
 import de.uulm.einhoernchen.flashcardsapp.Util.Globals;
-
-import static de.uulm.einhoernchen.flashcardsapp.Database.DbHelper.COLUMN_SETTINGS_ALLOW_SYNC;
-import static de.uulm.einhoernchen.flashcardsapp.Database.DbHelper.COLUMN_SETTINGS_DATE;
-import static de.uulm.einhoernchen.flashcardsapp.Database.DbHelper.COLUMN_SETTINGS_IS_NIGHT_MODE;
-import static de.uulm.einhoernchen.flashcardsapp.Database.DbHelper.COLUMN_SETTINGS_LEARN_MODE;
-import static de.uulm.einhoernchen.flashcardsapp.Database.DbHelper.COLUMN_SETTINGS_ORDER_ANSWERS_MULTIPLY_CHOICE_RANDOM;
-import static de.uulm.einhoernchen.flashcardsapp.Database.DbHelper.COLUMN_SETTINGS_SHOW_LAST_DRAWER;
-import static de.uulm.einhoernchen.flashcardsapp.Database.DbHelper.COLUMN_SETTINGS_USER_ID;
 import static de.uulm.einhoernchen.flashcardsapp.Database.DbHelper.COLUMN_STATISTICS_CARD_ID;
 import static de.uulm.einhoernchen.flashcardsapp.Database.DbHelper.COLUMN_STATISTICS_DRAWER;
 import static de.uulm.einhoernchen.flashcardsapp.Database.DbHelper.COLUMN_STATISTICS_END_DATE;
 import static de.uulm.einhoernchen.flashcardsapp.Database.DbHelper.COLUMN_STATISTICS_KNOWLEDGE;
 import static de.uulm.einhoernchen.flashcardsapp.Database.DbHelper.COLUMN_STATISTICS_START_DATE;
 import static de.uulm.einhoernchen.flashcardsapp.Database.DbHelper.COLUMN_STATISTICS_USER_ID;
-import static de.uulm.einhoernchen.flashcardsapp.Database.DbHelper.TABLE_SETTINGS;
 import static de.uulm.einhoernchen.flashcardsapp.Database.DbHelper.TABLE_STATISTICS;
+import static de.uulm.einhoernchen.flashcardsapp.Database.DbHelper.allStatisticsColumns;
 
 /**
  * @author Jonas Kraus jonas.kraus@uni-ulm.de
@@ -39,91 +31,53 @@ public class Statistics {
     private long startDate;
     private long endDate;
 
-    private boolean hasCahnges = false;
-
     /**
-     * Construct with this constructor to generate a new statistic
+     * Construct with this constructor to generate a new statistic for one user
+     * this object will be used over and over
      *
      * @author Jonas Kraus jonas.kraus@uni-ulm.de
      * @since 2017-01-15
      *
-     * @param drawer
-     * @param knowledge
-     * @param cardId
-     * @param userId
      */
-    public Statistics(int drawer, float knowledge, long cardId, long userId) {
-        this.drawer = drawer;
-        this.knowledge = knowledge;
-        this.cardId = cardId;
-        this.userId = userId;
-        this.startDate = System.currentTimeMillis();
+    public Statistics() {
+
+        this.userId = Globals.getDb().getLoggedInUser().getId();
     }
 
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
 
     public long getUserId() {
         return userId;
-    }
-
-    public void setUserId(long userId) {
-        this.userId = userId;
-    }
-
-    public long getCardId() {
-        return cardId;
     }
 
     public void setCardId(long cardId) {
         this.cardId = cardId;
     }
 
-    public float getKnowledge() {
-        return knowledge;
+    public long getCardId() {
+        return this.cardId;
     }
 
-    public void setKnowledge(float knowledge) {
-        this.knowledge = knowledge;
-    }
-
-    public int getDrawer() {
-        return drawer;
-    }
-
-    public void setDrawer(int drawer) {
-        this.drawer = drawer;
-    }
-
-    public long getStartDate() {
-        return startDate;
-    }
 
     public void setStartDate(long startDate) {
         this.startDate = startDate;
     }
 
-    public long getEndDate() {
-        return endDate;
+
+    public long getStartDate() {
+        return this.startDate;
     }
 
-    public void setEndDate(long endDate) {
-        this.endDate = endDate;
+    @Override
+    public String toString() {
+        return "Statistics{" +
+                "userId=" + userId +
+                ", cardId=" + cardId +
+                ", knowledge=" + knowledge +
+                ", drawer=" + drawer +
+                ", startDate=" + startDate +
+                ", endDate=" + endDate +
+                '}';
     }
-
-    public boolean isHasCahnges() {
-        return hasCahnges;
-    }
-
-    public void setHasCahnges(boolean hasCahnges) {
-        this.hasCahnges = hasCahnges;
-    }
-
 
     /**
      * Saves a statistic to the local database
@@ -133,13 +87,16 @@ public class Statistics {
      *
      * @return
      */
-    public boolean save() {
+    public boolean save(float knowledge) {
 
-        if (!this.hasCahnges) {
+        int drawer = getLatestDrawer(this.getCardId(), userId);
 
-            Log.d("save " + this.getClass().getName(), "no changes");
+        if (knowledge != 100 && drawer > 0) {
 
-            return false;
+            drawer = 0;
+        } else if (knowledge == 100 && drawer < Constants.COUNT_DRAWER) {
+
+            drawer += 1;
         }
 
         SQLiteDatabase database = Globals.getDb().getSQLiteDatabase();
@@ -147,8 +104,8 @@ public class Statistics {
         ContentValues values = new ContentValues();
         values.put(COLUMN_STATISTICS_USER_ID, this.getUserId());
         values.put(COLUMN_STATISTICS_CARD_ID, this.getCardId());
-        values.put(COLUMN_STATISTICS_KNOWLEDGE, this.getKnowledge());
-        values.put(COLUMN_STATISTICS_DRAWER, this.getDrawer());
+        values.put(COLUMN_STATISTICS_KNOWLEDGE, knowledge);
+        values.put(COLUMN_STATISTICS_DRAWER, drawer);
         values.put(COLUMN_STATISTICS_START_DATE, this.getStartDate());
         values.put(COLUMN_STATISTICS_END_DATE, System.currentTimeMillis());
 
@@ -156,4 +113,47 @@ public class Statistics {
 
         return true;
     }
+
+
+    /**
+     * Gets the drawer where the card was before
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     * @since 2017-01-15
+     *
+     * @param cardId
+     * @param userId
+     * @return
+     */
+    private static int getLatestDrawer(long cardId, long userId) {
+
+        SQLiteDatabase database = Globals.getDb().getSQLiteDatabase();
+
+        int drawer = 0;
+
+
+        Cursor cursor = database.query(
+                TABLE_STATISTICS,
+                allStatisticsColumns,
+                COLUMN_STATISTICS_CARD_ID + " = " + cardId
+                        + " AND " + COLUMN_STATISTICS_USER_ID + " = " + userId
+                , null, null, null,
+                COLUMN_STATISTICS_END_DATE + " DESC ",
+                "1");
+
+        if (cursor.moveToFirst()) {
+
+            drawer = cursor.getInt(
+                    cursor.getColumnIndex(DbHelper.COLUMN_STATISTICS_DRAWER)
+            );
+
+        }
+
+        cursor.close();
+
+        return drawer;
+    }
+
+
+
 }

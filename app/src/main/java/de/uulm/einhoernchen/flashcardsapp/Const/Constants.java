@@ -13,6 +13,8 @@ public enum Constants {
     SETTINGS_LEARN_MODE_DRAWER;
 
 
+    public static final int COUNT_DRAWER = 6;
+
     /**
      * Method to check wich string equels to which enum
      *

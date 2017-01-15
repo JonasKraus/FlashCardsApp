@@ -131,11 +131,11 @@ public class DbHelper extends SQLiteOpenHelper {
     public static final String COLUMN_SETTINGS_SHOW_LAST_DRAWER = "showLastDrawer";                 //6
     public static final String COLUMN_SETTINGS_DATE = "changeDate";
 
-    public static final String TABLE_STATISTICS = "settings";
+    public static final String TABLE_STATISTICS = "statistics";
     public static final String COLUMN_STATISTICS_ID = "statisticsId";                       //0
     public static final String COLUMN_STATISTICS_USER_ID = "userId";                        //1
     public static final String COLUMN_STATISTICS_CARD_ID = "cardId";                        //2
-    public static final String COLUMN_STATISTICS_KNOWLEDGE = "knoeledge";                   //3
+    public static final String COLUMN_STATISTICS_KNOWLEDGE = "knowledge";                   //3
     public static final String COLUMN_STATISTICS_DRAWER = "drawer";                         //4
     public static final String COLUMN_STATISTICS_START_DATE = "startDate";                  //5
     public static final String COLUMN_STATISTICS_END_DATE = "endDate";                      //6
@@ -365,7 +365,7 @@ public class DbHelper extends SQLiteOpenHelper {
 
 
     private static final String STATISTICS_CREATE = "create table "
-            + TABLE_STATISTICS+ "("
+            + TABLE_STATISTICS + "("
             + COLUMN_STATISTICS_ID
             + " integer primary key AUTOINCREMENT NOT NULL, "
             + COLUMN_STATISTICS_USER_ID
@@ -379,7 +379,7 @@ public class DbHelper extends SQLiteOpenHelper {
             + COLUMN_STATISTICS_START_DATE
             + " time timestamp default (strftime('%s', 'now')),"
             + COLUMN_STATISTICS_END_DATE
-            + " time timestamp default (strftime('%s', 'now')),"
+            + " time timestamp default (strftime('%s', 'now'))"
             + ");";
 
     private static final String VOTING_CREATE_UNIQUE_INDEX_1 =

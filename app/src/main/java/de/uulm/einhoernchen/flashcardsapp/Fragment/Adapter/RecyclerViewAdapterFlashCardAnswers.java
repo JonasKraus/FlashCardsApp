@@ -28,6 +28,7 @@ import de.uulm.einhoernchen.flashcardsapp.AsyncTask.Remote.POST.AsyncPostRemoteR
 import de.uulm.einhoernchen.flashcardsapp.Database.DbManager;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.Interface.OnFragmentInteractionListenerAnswer;
 import de.uulm.einhoernchen.flashcardsapp.Model.Answer;
+import de.uulm.einhoernchen.flashcardsapp.Model.Statistics;
 import de.uulm.einhoernchen.flashcardsapp.R;
 import de.uulm.einhoernchen.flashcardsapp.Util.Globals;
 import de.uulm.einhoernchen.flashcardsapp.Util.ProcessConnectivity;
@@ -401,7 +402,10 @@ public class RecyclerViewAdapterFlashCardAnswers extends RecyclerView.Adapter<Re
      * @since 2017-01-13
      *
      */
-    public void validateAnswers() {
+    public void validateAnswers(Statistics statistics) {
+
+        // 100 percent
+        long knowledge = 100;
 
         for (int i = 0; i < answers.size(); i++) {
 
@@ -419,6 +423,9 @@ public class RecyclerViewAdapterFlashCardAnswers extends RecyclerView.Adapter<Re
 
                 holders.get(i).mIsCorrect.setBackgroundColor(Globals.getContext().getResources().getColor(R.color.red_0));
                 //holders.get(i).llAnswerCheck.setBackgroundColor(Color.RED);
+
+                // Its about 100 percent
+                knowledge -= (100 / answers.size());
             } else {
 
                 holders.get(i).mIsCorrect.setBackgroundColor(Globals.getContext().getResources().getColor(R.color.green_0));
@@ -426,7 +433,9 @@ public class RecyclerViewAdapterFlashCardAnswers extends RecyclerView.Adapter<Re
             }
         }
 
-        Log.d("recycler", "validate");
+        //SAVING statistics
+        statistics.save(knowledge);
+        Log.d("recycler", "validate " + statistics.toString());
     }
 
 
