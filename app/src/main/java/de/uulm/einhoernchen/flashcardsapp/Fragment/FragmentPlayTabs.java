@@ -17,13 +17,13 @@ import de.uulm.einhoernchen.flashcardsapp.R;
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
  * to handle interaction events.
- * Use the {@link FragmentPlay#newInstance} factory method to
+ * Use the {@link FragmentPlayTabs#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class FragmentPlay extends Fragment {
+public class FragmentPlayTabs extends Fragment {
 
 
-    public FragmentPlay() {
+    public FragmentPlayTabs() {
         // Required empty public constructor
     }
 
@@ -33,11 +33,11 @@ public class FragmentPlay extends Fragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment FragmentPlay.
+     * @return A new instance of fragment FragmentPlayTabs.
      */
     // TODO: Rename and change types and number of parameters
-    public static FragmentPlay newInstance(String param1, String param2) {
-        FragmentPlay fragment = new FragmentPlay();
+    public static FragmentPlayTabs newInstance(String param1, String param2) {
+        FragmentPlayTabs fragment = new FragmentPlayTabs();
 
         return fragment;
     }

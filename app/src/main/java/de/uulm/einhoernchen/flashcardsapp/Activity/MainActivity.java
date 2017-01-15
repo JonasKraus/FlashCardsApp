@@ -41,7 +41,7 @@ import de.uulm.einhoernchen.flashcardsapp.Fragment.FragmentFlashCardCreate;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.FragmentHome;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.Dataset.ContentCarddecks;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.Dataset.ContentCategories;
-import de.uulm.einhoernchen.flashcardsapp.Fragment.FragmentPlay;
+import de.uulm.einhoernchen.flashcardsapp.Fragment.FragmentPlayTabs;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.FragmentSettings;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.Interface.OnFragmentInteractionListenerAnswer;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.Interface.OnFragmentInteractionListenerCarddeck;
@@ -89,7 +89,7 @@ public class MainActivity extends AppCompatActivity
     private FloatingActionButton floatingActionButton;
     private FloatingActionButton floatingActionButtonAdd;
     private CollapsingToolbarLayout collapsingToolbar;
-    private FragmentPlay fragmentPlay;
+    private FragmentPlayTabs fragmentPlay;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -296,7 +296,7 @@ public class MainActivity extends AppCompatActivity
 
         Log.d("frag", (fragmentPlay == null) + "");
 
-        fragmentPlay = fragmentPlay == null ? new FragmentPlay() : fragmentPlay;
+        fragmentPlay = fragmentPlay == null ? new FragmentPlayTabs() : fragmentPlay;
         android.support.v4.app.FragmentTransaction fragmentTransaction =
                 getSupportFragmentManager().beginTransaction();
 

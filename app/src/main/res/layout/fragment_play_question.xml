@@ -8,7 +8,7 @@
 
     <!-- TODO: Update blank fragment layout -->
     <android.support.v4.widget.NestedScrollView
-        tools:context="de.uulm.einhoernchen.flashcardsapp.Fragment.FragmentPlay"
+        tools:context="de.uulm.einhoernchen.flashcardsapp.Fragment.FragmentPlayTabs"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <LinearLayout
