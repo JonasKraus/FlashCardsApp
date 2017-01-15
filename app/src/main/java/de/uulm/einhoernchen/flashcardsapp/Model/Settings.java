@@ -193,6 +193,7 @@ public class Settings {
         values.put(COLUMN_SETTINGS_ORDER_ANSWERS_MULTIPLY_CHOICE_RANDOM, this.isMultiplyChoiceAnswerOrderRandom());
         values.put(COLUMN_SETTINGS_IS_NIGHT_MODE, this.isNightMode());
         values.put(COLUMN_SETTINGS_SHOW_LAST_DRAWER, this.isHideLastDrawer());
+        values.put(COLUMN_SETTINGS_DATE, System.currentTimeMillis());
 
         database.insert(TABLE_SETTINGS, null, values);
 

@@ -958,6 +958,7 @@ public class DbManager extends DbHelper{
         values.put(DbHelper.COLUMN_VOTING_USER_ID, loggedInUser.getId());
         values.put(DbHelper.COLUMN_VOTING_CARD_ID, cardId);
         values.put(DbHelper.COLUMN_VOTING_VALUE, value);
+        values.put(DbHelper.COLUMN_VOTING_DATE,  System.currentTimeMillis());
 
         if (voting != 0) {
             database.updateWithOnConflict(DbHelper.TABLE_VOTING, values, DbHelper.COLUMN_VOTING_USER_ID + "=" + loggedInUser.getId() + " AND " + DbHelper.COLUMN_VOTING_CARD_ID + "=" + cardId, null, SQLiteDatabase.CONFLICT_REPLACE);
@@ -1039,6 +1040,7 @@ public class DbManager extends DbHelper{
         values.put(DbHelper.COLUMN_VOTING_USER_ID, loggedInUser.getId());
         values.put(DbHelper.COLUMN_VOTING_ANSWER_ID, answerId);
         values.put(DbHelper.COLUMN_VOTING_VALUE, value);
+        values.put(DbHelper.COLUMN_VOTING_DATE, System.currentTimeMillis());
 
 
         if (voting != 0) {

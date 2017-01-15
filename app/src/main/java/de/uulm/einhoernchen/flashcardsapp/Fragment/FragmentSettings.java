@@ -173,7 +173,6 @@ public class FragmentSettings extends Fragment implements CompoundButton.OnCheck
 
         // Unset listener
         setViewElementsListener(null);
-        settings.save();
     }
 
 
@@ -208,6 +207,8 @@ public class FragmentSettings extends Fragment implements CompoundButton.OnCheck
                 settings.setNightMode(isChecked);
                 break;
         }
+
+        settings.save();
 
     }
 
@@ -256,11 +257,10 @@ public class FragmentSettings extends Fragment implements CompoundButton.OnCheck
                 }
 
                 settings.setLearnMode(mode);
-                Log.d("radio", radioGroupLearnMode.getCheckedRadioButtonId() + "");
-                Log.d("radio mode", mode + "");
-
                 break;
         }
+
+        settings.save();
 
     }
 
