@@ -238,7 +238,7 @@ public class FragmentPlayQuestion extends Fragment implements View.OnClickListen
                              Bundle savedInstanceState) {
 
         // Inflate the layout for this fragment
-        view = inflater.inflate(R.layout.fragment_fragment_play_question, container, false);
+        view = inflater.inflate(R.layout.fragment_play_question, container, false);
 
         initVariables();
 
