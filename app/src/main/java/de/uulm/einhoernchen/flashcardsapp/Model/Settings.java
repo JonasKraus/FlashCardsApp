@@ -3,6 +3,7 @@ package de.uulm.einhoernchen.flashcardsapp.Model;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 import de.uulm.einhoernchen.flashcardsapp.Const.Constants;
 import de.uulm.einhoernchen.flashcardsapp.Database.DbHelper;
@@ -34,6 +35,8 @@ public class Settings {
     private boolean showLastDrawer;
     private int changeDate;
 
+    private boolean hasCahnges = false;
+
 
     /**
      * Constructs a settings object with all params
@@ -60,14 +63,8 @@ public class Settings {
         this.isNightMode = isNightMode;
         this.showLastDrawer = showLastDrawer;
         this.changeDate = changeDate;
-    }
 
-    /**
-     * Constructor
-     *
-     */
-    public Settings() {
-
+        this.hasCahnges = false;
     }
 
     public long getId() {
@@ -75,7 +72,9 @@ public class Settings {
     }
 
     public void setId(long id) {
+
         this.id = id;
+        this.hasCahnges = true;
     }
 
     public long getUserId() {
@@ -83,6 +82,8 @@ public class Settings {
     }
 
     public void setUserId(long userId) {
+
+        this.hasCahnges = true;
         this.userId = userId;
     }
 
@@ -91,6 +92,8 @@ public class Settings {
     }
 
     public void setAllowSync(boolean allowSync) {
+
+        this.hasCahnges = true;
         this.allowSync = allowSync;
     }
 
@@ -99,14 +102,19 @@ public class Settings {
     }
 
     public void setLearnMode(Constants learnMode) {
+
+        this.hasCahnges = true;
         this.learnMode = learnMode;
     }
 
     public boolean isMultiplyChoiceAnswerOrderRandom() {
+
         return multiplyChoiceAnswerOrderRandom;
     }
 
     public void setMultiplyChoiceAnswerOrderRandom(boolean multiplyChoiceAnswerOrderRandom) {
+
+        this.hasCahnges = true;
         this.multiplyChoiceAnswerOrderRandom = multiplyChoiceAnswerOrderRandom;
     }
 
@@ -115,14 +123,19 @@ public class Settings {
     }
 
     public void setNightMode(boolean nightMode) {
+
+        this.hasCahnges = true;
         isNightMode = nightMode;
     }
 
     public boolean isHideLastDrawer() {
+
         return showLastDrawer;
     }
 
     public void setHideLastDrawer(boolean showLastDrawer) {
+
+        this.hasCahnges = true;
         this.showLastDrawer = showLastDrawer;
     }
 
@@ -131,6 +144,8 @@ public class Settings {
     }
 
     public void setChangeDate(int changeDate) {
+
+        this.hasCahnges = true;
         this.changeDate = changeDate;
     }
 
@@ -161,6 +176,13 @@ public class Settings {
      * @return
      */
     public boolean save() {
+
+        if (!this.hasCahnges) {
+
+            Log.d("save " + this.getClass().getName(), "no changes");
+
+            return false;
+        }
 
         SQLiteDatabase database = Globals.getDb().getSQLiteDatabase();
 

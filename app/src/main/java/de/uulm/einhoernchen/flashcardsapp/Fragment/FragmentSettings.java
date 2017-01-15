@@ -44,6 +44,7 @@ public class FragmentSettings extends Fragment implements CompoundButton.OnCheck
     private Settings settings;
 
 
+
     public FragmentSettings() {
         // Required empty public constructor
     }
@@ -75,8 +76,6 @@ public class FragmentSettings extends Fragment implements CompoundButton.OnCheck
         }
 
         settings = Settings.getSettings();
-
-        Log.d("settings", settings.toString());
 
     }
 
