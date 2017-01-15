@@ -1679,31 +1679,6 @@ public class DbManager extends DbHelper{
         database.insertWithOnConflict(TABLE_SETTINGS, null, values, SQLiteDatabase.CONFLICT_REPLACE);
     }
 
-    /**
-     *
-     * @return
-     */
-    public Settings getSettings() {
-
-        Cursor cursor = database.query(
-                TABLE_SETTINGS,
-                allSettingsColumns,
-                DbHelper.COLUMN_SETTINGS_USER_ID + " = " + this.loggedInUser.getId()
-                , null, null, null, null);
-
-        if (cursor.moveToFirst()) {
-            do {
-
-                //parentId = cursor.getLong(cursor.getColumnIndex(DbHelper.COLUMN_FLASHCARD_CARDDECK_ID));
-            } while (cursor.moveToNext());
-
-        }
-
-        cursor.close();
-
-        return new Settings();
-    }
-
 
     /**
      * Get the writable instance of the Database

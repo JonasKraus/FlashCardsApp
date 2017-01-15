@@ -1,7 +1,6 @@
 package de.uulm.einhoernchen.flashcardsapp.Fragment;
 
 import android.content.Context;
-import android.media.audiofx.BassBoost;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.app.Fragment;
@@ -16,7 +15,6 @@ import android.widget.Switch;
 
 import de.uulm.einhoernchen.flashcardsapp.Activity.MainActivity;
 import de.uulm.einhoernchen.flashcardsapp.Const.Constants;
-import de.uulm.einhoernchen.flashcardsapp.Database.DbManager;
 import de.uulm.einhoernchen.flashcardsapp.Model.Settings;
 import de.uulm.einhoernchen.flashcardsapp.R;
 import de.uulm.einhoernchen.flashcardsapp.Util.Globals;
@@ -120,7 +118,7 @@ public class FragmentSettings extends Fragment implements CompoundButton.OnCheck
 
         switchSnyc.setChecked(settings.isAllowSync());
         switchAnswerMultiChoiceRandom.setChecked(settings.isMultiplyChoiceAnswerOrderRandom());
-        switchShowLastDrawer.setChecked(settings.isShowLastDrawer());
+        switchShowLastDrawer.setChecked(settings.isHideLastDrawer());
         switchNightMode.setChecked(settings.isNightMode());
 
         radioGroupLearnMode.check(equalsId(settings.getLearnMode()));
@@ -178,6 +176,7 @@ public class FragmentSettings extends Fragment implements CompoundButton.OnCheck
 
         // Unset listener
         setViewElementsListener(null);
+        settings.save();
     }
 
 
@@ -196,20 +195,20 @@ public class FragmentSettings extends Fragment implements CompoundButton.OnCheck
         switch (buttonView.getId()) {
 
             case R.id.switch_settings_sync:
-                // TODO
 
+                settings.setAllowSync(isChecked);
                 break;
             case R.id.switch_settings_answer_multi_choice_random:
-                // TODO
 
+                settings.setMultiplyChoiceAnswerOrderRandom(isChecked);
                 break;
             case R.id.switch_setting_show_last_drawer:
-                // TODO
 
+                settings.setHideLastDrawer(isChecked);
                 break;
             case R.id.switch_settings_night_mode:
-                // TODO
 
+                settings.setNightMode(isChecked);
                 break;
         }
 
@@ -259,7 +258,7 @@ public class FragmentSettings extends Fragment implements CompoundButton.OnCheck
                         break;
                 }
 
-
+                settings.setLearnMode(mode);
                 Log.d("radio", radioGroupLearnMode.getCheckedRadioButtonId() + "");
                 Log.d("radio mode", mode + "");
 

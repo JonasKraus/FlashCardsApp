@@ -1,5 +1,6 @@
 package de.uulm.einhoernchen.flashcardsapp.Model;
 
+import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
@@ -7,7 +8,12 @@ import de.uulm.einhoernchen.flashcardsapp.Const.Constants;
 import de.uulm.einhoernchen.flashcardsapp.Database.DbHelper;
 import de.uulm.einhoernchen.flashcardsapp.Util.Globals;
 
+import static de.uulm.einhoernchen.flashcardsapp.Database.DbHelper.COLUMN_SETTINGS_ALLOW_SYNC;
 import static de.uulm.einhoernchen.flashcardsapp.Database.DbHelper.COLUMN_SETTINGS_DATE;
+import static de.uulm.einhoernchen.flashcardsapp.Database.DbHelper.COLUMN_SETTINGS_IS_NIGHT_MODE;
+import static de.uulm.einhoernchen.flashcardsapp.Database.DbHelper.COLUMN_SETTINGS_LEARN_MODE;
+import static de.uulm.einhoernchen.flashcardsapp.Database.DbHelper.COLUMN_SETTINGS_ORDER_ANSWERS_MULTIPLY_CHOICE_RANDOM;
+import static de.uulm.einhoernchen.flashcardsapp.Database.DbHelper.COLUMN_SETTINGS_SHOW_LAST_DRAWER;
 import static de.uulm.einhoernchen.flashcardsapp.Database.DbHelper.COLUMN_SETTINGS_USER_ID;
 import static de.uulm.einhoernchen.flashcardsapp.Database.DbHelper.TABLE_SETTINGS;
 import static de.uulm.einhoernchen.flashcardsapp.Database.DbHelper.allSettingsColumns;
@@ -112,11 +118,11 @@ public class Settings {
         isNightMode = nightMode;
     }
 
-    public boolean isShowLastDrawer() {
+    public boolean isHideLastDrawer() {
         return showLastDrawer;
     }
 
-    public void setShowLastDrawer(boolean showLastDrawer) {
+    public void setHideLastDrawer(boolean showLastDrawer) {
         this.showLastDrawer = showLastDrawer;
     }
 
@@ -128,12 +134,49 @@ public class Settings {
         this.changeDate = changeDate;
     }
 
-    private static boolean saveSettings() {
+    @Override
+    public String toString() {
+        return "Settings{" +
+                "id=" + id +
+                ", userId=" + userId +
+                ", allowSync=" + allowSync +
+                ", learnMode=" + learnMode +
+                ", multiplyChoiceAnswerOrderRandom=" + multiplyChoiceAnswerOrderRandom +
+                ", isNightMode=" + isNightMode +
+                ", showLastDrawer=" + showLastDrawer +
+                ", changeDate=" + changeDate +
+                '}';
+    }
 
-        SQLiteDatabase sqLiteDatabase = Globals.getDb().getSQLiteDatabase();
+    /************************/
+    /*** D A T A B A S E ****/
+    /************************/
+
+    /**
+     * Saves the settings object as a new row
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     * @since 2017-01-15
+     *
+     * @return
+     */
+    public boolean save() {
+
+        SQLiteDatabase database = Globals.getDb().getSQLiteDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_SETTINGS_USER_ID, this.getUserId());
+        values.put(COLUMN_SETTINGS_ALLOW_SYNC, this.isAllowSync());
+        values.put(COLUMN_SETTINGS_LEARN_MODE, String.valueOf(this.getLearnMode()));
+        values.put(COLUMN_SETTINGS_ORDER_ANSWERS_MULTIPLY_CHOICE_RANDOM, this.isMultiplyChoiceAnswerOrderRandom());
+        values.put(COLUMN_SETTINGS_IS_NIGHT_MODE, this.isNightMode());
+        values.put(COLUMN_SETTINGS_SHOW_LAST_DRAWER, this.isHideLastDrawer());
+
+        database.insert(TABLE_SETTINGS, null, values);
 
         return true;
     }
+
 
     /**
      * Get the latest settings of the currently logged in user
@@ -204,17 +247,5 @@ public class Settings {
         return settings;
     }
 
-    @Override
-    public String toString() {
-        return "Settings{" +
-                "id=" + id +
-                ", userId=" + userId +
-                ", allowSync=" + allowSync +
-                ", learnMode=" + learnMode +
-                ", multiplyChoiceAnswerOrderRandom=" + multiplyChoiceAnswerOrderRandom +
-                ", isNightMode=" + isNightMode +
-                ", showLastDrawer=" + showLastDrawer +
-                ", changeDate=" + changeDate +
-                '}';
-    }
+
 }
