@@ -195,7 +195,6 @@
 
             <Switch
                 android:id="@+id/switch_setting_show_last_drawer"
-                android:checked="true"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 />

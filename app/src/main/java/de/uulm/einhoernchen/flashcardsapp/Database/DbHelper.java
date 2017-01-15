@@ -349,7 +349,7 @@ public class DbHelper extends SQLiteOpenHelper {
             + COLUMN_SETTINGS_IS_NIGHT_MODE
             + " integer default 0, "
             + COLUMN_SETTINGS_SHOW_LAST_DRAWER
-            + " integer default 0, "
+            + " integer default 1, "
             + COLUMN_SETTINGS_DATE
             + " INTEGER DEFAULT CURRENT_TIMESTAMP"
             + ");";
@@ -420,7 +420,7 @@ public class DbHelper extends SQLiteOpenHelper {
     /**
      * All Columns of an user
      */
-    protected static String[] allUserColumns = {
+    public static String[] allUserColumns = {
             COLUMN_USER_ID,                  //0
             COLUMN_USER_AVATAR,              //1
             COLUMN_USER_NAME,                //2
@@ -434,7 +434,7 @@ public class DbHelper extends SQLiteOpenHelper {
             COLUMN_USER_IS_LOGGED_IN         //10
     };
 
-    protected static String[] allFlashCardColumns = {
+    public static String[] allFlashCardColumns = {
             COLUMN_FLASHCARD_ID,             //0
             COLUMN_FLASHCARD_CARDDECK_ID,    //1
             COLUMN_FLASHCARD_RATING,         //2
@@ -445,14 +445,14 @@ public class DbHelper extends SQLiteOpenHelper {
             COLUMN_FLASHCARD_USER_ID         //7
     };
 
-    protected static String[] allQuestionColumns = {
+    public static String[] allQuestionColumns = {
             COLUMN_QUESTION_ID,              //0
             COLUMN_QUESTION_TEXT,            //1
             COLUMN_QUESTION_MEDIA_URI,       //2
             COLUMN_QUESTION_AUTHOR_ID,       //3
     };
 
-    protected static String[] allAnswerColumns = {
+    public static String[] allAnswerColumns = {
             COLUMN_ANSWER_ID,                //0
             COLUMN_ANSWER_TEXT,              //1
             COLUMN_ANSWER_HINT,              //2
@@ -465,23 +465,23 @@ public class DbHelper extends SQLiteOpenHelper {
             COLUMN_ANSWER_LAST_UPDATED       //9
     };
 
-    protected static String[] allCardTagColumns = {
+    public static String[] allCardTagColumns = {
             COLUMN_CARD_TAG_FLASHCARD_ID,    //0
             COLUMN_CARD_TAG_TAG_ID,          //1
     };
 
-    protected static String[] allTagColumns = {
+    public static String[] allTagColumns = {
             COLUMN_TAG_ID,                   //0
             COLUMN_TAG_NAME,                 //1
     };
 
-    protected static String[] allGroupColumns = {
+    public static String[] allGroupColumns = {
             COLUMN_GROUP_ID,                 //0
             COLUMN_GROUP_NAME,               //1
             COLUMN_GROUP_DESCRIPTION,        //2
     };
 
-    protected static String[] allRatingColumns = {
+    public static String[] allRatingColumns = {
             COLUMN_RATING_ID,                //0
             COLUMN_RATING_TYPE,              //1
             COLUMN_RATING_USER_ID,           //2
@@ -490,7 +490,7 @@ public class DbHelper extends SQLiteOpenHelper {
             COLUMN_RATING_ANSWER_ID,         //5
     };
 
-    protected static String[] allAuthTokenColumns = {
+    public static String[] allAuthTokenColumns = {
             COLUMN_RATING_ID,                //0
             COLUMN_AUTH_TOKEN_ID,            //1
             COLUMN_AUTH_TOKEN_USER_ID,       //2
@@ -506,19 +506,19 @@ public class DbHelper extends SQLiteOpenHelper {
     };
     */
 
-    protected static String[] allCategoryColumns = {
+    public static String[] allCategoryColumns = {
             COLUMN_CATEGORY_ID,             //0
             COLUMN_CATEGORY_NAME,           //1
             COLUMN_CATEGORY_PARENT,         //2
     };
 
-    protected static String[] allUserGroupColumns = {
+    public static String[] allUserGroupColumns = {
             COLUMN_GROUP_ID,                 //0
             COLUMN_GROUP_NAME,               //1
             COLUMN_GROUP_DESCRIPTION,        //2
     };
 
-    protected static String[] allCardDeckColumns = {
+    public static String[] allCardDeckColumns = {
             COLUMN_CARD_DECK_ID,             //0
             COLUMN_CARD_DECK_NAME,           //1
             COLUMN_CARD_DECK_DESCRIPTION,    //2
@@ -527,7 +527,7 @@ public class DbHelper extends SQLiteOpenHelper {
             COLUMN_CARD_DECK_PARENT,         //5
     };
 
-    protected static String[] allSelectionColumns = {
+    public static String[] allSelectionColumns = {
             COLUMN_SELECTION_ID,             //0
             COLUMN_SELECTION_USER_ID,        //1
             COLUMN_SELECTION_CARD_DECK_ID,   //2
@@ -535,7 +535,7 @@ public class DbHelper extends SQLiteOpenHelper {
             COLUMN_SELECTION_DATE            //4
     };
 
-    protected static String[] allVotingColumns = {
+    public static String[] allVotingColumns = {
             COLUMN_VOTING_ID,                //0
             COLUMN_VOTING_USER_ID,           //1
             COLUMN_VOTING_CARD_ID,           //2
@@ -546,7 +546,7 @@ public class DbHelper extends SQLiteOpenHelper {
     };
 
 
-    protected static String[] allSettingsColumns = {
+    public static String[] allSettingsColumns = {
             COLUMN_SETTINGS_ID,                                    //0
             COLUMN_SETTINGS_USER_ID,                               //1
             COLUMN_SETTINGS_ALLOW_SYNC,                            //2

@@ -192,7 +192,7 @@
     <string name="settings_answer_multiplychoice_order">Random ordering multiple choice answers</string>
     <string name="settings_nightmode">night mode</string>
     <string name="settings_learn_mode_random">random</string>
-    <string name="settings_view_last_drawer">show cards of last drawer</string>
+    <string name="settings_view_last_drawer">hide last drawer</string>
     <string name="settings_sync">sync with server</string>
     <string name="toolbar_title_settings">settings</string>
 

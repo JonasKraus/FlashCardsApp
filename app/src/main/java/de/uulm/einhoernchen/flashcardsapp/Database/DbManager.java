@@ -12,11 +12,13 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import de.uulm.einhoernchen.flashcardsapp.Const.Constants;
 import de.uulm.einhoernchen.flashcardsapp.Model.Answer;
 import de.uulm.einhoernchen.flashcardsapp.Model.CardDeck;
 import de.uulm.einhoernchen.flashcardsapp.Model.Category;
 import de.uulm.einhoernchen.flashcardsapp.Model.FlashCard;
 import de.uulm.einhoernchen.flashcardsapp.Model.Question;
+import de.uulm.einhoernchen.flashcardsapp.Model.Settings;
 import de.uulm.einhoernchen.flashcardsapp.Model.Tag;
 import de.uulm.einhoernchen.flashcardsapp.Model.User;
 import de.uulm.einhoernchen.flashcardsapp.Model.UserGroup;
@@ -35,11 +37,14 @@ import static de.uulm.einhoernchen.flashcardsapp.Database.DbHelper.COLUMN_SELECT
 import static de.uulm.einhoernchen.flashcardsapp.Database.DbHelper.COLUMN_SELECTION_CARD_ID;
 import static de.uulm.einhoernchen.flashcardsapp.Database.DbHelper.COLUMN_SELECTION_DATE;
 import static de.uulm.einhoernchen.flashcardsapp.Database.DbHelper.COLUMN_SELECTION_USER_ID;
+import static de.uulm.einhoernchen.flashcardsapp.Database.DbHelper.COLUMN_SETTINGS_ID;
+import static de.uulm.einhoernchen.flashcardsapp.Database.DbHelper.COLUMN_SETTINGS_USER_ID;
 import static de.uulm.einhoernchen.flashcardsapp.Database.DbHelper.COLUMN_USER_ID;
 import static de.uulm.einhoernchen.flashcardsapp.Database.DbHelper.COLUMN_USER_IS_LOGGED_IN;
 import static de.uulm.einhoernchen.flashcardsapp.Database.DbHelper.TABLE_ANSWER;
 import static de.uulm.einhoernchen.flashcardsapp.Database.DbHelper.TABLE_FLASHCARD;
 import static de.uulm.einhoernchen.flashcardsapp.Database.DbHelper.TABLE_SELECTION;
+import static de.uulm.einhoernchen.flashcardsapp.Database.DbHelper.TABLE_SETTINGS;
 import static de.uulm.einhoernchen.flashcardsapp.Database.DbHelper.TABLE_USER;
 import static de.uulm.einhoernchen.flashcardsapp.Database.DbHelper.allAnswerColumns;
 import static de.uulm.einhoernchen.flashcardsapp.Database.DbHelper.allCardTagColumns;
@@ -47,6 +52,7 @@ import static de.uulm.einhoernchen.flashcardsapp.Database.DbHelper.allCategoryCo
 import static de.uulm.einhoernchen.flashcardsapp.Database.DbHelper.allFlashCardColumns;
 import static de.uulm.einhoernchen.flashcardsapp.Database.DbHelper.allQuestionColumns;
 import static de.uulm.einhoernchen.flashcardsapp.Database.DbHelper.allSelectionColumns;
+import static de.uulm.einhoernchen.flashcardsapp.Database.DbHelper.allSettingsColumns;
 import static de.uulm.einhoernchen.flashcardsapp.Database.DbHelper.allTagColumns;
 import static de.uulm.einhoernchen.flashcardsapp.Database.DbHelper.allUserColumns;
 import static de.uulm.einhoernchen.flashcardsapp.Database.DbHelper.allUserGroupColumns;
@@ -55,12 +61,11 @@ import static de.uulm.einhoernchen.flashcardsapp.Database.DbHelper.allVotingColu
 /**
  * Created by Jonas on 02.07.2016.
  */
-public class DbManager {
+public class DbManager extends DbHelper{
 
     private static final boolean DEBUG = false;
 
     private SQLiteDatabase database;
-    private DbHelper dbHelper;
     private Context context;
     private User loggedInUser;
 
@@ -71,9 +76,8 @@ public class DbManager {
      * @param context
      */
     public DbManager(Context context) {
+        super(context);
 
-        this.context = context;
-        dbHelper = new DbHelper(context);
     }
 
 
@@ -84,7 +88,7 @@ public class DbManager {
      */
     public void open() throws SQLException {
 
-        this.database = dbHelper.getWritableDatabase();
+        this.database = getWritableDatabase();
 
         this.loggedInUser = getLoggedInUser();
     }
@@ -96,7 +100,7 @@ public class DbManager {
      */
     public void close() {
 
-        dbHelper.close();
+        close();
          if (DEBUG) Log.d("db", "closed");
     }
 
@@ -132,6 +136,7 @@ public class DbManager {
         } else if(user.getPassword() != null && user.getPassword() != "") {
 
             values.put(DbHelper.COLUMN_USER_PASSWORD, user.getPassword());
+            initStandardSettings(user.getId());
         }
 
         values.put(DbHelper.COLUMN_USER_LOCAL_ACCOUNT, localAccount);
@@ -220,6 +225,11 @@ public class DbManager {
      * @return
      */
     public User getLoggedInUser() {
+
+        if (this.loggedInUser != null) {
+
+            return this.loggedInUser;
+        }
 
         User user = null;
         Cursor cursor = database.query(DbHelper.TABLE_USER, allUserColumns,
@@ -777,7 +787,7 @@ public class DbManager {
                 boolean cardDeckVisible = cursor.getInt(3) > 0;
                 long cardDeckGroupId = cursor.getLong(4);
                 long cardDeckParentId = cursor.getLong(5);
-                long selectionDate = cursor.getLong(cursor.getColumnIndex(dbHelper.COLUMN_SELECTION_DATE));
+                long selectionDate = cursor.getLong(cursor.getColumnIndex(COLUMN_SELECTION_DATE));
 
                 boolean isSelected = selectionDate > 0;
 
@@ -1418,9 +1428,24 @@ public class DbManager {
         ContentValues values = new ContentValues();
         values.put(DbHelper.COLUMN_USER_IS_LOGGED_IN, 0);
 
+        // reset the class var
+        this.loggedInUser = null;
+
         database.update(DbHelper.TABLE_USER, values, DbHelper.COLUMN_USER_ID + " = " + loggedInUser.getId(), null);
     }
 
+
+    /**
+     * tries to login user
+     * sets the class var of the currently logged i user
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     *
+     * @param mEmail
+     * @param mUserName
+     * @param mPassword
+     * @return
+     */
     public boolean loginUser(String mEmail, String mUserName, String mPassword) {
         ContentValues values = new ContentValues();
         values.put(DbHelper.COLUMN_USER_IS_LOGGED_IN, 1);
@@ -1432,7 +1457,15 @@ public class DbManager {
                 + "' AND " + DbHelper.COLUMN_USER_LOCAL_ACCOUNT + " = " + 1
                 , null);
 
-        return affectedRows > 0;
+        // Check if it was successful
+        if (affectedRows > 0) {
+
+            this.loggedInUser = getLoggedInUser();
+
+            return true;
+        }
+
+        return false;
     }
 
 
@@ -1626,5 +1659,61 @@ public class DbManager {
         cursor.close();
 
         return isMultipleChoice;
+    }
+
+
+    /**
+     * inits the settings for a user
+     * do this after first creating the new user
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     * @since 2017-01-15
+     *
+     * @param userId
+     */
+    public void initStandardSettings(long userId) {
+
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_SETTINGS_USER_ID, userId);
+
+        database.insertWithOnConflict(TABLE_SETTINGS, null, values, SQLiteDatabase.CONFLICT_REPLACE);
+    }
+
+    /**
+     *
+     * @return
+     */
+    public Settings getSettings() {
+
+        Cursor cursor = database.query(
+                TABLE_SETTINGS,
+                allSettingsColumns,
+                DbHelper.COLUMN_SETTINGS_USER_ID + " = " + this.loggedInUser.getId()
+                , null, null, null, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+
+                //parentId = cursor.getLong(cursor.getColumnIndex(DbHelper.COLUMN_FLASHCARD_CARDDECK_ID));
+            } while (cursor.moveToNext());
+
+        }
+
+        cursor.close();
+
+        return new Settings();
+    }
+
+
+    /**
+     * Get the writable instance of the Database
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     * @since 2017-01-15
+     *
+     * @return
+     */
+    public SQLiteDatabase getSQLiteDatabase() {
+        return database;
     }
 }

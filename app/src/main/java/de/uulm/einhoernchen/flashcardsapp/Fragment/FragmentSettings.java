@@ -1,6 +1,7 @@
 package de.uulm.einhoernchen.flashcardsapp.Fragment;
 
 import android.content.Context;
+import android.media.audiofx.BassBoost;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.app.Fragment;
@@ -16,6 +17,7 @@ import android.widget.Switch;
 import de.uulm.einhoernchen.flashcardsapp.Activity.MainActivity;
 import de.uulm.einhoernchen.flashcardsapp.Const.Constants;
 import de.uulm.einhoernchen.flashcardsapp.Database.DbManager;
+import de.uulm.einhoernchen.flashcardsapp.Model.Settings;
 import de.uulm.einhoernchen.flashcardsapp.R;
 import de.uulm.einhoernchen.flashcardsapp.Util.Globals;
 
@@ -34,12 +36,14 @@ public class FragmentSettings extends Fragment implements CompoundButton.OnCheck
     private String mParam1;
     private String mParam2;
 
-    private DbManager db = Globals.getDb();
+    //private DbManager db = Globals.getDb();
     private Switch switchSnyc;
     private RadioGroup radioGroupLearnMode;
     private Switch switchAnswerMultiChoiceRandom;
     private Switch switchNightMode;
     private Switch switchShowLastDrawer;
+
+    private Settings settings;
 
 
     public FragmentSettings() {
@@ -72,6 +76,10 @@ public class FragmentSettings extends Fragment implements CompoundButton.OnCheck
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
 
+        settings = Settings.getSettings();
+
+        Log.d("settings", settings.toString());
+
     }
 
     @Override
@@ -93,9 +101,29 @@ public class FragmentSettings extends Fragment implements CompoundButton.OnCheck
 
         findViewElements(view);
 
+        setElementValues();
+
         setViewElementsListener(this);
 
         return view;
+    }
+
+
+    /**
+     * Sets the values of the users settings to the gui elements
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     * @since 2017-01-15
+     *
+     */
+    private void setElementValues() {
+
+        switchSnyc.setChecked(settings.isAllowSync());
+        switchAnswerMultiChoiceRandom.setChecked(settings.isMultiplyChoiceAnswerOrderRandom());
+        switchShowLastDrawer.setChecked(settings.isShowLastDrawer());
+        switchNightMode.setChecked(settings.isNightMode());
+
+        radioGroupLearnMode.check(equalsId(settings.getLearnMode()));
     }
 
 
@@ -131,7 +159,7 @@ public class FragmentSettings extends Fragment implements CompoundButton.OnCheck
 
         switchSnyc = (Switch) view.findViewById(R.id.switch_settings_sync);
         switchAnswerMultiChoiceRandom = (Switch) view.findViewById(R.id.switch_settings_answer_multi_choice_random);
-        switchShowLastDrawer = (Switch) view.findViewById(R.id.switch_settings_night_mode);
+        switchShowLastDrawer = (Switch) view.findViewById(R.id.switch_setting_show_last_drawer);
         switchNightMode = (Switch) view.findViewById(R.id.switch_settings_night_mode);
 
         radioGroupLearnMode = (RadioGroup) view.findViewById(R.id.radio_group_learn_mode);
@@ -239,4 +267,38 @@ public class FragmentSettings extends Fragment implements CompoundButton.OnCheck
         }
 
     }
-}
+
+
+    /**
+     * Gets the gui id of the referenced enum constant
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     * @since 2017-01-15
+     *
+     * @param constant
+     * @return
+     */
+    public static int equalsId(Constants constant) {
+
+        switch (constant) {
+
+            case SETTINGS_LEARN_MODE_KNOWLEDGE:
+
+                return R.id.radio_learn_mode_knowledge;
+
+            case SETTINGS_LEARN_MODE_DATE:
+
+                return R.id.radio_learn_mode_date;
+
+            case SETTINGS_LEARN_MODE_RANDOM:
+
+                return R.id.radio_learn_mode_random;
+
+            case SETTINGS_LEARN_MODE_DRAWER:
+
+                return R.id.radio_learn_mode_drawer;
+        }
+
+        return R.id.radio_learn_mode_drawer; // default
+
+    }}
