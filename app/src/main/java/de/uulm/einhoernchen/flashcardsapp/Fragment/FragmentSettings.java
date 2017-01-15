@@ -77,6 +77,10 @@ public class FragmentSettings extends Fragment implements CompoundButton.OnCheck
 
         settings = Settings.getSettings();
 
+        Globals.setVisibilityToolbarMain(View.GONE);
+        Globals.setVisibilityFab(View.VISIBLE);
+        Globals.setVisibilityFabAdd(View.GONE);
+
     }
 
     @Override
@@ -84,10 +88,6 @@ public class FragmentSettings extends Fragment implements CompoundButton.OnCheck
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_settings, container, false);
-
-        Globals.setVisibilityToolbarMain(View.GONE);
-        Globals.setVisibilityFab(View.GONE);
-        Globals.setVisibilityFabAdd(View.GONE);
 
         Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar_settings);
         ((MainActivity) Globals.getContext()).setSupportActionBar(toolbar);
@@ -170,8 +170,6 @@ public class FragmentSettings extends Fragment implements CompoundButton.OnCheck
     @Override
     public void onDetach() {
         super.onDetach();
-        Globals.setVisibilityToolbarMain(View.VISIBLE);
-        Globals.setVisibilityFab(View.VISIBLE);
 
         // Unset listener
         setViewElementsListener(null);

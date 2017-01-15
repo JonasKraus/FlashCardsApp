@@ -539,6 +539,8 @@ public class MainActivity extends AppCompatActivity
 
         } else if (id == R.id.nav_catalogue) {
 
+            Globals.setVisibilityToolbarMain(View.VISIBLE);
+            Globals.setVisibilityFab(View.VISIBLE);
             ProcessConnectivity.isServerAlive ();
             moveToLastCatalogueState();
 
