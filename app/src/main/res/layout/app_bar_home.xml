@@ -5,16 +5,17 @@
     android:layout_height="match_parent"
     app:theme="@style/AppTheme">
 
-    <include layout="@layout/toolbar_search" />
+    <!-- keep this above the toolbar and set scrolling behavior -->
+    <FrameLayout
+        android:id="@+id/fragment_container_main"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
+    </FrameLayout>
 
-        <FrameLayout
-            android:id="@+id/fragment_container_main"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-        </FrameLayout>
-
+    <include layout="@layout/toolbar_search"
+        android:id="@+id/toolbar_layout_main"/>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"
