@@ -5,6 +5,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import de.uulm.einhoernchen.flashcardsapp.Const.Constants;
+
 /**
  * Created by Jonas on 02.07.2016.
  */
@@ -117,11 +119,21 @@ public class DbHelper extends SQLiteOpenHelper {
     public static final String COLUMN_VOTING_ANSWER_ID = "answerId";                      //3
     public static final String COLUMN_VOTING_VALUE = "value";                             //4
     public static final String COLUMN_VOTING_DATE = "votingDate";                         //5
-    public static final String COLUMN_VOTING_RATING_ID = "ratingId";                     //6
+    public static final String COLUMN_VOTING_RATING_ID = "ratingId";                      //6
+
+    public static final String TABLE_SETTINGS = "settings";
+    public static final String COLUMN_SETTINGS_ID = "settingsId";                                   //0
+    public static final String COLUMN_SETTINGS_USER_ID = "userId";                                  //1
+    public static final String COLUMN_SETTINGS_ALLOW_SYNC = "allowSync";                                //2
+    public static final String COLUMN_SETTINGS_LEARN_MODE = "learnmode";                            //3
+    public static final String COLUMN_SETTINGS_ORDER_ANSWERS_MULTIPLY_CHOICE_RANDOM = "multiplyChoiceAnswersRandom"; //4
+    public static final String COLUMN_SETTINGS_IS_NIGHT_MODE= "isNightMode";                        //5
+    public static final String COLUMN_SETTINGS_SHOW_LAST_DRAWER = "showLastDrawer";                 //6
+    public static final String COLUMN_SETTINGS_DATE = "changeDate";                                 //7
 
     // Database name and version - increase when existing table is altered
     private static final String DATABASE_NAME = "flashcardsDb.db";
-    private static final int DATABASE_VERSION = 17; // @TODO revert version before first release
+    private static final int DATABASE_VERSION = 18; // @TODO revert version before first release
 
     /**
      * Database creation sql statement for table user
@@ -321,6 +333,27 @@ public class DbHelper extends SQLiteOpenHelper {
             + " INTEGER DEFAULT null"
             + ");";
 
+
+    private static final String SETTINGS_CREATE = "create table "
+            + TABLE_SETTINGS + "("
+            + COLUMN_SETTINGS_ID
+            + " integer primary key AUTOINCREMENT NOT NULL, "
+            + COLUMN_SETTINGS_USER_ID
+            + " integer not null, "
+            + COLUMN_SETTINGS_ALLOW_SYNC
+            + " integer default 1, "
+            + COLUMN_SETTINGS_LEARN_MODE
+            + " string default " + Constants.SETTINGS_LEARN_MODE_DRAWER +", "
+            + COLUMN_SETTINGS_ORDER_ANSWERS_MULTIPLY_CHOICE_RANDOM
+            + " integer default 0, "
+            + COLUMN_SETTINGS_IS_NIGHT_MODE
+            + " integer default 0, "
+            + COLUMN_SETTINGS_SHOW_LAST_DRAWER
+            + " integer default 0, "
+            + COLUMN_SETTINGS_DATE
+            + " INTEGER DEFAULT CURRENT_TIMESTAMP"
+            + ");";
+
     private static final String VOTING_CREATE_UNIQUE_INDEX_1 =
             "CREATE UNIQUE INDEX " + TABLE_VOTING + "_user_card "
                     + "ON " + TABLE_VOTING + "(" + COLUMN_VOTING_USER_ID + ", " + COLUMN_VOTING_CARD_ID + "); ";
@@ -353,6 +386,7 @@ public class DbHelper extends SQLiteOpenHelper {
         db.execSQL(CARD_DECK_CREATE);
         db.execSQL(CATEGORY_CREATE);
         db.execSQL(SELECTION_CREATE);
+        db.execSQL(SETTINGS_CREATE);
         db.execSQL(VOTING_CREATE);
         db.execSQL(VOTING_CREATE_UNIQUE_INDEX_1);
         db.execSQL(VOTING_CREATE_UNIQUE_INDEX_2);
@@ -378,6 +412,7 @@ public class DbHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_CATEGORY);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_SELECTION);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_VOTING);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_SETTINGS);
 
         onCreate(db);
     }
