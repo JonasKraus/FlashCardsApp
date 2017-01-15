@@ -41,6 +41,16 @@ import static de.uulm.einhoernchen.flashcardsapp.Database.DbHelper.TABLE_ANSWER;
 import static de.uulm.einhoernchen.flashcardsapp.Database.DbHelper.TABLE_FLASHCARD;
 import static de.uulm.einhoernchen.flashcardsapp.Database.DbHelper.TABLE_SELECTION;
 import static de.uulm.einhoernchen.flashcardsapp.Database.DbHelper.TABLE_USER;
+import static de.uulm.einhoernchen.flashcardsapp.Database.DbHelper.allAnswerColumns;
+import static de.uulm.einhoernchen.flashcardsapp.Database.DbHelper.allCardTagColumns;
+import static de.uulm.einhoernchen.flashcardsapp.Database.DbHelper.allCategoryColumns;
+import static de.uulm.einhoernchen.flashcardsapp.Database.DbHelper.allFlashCardColumns;
+import static de.uulm.einhoernchen.flashcardsapp.Database.DbHelper.allQuestionColumns;
+import static de.uulm.einhoernchen.flashcardsapp.Database.DbHelper.allSelectionColumns;
+import static de.uulm.einhoernchen.flashcardsapp.Database.DbHelper.allTagColumns;
+import static de.uulm.einhoernchen.flashcardsapp.Database.DbHelper.allUserColumns;
+import static de.uulm.einhoernchen.flashcardsapp.Database.DbHelper.allUserGroupColumns;
+import static de.uulm.einhoernchen.flashcardsapp.Database.DbHelper.allVotingColumns;
 
 /**
  * Created by Jonas on 02.07.2016.
@@ -54,134 +64,6 @@ public class DbManager {
     private Context context;
     private User loggedInUser;
 
-    /**
-     * All Columns of an user
-     */
-    private String[] allUserColumns = {
-            DbHelper.COLUMN_USER_ID,                  //0
-            DbHelper.COLUMN_USER_AVATAR,              //1
-            DbHelper.COLUMN_USER_NAME,                //2
-            DbHelper.COLUMN_USER_PASSWORD,            //3
-            DbHelper.COLUMN_USER_EMAIL,               //4
-            DbHelper.COLUMN_USER_RATING,              //5
-            DbHelper.COLUMN_USER_GROUP,               //6
-            DbHelper.COLUMN_USER_CREATED,             //7
-            DbHelper.COLUMN_USER_LAST_LOGIN,          //8
-            DbHelper.COLUMN_USER_LOCAL_ACCOUNT,       //9
-            DbHelper.COLUMN_USER_IS_LOGGED_IN         //10
-    };
-
-    private String[] allFlashCardColumns = {
-            DbHelper.COLUMN_FLASHCARD_ID,             //0
-            DbHelper.COLUMN_FLASHCARD_CARDDECK_ID,    //1
-            DbHelper.COLUMN_FLASHCARD_RATING,         //2
-            DbHelper.COLUMN_FLASHCARD_QUESTION_ID,    //3
-            DbHelper.COLUMN_FLASHCARD_MULTIPLE_CHOICE,//4
-            DbHelper.COLUMN_FLASHCARD_CREATED,        //5
-            DbHelper.COLUMN_FLASHCARD_LAST_UPDATED,   //6
-            DbHelper.COLUMN_FLASHCARD_USER_ID         //7
-    };
-
-    private String[] allQuestionColumns = {
-            DbHelper.COLUMN_QUESTION_ID,              //0
-            DbHelper.COLUMN_QUESTION_TEXT,            //1
-            DbHelper.COLUMN_QUESTION_MEDIA_URI,       //2
-            DbHelper.COLUMN_QUESTION_AUTHOR_ID,       //3
-    };
-
-    private String[] allAnswerColumns = {
-            DbHelper.COLUMN_ANSWER_ID,                //0
-            DbHelper.COLUMN_ANSWER_TEXT,              //1
-            DbHelper.COLUMN_ANSWER_HINT,              //2
-            DbHelper.COLUMN_ANSWER_MEDIA_URI,         //3
-            DbHelper.COLUMN_ANSWER_USER_ID,           //4
-            DbHelper.COLUMN_ANSWER_PARENT_CARD_ID,    //5
-            DbHelper.COLUMN_ANSWER_RATING,            //6
-            DbHelper.COLUMN_ANSWER_CORRECT,           //7
-            DbHelper.COLUMN_ANSWER_CREATED,           //8
-            DbHelper.COLUMN_ANSWER_LAST_UPDATED       //9
-    };
-
-    private String[] allCardTagColumns = {
-            DbHelper.COLUMN_CARD_TAG_FLASHCARD_ID,    //0
-            DbHelper.COLUMN_CARD_TAG_TAG_ID,          //1
-    };
-
-    private String[] allTagColumns = {
-            DbHelper.COLUMN_TAG_ID,                   //0
-            DbHelper.COLUMN_TAG_NAME,                 //1
-    };
-
-    private String[] allGroupColumns = {
-            DbHelper.COLUMN_GROUP_ID,                 //0
-            DbHelper.COLUMN_GROUP_NAME,               //1
-            DbHelper.COLUMN_GROUP_DESCRIPTION,        //2
-    };
-
-    private String[] allRatingColumns = {
-            DbHelper.COLUMN_RATING_ID,                //0
-            DbHelper.COLUMN_RATING_TYPE,              //1
-            DbHelper.COLUMN_RATING_USER_ID,           //2
-            DbHelper.COLUMN_RATING_MODIFIER,          //3
-            DbHelper.COLUMN_RATING_FLASHCARD_ID,      //4
-            DbHelper.COLUMN_RATING_ANSWER_ID,         //5
-    };
-
-    private String[] allAuthTokenColumns = {
-            DbHelper.COLUMN_RATING_ID,                //0
-            DbHelper.COLUMN_AUTH_TOKEN_ID,            //1
-            DbHelper.COLUMN_AUTH_TOKEN_USER_ID,       //2
-            DbHelper.COLUMN_AUTH_TOKEN_TOKEN,         //3
-            DbHelper.COLUMN_AUTH_TOKEN_CREATED,       //4
-    };
-
-    /*
-    private String[] allCardDeckColumns = {
-            DbHelper.COLUMN_CARD_DECK_ID,             //0
-            DbHelper.COLUMN_CARD_DECK_NAME,           //1
-            DbHelper.COLUMN_CARD_DECK_DESCRIPTION,    //2
-    };
-    */
-
-    private String[] allCategoryColumns = {
-            DbHelper.COLUMN_CATEGORY_ID,             //0
-            DbHelper.COLUMN_CATEGORY_NAME,           //1
-            DbHelper.COLUMN_CATEGORY_PARENT,         //2
-    };
-
-    private String[] allUserGroupColumns = {
-            DbHelper.COLUMN_GROUP_ID,                 //0
-            DbHelper.COLUMN_GROUP_NAME,               //1
-            DbHelper.COLUMN_GROUP_DESCRIPTION,        //2
-    };
-
-    private String[] allCardDeckColumns = {
-            DbHelper.COLUMN_CARD_DECK_ID,             //0
-            DbHelper.COLUMN_CARD_DECK_NAME,           //1
-            DbHelper.COLUMN_CARD_DECK_DESCRIPTION,    //2
-            DbHelper.COLUMN_CARD_DECK_VISIBLE,        //3
-            DbHelper.COLUMN_CARD_DECK_GROUP,          //4
-            DbHelper.COLUMN_CARD_DECK_PARENT,         //5
-    };
-
-    private String[] allSelectionColumns = {
-            DbHelper.COLUMN_SELECTION_ID,             //0
-            DbHelper.COLUMN_SELECTION_USER_ID,        //1
-            DbHelper.COLUMN_SELECTION_CARD_DECK_ID,   //2
-            COLUMN_SELECTION_CARD_ID,        //3
-            DbHelper.COLUMN_SELECTION_DATE            //4
-    };
-
-    private String[] allVotingColumns = {
-            DbHelper.COLUMN_VOTING_ID,                //0
-            DbHelper.COLUMN_VOTING_USER_ID,           //1
-            DbHelper.COLUMN_VOTING_CARD_ID,           //2
-            DbHelper.COLUMN_VOTING_ANSWER_ID,         //3
-            DbHelper.COLUMN_VOTING_VALUE,             //4
-            DbHelper.COLUMN_VOTING_DATE,              //5
-            DbHelper.COLUMN_VOTING_RATING_ID          //6
-    };
-    private List<FlashCard> selectedFlashcards;
 
     /**
      * Constructor

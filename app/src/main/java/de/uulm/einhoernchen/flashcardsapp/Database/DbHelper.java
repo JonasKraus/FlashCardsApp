@@ -416,5 +416,145 @@ public class DbHelper extends SQLiteOpenHelper {
 
         onCreate(db);
     }
+
+    /**
+     * All Columns of an user
+     */
+    protected static String[] allUserColumns = {
+            COLUMN_USER_ID,                  //0
+            COLUMN_USER_AVATAR,              //1
+            COLUMN_USER_NAME,                //2
+            COLUMN_USER_PASSWORD,            //3
+            COLUMN_USER_EMAIL,               //4
+            COLUMN_USER_RATING,              //5
+            COLUMN_USER_GROUP,               //6
+            COLUMN_USER_CREATED,             //7
+            COLUMN_USER_LAST_LOGIN,          //8
+            COLUMN_USER_LOCAL_ACCOUNT,       //9
+            COLUMN_USER_IS_LOGGED_IN         //10
+    };
+
+    protected static String[] allFlashCardColumns = {
+            COLUMN_FLASHCARD_ID,             //0
+            COLUMN_FLASHCARD_CARDDECK_ID,    //1
+            COLUMN_FLASHCARD_RATING,         //2
+            COLUMN_FLASHCARD_QUESTION_ID,    //3
+            COLUMN_FLASHCARD_MULTIPLE_CHOICE,//4
+            COLUMN_FLASHCARD_CREATED,        //5
+            COLUMN_FLASHCARD_LAST_UPDATED,   //6
+            COLUMN_FLASHCARD_USER_ID         //7
+    };
+
+    protected static String[] allQuestionColumns = {
+            COLUMN_QUESTION_ID,              //0
+            COLUMN_QUESTION_TEXT,            //1
+            COLUMN_QUESTION_MEDIA_URI,       //2
+            COLUMN_QUESTION_AUTHOR_ID,       //3
+    };
+
+    protected static String[] allAnswerColumns = {
+            COLUMN_ANSWER_ID,                //0
+            COLUMN_ANSWER_TEXT,              //1
+            COLUMN_ANSWER_HINT,              //2
+            COLUMN_ANSWER_MEDIA_URI,         //3
+            COLUMN_ANSWER_USER_ID,           //4
+            COLUMN_ANSWER_PARENT_CARD_ID,    //5
+            COLUMN_ANSWER_RATING,            //6
+            COLUMN_ANSWER_CORRECT,           //7
+            COLUMN_ANSWER_CREATED,           //8
+            COLUMN_ANSWER_LAST_UPDATED       //9
+    };
+
+    protected static String[] allCardTagColumns = {
+            COLUMN_CARD_TAG_FLASHCARD_ID,    //0
+            COLUMN_CARD_TAG_TAG_ID,          //1
+    };
+
+    protected static String[] allTagColumns = {
+            COLUMN_TAG_ID,                   //0
+            COLUMN_TAG_NAME,                 //1
+    };
+
+    protected static String[] allGroupColumns = {
+            COLUMN_GROUP_ID,                 //0
+            COLUMN_GROUP_NAME,               //1
+            COLUMN_GROUP_DESCRIPTION,        //2
+    };
+
+    protected static String[] allRatingColumns = {
+            COLUMN_RATING_ID,                //0
+            COLUMN_RATING_TYPE,              //1
+            COLUMN_RATING_USER_ID,           //2
+            COLUMN_RATING_MODIFIER,          //3
+            COLUMN_RATING_FLASHCARD_ID,      //4
+            COLUMN_RATING_ANSWER_ID,         //5
+    };
+
+    protected static String[] allAuthTokenColumns = {
+            COLUMN_RATING_ID,                //0
+            COLUMN_AUTH_TOKEN_ID,            //1
+            COLUMN_AUTH_TOKEN_USER_ID,       //2
+            COLUMN_AUTH_TOKEN_TOKEN,         //3
+            COLUMN_AUTH_TOKEN_CREATED,       //4
+    };
+
+    /*
+    private static String[] allCardDeckColumns = {
+            COLUMN_CARD_DECK_ID,             //0
+            COLUMN_CARD_DECK_NAME,           //1
+            COLUMN_CARD_DECK_DESCRIPTION,    //2
+    };
+    */
+
+    protected static String[] allCategoryColumns = {
+            COLUMN_CATEGORY_ID,             //0
+            COLUMN_CATEGORY_NAME,           //1
+            COLUMN_CATEGORY_PARENT,         //2
+    };
+
+    protected static String[] allUserGroupColumns = {
+            COLUMN_GROUP_ID,                 //0
+            COLUMN_GROUP_NAME,               //1
+            COLUMN_GROUP_DESCRIPTION,        //2
+    };
+
+    protected static String[] allCardDeckColumns = {
+            COLUMN_CARD_DECK_ID,             //0
+            COLUMN_CARD_DECK_NAME,           //1
+            COLUMN_CARD_DECK_DESCRIPTION,    //2
+            COLUMN_CARD_DECK_VISIBLE,        //3
+            COLUMN_CARD_DECK_GROUP,          //4
+            COLUMN_CARD_DECK_PARENT,         //5
+    };
+
+    protected static String[] allSelectionColumns = {
+            COLUMN_SELECTION_ID,             //0
+            COLUMN_SELECTION_USER_ID,        //1
+            COLUMN_SELECTION_CARD_DECK_ID,   //2
+            COLUMN_SELECTION_CARD_ID,        //3
+            COLUMN_SELECTION_DATE            //4
+    };
+
+    protected static String[] allVotingColumns = {
+            COLUMN_VOTING_ID,                //0
+            COLUMN_VOTING_USER_ID,           //1
+            COLUMN_VOTING_CARD_ID,           //2
+            COLUMN_VOTING_ANSWER_ID,         //3
+            COLUMN_VOTING_VALUE,             //4
+            COLUMN_VOTING_DATE,              //5
+            COLUMN_VOTING_RATING_ID          //6
+    };
+
+
+    protected static String[] allSettingsColumns = {
+            COLUMN_SETTINGS_ID,                                    //0
+            COLUMN_SETTINGS_USER_ID,                               //1
+            COLUMN_SETTINGS_ALLOW_SYNC,                            //2
+            COLUMN_SETTINGS_LEARN_MODE,                            //3
+            COLUMN_SETTINGS_ORDER_ANSWERS_MULTIPLY_CHOICE_RANDOM,  //4
+            COLUMN_SETTINGS_IS_NIGHT_MODE,                         //5
+            COLUMN_SETTINGS_SHOW_LAST_DRAWER,                      //6
+            COLUMN_SETTINGS_DATE                                   //7
+    };
 }
 

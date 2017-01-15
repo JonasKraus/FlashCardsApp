@@ -1,9 +1,13 @@
 package de.uulm.einhoernchen.flashcardsapp.Model;
 
+import android.util.Log;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+
+import org.apache.http.impl.cookie.DateParseException;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -117,8 +121,15 @@ public class User {
         this.email = email;
         this.rating = rating;
 
-        this.created = new Date(created);
-        this.lastLogin = new Date(lastLogin);
+        try {
+            this.created = new Date(created);
+            this.lastLogin = new Date(lastLogin);
+        } catch (Exception e) {
+
+            this.created = new Date();
+            this.lastLogin = new Date();
+            Log.w("ERROR parse Date", e.getMessage());
+        }
     }
 
 
