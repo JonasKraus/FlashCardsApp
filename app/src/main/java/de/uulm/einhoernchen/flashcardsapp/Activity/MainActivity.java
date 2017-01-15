@@ -637,7 +637,7 @@ public class MainActivity extends AppCompatActivity
      */
     private void moveBackwardsInCatalogue() {
 
-        if (catalogueState != Constants.FLASH_CARD_CREATE && catalogueState != Constants.PLAY) {
+        if (catalogueState != Constants.FLASH_CARD_CREATE && catalogueState != Constants.PLAY && parentIds.size() > 0) {
 
             this.childrenId = parentIds.get(parentIds.size() - 1);
         }

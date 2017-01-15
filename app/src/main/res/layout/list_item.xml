@@ -1,136 +1,188 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout android:layout_height="wrap_content"
-    android:layout_width="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
-    app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    xmlns:android="http://schemas.android.com/apk/res/android">
-
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal"
-    android:layout_marginTop="@dimen/activity_horizontal_margin"
-    android:clipToPadding="false">
-
-    <TextView
-        android:id="@+id/id"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:visibility="gone"
-        android:textAppearance="?attr/textAppearanceListItem" />
+    android:orientation="vertical"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
-        android:orientation="horizontal">
-        <ImageView
-            android:id="@+id/image_view_round_icon"
-            android:layout_width="@dimen/icon_round_random"
-            android:layout_height="@dimen/icon_round_random"
-            android:contentDescription="@string/app_name"/>
-
-        <ImageView
-            android:layout_width="15dp"
-            android:layout_height="15dp"
-            android:visibility="visible"
-            android:layout_marginLeft="-8dp"
-            android:layout_marginBottom="-1dp"
-            android:layout_gravity="bottom"
-            android:src="@drawable/ic_offline_pin"
-            android:id="@+id/image_view_offline"
-            android:alpha=".3"/>
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_weight=".50"
-        android:layout_marginLeft="@dimen/text_margin"
         android:orientation="vertical">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/textView_listItem_author"
-            android:textSize="@dimen/item_small_text_size"
-            android:text="Author"/>
-        <!--
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/text_view_listItem_group_rating"
-            android:textSize="@dimen/item_small_text_size"
-            android:visibility="gone"
-            android:text="+666"/>
-            -->
-        <TextView
-            android:id="@+id/content"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:lines="2"
-            android:textAppearance="?attr/textAppearanceListItem" />
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/text_view_listItem_card_rating"
-            android:textSize="@dimen/item_small_text_size"
-            android:text="+666"/>
-        <View
+
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@android:color/darker_gray"/>
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:id="@+id/ll_listItem_right">
-
-        <TextView
-            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/text_view_listItem_date"
-            android:layout_gravity="right"
-            android:textSize="@dimen/item_small_text_size"
-            android:text="23.04.2016"/>
+            android:orientation="vertical">
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="47dp"
-            android:src="@drawable/ic_bookmark_border"
-            android:id="@+id/image_view_iscorrect"
-            android:layout_marginRight="-4.5dp"
-            android:layout_gravity="right"/>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+                <WebView
+                    android:layout_width="match_parent"
+                    android:layout_height="242dp"
+                    android:visibility="gone"
+                    android:id="@+id/webview_answer_question">
+                </WebView>
+            </RelativeLayout>
 
-        <!--
-        <ImageView
-            android:layout_width="15dp"
-            android:layout_height="15dp"
-            android:id="@+id/image_view_offline"
-            android:src="@drawable/ic_offline_pin"
-            android:layout_gravity="right"
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:id="@+id/ll_answer_media">
 
-            android:alpha=".3"/>
-            -->
-    </LinearLayout>
+                <ImageView
+                    android:layout_height="wrap_content"
+                    android:layout_width="fill_parent"
+                    android:adjustViewBounds="true"
+                    android:scaleType="fitCenter"
+                    android:visibility="gone"
+                    android:id="@+id/image_view_question_uri"/>
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="-150dp"
+                    android:visibility="gone"
+                    android:src="@drawable/quantum_ic_play_circle_filled_white_36"
+                    android:id="@+id/imageview_card_media_play"/>
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:layout_marginTop="@dimen/activity_horizontal_margin"
+            android:clipToPadding="false"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/id"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?attr/textAppearanceListItem"
+                android:visibility="gone" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/image_view_round_icon"
+                    android:layout_width="@dimen/icon_round_random"
+                    android:layout_height="@dimen/icon_round_random"
+                    android:contentDescription="@string/app_name" />
+
+                <ImageView
+                    android:id="@+id/image_view_offline"
+                    android:layout_width="15dp"
+                    android:layout_height="15dp"
+                    android:layout_gravity="bottom"
+                    android:layout_marginBottom="-1dp"
+                    android:layout_marginLeft="-8dp"
+                    android:alpha=".3"
+                    android:src="@drawable/ic_offline_pin"
+                    android:visibility="visible" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/text_margin"
+                android:layout_weight=".50"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/textView_listItem_author"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Author"
+                    android:textSize="@dimen/item_small_text_size" />
+                <!--
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/text_view_listItem_group_rating"
+                    android:textSize="@dimen/item_small_text_size"
+                    android:visibility="gone"
+                    android:text="+666"/>
+                    -->
+                <TextView
+                    android:id="@+id/content"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:lines="2"
+                    android:textAppearance="?attr/textAppearanceListItem" />
+
+                <TextView
+                    android:id="@+id/text_view_listItem_card_rating"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="+666"
+                    android:textSize="@dimen/item_small_text_size" />
+                <!--
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@android:color/darker_gray"/>
+                    -->
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/ll_listItem_right"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/text_view_listItem_date"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="right"
+                    android:text="23.04.2016"
+                    android:textSize="@dimen/item_small_text_size" />
+
+                <ImageView
+                    android:id="@+id/image_view_iscorrect"
+                    android:layout_width="wrap_content"
+                    android:layout_height="47dp"
+                    android:layout_gravity="right"
+                    android:layout_marginRight="-4.5dp"
+                    android:src="@drawable/ic_bookmark_border" />
+
+                <!--
+                <ImageView
+                    android:layout_width="15dp"
+                    android:layout_height="15dp"
+                    android:id="@+id/image_view_offline"
+                    android:src="@drawable/ic_offline_pin"
+                    android:layout_gravity="right"
+
+                    android:alpha=".3"/>
+                    -->
+            </LinearLayout>
 
 
+            <!--
+                <ImageView
+                    android:id="@+id/checkBox"
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:padding="6dp"
+                    android:gravity="right"
+                    android:layout_marginLeft="5dp"
+                    android:tag="false"/>
+                    -->
+        </LinearLayout>
+        </LinearLayout>
 
-<!--
-    <ImageView
-        android:id="@+id/checkBox"
-        android:layout_width="35dp"
-        android:layout_height="35dp"
-        android:padding="6dp"
-        android:gravity="right"
-        android:layout_marginLeft="5dp"
-        android:tag="false"/>
-        -->
-</LinearLayout>
-
-
-</LinearLayout>
-
+    <View
+        android:layout_width="wrap_content"
+        android:layout_height="1dp"
+        android:background="@color/divider"/>
+        </LinearLayout>
