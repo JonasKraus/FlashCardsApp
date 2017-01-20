@@ -1824,7 +1824,6 @@ public class DbManager extends DbHelper{
 
                 PieEntry pieEntry = new PieEntry(count * totalCountPercent, "drawer " + index);
                 entries.add(pieEntry);
-                Log.d("data", entries.get(cursor.getPosition()).toString());
             } while (cursor.moveToNext());
         }
 
