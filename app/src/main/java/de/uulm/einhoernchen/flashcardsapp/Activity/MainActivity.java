@@ -553,7 +553,7 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_challenge) {
 
         } else if (id == R.id.nav_settings) {
-
+/*
             FragmentSettings fragment = new FragmentSettings();
             android.support.v4.app.FragmentTransaction fragmentTransaction =
                     getSupportFragmentManager().beginTransaction();
@@ -561,8 +561,9 @@ public class MainActivity extends AppCompatActivity
             // Keep attention that this is replaced and not added
             fragmentTransaction.replace(R.id.fragment_container_main, fragment);
             fragmentTransaction.commit();
+            */
 
-            //startActivity(new Intent(MainActivity.this, SettingsActivity.class));
+            startActivity(new Intent(MainActivity.this, SettingsActivity.class));
 
         } else if (id == R.id.nav_help) {
 
