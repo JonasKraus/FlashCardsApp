@@ -53,6 +53,7 @@ import de.uulm.einhoernchen.flashcardsapp.Model.Answer;
 import de.uulm.einhoernchen.flashcardsapp.Model.CardDeck;
 import de.uulm.einhoernchen.flashcardsapp.Model.Category;
 import de.uulm.einhoernchen.flashcardsapp.Model.FlashCard;
+import de.uulm.einhoernchen.flashcardsapp.Model.Statistics;
 import de.uulm.einhoernchen.flashcardsapp.Model.User;
 import de.uulm.einhoernchen.flashcardsapp.R;
 import de.uulm.einhoernchen.flashcardsapp.Const.Constants;
@@ -553,6 +554,7 @@ public class MainActivity extends AppCompatActivity
 
         } else if (id == R.id.nav_statistics) {
 
+            /* Uncomment to start Statistics as fragment
             FragmentStatistics fragment = new FragmentStatistics();
             android.support.v4.app.FragmentTransaction fragmentTransaction =
                     getSupportFragmentManager().beginTransaction();
@@ -560,6 +562,9 @@ public class MainActivity extends AppCompatActivity
             // Keep attention that this is replaced and not added
             fragmentTransaction.replace(R.id.fragment_container_main, fragment);
             fragmentTransaction.commit();
+            */
+
+            startActivity(new Intent(MainActivity.this, StatisticsActivity.class));
 
         } else if (id == R.id.nav_challenge) {
 

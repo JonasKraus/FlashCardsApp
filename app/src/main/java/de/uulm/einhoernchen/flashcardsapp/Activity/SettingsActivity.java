@@ -48,7 +48,7 @@ public class SettingsActivity extends AppCompatActivity implements CompoundButto
 
         setElementValues();
 
-        setViewElementsListener();
+        setViewElementsListener(this);
     }
 
     /**
@@ -73,17 +73,19 @@ public class SettingsActivity extends AppCompatActivity implements CompoundButto
      * Sets the listener to the gui elements
      * To unset listener give null as param
      *
+     * @param set
+     *
      * @author Jonas Kraus jonas.kraus@uni-ulm.de
      * @since 2017-01-20
      */
-    private void setViewElementsListener() {
+    private void setViewElementsListener(SettingsActivity set) {
 
-        switchSnyc.setOnCheckedChangeListener(this);
-        switchAnswerMultiChoiceRandom.setOnCheckedChangeListener(this);
-        switchShowLastDrawer.setOnCheckedChangeListener(this);
-        switchNightMode.setOnCheckedChangeListener(this);
+        switchSnyc.setOnCheckedChangeListener(set);
+        switchAnswerMultiChoiceRandom.setOnCheckedChangeListener(set);
+        switchShowLastDrawer.setOnCheckedChangeListener(set);
+        switchNightMode.setOnCheckedChangeListener(set);
 
-        radioGroupLearnMode.setOnCheckedChangeListener(this);
+        radioGroupLearnMode.setOnCheckedChangeListener(set);
 
     }
 
@@ -227,6 +229,22 @@ public class SettingsActivity extends AppCompatActivity implements CompoundButto
 
         return R.id.radio_learn_mode_drawer; // default
 
+    }
+
+
+    /**
+     * Destroys the activity
+     * resets listeners
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     * @since 2017-01-20
+     *
+     */
+    @Override
+    protected void onDestroy() {
+
+        super.onDestroy();
+        setViewElementsListener(null);
     }
 
 }
