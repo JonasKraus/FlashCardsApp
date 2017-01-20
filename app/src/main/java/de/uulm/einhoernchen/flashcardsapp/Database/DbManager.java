@@ -1730,6 +1730,15 @@ public class DbManager extends DbHelper{
         return entries;
     }
 
+
+    /**
+     * Generates data for a bar chart
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     * @since 2017-01-20
+     *
+     * @return entries
+     */
     public List<BarEntry> getEntriesForBarChart() {
 
         List<BarEntry> entries = new ArrayList<BarEntry>();
@@ -1753,6 +1762,15 @@ public class DbManager extends DbHelper{
         return entries;
     }
 
+
+    /**
+     * Generates data for a radar chart
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     * @since 2017-01-20
+     *
+     * @return entries
+     */
     public List<RadarEntry> getEntriesForRadarChart() {
 
         List<RadarEntry> entries = new ArrayList<RadarEntry>();
@@ -1776,6 +1794,15 @@ public class DbManager extends DbHelper{
         return entries;
     }
 
+
+    /**
+     * Generates data for a pie chart
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     * @since 2017-01-20
+     *
+     * @return entries
+     */
     public List<PieEntry> getEntriesForPieChart() {
         List<PieEntry> entries = new ArrayList<PieEntry>();
 
@@ -1804,6 +1831,15 @@ public class DbManager extends DbHelper{
         return entries;
     }
 
+
+    /**
+     * Counts the number of statistic rows for the user
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     * @since 2017-01-20
+     *
+     * @return count
+     */
     public float getCountStatistics() {
         String[] columns = {COLUMN_STATISTICS_ID};
 
