@@ -25,6 +25,7 @@ import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.RadarData;
 import com.github.mikephil.charting.data.RadarDataSet;
+import com.github.mikephil.charting.formatter.PercentFormatter;
 import com.github.mikephil.charting.utils.ColorTemplate;
 
 import java.util.List;
@@ -144,15 +145,16 @@ public class FragmentStatistics extends Fragment {
 
         PieDataSet pieSet = new PieDataSet(Globals.getDb().getEntriesForPieChart(), "Drawers content");
 
-        PieData dataPie = new PieData(pieSet);
         pieSet.setColors(ColorTemplate.VORDIPLOM_COLORS);
         pieSet.setSliceSpace(3);
         pieSet.setSelectionShift(5);
         pieChartTest.setUsePercentValues(true);
+        PieData dataPie = new PieData(pieSet);
+        dataPie.setValueFormatter(new PercentFormatter());
         pieChartTest.setData(dataPie);
         //pieChartTest.setDescription("This is the distribution of cards to the drawers");
-        pieChartTest.invalidate(); // refresh
         pieChartTest.animateXY(1400, 1400); // refresh
+        pieChartTest.invalidate(); // refresh
     }
 
 
