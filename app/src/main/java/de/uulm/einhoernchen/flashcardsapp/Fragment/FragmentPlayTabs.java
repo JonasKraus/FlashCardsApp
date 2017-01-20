@@ -69,7 +69,7 @@ public class FragmentPlayTabs extends Fragment {
 
         FragmentPagerAdapterPlay adapter = new FragmentPagerAdapterPlay(getChildFragmentManager());
 
-        adapter.addFragment(new FragmentPlayQuestion(), getResources().getString(R.string.tab_play));
+        adapter.addFragment(new FragmentPlayFlashCards(), getResources().getString(R.string.tab_play));
         adapter.addFragment(new FragmentSettings(), getResources().getString(R.string.toolbar_title_settings));
 
         viewPager.setAdapter(adapter);

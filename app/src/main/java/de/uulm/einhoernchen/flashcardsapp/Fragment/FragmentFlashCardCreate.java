@@ -183,6 +183,8 @@ public class FragmentFlashCardCreate extends Fragment implements View.OnClickLis
         textInputLayoutContent = (TextInputLayout) view.findViewById(R.id.textInputLayout_content);
 
         editTextQuestionUri = (EditText) view.findViewById(R.id.edittext_uri);
+
+        /* TODO uncomment to automatically show uri
         editTextQuestionUri.setOnFocusChangeListener(new View.OnFocusChangeListener() {
 
             @Override
@@ -194,6 +196,7 @@ public class FragmentFlashCardCreate extends Fragment implements View.OnClickLis
                 }
             }
         });
+        */
 
         editTextQuestionText = (EditText) view.findViewById(R.id.edittext_content);
 
@@ -288,6 +291,8 @@ public class FragmentFlashCardCreate extends Fragment implements View.OnClickLis
      * @since 2017-01-03
      */
     private void setMedia(String uriString) {
+
+        Log.d("hier", "setMedia");
 
         Globals.getProgressBar().setVisibility(View.VISIBLE);
 
@@ -617,6 +622,8 @@ public class FragmentFlashCardCreate extends Fragment implements View.OnClickLis
      * @return
      */
     private boolean validateQuestion() {
+
+        if (editTextQuestionText.getText().equals("")) return true;
 
         return ValidatorInput.isNotEmpty(editTextQuestionText) && ValidatorInput.isValidUri(editTextQuestionUri);
     }

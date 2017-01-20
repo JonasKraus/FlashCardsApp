@@ -1605,21 +1605,73 @@ public class DbManager extends DbHelper{
      * @return
      */
     public List<Long> getSelectedFlashcardIDs() {
-        List<Long> ids = new ArrayList<Long>();
 
+        Settings settings = Settings.getSettings();
+        Constants learnMode = settings.getLearnMode();
+
+        String orderBy = null;
+
+        switch (learnMode) {
+
+            case SETTINGS_LEARN_MODE_KNOWLEDGE:
+
+                orderBy = " ORDER BY " + TABLE_STATISTICS  + "." +
+                        COLUMN_STATISTICS_KNOWLEDGE + " ASC,  max(statistics.endDate) ASC";
+                // Order by knowledge ASC
+                break;
+
+            case SETTINGS_LEARN_MODE_DATE:
+
+                // ORDER by dateEnd ASC
+                orderBy = " ORDER BY " + TABLE_STATISTICS  + "." +
+                        COLUMN_STATISTICS_END_DATE + " ASC";
+                break;
+
+            case SETTINGS_LEARN_MODE_RANDOM:
+
+                // ORDER Random ??
+                break;
+
+            case SETTINGS_LEARN_MODE_DRAWER:
+
+                // Order by drawer ASC
+
+                orderBy = " ORDER BY " + TABLE_STATISTICS + "." +
+                        COLUMN_STATISTICS_DRAWER + " ASC,  max(statistics.endDate) ASC";
+                break;
+
+        }
+
+        List<Long> ids = new ArrayList<Long>();
 
         SQLiteQueryBuilder qb = new SQLiteQueryBuilder();
 
+        /*
         qb.setTables(
                 TABLE_SELECTION
                 + " JOIN " + TABLE_USER + " ON "
-                + TABLE_SELECTION + "." + COLUMN_SELECTION_USER_ID + "=" + TABLE_USER + "." + COLUMN_USER_ID
+                + TABLE_SELECTION + "." + COLUMN_SELECTION_USER_ID
+                        + "=" + TABLE_USER + "." + COLUMN_USER_ID
+                + " left JOIN " + TABLE_STATISTICS + " ON "
+                + TABLE_STATISTICS+ "." + COLUMN_STATISTICS_CARD_ID
+                        + "=" + TABLE_SELECTION + "." + COLUMN_SELECTION_CARD_ID
                 );
 
-        qb.appendWhere(COLUMN_USER_IS_LOGGED_IN + "=" + 1 + " AND " + COLUMN_SELECTION_DATE + " NOT NULL"
-                + " AND " + COLUMN_SELECTION_CARD_ID + " NOT NULL");
+        qb.appendWhere(COLUMN_USER_IS_LOGGED_IN + "=" + 1
+                + " AND " + COLUMN_SELECTION_DATE + " NOT NULL"
+                + " AND " + COLUMN_SELECTION_CARD_ID + " NOT NULL " + "ORDER BY " + orderBy);
 
         Cursor cursor = qb.query(database, null, null, null, null, null, null);
+        */
+
+        Cursor cursor = database.rawQuery("SELECT selection.cardId, * FROM selection\n" +
+                "    LEFT JOIN statistics ON selection.cardId = statistics.cardId\n" +
+                "    JOIN user ON selection.userId = user.userId\n" +
+                "    WHERE selection.cardId NOT NULL\n" +
+                "        AND user.isLoggedIn = 1\n" +
+                "     GROUP BY (selection.cardId)\n" +
+                "    " + orderBy, null);
+
 
         if (cursor.moveToFirst()) {
             do {

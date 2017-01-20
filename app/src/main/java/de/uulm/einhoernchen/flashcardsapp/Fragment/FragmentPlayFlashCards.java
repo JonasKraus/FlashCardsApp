@@ -8,7 +8,6 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.NestedScrollView;
 import android.text.Html;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -43,10 +42,10 @@ import de.uulm.einhoernchen.flashcardsapp.Util.ProcessorImage;
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
  * to handle interaction events.
- * Use the {@link FragmentPlayQuestion#newInstance} factory method to
+ * Use the {@link FragmentPlayFlashCards#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class FragmentPlayQuestion extends Fragment implements View.OnClickListener {
+public class FragmentPlayFlashCards extends Fragment implements View.OnClickListener {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -95,7 +94,7 @@ public class FragmentPlayQuestion extends Fragment implements View.OnClickListen
     private Statistics statistics;
 
 
-    public FragmentPlayQuestion() {
+    public FragmentPlayFlashCards() {
         // Required empty public constructor
 
     }
@@ -106,11 +105,11 @@ public class FragmentPlayQuestion extends Fragment implements View.OnClickListen
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment FragmentPlayQuestion.
+     * @return A new instance of fragment FragmentPlayFlashCards.
      */
     // TODO: Rename and change types and number of parameters
-    public static FragmentPlayQuestion newInstance(String param1, String param2) {
-        FragmentPlayQuestion fragment = new FragmentPlayQuestion();
+    public static FragmentPlayFlashCards newInstance(String param1, String param2) {
+        FragmentPlayFlashCards fragment = new FragmentPlayFlashCards();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);

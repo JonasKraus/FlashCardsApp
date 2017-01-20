@@ -28,10 +28,10 @@ public enum Constants {
 
             if (learnModeString.equals(String.valueOf(SETTINGS_LEARN_MODE_KNOWLEDGE))) {
 
-                return SETTINGS_LEARN_MODE_DATE;
+                return SETTINGS_LEARN_MODE_KNOWLEDGE;
             } else if (learnModeString.equals(String.valueOf(SETTINGS_LEARN_MODE_DATE))) {
 
-                return SETTINGS_LEARN_MODE_RANDOM;
+                return SETTINGS_LEARN_MODE_DATE;
             } else if (learnModeString.equals(String.valueOf(SETTINGS_LEARN_MODE_RANDOM))) {
 
                 return SETTINGS_LEARN_MODE_RANDOM;
