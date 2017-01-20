@@ -199,6 +199,8 @@
     <string name="dialog_content_knowledge">set your knowsledge in percent:</string>
     <string name="prompt_incorrect">incorrect</string>
     <string name="prompt_correct">correct</string>
+    <string name="title_activity_statistics">StatisticsActivity</string>
+    <string name="toolbar_title_statistic">Statistics</string>
 
 
 </resources>

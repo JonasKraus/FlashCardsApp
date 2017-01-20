@@ -43,6 +43,7 @@ import de.uulm.einhoernchen.flashcardsapp.Fragment.Dataset.ContentCarddecks;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.Dataset.ContentCategories;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.FragmentPlayTabs;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.FragmentSettings;
+import de.uulm.einhoernchen.flashcardsapp.Fragment.FragmentStatistics;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.Interface.OnFragmentInteractionListenerAnswer;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.Interface.OnFragmentInteractionListenerCarddeck;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.Interface.OnFragmentInteractionListenerCategory;
@@ -550,10 +551,21 @@ public class MainActivity extends AppCompatActivity
 
         } else if (id == R.id.nav_profile) {
 
+        } else if (id == R.id.nav_statistics) {
+
+            FragmentStatistics fragment = new FragmentStatistics();
+            android.support.v4.app.FragmentTransaction fragmentTransaction =
+                    getSupportFragmentManager().beginTransaction();
+
+            // Keep attention that this is replaced and not added
+            fragmentTransaction.replace(R.id.fragment_container_main, fragment);
+            fragmentTransaction.commit();
+
         } else if (id == R.id.nav_challenge) {
 
         } else if (id == R.id.nav_settings) {
-/*
+
+            /* Uncomment to start Settings as fragment
             FragmentSettings fragment = new FragmentSettings();
             android.support.v4.app.FragmentTransaction fragmentTransaction =
                     getSupportFragmentManager().beginTransaction();
@@ -563,6 +575,7 @@ public class MainActivity extends AppCompatActivity
             fragmentTransaction.commit();
             */
 
+            // Starting Settings as Activity
             startActivity(new Intent(MainActivity.this, SettingsActivity.class));
 
         } else if (id == R.id.nav_help) {
