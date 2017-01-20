@@ -12,6 +12,23 @@ import android.widget.CompoundButton;
 import android.widget.RadioGroup;
 import android.widget.Switch;
 
+import com.github.mikephil.charting.charts.BarChart;
+import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.charts.PieChart;
+import com.github.mikephil.charting.charts.RadarChart;
+import com.github.mikephil.charting.data.BarData;
+import com.github.mikephil.charting.data.BarDataSet;
+import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.LineData;
+import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.data.PieData;
+import com.github.mikephil.charting.data.PieDataSet;
+import com.github.mikephil.charting.data.RadarData;
+import com.github.mikephil.charting.data.RadarDataSet;
+import com.github.mikephil.charting.utils.ColorTemplate;
+
+import java.util.List;
+
 import de.uulm.einhoernchen.flashcardsapp.Activity.MainActivity;
 import de.uulm.einhoernchen.flashcardsapp.Const.Constants;
 import de.uulm.einhoernchen.flashcardsapp.Model.Settings;
@@ -32,6 +49,11 @@ public class FragmentStatistics extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+
+    private LineChart lineChartTest;
+    private BarChart barChartTest;
+    private RadarChart radarChartTest;
+    private PieChart pieChartTest;
 
 
     public FragmentStatistics() {
@@ -100,7 +122,37 @@ public class FragmentStatistics extends Fragment {
      */
     private void setElementValues() {
 
-        // TODO switchSnyc.setChecked(settings.isAllowSync());
+        List<Entry> entries = Globals.getDb().geEntriesForLineChart();
+        LineDataSet lineDataSet = new LineDataSet(entries, "Knowledge");
+        // dataSet.setColor(...);
+        // dataSet.setValueTextColor(...);
+        LineData lineData = new LineData(lineDataSet);
+        lineChartTest.setData(lineData);
+        lineChartTest.invalidate(); // refresh
+
+        BarDataSet set = new BarDataSet(Globals.getDb().getEntriesForBarChart(), "BarDataSet");
+        BarData data = new BarData(set);
+        data.setBarWidth(0.9f); // set custom bar width
+        barChartTest.setData(data);
+        barChartTest.setFitBars(true); // make the x-axis fit exactly all bars
+        barChartTest.invalidate(); // refresh
+
+        RadarDataSet setRadar = new RadarDataSet(Globals.getDb().getEntriesForRadarChart(), "RadarDataSet");
+        RadarData dataRadar = new RadarData(setRadar);
+        radarChartTest.setData(dataRadar);
+        radarChartTest.invalidate(); // refresh
+
+        PieDataSet pieSet = new PieDataSet(Globals.getDb().getEntriesForPieChart(), "Drawers content");
+
+        PieData dataPie = new PieData(pieSet);
+        pieSet.setColors(ColorTemplate.VORDIPLOM_COLORS);
+        pieSet.setSliceSpace(3);
+        pieSet.setSelectionShift(5);
+        pieChartTest.setUsePercentValues(true);
+        pieChartTest.setData(dataPie);
+        //pieChartTest.setDescription("This is the distribution of cards to the drawers");
+        pieChartTest.invalidate(); // refresh
+        pieChartTest.animateXY(1400, 1400); // refresh
     }
 
 
@@ -128,7 +180,10 @@ public class FragmentStatistics extends Fragment {
      */
     private void findViewElements(View view) {
 
-        // TODO switchSnyc = (Switch) view.findViewById(R.id.switch_settings_sync);
+        lineChartTest = (LineChart) view.findViewById(R.id.chart_linechart_statistics);
+        barChartTest = (BarChart) view.findViewById(R.id.chart_barchart_statistics);
+        radarChartTest = (RadarChart) view.findViewById(R.id.chart_radarchart_statistics);
+        pieChartTest = (PieChart) view.findViewById(R.id.chart_piechart_statistics);
 
     }
 

@@ -7,6 +7,12 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.util.Log;
 
+import com.github.mikephil.charting.charts.BarChart;
+import com.github.mikephil.charting.data.BarEntry;
+import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.PieEntry;
+import com.github.mikephil.charting.data.RadarEntry;
+
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -68,6 +74,9 @@ public class DbManager extends DbHelper{
     private SQLiteDatabase database;
     private Context context;
     private User loggedInUser;
+    private List<BarEntry> entriesForBarChart;
+    private List<RadarEntry> entriesForRadarChart;
+    private List<PieEntry> entriesForPieChart;
 
 
     /**
@@ -1692,5 +1701,124 @@ public class DbManager extends DbHelper{
      */
     public SQLiteDatabase getSQLiteDatabase() {
         return database;
+    }
+
+
+    /**
+     * Gets a bar chart data
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     * @since 2017-01-20
+     *
+     * @return
+     */
+    public List<Entry> geEntriesForLineChart() {
+
+        List<Entry> entries = new ArrayList<Entry>();
+
+        Cursor cursor = database.query(DbHelper.TABLE_STATISTICS, allStatisticsColumns, DbHelper.COLUMN_STATISTICS_USER_ID + " = " + getLoggedInUser().getId(), null, null, null, COLUMN_STATISTICS_END_DATE + " ASC");
+
+        if (cursor.moveToFirst()) {
+            do {
+                long index = cursor.getLong(cursor.getColumnIndex(COLUMN_STATISTICS_END_DATE));
+                long count = cursor.getLong(cursor.getColumnIndex(COLUMN_STATISTICS_KNOWLEDGE));
+
+                entries.add(new Entry(index, count));
+            } while (cursor.moveToNext());
+        }
+
+        return entries;
+    }
+
+    public List<BarEntry> getEntriesForBarChart() {
+
+        List<BarEntry> entries = new ArrayList<BarEntry>();
+        String[] columns = {"count("+ COLUMN_STATISTICS_ID + ") AS count"};
+
+        Cursor cursor = database.query(TABLE_STATISTICS,
+                columns,
+                COLUMN_STATISTICS_USER_ID + "=" + getLoggedInUser().getId(),
+                null, COLUMN_STATISTICS_DRAWER,
+                null, COLUMN_STATISTICS_DRAWER + " ASC");
+
+        if (cursor.moveToFirst()) {
+            do {
+                long index = cursor.getPosition();
+                long count = cursor.getLong(0);
+
+                entries.add(new BarEntry(index, count));
+            } while (cursor.moveToNext());
+        }
+
+        return entries;
+    }
+
+    public List<RadarEntry> getEntriesForRadarChart() {
+
+        List<RadarEntry> entries = new ArrayList<RadarEntry>();
+        String[] columns = {"count("+ COLUMN_STATISTICS_ID + ") AS count"};
+
+        Cursor cursor = database.query(TABLE_STATISTICS,
+                columns,
+                COLUMN_STATISTICS_USER_ID + "=" + getLoggedInUser().getId(),
+                null, COLUMN_STATISTICS_DRAWER,
+                null, COLUMN_STATISTICS_DRAWER + " ASC");
+
+        if (cursor.moveToFirst()) {
+            do {
+                long index = cursor.getPosition();
+                long count = cursor.getLong(0);
+
+                entries.add(new RadarEntry(index, count));
+            } while (cursor.moveToNext());
+        }
+
+        return entries;
+    }
+
+    public List<PieEntry> getEntriesForPieChart() {
+        List<PieEntry> entries = new ArrayList<PieEntry>();
+
+        // TODO Uncomment this to get percent float totalCountPercent = getCountStatistics() / 100f;
+        float totalCountPercent = 1;
+
+        String[] columns = {"count("+ COLUMN_STATISTICS_ID + ") AS count"};
+
+        Cursor cursor = database.query(TABLE_STATISTICS,
+                columns,
+                COLUMN_STATISTICS_USER_ID + "=" + getLoggedInUser().getId(),
+                null, COLUMN_STATISTICS_DRAWER,
+                null, COLUMN_STATISTICS_DRAWER + " ASC");
+
+        if (cursor.moveToFirst()) {
+            do {
+                long index = cursor.getPosition();
+                long count = cursor.getLong(0);
+
+                PieEntry pieEntry = new PieEntry(count * totalCountPercent, "drawer " + index);
+                entries.add(pieEntry);
+                Log.d("data", entries.get(cursor.getPosition()).toString());
+            } while (cursor.moveToNext());
+        }
+
+        return entries;
+    }
+
+    public float getCountStatistics() {
+        String[] columns = {COLUMN_STATISTICS_ID};
+
+        float count = 0;
+
+        Cursor cursor = database.query(TABLE_STATISTICS,
+                columns,
+                COLUMN_STATISTICS_USER_ID + "=" + getLoggedInUser().getId(),
+                null, null,
+                null, null);
+
+        if (cursor.moveToFirst()) {
+             count = cursor.getCount();
+        }
+
+        return count;
     }
 }

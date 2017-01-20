@@ -32,11 +32,19 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    allprojects {
+        repositories {
+            maven { url "https://jitpack.io" }
+        }
+    }
 }
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     compile files('libs/json-simple-1.1.1.jar')
+
+    // Charting library
+    compile 'com.github.PhilJay:MPAndroidChart:v3.0.1'
 
 
 
