@@ -142,7 +142,9 @@ public class FragmentPlayFlashCards extends Fragment implements View.OnClickList
         fab.setImageDrawable(Globals.getContext().getResources().getDrawable(R.drawable.ic_list));
         fab.setOnClickListener(this);
 
+        Globals.getProgressBar().setVisibility(View.VISIBLE);
         cardIds = db.getSelectedFlashcardIDs();
+        Globals.getProgressBar().setVisibility(View.GONE);
 
         if (cardIds.size() == 0) {
 
