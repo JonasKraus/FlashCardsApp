@@ -98,6 +98,18 @@ public class Statistic {
         return this.startDate;
     }
 
+    public float getKnowledge() {
+        return knowledge;
+    }
+
+    public int getDrawer() {
+        return drawer;
+    }
+
+    public long getEndDate() {
+        return endDate;
+    }
+
     @Override
     public String toString() {
         return "Statistic{" +
@@ -257,7 +269,6 @@ public class Statistic {
 
                 Statistic statistic = new Statistic(userId, cardId, knowledge, drawer, startDate, endDate);
 
-                Log.d("stat", statistic.toString());
                 stats.add(statistic);
 
             } while (cursor.moveToNext());

@@ -8,9 +8,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CompoundButton;
-import android.widget.RadioGroup;
-import android.widget.Switch;
 
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.LineChart;
@@ -31,8 +28,6 @@ import com.github.mikephil.charting.utils.ColorTemplate;
 import java.util.List;
 
 import de.uulm.einhoernchen.flashcardsapp.Activity.MainActivity;
-import de.uulm.einhoernchen.flashcardsapp.Const.Constants;
-import de.uulm.einhoernchen.flashcardsapp.Model.Settings;
 import de.uulm.einhoernchen.flashcardsapp.R;
 import de.uulm.einhoernchen.flashcardsapp.Util.Globals;
 
@@ -123,7 +118,7 @@ public class FragmentStatistics extends Fragment {
      */
     private void setElementValues() {
 
-        List<Entry> entries = Globals.getDb().geEntriesForLineChart();
+        List<Entry> entries = Globals.getDb().getEntriesForLineChart();
         LineDataSet lineDataSet = new LineDataSet(entries, "Knowledge");
         // dataSet.setColor(...);
         // dataSet.setValueTextColor(...);

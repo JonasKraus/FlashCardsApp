@@ -1764,22 +1764,23 @@ public class DbManager extends DbHelper{
      *
      * @return
      */
-    public List<Entry> geEntriesForLineChart() {
+    public List<Entry> getEntriesForLineChart() {
 
         List<Entry> entries = new ArrayList<Entry>();
 
-        Cursor cursor = database.query(
-                DbHelper.TABLE_STATISTICS,
-                allStatisticsColumns,
-                DbHelper.COLUMN_STATISTICS_USER_ID + " = " + getLoggedInUser().getId(),
-                null,
-                COLUMN_STATISTICS_CARD_ID,
-                null,
-                COLUMN_STATISTICS_END_DATE + " ASC");
+        String query = "SELECT avg(knowledge) knowledge, endDate, endDate-startDate as duration, sum(endDate-startDate) as durationSum FROM selection\n" +
+                "    LEFT JOIN statistics ON selection.cardId = statistics.cardId\n" +
+                "    JOIN user ON user.isLoggedIn = 1\n" +
+                "    WHERE selection.cardId NOT NULL\n" +
+                "GROUP BY  endDate " +
+                "ORDER BY endDate ASC";
+
+
+        Cursor cursor = database.rawQuery(query, null);
 
         if (cursor.moveToFirst()) {
             do {
-                long index = cursor.getLong(cursor.getColumnIndex(COLUMN_STATISTICS_END_DATE));
+                long index = cursor.getPosition();
                 long count = cursor.getLong(cursor.getColumnIndex(COLUMN_STATISTICS_KNOWLEDGE));
 
                 entries.add(new Entry(index, count));
@@ -1803,11 +1804,13 @@ public class DbManager extends DbHelper{
         List<BarEntry> entries = new ArrayList<BarEntry>();
         String[] columns = {"count("+ COLUMN_STATISTICS_ID + ") AS count"};
 
-        Cursor cursor = database.query(TABLE_STATISTICS,
+        Cursor cursor = database.query(TABLE_STATISTICS
+                + " JOIN " + TABLE_SELECTION + " ON " + TABLE_SELECTION + "." + COLUMN_SELECTION_CARD_ID + " = " + TABLE_STATISTICS+ "." + COLUMN_STATISTICS_CARD_ID
+                ,
                 columns,
-                COLUMN_STATISTICS_USER_ID + "=" + getLoggedInUser().getId(),
-                null, COLUMN_STATISTICS_CARD_ID,
-                null, COLUMN_STATISTICS_DRAWER + " ASC");
+                TABLE_STATISTICS + "." + COLUMN_STATISTICS_USER_ID + "=" + getLoggedInUser().getId(),
+                null, TABLE_STATISTICS + "." + COLUMN_STATISTICS_CARD_ID,
+                null, TABLE_STATISTICS + "." + COLUMN_STATISTICS_DRAWER + " ASC");
 
         if (cursor.moveToFirst()) {
             do {

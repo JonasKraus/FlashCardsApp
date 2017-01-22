@@ -1,13 +1,9 @@
 package de.uulm.einhoernchen.flashcardsapp.Activity;
 
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.View;
 import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.BarChart;
@@ -16,6 +12,7 @@ import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.charts.RadarChart;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
+import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
@@ -25,14 +22,10 @@ import com.github.mikephil.charting.data.RadarData;
 import com.github.mikephil.charting.data.RadarDataSet;
 import com.github.mikephil.charting.formatter.PercentFormatter;
 import com.github.mikephil.charting.utils.ColorTemplate;
-import com.google.android.gms.appindexing.Action;
-import com.google.android.gms.appindexing.AppIndex;
-import com.google.android.gms.appindexing.Thing;
-import com.google.android.gms.common.api.GoogleApiClient;
 
+import java.util.ArrayList;
 import java.util.List;
 
-import de.uulm.einhoernchen.flashcardsapp.Fragment.FragmentStatistics;
 import de.uulm.einhoernchen.flashcardsapp.Model.Statistic;
 import de.uulm.einhoernchen.flashcardsapp.R;
 import de.uulm.einhoernchen.flashcardsapp.Util.Globals;
@@ -82,15 +75,66 @@ public class StatisticsActivity extends AppCompatActivity {
      */
     private void setElementValues() {
 
-        List<Entry> entries = Globals.getDb().geEntriesForLineChart();
-        LineDataSet lineDataSet = new LineDataSet(entries, "Knowledge");
+        List<Entry> entries = Globals.getDb().getEntriesForLineChart();
+        LineDataSet lineDataSet = new LineDataSet(entries, getResources().getString(R.string.knowledge));
         // dataSet.setColor(...);
         // dataSet.setValueTextColor(...);
         LineData lineData = new LineData(lineDataSet);
         lineChartTest.setData(lineData);
         lineChartTest.invalidate(); // refresh
 
+/*
+        List<BarEntry> barEntries = new ArrayList<BarEntry>();
+
+        float numDrawer0 = 0;
+        float numDrawer1 = 0;
+        float numDrawer2 = 0;
+        float numDrawer3 = 0;
+        float numDrawer4 = 0;
+        float numDrawer5 = 0;
+        float numDrawer6 = 0;
+
+        for (Statistic stat: statistics) {
+
+            switch (stat.getDrawer()) {
+
+                case 0:
+                    numDrawer0++;
+                    break;
+                case 1:
+                    numDrawer1++;
+                    break;
+                case 2:
+                    numDrawer2++;
+                    break;
+                case 3:
+                    numDrawer3++;
+                    break;
+                case 4:
+                    numDrawer4++;
+                    break;
+                case 5:
+                    numDrawer5++;
+                    break;
+                case 6:
+                    numDrawer6++;
+                    break;
+            }
+        }
+
+        barEntries.add(new BarEntry(0f, numDrawer0));
+        barEntries.add(new BarEntry(1f, numDrawer1));
+        barEntries.add(new BarEntry(2f, numDrawer2));
+        barEntries.add(new BarEntry(3f, numDrawer3));
+        barEntries.add(new BarEntry(4f, numDrawer4));
+        barEntries.add(new BarEntry(5f, numDrawer5));
+        barEntries.add(new BarEntry(6f, numDrawer6));
+
+        BarDataSet set = new BarDataSet(barEntries, "ads");
+*/
+
         BarDataSet set = new BarDataSet(Globals.getDb().getEntriesForBarChart(), "BarDataSet");
+
         BarData data = new BarData(set);
         data.setBarWidth(0.9f); // set custom bar width
         barChartTest.setData(data);

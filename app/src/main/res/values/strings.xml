@@ -205,6 +205,7 @@
     <string name="statistcis_duration">entire duration</string>
     <string name="statistcis_duration_per_card">duration / card</string>
     <string name="statistcis_duration_average_knowledge">average knowledge</string>
+    <string name="knowledge">knowledge</string>
 
 
 </resources>
