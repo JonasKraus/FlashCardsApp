@@ -21,6 +21,7 @@ import static de.uulm.einhoernchen.flashcardsapp.Database.DbHelper.COLUMN_STATIS
 import static de.uulm.einhoernchen.flashcardsapp.Database.DbHelper.COLUMN_STATISTICS_KNOWLEDGE;
 import static de.uulm.einhoernchen.flashcardsapp.Database.DbHelper.COLUMN_STATISTICS_START_DATE;
 import static de.uulm.einhoernchen.flashcardsapp.Database.DbHelper.COLUMN_STATISTICS_USER_ID;
+import static de.uulm.einhoernchen.flashcardsapp.Database.DbHelper.TABLE_FLASHCARD;
 import static de.uulm.einhoernchen.flashcardsapp.Database.DbHelper.TABLE_STATISTICS;
 import static de.uulm.einhoernchen.flashcardsapp.Database.DbHelper.allStatisticsColumns;
 
@@ -267,4 +268,33 @@ public class Statistic {
     }
 
 
+    /**
+     * Gets the duration of all selected cards
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     * @since 2017-01-22
+     *
+     * @return
+     */
+    public static long getDurationOfSelection() {
+
+        SQLiteDatabase database = Globals.getDb().getSQLiteDatabase();
+
+        long duration = 0;
+
+        Cursor cursor = database.rawQuery(
+                "SELECT sum(endDate-startDate) as duration FROM selection " +
+                        "    LEFT JOIN statistics ON selection.cardId = statistics.cardId " +
+                        "    JOIN user ON user.isLoggedIn = 1"
+                , null);
+
+        if (cursor.moveToFirst()) {
+
+            duration = cursor.getLong(0);
+
+        }
+        cursor.close();
+
+        return duration;
+    }
 }

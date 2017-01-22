@@ -27,7 +27,6 @@
                 android:src="@drawable/ic_info_outline"/>
 
             <TextView
-                android:labelFor="@+id/textview_statistcis_num_selected_cards"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -73,6 +72,43 @@
 
             <TextView
                 android:id="@+id/textview_statistcis_duration"
+                android:text="0"
+                android:textSize="@dimen/text_size_app_bar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                />
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/divider"/>
+        <!-- END ITEM -->
+
+
+        <!-- START ITEM -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/activity_horizontal_margin"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingRight="@dimen/activity_horizontal_margin"
+                android:src="@drawable/ic_timer"/>
+
+            <TextView
+                android:labelFor="@+id/textview_statistcis_duration_per_card"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/statistcis_duration_per_card"/>
+
+            <TextView
+                android:id="@+id/textview_statistcis_duration_per_card"
                 android:text="0"
                 android:textSize="@dimen/text_size_app_bar"
                 android:layout_width="wrap_content"

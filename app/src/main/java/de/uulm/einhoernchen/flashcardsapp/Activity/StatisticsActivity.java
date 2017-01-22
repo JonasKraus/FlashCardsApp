@@ -8,6 +8,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.LineChart;
@@ -32,8 +33,10 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import java.util.List;
 
 import de.uulm.einhoernchen.flashcardsapp.Fragment.FragmentStatistics;
+import de.uulm.einhoernchen.flashcardsapp.Model.Statistic;
 import de.uulm.einhoernchen.flashcardsapp.R;
 import de.uulm.einhoernchen.flashcardsapp.Util.Globals;
+import de.uulm.einhoernchen.flashcardsapp.Util.ProcessorDate;
 
 public class StatisticsActivity extends AppCompatActivity {
 
@@ -42,17 +45,20 @@ public class StatisticsActivity extends AppCompatActivity {
     private BarChart barChartTest;
     private RadarChart radarChartTest;
     private PieChart pieChartTest;
-    /**
-     * ATTENTION: This was auto-generated to implement the App Indexing API.
-     * See https://g.co/AppIndexing/AndroidStudio for more information.
-     */
-    private GoogleApiClient client;
+
+    private TextView textViewNumCards;
+    private TextView textViewDuration;
+    private TextView textViewDurationPerCard;
+
+    private List<Statistic> statistics;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_statistics);
+
+        statistics = Statistic.getStatistics();
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_statistics);
         ((MainActivity) Globals.getContext()).setSupportActionBar(toolbar);
@@ -107,6 +113,16 @@ public class StatisticsActivity extends AppCompatActivity {
         //pieChartTest.setDescription("This is the distribution of cards to the drawers");
         pieChartTest.animateXY(1400, 1400); // refresh
         pieChartTest.invalidate(); // refresh
+
+        // SET TextViews
+        textViewNumCards.setText(statistics.size() +"");
+        textViewDuration.setText(ProcessorDate.convertMillisToHMS(Statistic.getDurationOfSelection()));
+        textViewDurationPerCard.setText(
+                ProcessorDate.convertMillisToHMS(
+                        Statistic.getDurationOfSelection() / statistics.size()
+                )
+        );
+
     }
 
 
@@ -138,6 +154,9 @@ public class StatisticsActivity extends AppCompatActivity {
         radarChartTest = (RadarChart) findViewById(R.id.chart_radarchart_statistics);
         pieChartTest = (PieChart) findViewById(R.id.chart_piechart_statistics);
 
+        textViewNumCards = (TextView) findViewById(R.id.textview_statistcis_num_selected_cards);
+        textViewDuration = (TextView) findViewById(R.id.textview_statistcis_duration);
+        textViewDurationPerCard = (TextView) findViewById(R.id.textview_statistcis_duration_per_card);
     }
 
 

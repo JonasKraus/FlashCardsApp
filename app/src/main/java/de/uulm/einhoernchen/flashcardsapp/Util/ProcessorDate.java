@@ -9,6 +9,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by jonas-uni on 21.08.2016.
@@ -63,5 +64,27 @@ public class ProcessorDate {
 
 
         return null;
+    }
+
+
+    /**
+     * Converts millis to hours minutes and seconds
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     * @since 2017-01-22
+     *
+     * @param millis
+     * @return
+     */
+    public static String convertMillisToHMS(long millis) {
+
+        String converted = String.format(Locale.getDefault(), "%d hrs, %d min, %d sec",
+                TimeUnit.MILLISECONDS.toHours(millis),
+                TimeUnit.MILLISECONDS.toMinutes(millis),
+                TimeUnit.MILLISECONDS.toSeconds(millis) -
+                        TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millis))
+        );
+
+        return converted;
     }
 }
