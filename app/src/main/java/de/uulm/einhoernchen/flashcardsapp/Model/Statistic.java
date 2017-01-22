@@ -297,4 +297,35 @@ public class Statistic {
 
         return duration;
     }
+
+
+    /**
+     * Gets the average knowledge of all selected cards
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     * @since 2017-01-22
+     *
+     * @return
+     */
+    public static long getAverageKnowledgeOfSelection() {
+
+        SQLiteDatabase database = Globals.getDb().getSQLiteDatabase();
+
+        long averageKnowledge = 0;
+
+        Cursor cursor = database.rawQuery(
+                "SELECT AVG(knowledge) as average FROM selection " +
+                        "    LEFT JOIN statistics ON selection.cardId = statistics.cardId " +
+                        "    JOIN user ON user.isLoggedIn = 1"
+                , null);
+
+        if (cursor.moveToFirst()) {
+
+            averageKnowledge = cursor.getLong(0);
+
+        }
+        cursor.close();
+
+        return averageKnowledge;
+    }
 }

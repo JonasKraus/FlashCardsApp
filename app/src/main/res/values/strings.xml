@@ -204,6 +204,7 @@
     <string name="statistcis_num_selected_cards">selected cards</string>
     <string name="statistcis_duration">entire duration</string>
     <string name="statistcis_duration_per_card">duration / card</string>
+    <string name="statistcis_duration_average_knowledge">average knowledge</string>
 
 
 </resources>

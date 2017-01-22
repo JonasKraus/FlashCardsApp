@@ -51,6 +51,7 @@ public class StatisticsActivity extends AppCompatActivity {
     private TextView textViewDurationPerCard;
 
     private List<Statistic> statistics;
+    private TextView textViewAverageKnowledge;
 
 
     @Override
@@ -122,6 +123,7 @@ public class StatisticsActivity extends AppCompatActivity {
                         Statistic.getDurationOfSelection() / statistics.size()
                 )
         );
+        textViewAverageKnowledge.setText(Statistic.getAverageKnowledgeOfSelection() + "%");
 
     }
 
@@ -157,6 +159,7 @@ public class StatisticsActivity extends AppCompatActivity {
         textViewNumCards = (TextView) findViewById(R.id.textview_statistcis_num_selected_cards);
         textViewDuration = (TextView) findViewById(R.id.textview_statistcis_duration);
         textViewDurationPerCard = (TextView) findViewById(R.id.textview_statistcis_duration_per_card);
+        textViewAverageKnowledge = (TextView) findViewById(R.id.textview_statistcis_average_knowledge);
     }
 
 
