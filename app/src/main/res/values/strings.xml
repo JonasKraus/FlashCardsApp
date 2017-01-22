@@ -201,6 +201,8 @@
     <string name="prompt_correct">correct</string>
     <string name="title_activity_statistics">StatisticsActivity</string>
     <string name="toolbar_title_statistic">Statistics</string>
+    <string name="statistcis_num_selected_cards">selected cards</string>
+    <string name="statistcis_duration">duration</string>
 
 
 </resources>

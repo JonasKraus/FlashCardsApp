@@ -32,7 +32,7 @@ import de.uulm.einhoernchen.flashcardsapp.Database.DbManager;
 import de.uulm.einhoernchen.flashcardsapp.Dialog.DialogKnowledge;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.Dataset.ContentFlashCardAnswers;
 import de.uulm.einhoernchen.flashcardsapp.Model.FlashCard;
-import de.uulm.einhoernchen.flashcardsapp.Model.Statistics;
+import de.uulm.einhoernchen.flashcardsapp.Model.Statistic;
 import de.uulm.einhoernchen.flashcardsapp.R;
 import de.uulm.einhoernchen.flashcardsapp.Util.Globals;
 import de.uulm.einhoernchen.flashcardsapp.Util.ProcessConnectivity;
@@ -78,7 +78,6 @@ public class FragmentPlayFlashCards extends Fragment implements View.OnClickList
 
     private FloatingActionButton fab = Globals.getFloatingActionButton();
 
-    private List<Long> cardIds;
     private DbManager db = Globals.getDb();
     private FlashCard currentFlashcard;
     private int position = 0;
@@ -91,7 +90,8 @@ public class FragmentPlayFlashCards extends Fragment implements View.OnClickList
     private View view;
     private NestedScrollView nsContentAnswers;
     private ContentFlashCardAnswers contentAnswers;
-    private Statistics statistics;
+    private Statistic statistic;
+    private List<Statistic> statistics;
 
 
     public FragmentPlayFlashCards() {
@@ -143,19 +143,20 @@ public class FragmentPlayFlashCards extends Fragment implements View.OnClickList
         fab.setOnClickListener(this);
 
         Globals.getProgressBar().setVisibility(View.VISIBLE);
-        cardIds = db.getSelectedFlashcardIDs();
         Globals.getProgressBar().setVisibility(View.GONE);
 
-        if (cardIds.size() == 0) {
+        statistics = Statistic.getStatistics();
+
+        if (statistics.size() == 0) {
 
             Toast.makeText(getContext(), R.string.select_card, Toast.LENGTH_SHORT).show();
             // TODO return to catalogue
             MainActivity mainActivity = (MainActivity) Globals.getContext();
             mainActivity.onBackPressed();
 
-        } else if (position < cardIds.size()){
+        } else if (position < statistics.size()){
 
-            currentFlashcard = db.getFlashCard(cardIds.get(position));
+            currentFlashcard = db.getFlashCard(statistics.get(position).getCardId());
         }
     }
 
@@ -247,7 +248,7 @@ public class FragmentPlayFlashCards extends Fragment implements View.OnClickList
 
         // Create statistic Object
 
-        statistics = new Statistics();
+        statistic = new Statistic();
 
         initVariables();
 
@@ -351,8 +352,8 @@ public class FragmentPlayFlashCards extends Fragment implements View.OnClickList
 
         // Set the cardid to the statistic object
         // save it after validating
-        statistics.setCardId(currentFlashcard.getId());
-        statistics.setStartDate(System.currentTimeMillis());
+        statistic.setCardId(currentFlashcard.getId());
+        statistic.setStartDate(System.currentTimeMillis());
 
         mContentView.setText(Html.fromHtml(currentFlashcard.getQuestion().getQuestionText()));
         mAuthorView.setText(currentFlashcard.getQuestion().getAuthor().getName());
@@ -473,7 +474,7 @@ public class FragmentPlayFlashCards extends Fragment implements View.OnClickList
      */
     private void setListener() {
 
-        final long cardID = cardIds.get(position);
+        final long cardID = statistics.get(position).getCardId();
 
         /**
          * Sets the clicklistener to vote a cards rating down
@@ -587,11 +588,11 @@ public class FragmentPlayFlashCards extends Fragment implements View.OnClickList
                     position++;
 
                     // get loop if end is reached
-                    position %= cardIds.size();
+                    position %= statistics.size();
 
                     // get flashcard
                     // TODO sync with server
-                    currentFlashcard = db.getFlashCard(cardIds.get(position));
+                    currentFlashcard = db.getFlashCard(statistics.get(position).getCardId());
                 }
 
                 setContent();
@@ -621,7 +622,7 @@ public class FragmentPlayFlashCards extends Fragment implements View.OnClickList
 
                 if (currentFlashcard.isMultipleChoice()) {
 
-                    contentAnswers.validateAnswers(statistics);
+                    contentAnswers.validateAnswers(statistic);
 
                     //TODO check if answers are correct
                 } else {
@@ -643,7 +644,7 @@ public class FragmentPlayFlashCards extends Fragment implements View.OnClickList
             case PLAY_DIALOG:
 
                 // Custom Dialog which saves a statistic
-                new DialogKnowledge(getContext(), statistics).show();
+                new DialogKnowledge(getContext(), statistic).show();
                 state = Constants.PLAY_QUESTION;
                 break;
 

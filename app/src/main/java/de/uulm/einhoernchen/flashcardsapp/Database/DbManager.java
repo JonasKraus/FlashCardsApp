@@ -1768,7 +1768,14 @@ public class DbManager extends DbHelper{
 
         List<Entry> entries = new ArrayList<Entry>();
 
-        Cursor cursor = database.query(DbHelper.TABLE_STATISTICS, allStatisticsColumns, DbHelper.COLUMN_STATISTICS_USER_ID + " = " + getLoggedInUser().getId(), null, null, null, COLUMN_STATISTICS_END_DATE + " ASC");
+        Cursor cursor = database.query(
+                DbHelper.TABLE_STATISTICS,
+                allStatisticsColumns,
+                DbHelper.COLUMN_STATISTICS_USER_ID + " = " + getLoggedInUser().getId(),
+                null,
+                COLUMN_STATISTICS_CARD_ID,
+                null,
+                COLUMN_STATISTICS_END_DATE + " ASC");
 
         if (cursor.moveToFirst()) {
             do {
@@ -1799,7 +1806,7 @@ public class DbManager extends DbHelper{
         Cursor cursor = database.query(TABLE_STATISTICS,
                 columns,
                 COLUMN_STATISTICS_USER_ID + "=" + getLoggedInUser().getId(),
-                null, COLUMN_STATISTICS_DRAWER,
+                null, COLUMN_STATISTICS_CARD_ID,
                 null, COLUMN_STATISTICS_DRAWER + " ASC");
 
         if (cursor.moveToFirst()) {
@@ -1831,7 +1838,7 @@ public class DbManager extends DbHelper{
         Cursor cursor = database.query(TABLE_STATISTICS,
                 columns,
                 COLUMN_STATISTICS_USER_ID + "=" + getLoggedInUser().getId(),
-                null, COLUMN_STATISTICS_DRAWER,
+                null, COLUMN_STATISTICS_CARD_ID,
                 null, COLUMN_STATISTICS_DRAWER + " ASC");
 
         if (cursor.moveToFirst()) {
@@ -1866,7 +1873,7 @@ public class DbManager extends DbHelper{
         Cursor cursor = database.query(TABLE_STATISTICS,
                 columns,
                 COLUMN_STATISTICS_USER_ID + "=" + getLoggedInUser().getId(),
-                null, COLUMN_STATISTICS_DRAWER,
+                null, COLUMN_STATISTICS_CARD_ID,
                 null, COLUMN_STATISTICS_DRAWER + " ASC");
 
         if (cursor.moveToFirst()) {

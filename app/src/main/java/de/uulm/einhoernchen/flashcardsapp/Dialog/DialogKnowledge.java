@@ -10,7 +10,7 @@ import android.widget.Button;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
-import de.uulm.einhoernchen.flashcardsapp.Model.Statistics;
+import de.uulm.einhoernchen.flashcardsapp.Model.Statistic;
 import de.uulm.einhoernchen.flashcardsapp.R;
 
 
@@ -24,7 +24,7 @@ public class DialogKnowledge extends Dialog implements View.OnClickListener, See
     private Button buttonCorrect;
     private Button buttonOk;
     private Button buttonIncorrect;
-    private Statistics statistics;
+    private Statistic statistics;
     private SeekBar seekBarKnowledge;
     private TextView textPercentKnowledge;
 
@@ -36,7 +36,7 @@ public class DialogKnowledge extends Dialog implements View.OnClickListener, See
      * @author Jonas Kraus jonas.kraus@uni-ulm.de
      * @since 2017-01-17
      */
-    public DialogKnowledge(Context context, Statistics statistics) {
+    public DialogKnowledge(Context context, Statistic statistics) {
 
         super(context);
 

@@ -42,8 +42,6 @@ import de.uulm.einhoernchen.flashcardsapp.Fragment.FragmentHome;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.Dataset.ContentCarddecks;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.Dataset.ContentCategories;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.FragmentPlayTabs;
-import de.uulm.einhoernchen.flashcardsapp.Fragment.FragmentSettings;
-import de.uulm.einhoernchen.flashcardsapp.Fragment.FragmentStatistics;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.Interface.OnFragmentInteractionListenerAnswer;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.Interface.OnFragmentInteractionListenerCarddeck;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.Interface.OnFragmentInteractionListenerCategory;
@@ -53,7 +51,6 @@ import de.uulm.einhoernchen.flashcardsapp.Model.Answer;
 import de.uulm.einhoernchen.flashcardsapp.Model.CardDeck;
 import de.uulm.einhoernchen.flashcardsapp.Model.Category;
 import de.uulm.einhoernchen.flashcardsapp.Model.FlashCard;
-import de.uulm.einhoernchen.flashcardsapp.Model.Statistics;
 import de.uulm.einhoernchen.flashcardsapp.Model.User;
 import de.uulm.einhoernchen.flashcardsapp.R;
 import de.uulm.einhoernchen.flashcardsapp.Const.Constants;
@@ -554,7 +551,7 @@ public class MainActivity extends AppCompatActivity
 
         } else if (id == R.id.nav_statistics) {
 
-            /* Uncomment to start Statistics as fragment
+            /* Uncomment to start Statistic as fragment
             FragmentStatistics fragment = new FragmentStatistics();
             android.support.v4.app.FragmentTransaction fragmentTransaction =
                     getSupportFragmentManager().beginTransaction();

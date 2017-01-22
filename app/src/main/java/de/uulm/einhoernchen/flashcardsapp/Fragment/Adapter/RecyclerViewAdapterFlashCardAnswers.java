@@ -28,7 +28,7 @@ import de.uulm.einhoernchen.flashcardsapp.AsyncTask.Remote.POST.AsyncPostRemoteR
 import de.uulm.einhoernchen.flashcardsapp.Database.DbManager;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.Interface.OnFragmentInteractionListenerAnswer;
 import de.uulm.einhoernchen.flashcardsapp.Model.Answer;
-import de.uulm.einhoernchen.flashcardsapp.Model.Statistics;
+import de.uulm.einhoernchen.flashcardsapp.Model.Statistic;
 import de.uulm.einhoernchen.flashcardsapp.R;
 import de.uulm.einhoernchen.flashcardsapp.Util.Globals;
 import de.uulm.einhoernchen.flashcardsapp.Util.ProcessConnectivity;
@@ -402,7 +402,7 @@ public class RecyclerViewAdapterFlashCardAnswers extends RecyclerView.Adapter<Re
      * @since 2017-01-13
      *
      */
-    public void validateAnswers(Statistics statistics) {
+    public void validateAnswers(Statistic statistics) {
 
         // 100 percent
         long knowledge = 100;

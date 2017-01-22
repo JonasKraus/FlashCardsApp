@@ -3,10 +3,18 @@ package de.uulm.einhoernchen.flashcardsapp.Model;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteQueryBuilder;
+import android.util.Log;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import de.uulm.einhoernchen.flashcardsapp.Const.Constants;
 import de.uulm.einhoernchen.flashcardsapp.Database.DbHelper;
 import de.uulm.einhoernchen.flashcardsapp.Util.Globals;
+
+import static de.uulm.einhoernchen.flashcardsapp.Database.DbHelper.COLUMN_SELECTION_CARD_ID;
+import static de.uulm.einhoernchen.flashcardsapp.Database.DbHelper.COLUMN_SELECTION_USER_ID;
 import static de.uulm.einhoernchen.flashcardsapp.Database.DbHelper.COLUMN_STATISTICS_CARD_ID;
 import static de.uulm.einhoernchen.flashcardsapp.Database.DbHelper.COLUMN_STATISTICS_DRAWER;
 import static de.uulm.einhoernchen.flashcardsapp.Database.DbHelper.COLUMN_STATISTICS_END_DATE;
@@ -21,7 +29,7 @@ import static de.uulm.einhoernchen.flashcardsapp.Database.DbHelper.allStatistics
  * @since 2017.01.15
  */
 
-public class Statistics {
+public class Statistic {
 
     private long id;
     private long userId;
@@ -39,11 +47,33 @@ public class Statistics {
      * @since 2017-01-15
      *
      */
-    public Statistics() {
+    public Statistic() {
 
         this.userId = Globals.getDb().getLoggedInUser().getId();
     }
 
+
+    /**
+     * Use this constructor to instantiate a statistic from the db
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     * @since 2017-01-22
+     *
+     * @param userId
+     * @param cardId
+     * @param knowledge
+     * @param drawer
+     * @param startDate
+     * @param endDate
+     */
+    private Statistic(long userId, long cardId, float knowledge, int drawer, long startDate, long endDate) {
+        this.userId = userId;
+        this.cardId = cardId;
+        this.knowledge = knowledge;
+        this.drawer = drawer;
+        this.startDate = startDate;
+        this.endDate = endDate;
+    }
 
     public long getUserId() {
         return userId;
@@ -69,7 +99,7 @@ public class Statistics {
 
     @Override
     public String toString() {
-        return "Statistics{" +
+        return "Statistic{" +
                 "userId=" + userId +
                 ", cardId=" + cardId +
                 ", knowledge=" + knowledge +
@@ -154,6 +184,87 @@ public class Statistics {
         return drawer;
     }
 
+
+    /**
+     * Gets the list of all currently selected cards' stats
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     * @since 2017-01-22
+     *
+     * @return
+     */
+    public static List<Statistic> getStatistics() {
+
+        Settings settings = Settings.getSettings();
+        Constants learnMode = settings.getLearnMode();
+
+        String orderBy = null;
+
+        switch (learnMode) {
+
+            case SETTINGS_LEARN_MODE_KNOWLEDGE:
+
+                orderBy = " ORDER BY " + TABLE_STATISTICS  + "." +
+                        COLUMN_STATISTICS_KNOWLEDGE + " ASC,  max(statistics.endDate) ASC";
+                // Order by knowledge ASC
+                break;
+
+            case SETTINGS_LEARN_MODE_DATE:
+
+                // ORDER by dateEnd ASC
+                orderBy = " ORDER BY " + TABLE_STATISTICS  + "." +
+                        COLUMN_STATISTICS_END_DATE + " ASC";
+                break;
+
+            case SETTINGS_LEARN_MODE_RANDOM:
+
+                // ORDER Random ??
+                break;
+
+            case SETTINGS_LEARN_MODE_DRAWER:
+
+                // Order by drawer ASC
+
+                orderBy = " ORDER BY " + TABLE_STATISTICS + "." +
+                        COLUMN_STATISTICS_DRAWER + " ASC,  max(statistics.endDate) ASC";
+                break;
+
+        }
+
+        List<Statistic> stats = new ArrayList<Statistic>();
+
+        SQLiteDatabase database = Globals.getDb().getSQLiteDatabase();
+
+        Cursor cursor = database.rawQuery("SELECT selection.userId, selection.cardId, knowledge, drawer, startDate, endDate " +
+                "FROM selection\n" +
+                "    LEFT JOIN statistics ON selection.cardId = statistics.cardId\n" +
+                "    JOIN user ON user.isLoggedIn = 1\n" +
+                "    WHERE selection.cardId NOT NULL\n" +
+                "     GROUP BY (selection.cardId)\n" +
+                "    " + orderBy, null);
+
+
+        if (cursor.moveToFirst()) {
+            do {
+
+                long cardId = cursor.getLong(cursor.getColumnIndex(COLUMN_SELECTION_CARD_ID));
+                long userId = cursor.getLong(cursor.getColumnIndex(COLUMN_SELECTION_USER_ID));
+                float knowledge = cursor.getFloat(cursor.getColumnIndex(COLUMN_STATISTICS_KNOWLEDGE));
+                int drawer = cursor.getInt(cursor.getColumnIndex(COLUMN_STATISTICS_DRAWER));
+                long startDate = cursor.getLong(cursor.getColumnIndex(COLUMN_STATISTICS_START_DATE));
+                long endDate = cursor.getLong(cursor.getColumnIndex(COLUMN_STATISTICS_END_DATE));
+
+                Statistic statistic = new Statistic(userId, cardId, knowledge, drawer, startDate, endDate);
+
+                Log.d("stat", statistic.toString());
+                stats.add(statistic);
+
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+
+        return stats;
+    }
 
 
 }
