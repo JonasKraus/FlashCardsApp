@@ -85,6 +85,17 @@ public class RecyclerViewAdapterUserGroups extends RecyclerView.Adapter<Recycler
         setViewState(holder, position);
 
         holders.add(holder);
+
+        holder.mView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (null != mListener) {
+                    // Notify the active callbacks interface (the activity, if the
+                    // fragment is attached to one) that an item has been selected.
+                    mListener.onUserGroupListFragmentInteraction(holder.mItem);
+                }
+            }
+        });
     }
 
 
