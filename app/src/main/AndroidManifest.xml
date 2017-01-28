@@ -30,14 +30,22 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity
             android:name=".Activity.MainActivity"
             android:label="@string/title_activity_home"
             android:theme="@style/AppTheme" />
+
         <activity
             android:name=".Activity.SettingsActivity"
             android:label="@string/title_activity_settings"
-            android:theme="@style/AppTheme" />
+            android:parentActivityName=".Activity.MainActivity"
+            android:theme="@style/AppTheme">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="de.uulm.einhoernchen.flashcardsapp.Activity.MainActivity" />
+        </activity>
+
         <activity
             android:name=".Activity.StatisticsActivity"
             android:label="@string/title_activity_statistics"

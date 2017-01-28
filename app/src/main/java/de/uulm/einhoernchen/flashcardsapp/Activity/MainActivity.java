@@ -99,6 +99,15 @@ public class MainActivity extends AppCompatActivity
     private FragmentPlayTabs fragmentPlay;
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        this.context = this;
+        openDb();
+        Globals.initGlobals(context, progressBar, db, getSupportFragmentManager(), floatingActionButton, floatingActionButtonAdd);
+    }
+
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
@@ -784,7 +793,7 @@ public class MainActivity extends AppCompatActivity
     protected void onDestroy() {
 
         super.onDestroy();
-        db.close();
+        //db.close(); TODO
     }
 
 

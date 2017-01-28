@@ -40,9 +40,13 @@ public class SettingsActivity extends AppCompatActivity implements CompoundButto
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_settings);
         ((MainActivity) Globals.getContext()).setSupportActionBar(toolbar);
 
+        setSupportActionBar(toolbar);
+
         CollapsingToolbarLayout collapsingToolbar =
                 (CollapsingToolbarLayout) findViewById(R.id.toolbar_layout_settings);
         collapsingToolbar.setTitle(getResources().getString(R.string.toolbar_title_settings));
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         findViewElements();
 

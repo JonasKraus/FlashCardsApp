@@ -57,9 +57,13 @@ public class StatisticsActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_statistics);
         ((MainActivity) Globals.getContext()).setSupportActionBar(toolbar);
 
+        setSupportActionBar(toolbar);
+
         CollapsingToolbarLayout collapsingToolbar =
                 (CollapsingToolbarLayout) findViewById(R.id.toolbar_layout_statistics);
         collapsingToolbar.setTitle(getResources().getString(R.string.toolbar_title_statistic));
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         findViewElements();
 
