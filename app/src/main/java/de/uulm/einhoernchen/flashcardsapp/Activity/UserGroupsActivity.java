@@ -46,8 +46,8 @@ public class UserGroupsActivity extends AppCompatActivity implements OnFragmentI
 
         Globals.setFragmentManager(getSupportFragmentManager());
         ContentUserGroups contentUserGroups = new ContentUserGroups();
-        contentUserGroups.collectItemsFromServer(false);
         contentUserGroups.collectItemsFromDb(false);
+        contentUserGroups.collectItemsFromServer(false);
 
     }
 

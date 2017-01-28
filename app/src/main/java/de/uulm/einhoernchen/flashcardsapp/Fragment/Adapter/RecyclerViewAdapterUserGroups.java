@@ -1,41 +1,26 @@
 package de.uulm.einhoernchen.flashcardsapp.Fragment.Adapter;
 
 import android.content.Context;
-import android.content.Intent;
-import android.graphics.Color;
-import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.WebSettings;
-import android.webkit.WebView;
-import android.webkit.WebViewClient;
-import android.widget.CheckBox;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
+
+import com.amulyakhare.textdrawable.TextDrawable;
+import com.amulyakhare.textdrawable.util.ColorGenerator;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import de.uulm.einhoernchen.flashcardsapp.AsyncTask.Remote.DELETE.AsyncDeleteRemoteRating;
-import de.uulm.einhoernchen.flashcardsapp.AsyncTask.Remote.POST.AsyncPostRemoteRating;
 import de.uulm.einhoernchen.flashcardsapp.Database.DbManager;
-import de.uulm.einhoernchen.flashcardsapp.Fragment.Interface.OnFragmentInteractionListenerAnswer;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.Interface.OnFragmentInteractionListenerUserGroup;
-import de.uulm.einhoernchen.flashcardsapp.Model.Answer;
-import de.uulm.einhoernchen.flashcardsapp.Model.FlashCard;
-import de.uulm.einhoernchen.flashcardsapp.Model.Statistic;
 import de.uulm.einhoernchen.flashcardsapp.Model.UserGroup;
 import de.uulm.einhoernchen.flashcardsapp.R;
 import de.uulm.einhoernchen.flashcardsapp.Util.Globals;
-import de.uulm.einhoernchen.flashcardsapp.Util.ProcessConnectivity;
-import de.uulm.einhoernchen.flashcardsapp.Util.ProcessorImage;
 
 /**
  * {@link RecyclerView.Adapter} that can display a {@link de.uulm.einhoernchen.flashcardsapp.Fragment.Dataset.ContentFlashCardAnswers} and makes a call to the
@@ -78,13 +63,15 @@ public class RecyclerViewAdapterUserGroups extends RecyclerView.Adapter<Recycler
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.mItem = groups.get(position);
         // holder.mIdView.setText(groups.get(position).getId()+""); TODO Wird das benötigt?
-        holder.mContentView.setText(groups.get(position).getName());
-        holder.mAuthorView.setVisibility(View.VISIBLE);
-        holder.mAuthorView.setText(groups.get(position).getDescription());
+        holder.textviewName.setText(groups.get(position).getName());
+        holder.textViewdescription.setVisibility(View.VISIBLE);
+        holder.textViewdescription.setText(groups.get(position).getDescription());
 
         setViewState(holder, position);
 
         holders.add(holder);
+
+        setRoundIcon(groups.get(position), holder);
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -98,6 +85,20 @@ public class RecyclerViewAdapterUserGroups extends RecyclerView.Adapter<Recycler
         });
     }
 
+    private void setRoundIcon(UserGroup userGroup, ViewHolder holder) {
+        //get first letter of each String item
+        final String firstLetter = String.valueOf(userGroup.getName().charAt(0)); // hier wird der buchstabe gesetzt
+
+        ColorGenerator generator = ColorGenerator.MATERIAL; // or use DEFAULT
+        // generate random color
+        final int color = generator.getColor(userGroup.getId()); // TODO
+        //int color = generator.getRandomColor();
+
+        TextDrawable drawable = TextDrawable.builder()
+                .buildRound(firstLetter, color); // radius in px
+
+        holder.imageView.setImageDrawable(drawable);
+    }
 
     /**
      * Sets the visibilities and states of the gui elements
@@ -110,7 +111,7 @@ public class RecyclerViewAdapterUserGroups extends RecyclerView.Adapter<Recycler
      */
     private void setViewState(ViewHolder holder, int position) {
 
-
+        Log.d("visibillity", isUpToDate+"");
         /**
          * Check if the data is from the server or from the local db
          */
@@ -153,9 +154,8 @@ public class RecyclerViewAdapterUserGroups extends RecyclerView.Adapter<Recycler
     public class ViewHolder extends RecyclerView.ViewHolder {
         public final View mView;
         public final TextView mIdView;
-        public final TextView mContentView;
-        public final TextView mHintView;
-        public final TextView mAuthorView;
+        public final TextView textviewName;
+        public final TextView textViewdescription;
         public final ImageView mLocalView;
         public final ImageView imageView; // Text icon
 
@@ -174,9 +174,8 @@ public class RecyclerViewAdapterUserGroups extends RecyclerView.Adapter<Recycler
 
             mView = view;
             mIdView = (TextView) view.findViewById(R.id.id);
-            mContentView = (TextView) view.findViewById(R.id.content);
-            mHintView = (TextView) view.findViewById(R.id.hint);
-            mAuthorView = (TextView) view.findViewById(R.id.textView_listItem_author);
+            textviewName = (TextView) view.findViewById(R.id.textview_usergroup_name);
+            textViewdescription = (TextView) view.findViewById(R.id.textview_usergroup_description);
 
             mLocalView = (ImageView) view.findViewById(R.id.image_view_offline);
 
@@ -186,7 +185,7 @@ public class RecyclerViewAdapterUserGroups extends RecyclerView.Adapter<Recycler
 
         @Override
         public String toString() {
-            return super.toString() + " '" + mContentView.getText() + "'";
+            return super.toString() + " '" + textviewName.getText() + "'";
         }
     }
 }
