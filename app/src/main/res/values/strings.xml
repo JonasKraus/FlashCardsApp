@@ -206,6 +206,8 @@
     <string name="statistcis_duration_per_card">duration / card</string>
     <string name="statistcis_duration_average_knowledge">average knowledge</string>
     <string name="knowledge">knowledge</string>
+    <string name="title_activity_user_groups">User Groups</string>
+    <string name="nav_user_groups">user groups</string>
 
 
 </resources>

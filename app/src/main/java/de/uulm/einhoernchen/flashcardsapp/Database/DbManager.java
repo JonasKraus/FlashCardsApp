@@ -810,6 +810,15 @@ public class DbManager extends DbHelper{
         return cardDecks;
     }
 
+
+    /**
+     * Gets a user group from db for a given carddeck id
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     *
+     * @param cardDeckGroupId
+     * @return
+     */
     private UserGroup getUserGroup(long cardDeckGroupId) {
 
         UserGroup userGroup = null;
@@ -826,6 +835,34 @@ public class DbManager extends DbHelper{
         }
 
         return userGroup == null ? new UserGroup() : userGroup;
+
+    }
+
+
+    /**
+     * Gets a list of user groups from db
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     *
+     * @return
+     */
+    public List<UserGroup> getUserGroups() {
+
+        List<UserGroup> userGroups = new ArrayList<UserGroup>();
+
+        // TODO join to user where id ... userjoin table
+        Cursor cursor = database.query(DbHelper.TABLE_USER_GROUP, allUserGroupColumns, null, null, null, null, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                long userGroupId = cursor.getLong(0);
+                String userGroupName = cursor.getString(1);
+                String userGroupDecscription = cursor.getString(2);
+                userGroups.add(new UserGroup(userGroupId, userGroupName, userGroupDecscription));
+            } while (cursor.moveToNext());
+        }
+
+        return userGroups;
 
     }
 
@@ -1918,4 +1955,21 @@ public class DbManager extends DbHelper{
 
         return count;
     }
+
+
+    /**
+     * Saves a list of user groups to the db
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     * @since 2017-01-28
+     *
+     * @param userGroups
+     */
+    public void saveUserGroups(List<UserGroup> userGroups) {
+
+        for (UserGroup group : userGroups) {
+            saveUserGroup(group);
+        }
+    }
+
 }

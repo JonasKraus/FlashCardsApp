@@ -46,12 +46,14 @@ import de.uulm.einhoernchen.flashcardsapp.Fragment.Interface.OnFragmentInteracti
 import de.uulm.einhoernchen.flashcardsapp.Fragment.Interface.OnFragmentInteractionListenerCarddeck;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.Interface.OnFragmentInteractionListenerCategory;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.Interface.OnFragmentInteractionListenerFlashcard;
+import de.uulm.einhoernchen.flashcardsapp.Fragment.Interface.OnFragmentInteractionListenerUserGroup;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.SimpleRTEditor;
 import de.uulm.einhoernchen.flashcardsapp.Model.Answer;
 import de.uulm.einhoernchen.flashcardsapp.Model.CardDeck;
 import de.uulm.einhoernchen.flashcardsapp.Model.Category;
 import de.uulm.einhoernchen.flashcardsapp.Model.FlashCard;
 import de.uulm.einhoernchen.flashcardsapp.Model.User;
+import de.uulm.einhoernchen.flashcardsapp.Model.UserGroup;
 import de.uulm.einhoernchen.flashcardsapp.R;
 import de.uulm.einhoernchen.flashcardsapp.Const.Constants;
 import de.uulm.einhoernchen.flashcardsapp.Util.Globals;
@@ -60,7 +62,13 @@ import de.uulm.einhoernchen.flashcardsapp.Util.ProcessorImage;
 import de.uulm.einhoernchen.flashcardsapp.Util.PermissionManager;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, FragmentHome.OnFragmentInteractionListener, OnFragmentInteractionListenerFlashcard, OnFragmentInteractionListenerCategory, OnFragmentInteractionListenerCarddeck, FragmentFlashCard.OnFlashCardFragmentInteractionListener, OnFragmentInteractionListenerAnswer {
+        implements NavigationView.OnNavigationItemSelectedListener,
+        FragmentHome.OnFragmentInteractionListener,
+        OnFragmentInteractionListenerFlashcard,
+        OnFragmentInteractionListenerCategory,
+        OnFragmentInteractionListenerCarddeck,
+        FragmentFlashCard.OnFlashCardFragmentInteractionListener,
+        OnFragmentInteractionListenerAnswer {
 
 
     private DbManager db;
@@ -584,6 +592,10 @@ public class MainActivity extends AppCompatActivity
 
         } else if (id == R.id.nav_share) {
 
+        } else if (id == R.id.nav_user_groups) {
+
+            startActivity(new Intent(MainActivity.this, UserGroupsActivity.class));
+
         } else if (id == R.id.nav_feedback) {
 
             //TODO Jonas rteditor
@@ -1006,4 +1018,5 @@ public class MainActivity extends AppCompatActivity
     public void setCatalogueState(Constants catalogueState) {
         this.catalogueState = catalogueState;
     }
+
 }

@@ -26,7 +26,10 @@
             android:id="@+id/nav_profile"
             android:icon="@drawable/ic_account_circle"
             android:title="@string/nav_profile" />
-
+        <item
+            android:id="@+id/nav_user_groups"
+            android:icon="@drawable/ic_group"
+            android:title="@string/nav_user_groups" />
     </group>
 
     <group android:checkableBehavior="single"

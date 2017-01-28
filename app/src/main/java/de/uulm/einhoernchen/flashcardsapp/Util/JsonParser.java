@@ -13,6 +13,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -905,5 +906,37 @@ public class JsonParser {
         }
 
         return ratingId;
+    }
+
+
+    /**
+     * Reads an array of userGroups
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     * @since 2017-01-28
+     *
+     * @param inputStream
+     * @return
+     * @throws IOException
+     */
+    public static List<UserGroup> parseUserGroups(InputStream inputStream) throws IOException {
+
+        if (DEBUG) Log.d("parser Method", "parseUserGroups");
+
+        List<UserGroup> userGroups = null;
+        JsonReader reader = null;
+        try {
+            reader = new JsonReader(new InputStreamReader(inputStream, "UTF-8"));
+
+            userGroups = readUserGroupArray(reader);
+        } catch (UnsupportedEncodingException e) {
+
+            e.printStackTrace();
+        } finally {
+
+            reader.close();
+        }
+
+        return userGroups;
     }
 }
