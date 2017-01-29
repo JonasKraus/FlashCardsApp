@@ -60,6 +60,7 @@ public class UserGroupDetailsActivity extends AppCompatActivity  implements OnFr
                 createGroup();
             }
         });
+
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         Globals.setFragmentManager(getSupportFragmentManager());
@@ -72,11 +73,17 @@ public class UserGroupDetailsActivity extends AppCompatActivity  implements OnFr
             Log.d("details group", "usersId " + user.getId());
         }
 
-
         setUsersListFragment(users);
 
     }
 
+
+    /**
+     * Creates the json object for the async task wich starts a post to the server
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     * @since 2017-01-19
+     */
     private void createGroup() {
 
         String name = editTextName.getText().toString();
@@ -86,6 +93,7 @@ public class UserGroupDetailsActivity extends AppCompatActivity  implements OnFr
 
         JSONArray jsonArrayUsers = new JSONArray();
 
+        // add currently logged in user to the group
         users.add(Globals.getDb().getLoggedInUser());
 
         try {
