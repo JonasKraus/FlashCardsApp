@@ -140,7 +140,15 @@ public class DbManager extends DbHelper{
         values.put(DbHelper.COLUMN_USER_CREATED, created); // @TODO check correct date
         values.put(DbHelper.COLUMN_USER_LAST_LOGIN, lastLogin); // @TODO check correct date
 
-        database.updateWithOnConflict(DbHelper.TABLE_USER, values, DbHelper.COLUMN_USER_ID + "=" + user.getId() , null, SQLiteDatabase.CONFLICT_REPLACE);
+        List<Long> localAccountIds = getLocalAccountUserIds();
+
+        if (!localAccountIds.contains(user.getId())) {
+
+            database.insertWithOnConflict(DbHelper.TABLE_USER, null, values, SQLiteDatabase.CONFLICT_REPLACE);
+        } else {
+
+            database.update(DbHelper.TABLE_USER, values, DbHelper.COLUMN_USER_ID + "=" + user.getId(), null);
+        }
 
     }
 
@@ -157,7 +165,7 @@ public class DbManager extends DbHelper{
 
         List<Long> ids = new ArrayList<>();
 
-        Cursor cursor = database.query(DbHelper.TABLE_USER, allUserColumns, DbHelper.COLUMN_USER_LOCAL_ACCOUNT + " = " + true, null, null, null, null);
+        Cursor cursor = database.query(DbHelper.TABLE_USER, allUserColumns, DbHelper.COLUMN_USER_LOCAL_ACCOUNT + "=" + 1, null, null, null, null);
 
         if (cursor.moveToFirst()) {
             do {
@@ -2044,6 +2052,7 @@ public class DbManager extends DbHelper{
     public void saveUsers(List<User> users) {
 
         for (User user : users) {
+
             saveUser(user);
         }
     }

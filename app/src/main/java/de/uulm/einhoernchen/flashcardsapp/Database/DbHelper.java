@@ -174,6 +174,36 @@ public class DbHelper extends SQLiteOpenHelper {
             + " integer default 0"
             + ");";
 
+    /**
+     * Database creation sql statement for table user
+     *
+    private static final String USER_CREATE = "create table "
+            + TABLE_USER + "("
+            + COLUMN_USER_ID
+            + " integer primary key, "
+            + COLUMN_USER_NAME
+            + " text not null, "
+            + COLUMN_USER_AVATAR
+            + " blob, "
+            + COLUMN_USER_PASSWORD
+            + " text default null,"
+            + COLUMN_USER_EMAIL
+            + " text not null, "
+            + COLUMN_USER_RATING
+            + " integer DEFAULT 0, "
+            + COLUMN_USER_GROUP
+            + " integer default null, "
+            + COLUMN_USER_CREATED
+            + " text DEFAULT CURRENT_TIMESTAMP, " // TODO should be not null
+            + COLUMN_USER_LAST_LOGIN
+            + " text DEFAULT CURRENT_TIMESTAMP, "  // TODO should be not null
+            + COLUMN_USER_LOCAL_ACCOUNT
+            + " integer default 0, "
+            + COLUMN_USER_IS_LOGGED_IN
+            + " integer default 0"
+            + ");";
+    */
+
     private static final String FLASHCARD_CREATE = "create table "
             + TABLE_FLASHCARD + "("
             + COLUMN_FLASHCARD_ID

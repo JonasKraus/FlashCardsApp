@@ -47,8 +47,7 @@ public class ContentUsers {
             public void processFinish(List<User> users) {
 
                 AsyncSaveLocalUsers asyncSaveUsers = new AsyncSaveLocalUsers();
-                asyncSaveUsers.setUsers(users);
-                asyncSaveUsers.execute();
+                asyncSaveUsers.execute(users);
 
                 ContentUsers.users = users;
                 isUpToDate = true;
