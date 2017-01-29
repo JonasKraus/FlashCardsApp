@@ -1,6 +1,7 @@
 package de.uulm.einhoernchen.flashcardsapp.Fragment.Interface;
 
 
+import de.uulm.einhoernchen.flashcardsapp.Fragment.Adapter.RecyclerViewAdapterUsers;
 import de.uulm.einhoernchen.flashcardsapp.Model.User;
 import de.uulm.einhoernchen.flashcardsapp.Model.UserGroup;
 
@@ -16,5 +17,5 @@ import de.uulm.einhoernchen.flashcardsapp.Model.UserGroup;
  */
 public interface OnFragmentInteractionListenerUser {
 
-    void onUserListFragmentInteraction(User item);
+    void onUserListFragmentInteraction(RecyclerViewAdapterUsers.ViewHolder item);
 }

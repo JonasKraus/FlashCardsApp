@@ -35,6 +35,7 @@
 
                 <ImageView
                     android:id="@+id/image_view_round_icon"
+                    android:tag="unchecked"
                     android:layout_width="@dimen/icon_round_random"
                     android:layout_height="@dimen/icon_round_random"
                     android:contentDescription="@string/app_name" />

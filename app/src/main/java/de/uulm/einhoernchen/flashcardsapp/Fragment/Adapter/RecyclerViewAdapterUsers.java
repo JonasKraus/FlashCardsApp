@@ -79,7 +79,7 @@ public class RecyclerViewAdapterUsers extends RecyclerView.Adapter<RecyclerViewA
                 if (null != mListener) {
                     // Notify the active callbacks interface (the activity, if the
                     // fragment is attached to one) that an item has been selected.
-                    mListener.onUserListFragmentInteraction(holder.mItem);
+                    mListener.onUserListFragmentInteraction(holder);
                 }
             }
         });
@@ -122,7 +122,6 @@ public class RecyclerViewAdapterUsers extends RecyclerView.Adapter<RecyclerViewA
      */
     private void setViewState(ViewHolder holder, int position) {
 
-        Log.d("visibillity", isUpToDate+"");
         /**
          * Check if the data is from the server or from the local db
          */

@@ -111,7 +111,6 @@ public class RecyclerViewAdapterUserGroups extends RecyclerView.Adapter<Recycler
      */
     private void setViewState(ViewHolder holder, int position) {
 
-        Log.d("visibillity", isUpToDate+"");
         /**
          * Check if the data is from the server or from the local db
          */

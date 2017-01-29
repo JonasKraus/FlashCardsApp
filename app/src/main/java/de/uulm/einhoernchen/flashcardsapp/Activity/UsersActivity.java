@@ -1,5 +1,6 @@
 package de.uulm.einhoernchen.flashcardsapp.Activity;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -9,18 +10,27 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
+
+import com.amulyakhare.textdrawable.TextDrawable;
+import com.amulyakhare.textdrawable.util.ColorGenerator;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import de.uulm.einhoernchen.flashcardsapp.Database.DbManager;
+import de.uulm.einhoernchen.flashcardsapp.Fragment.Adapter.RecyclerViewAdapterUsers;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.Dataset.ContentUsers;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.Interface.OnFragmentInteractionListenerUser;
 import de.uulm.einhoernchen.flashcardsapp.Model.User;
-import de.uulm.einhoernchen.flashcardsapp.Model.UserGroup;
 import de.uulm.einhoernchen.flashcardsapp.R;
 import de.uulm.einhoernchen.flashcardsapp.Util.Globals;
 
 public class UsersActivity extends AppCompatActivity implements OnFragmentInteractionListenerUser {
 
     private DbManager db;
+    private List<User> checkedUsers = new ArrayList<>();
+    private TextView textViewToolbarCheckedUsers;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,12 +39,16 @@ public class UsersActivity extends AppCompatActivity implements OnFragmentIntera
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        textViewToolbarCheckedUsers = (TextView) findViewById(R.id.textView_checked_users);
+
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+
+                for (User user : checkedUsers) {
+                    Log.d("create group", "usersId " + user.getId());
+                }
             }
         });
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -45,6 +59,29 @@ public class UsersActivity extends AppCompatActivity implements OnFragmentIntera
         contentUsers.collectItemsFromDb(false);
         contentUsers.collectItemsFromServer(false);
 
+    }
+
+
+    /**
+     * Sets the list of checked users to the  toolbar textview
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     * @since 2017-01-29
+     */
+    private void setCheckedUsersList() {
+
+        String text = "";
+
+        for (int i = 0; i < checkedUsers.size(); i++) {
+
+            text += checkedUsers.get(i).getName();
+
+            if (i < checkedUsers.size() - 1) {
+                text += (", ");
+            }
+        }
+
+        textViewToolbarCheckedUsers.setText(text);
     }
 
 
@@ -63,7 +100,36 @@ public class UsersActivity extends AppCompatActivity implements OnFragmentIntera
 
 
     @Override
-    public void onUserListFragmentInteraction(User item) {
+    public void onUserListFragmentInteraction(RecyclerViewAdapterUsers.ViewHolder item) {
 
+        TextDrawable drawable;
+        ColorGenerator generator = ColorGenerator.MATERIAL; // or use DEFAULT
+        // generate random color
+
+        if (item.imageView.getTag().equals("checked")) {
+
+            Log.d("click", "un check it");
+            checkedUsers.remove(item.mItem);
+
+            final int color = generator.getColor(item.mItem.getId());
+
+            drawable = TextDrawable.builder()
+                    .buildRound(item.mItem.getName().charAt(0) + "", color); // radius in px
+            item.imageView.setTag("unchecked");
+
+        } else {
+            Log.d("click", "check it");
+            checkedUsers.add(item.mItem);
+
+            drawable = TextDrawable.builder()
+                    .buildRound(String.valueOf("✓"), Color.GRAY); // radius in px
+            item.imageView.setTag("checked");
+        }
+
+        item.imageView.setImageDrawable(drawable);
+
+        setCheckedUsersList();
+
+        Log.d("click", item.mItem.toString());
     }
 }
