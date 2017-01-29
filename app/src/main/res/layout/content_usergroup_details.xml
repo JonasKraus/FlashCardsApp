@@ -13,7 +13,7 @@
         android:layout_height="wrap_content">
 
         <EditText
-            android:id="@+id/textView_usergroup_name"
+            android:id="@+id/edittext_usergroup_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/usergroup_name"
@@ -24,7 +24,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <EditText
-            android:id="@+id/textView_usergroup_description"
+            android:id="@+id/edittext_usergroup_description"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/usergroup_description" />
