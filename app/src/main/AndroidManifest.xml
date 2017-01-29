@@ -72,6 +72,16 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="de.uulm.einhoernchen.flashcardsapp.Activity.MainActivity" />
         </activity>
+
+        <activity
+            android:name=".Activity.UsersActivity"
+            android:label="@string/title_activity_users"
+            android:parentActivityName=".Activity.UserGroupsActivity"
+            android:theme="@style/AppTheme">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="de.uulm.einhoernchen.flashcardsapp.Activity.UserGroupsActivity" />
+        </activity>
     </application>
 
 </manifest>

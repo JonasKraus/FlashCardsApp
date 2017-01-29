@@ -50,7 +50,7 @@ public class UserGroup {
 		this.users=requestGroup.getUsers();
 /*		for(User u:users){
 //            System.out.println(">> updating user: "+u);
-			u.setUserGroups(this);
+			u.setUsers(this);
 		}*/
 	}
 
@@ -124,7 +124,7 @@ public class UserGroup {
 	public void addUser(User user) {
 		if (!users.contains(user)) {
 			users.add(user);
-//			user.setUserGroups(this);
+//			user.setUsers(this);
 			//this.save(); TODO to be implemented
 		}
 	}

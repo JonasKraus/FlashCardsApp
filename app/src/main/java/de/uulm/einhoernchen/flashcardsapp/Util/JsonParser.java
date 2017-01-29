@@ -477,6 +477,15 @@ public class JsonParser {
         return new Answer(id, correct, text, hint, uri, author, created, lastUpdated, rating, answerCorrect);
     }
 
+
+    /**
+     * Reads an users
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     *
+     * @param reader
+     * @return
+     */
     private static User readUser(JsonReader reader) {
         if (DEBUG) Log.d("parser Method", "readUser");
 
@@ -535,6 +544,35 @@ public class JsonParser {
             e.printStackTrace();
         }
         return new User(id, avatar, name, email, rating, created, lastLogin, groups);
+    }
+
+
+    /**
+     * Reads an array of users
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     * @since 2017-01-29
+     *
+     * @param reader
+     * @return
+     */
+    private static List<User> readUserArray(JsonReader reader) {
+        if (DEBUG) Log.d("parser Method", "readUserArray");
+
+        List<User> users = new ArrayList<User>();
+
+        try {
+            reader.beginArray();
+
+            while (reader.hasNext()) {
+
+                users.add(readUser(reader));
+            }
+            reader.endArray();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return users;
     }
 
     private static List<UserGroup> readUserGroupArray(JsonReader reader) {
@@ -938,5 +976,40 @@ public class JsonParser {
         }
 
         return userGroups;
+    }
+
+
+    /**
+     * Parses for users
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     * @since 2017-01-29
+     *
+     * @param inputStream
+     * @return
+     */
+    public static List<User> parseUsers(InputStream inputStream) {
+        if (DEBUG) Log.d("parser Method", "parseUsers");
+
+        List<User> users = null;
+        JsonReader reader = null;
+        try {
+            reader = new JsonReader(new InputStreamReader(inputStream, "UTF-8"));
+
+            users = readUserArray(reader);
+        } catch (UnsupportedEncodingException e) {
+
+            e.printStackTrace();
+        } finally {
+
+            try {
+                reader.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+                Log.d("json parse users", e.getMessage());
+            }
+        }
+
+        return users;
     }
 }

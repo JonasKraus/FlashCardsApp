@@ -1,35 +1,31 @@
 package de.uulm.einhoernchen.flashcardsapp.Activity;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.NavUtils;
-import android.support.v4.app.TaskStackBuilder;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 
-import java.sql.SQLException;
-
 import de.uulm.einhoernchen.flashcardsapp.Database.DbManager;
-import de.uulm.einhoernchen.flashcardsapp.Fragment.Dataset.ContentFlashCard;
-import de.uulm.einhoernchen.flashcardsapp.Fragment.Dataset.ContentUserGroups;
-import de.uulm.einhoernchen.flashcardsapp.Fragment.Interface.OnFragmentInteractionListenerUserGroup;
+import de.uulm.einhoernchen.flashcardsapp.Fragment.Dataset.ContentUsers;
+import de.uulm.einhoernchen.flashcardsapp.Fragment.Interface.OnFragmentInteractionListenerUser;
+import de.uulm.einhoernchen.flashcardsapp.Model.User;
 import de.uulm.einhoernchen.flashcardsapp.Model.UserGroup;
 import de.uulm.einhoernchen.flashcardsapp.R;
 import de.uulm.einhoernchen.flashcardsapp.Util.Globals;
 
-public class UserGroupsActivity extends AppCompatActivity implements OnFragmentInteractionListenerUserGroup {
+public class UsersActivity extends AppCompatActivity implements OnFragmentInteractionListenerUser {
 
     private DbManager db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_user_groups);
+        setContentView(R.layout.activity_users);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -37,26 +33,21 @@ public class UserGroupsActivity extends AppCompatActivity implements OnFragmentI
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                startActivity(new Intent(UserGroupsActivity.this, UsersActivity.class));
+                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
             }
         });
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 
         Globals.setFragmentManager(getSupportFragmentManager());
-        ContentUserGroups contentUserGroups = new ContentUserGroups();
-        contentUserGroups.collectItemsFromDb(false);
-        contentUserGroups.collectItemsFromServer(false);
+        ContentUsers contentUsers = new ContentUsers();
+        contentUsers.collectItemsFromDb(false);
+        contentUsers.collectItemsFromServer(false);
 
     }
 
 
-    @Override
-    public void onUserGroupListFragmentInteraction(UserGroup item) {
-
-        Log.d("click", item.toString());
-    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -71,5 +62,8 @@ public class UserGroupsActivity extends AppCompatActivity implements OnFragmentI
     }
 
 
+    @Override
+    public void onUserListFragmentInteraction(User item) {
 
+    }
 }

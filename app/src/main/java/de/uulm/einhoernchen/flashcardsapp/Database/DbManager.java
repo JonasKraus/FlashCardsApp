@@ -115,6 +115,66 @@ public class DbManager extends DbHelper{
 
 
     /**
+     * Saves a user but without setting password, localUser, and logged in.
+     * so this cacn be used to update users
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     * @since 2017-01-29
+     *
+     * @param user
+     */
+    public void saveUser(User user) {
+
+        if (DEBUG) Log.d("save user", user.toString());
+        // For updating delete user
+
+        ContentValues values = new ContentValues();
+        values.put(DbHelper.COLUMN_USER_ID, user.getId());
+        values.put(DbHelper.COLUMN_USER_AVATAR, user.getAvatar());
+        values.put(DbHelper.COLUMN_USER_NAME, user.getName());
+        values.put(DbHelper.COLUMN_USER_EMAIL, user.getEmail());
+        values.put(DbHelper.COLUMN_USER_RATING, user.getRating());
+        //@TODO GroupID ??? values.put(DbHelper.COLUMN_USER_GROUP, user.getGroup().getId());
+        String created = user.getCreated() != null ? user.getCreated().toString() : "";
+        String lastLogin = user.getLastLogin() != null ? user.getLastLogin().toString() : "";
+        values.put(DbHelper.COLUMN_USER_CREATED, created); // @TODO check correct date
+        values.put(DbHelper.COLUMN_USER_LAST_LOGIN, lastLogin); // @TODO check correct date
+
+        database.updateWithOnConflict(DbHelper.TABLE_USER, values, DbHelper.COLUMN_USER_ID + "=" + user.getId() , null, SQLiteDatabase.CONFLICT_REPLACE);
+
+    }
+
+
+    /**
+     * Gets all local account users ids
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     * @since 2017-01-29
+     *
+     * @return
+     */
+    public List<Long> getLocalAccountUserIds() {
+
+        List<Long> ids = new ArrayList<>();
+
+        Cursor cursor = database.query(DbHelper.TABLE_USER, allUserColumns, DbHelper.COLUMN_USER_LOCAL_ACCOUNT + " = " + true, null, null, null, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                try {
+                    long id = cursor.getLong(cursor.getColumnIndex(COLUMN_USER_ID));
+                    ids.add(id);
+                } catch (Exception e) {
+                    System.out.print(e.getMessage());
+                }
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+
+        return ids;
+    }
+
+    /**
      * Creates a user with all given values
      *
      * @author Jonas Kraus jonas.kraus@uni-ulm.de
@@ -1972,4 +2032,62 @@ public class DbManager extends DbHelper{
         }
     }
 
+
+    /**
+     * Saves a list of users
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     * @since 2017-01-29
+     *
+     * @param users
+     */
+    public void saveUsers(List<User> users) {
+
+        for (User user : users) {
+            saveUser(user);
+        }
+    }
+
+
+    /**
+     * Gets all users
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     * @since 2017-01-29
+     *
+     * @return
+     */
+    public List<User> getUsers() {
+
+        List<User> users = new ArrayList<>();
+        Cursor cursor = database.query(DbHelper.TABLE_USER, allUserColumns, null, null, null, null, null);
+
+        if (cursor.moveToFirst()) {
+
+            do {
+                try {
+                    long id = cursor.getLong(0);
+                    String name = cursor.getString(2);
+                    String avatar = cursor.getString(1);
+                    // no pwd saved
+                    String email = cursor.getString(4);
+                    int rating = cursor.getInt(5);
+
+                    //long groupId = cursor.getLong(5); not needed here
+                    String created = cursor.getString(7);
+                    String lastLogin = cursor.getString(8);
+
+                    users.add(new User(id, avatar, name, email, rating, created, lastLogin));
+
+                } catch (Exception e) {
+                    System.out.print(e.getMessage());
+                }
+            } while (cursor.moveToNext());
+
+        }
+
+        cursor.close();
+
+        return users;
+    }
 }
