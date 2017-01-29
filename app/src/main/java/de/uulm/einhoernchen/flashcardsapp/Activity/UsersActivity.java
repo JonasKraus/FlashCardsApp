@@ -1,5 +1,6 @@
 package de.uulm.einhoernchen.flashcardsapp.Activity;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -29,7 +30,7 @@ import de.uulm.einhoernchen.flashcardsapp.Util.Globals;
 public class UsersActivity extends AppCompatActivity implements OnFragmentInteractionListenerUser {
 
     private DbManager db;
-    private List<User> checkedUsers = new ArrayList<>();
+    private ArrayList<User> checkedUsers = new ArrayList<>();
     private TextView textViewToolbarCheckedUsers;
 
     @Override
@@ -47,8 +48,14 @@ public class UsersActivity extends AppCompatActivity implements OnFragmentIntera
             public void onClick(View view) {
 
                 for (User user : checkedUsers) {
-                    Log.d("create group", "usersId " + user.getId());
+                    //Log.d("create group", "usersId " + user.getId());
                 }
+
+                Intent intent = new Intent(getApplicationContext(),UserGroupDetailsActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putParcelableArrayList("data", checkedUsers);
+                intent.putExtras(bundle);
+                startActivity(intent);
             }
         });
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);

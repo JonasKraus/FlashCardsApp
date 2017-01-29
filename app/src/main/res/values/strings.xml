@@ -209,6 +209,7 @@
     <string name="title_activity_user_groups">User Groups</string>
     <string name="nav_user_groups">user groups</string>
     <string name="title_activity_users">Users</string>
+    <string name="title_activity_user_group_details">UserGroupDetailsActivity</string>
 
 
 </resources>

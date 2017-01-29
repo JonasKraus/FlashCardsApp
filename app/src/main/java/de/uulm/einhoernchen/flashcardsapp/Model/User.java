@@ -1,5 +1,7 @@
 package de.uulm.einhoernchen.flashcardsapp.Model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.util.Log;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -24,7 +26,7 @@ import de.uulm.einhoernchen.flashcardsapp.Util.JsonKeys;
  */
 
 @JsonPropertyOrder({ JsonKeys.USER_ID})
-public class User {
+public class User implements Parcelable {
 
     private Long id;
 
@@ -131,8 +133,6 @@ public class User {
             Log.w("ERROR parse Date", e.getMessage());
         }
     }
-
-
 
     public Long getId() {
         return id;
@@ -269,4 +269,43 @@ public class User {
             //this.update(); TODO to be implemented
         }
     }
+
+
+    protected User(Parcel in) {
+        id = in.readLong();
+        avatar = in.readString();
+        name = in.readString();
+        password = in.readString();
+        email = in.readString();
+        rating = in.readInt();
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeLong(id);
+        dest.writeString(avatar);
+        dest.writeString(name);
+        dest.writeString(password);
+        dest.writeString(email);
+        dest.writeInt(rating);
+    }
+
+    public static final Creator<User> CREATOR = new Creator<User>() {
+        @Override
+        public User createFromParcel(Parcel in) {
+            return new User(in);
+        }
+
+        @Override
+        public User[] newArray(int size) {
+            return new User[size];
+        }
+    };
+
+
 }
