@@ -210,6 +210,9 @@
     <string name="nav_user_groups">user groups</string>
     <string name="title_activity_users">Users</string>
     <string name="title_activity_user_group_details">UserGroupDetailsActivity</string>
+    <string name="usergroup_name">Name</string>
+    <string name="usergroup_description">Description</string>
+    <string name="title_activity_main2">Main2Activity</string>
 
 
 </resources>
