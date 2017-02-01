@@ -22,6 +22,7 @@ import java.util.List;
 import de.uulm.einhoernchen.flashcardsapp.Database.DbManager;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.Adapter.RecyclerViewAdapterUsers;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.Dataset.ContentUsers;
+import de.uulm.einhoernchen.flashcardsapp.Fragment.Dataset.ContentUsersOfUserGroup;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.Interface.OnFragmentInteractionListenerUser;
 import de.uulm.einhoernchen.flashcardsapp.Model.User;
 import de.uulm.einhoernchen.flashcardsapp.R;
@@ -36,7 +37,28 @@ public class UsersActivity extends AppCompatActivity implements OnFragmentIntera
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        Bundle extras = getIntent().getExtras();
+
+        Globals.setFragmentManager(getSupportFragmentManager());
+
+        if (extras != null) {
+
+
+            Long groupId = extras.getLong("group_id");
+
+            ContentUsersOfUserGroup contentUsersOfUserGroup = new ContentUsersOfUserGroup();
+            contentUsersOfUserGroup.collectItemsFromDb(false, groupId);
+            contentUsersOfUserGroup.collectItemsFromServer(false, groupId);
+        } else {
+
+            ContentUsers contentUsers = new ContentUsers();
+            contentUsers.collectItemsFromDb(false);
+            contentUsers.collectItemsFromServer(false);
+        }
+
         setContentView(R.layout.activity_users);
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -61,10 +83,6 @@ public class UsersActivity extends AppCompatActivity implements OnFragmentIntera
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 
-        Globals.setFragmentManager(getSupportFragmentManager());
-        ContentUsers contentUsers = new ContentUsers();
-        contentUsers.collectItemsFromDb(false);
-        contentUsers.collectItemsFromServer(false);
 
     }
 

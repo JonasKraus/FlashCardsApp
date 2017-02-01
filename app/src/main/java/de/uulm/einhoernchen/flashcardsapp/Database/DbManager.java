@@ -2099,4 +2099,84 @@ public class DbManager extends DbHelper{
 
         return users;
     }
+
+
+    /**
+     * Collects all users of a given group
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     * @since 2017-02-01
+     *
+     * @param userGroupId
+     * @return
+     */
+    public List<User> getUsersOfUserGroup(Long userGroupId) {
+
+        Log.d("hier", "user group " + userGroupId);
+        SQLiteQueryBuilder qb = new SQLiteQueryBuilder();
+
+
+
+        List<User> users = new ArrayList<>();
+
+        String join = DbHelper.TABLE_USER_GROUP_JOIN_TABLE + " JOIN "
+                + DbHelper.TABLE_USER + " ON " + TABLE_USER + "." + COLUMN_USER_ID
+                + "=" + DbHelper.TABLE_USER_GROUP_JOIN_TABLE + "." + DbHelper.COLUMN_USER_GROUP_JOIN_TABLE_USER_ID;
+
+
+        qb.setTables(join);
+        qb.appendWhere(TABLE_USER_GROUP_JOIN_TABLE + "." + COLUMN_USER_GROUP_JOIN_TABLE_GROUP_ID  + "=" + userGroupId);
+
+        Cursor cursor = qb.query(database, null, null, null, null, null, null);
+
+
+        if (cursor.moveToFirst()) {
+
+            do {
+                try {
+                    long id = cursor.getLong(cursor.getColumnIndex(TABLE_USER + "." + COLUMN_USER_ID));
+                    String name = cursor.getString(cursor.getColumnIndex(TABLE_USER + "." + COLUMN_USER_NAME));
+                    String avatar = cursor.getString(cursor.getColumnIndex(TABLE_USER + "." + COLUMN_USER_AVATAR));
+                    // no pwd saved
+                    String email = cursor.getString(cursor.getColumnIndex(TABLE_USER + "." + COLUMN_USER_EMAIL));
+                    int rating = cursor.getInt(cursor.getColumnIndex(TABLE_USER + "." + COLUMN_USER_RATING));
+
+                    //long groupId = cursor.getLong(5); not needed here
+                    String created = cursor.getString(cursor.getColumnIndex(TABLE_USER + "." + COLUMN_USER_CREATED));
+                    String lastLogin = cursor.getString(cursor.getColumnIndex(TABLE_USER + "." + COLUMN_USER_LAST_LOGIN));
+
+                    users.add(new User(id, avatar, name, email, rating, created, lastLogin));
+
+                } catch (Exception e) {
+                    System.out.print(e.getMessage());
+                }
+            } while (cursor.moveToNext());
+
+        }
+
+        cursor.close();
+
+        return users;
+
+    }
+
+
+    /**
+     * Saves a relation of user and group to the joining table
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     * @since 2017-02-01
+     *
+     * @param userId
+     * @param groupId
+     */
+    public void saveUserGroupJoinTable(Long userId, Long groupId) {
+
+
+        ContentValues values = new ContentValues();
+        values.put(DbHelper.COLUMN_USER_GROUP_JOIN_TABLE_USER_ID, userId);
+        values.put(DbHelper.COLUMN_USER_GROUP_JOIN_TABLE_GROUP_ID, groupId);
+
+        database.insertWithOnConflict(DbHelper.TABLE_USER_GROUP_JOIN_TABLE, null, values, SQLiteDatabase.CONFLICT_REPLACE);
+    }
 }

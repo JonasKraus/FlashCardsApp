@@ -55,7 +55,11 @@ public class UserGroupsActivity extends AppCompatActivity implements OnFragmentI
     @Override
     public void onUserGroupListFragmentInteraction(UserGroup item) {
 
-        Log.d("click", item.toString());
+        Intent intent = new Intent(UserGroupsActivity.this, UsersActivity.class);
+
+        intent.putExtra("group_id", item.getId());
+        startActivity(intent);
+
     }
 
     @Override

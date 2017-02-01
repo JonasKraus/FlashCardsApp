@@ -74,6 +74,11 @@ public class DbHelper extends SQLiteOpenHelper {
     public static final String COLUMN_GROUP_NAME = "name";                              //1
     public static final String COLUMN_GROUP_DESCRIPTION = "description";                //2
 
+    // Strings for table userGroup JoinTable users
+    public static final String TABLE_USER_GROUP_JOIN_TABLE = "userGroupJoinTable";
+    public static final String COLUMN_USER_GROUP_JOIN_TABLE_USER_ID = "userId";         //0
+    public static final String COLUMN_USER_GROUP_JOIN_TABLE_GROUP_ID = "groupId";       //1
+
     // Strings for table rating
     public static final String TABLE_RATING = "rating";
     public static final String COLUMN_RATING_ID = "ratingId";                           //0
@@ -142,7 +147,7 @@ public class DbHelper extends SQLiteOpenHelper {
 
     // Database name and version - increase when existing table is altered
     private static final String DATABASE_NAME = "flashcardsDb.db";
-    private static final int DATABASE_VERSION = 19; // @TODO revert version before first release
+    private static final int DATABASE_VERSION = 23; // @TODO revert version before first release
 
     /**
      * Database creation sql statement for table user
@@ -286,6 +291,21 @@ public class DbHelper extends SQLiteOpenHelper {
             + " text "
             + ");";
 
+
+    /**
+     * Creates the table for selection users of groups
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     * @since 2017-02-01
+     */
+    private static final String USER_GROUP_JOIN_TABLE_CREATE = "create table "
+            + TABLE_USER_GROUP_JOIN_TABLE + "("
+            + COLUMN_USER_GROUP_JOIN_TABLE_USER_ID
+            + " integer NOT NULL, "
+            + COLUMN_USER_GROUP_JOIN_TABLE_GROUP_ID
+            + " integer NOT NULL "
+            + ");";
+
     private static final String RATING_CREATE = "create table "
             + TABLE_RATING + "("
             + COLUMN_RATING_ID
@@ -420,6 +440,10 @@ public class DbHelper extends SQLiteOpenHelper {
             "CREATE UNIQUE INDEX " + TABLE_VOTING + "_user_answer "
                     + "ON " + TABLE_VOTING + "(" + COLUMN_VOTING_USER_ID + ", " + COLUMN_VOTING_ANSWER_ID + ");";
 
+    private static final String USER_GROUP_JOIN_TABLE_CREATE_UNIQUE_INDEX =
+            "CREATE UNIQUE INDEX " + TABLE_USER_GROUP_JOIN_TABLE + "_userId_groupId "
+                    + "ON " + TABLE_USER_GROUP_JOIN_TABLE + "(" + COLUMN_USER_GROUP_JOIN_TABLE_GROUP_ID + ", " + COLUMN_USER_GROUP_JOIN_TABLE_USER_ID + ");";
+
 
     /**
      * Constructor
@@ -439,6 +463,7 @@ public class DbHelper extends SQLiteOpenHelper {
         db.execSQL(CARD_TAG_CREATE);
         db.execSQL(TAG_CREATE);
         db.execSQL(USER_GROUP_CREATE);
+        db.execSQL(USER_GROUP_JOIN_TABLE_CREATE);
         db.execSQL(RATING_CREATE);
         db.execSQL(AUTH_TOKEN_CREATE);
         db.execSQL(CARD_DECK_CREATE);
@@ -449,6 +474,7 @@ public class DbHelper extends SQLiteOpenHelper {
         db.execSQL(STATISTICS_CREATE);
         db.execSQL(VOTING_CREATE_UNIQUE_INDEX_1);
         db.execSQL(VOTING_CREATE_UNIQUE_INDEX_2);
+        db.execSQL(USER_GROUP_JOIN_TABLE_CREATE_UNIQUE_INDEX);
     }
 
     @Override
@@ -465,6 +491,7 @@ public class DbHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_CARD_TAG);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_TAG);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_USER_GROUP);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_USER_GROUP_JOIN_TABLE);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_RATING);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_AUTH_TOKEN);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_CARD_DECK);
@@ -539,6 +566,11 @@ public class DbHelper extends SQLiteOpenHelper {
             COLUMN_GROUP_ID,                 //0
             COLUMN_GROUP_NAME,               //1
             COLUMN_GROUP_DESCRIPTION,        //2
+    };
+
+    public static String[] allUserGroupJoinTableColumns = {
+            TABLE_USER_GROUP_JOIN_TABLE + "." + COLUMN_USER_GROUP_JOIN_TABLE_USER_ID,   //0
+            TABLE_USER_GROUP_JOIN_TABLE + "." + COLUMN_USER_GROUP_JOIN_TABLE_GROUP_ID,  //1
     };
 
     public static String[] allRatingColumns = {
