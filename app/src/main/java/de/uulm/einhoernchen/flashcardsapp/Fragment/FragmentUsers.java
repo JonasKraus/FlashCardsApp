@@ -37,6 +37,7 @@ public class FragmentUsers extends Fragment {
     private boolean isUpToDate;
     private RecyclerView recyclerView;
     private RecyclerViewAdapterUsers recyclerViewAdapterUsers;
+    private List<User> usersOfGroup;
 
     public RecyclerView getRecyclerView() {
         return recyclerView;
@@ -88,7 +89,7 @@ public class FragmentUsers extends Fragment {
             }
 
             recyclerViewAdapterUsers =
-                    new RecyclerViewAdapterUsers(itemList, mListener, isUpToDate);
+                    new RecyclerViewAdapterUsers(itemList, usersOfGroup, mListener, isUpToDate);
 
             recyclerView.setAdapter(recyclerViewAdapterUsers);
         }
@@ -120,4 +121,7 @@ public class FragmentUsers extends Fragment {
         this.isUpToDate = isUpToDate;
     }
 
+    public void setUsersOfGroup(List<User> usersOfGroup) {
+        this.usersOfGroup = usersOfGroup;
+    }
 }

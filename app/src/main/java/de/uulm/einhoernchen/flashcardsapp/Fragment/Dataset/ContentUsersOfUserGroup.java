@@ -23,8 +23,6 @@ import de.uulm.einhoernchen.flashcardsapp.Util.ProcessConnectivity;
  */
 public class ContentUsersOfUserGroup {
 
-    private static List<User> users = new ArrayList<User>();
-
     public static FragmentUsers fragment;
 
     private static boolean isUpToDate = false;
@@ -53,9 +51,16 @@ public class ContentUsersOfUserGroup {
                 localuserGroupJoinTable.setUsers(users);
                 localuserGroupJoinTable.execute(userGroupId);
 
-                ContentUsersOfUserGroup.users = users;
                 isUpToDate = true;
 
+                ContentUsers contentUsers = new ContentUsers();
+                contentUsers.setUsersOfGroup(users);
+                contentUsers.collectItemsFromDb(false);
+                contentUsers.collectItemsFromServer(false);
+
+                // Dont do anything
+
+                /*
                 fragment = new FragmentUsers();
                 fragment.setItemList(users);
                 fragment.setUpToDate(isUpToDate);
@@ -64,17 +69,18 @@ public class ContentUsersOfUserGroup {
                         Globals.getFragmentManager().beginTransaction();
 
                 // TODO delete if always loaded from local db
-                /*
+
                 if (backPressed) {
                     fragmentTransaction.setCustomAnimations(R.anim.enter_from_left, R.anim.exit_to_right);
                 } else if (!fragmentAnimated) {
                     fragmentTransaction.setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left);
                     fragmentAnimated = true;
                 }
-                */
+
 
                 fragmentTransaction.replace(R.id.fragment_container_users, fragment);
                 fragmentTransaction.commit();
+                */
 
             }
 
@@ -103,30 +109,37 @@ public class ContentUsersOfUserGroup {
             @Override
             public void processFinish(List<User> users) {
 
-
-                ContentUsersOfUserGroup.users = users;
                 isUpToDate = false;
 
                 fragment = new FragmentUsers();
                 fragment.setItemList(users);
                 fragment.setUpToDate(isUpToDate);
 
+
+                ContentUsers contentUsers = new ContentUsers();
+                contentUsers.setUsersOfGroup(users);
+                contentUsers.collectItemsFromDb(false);
+                contentUsers.collectItemsFromServer(false);
+
+                // Dont do anything
+
+                /*
                 android.support.v4.app.FragmentTransaction fragmentTransaction =
                         Globals.getFragmentManager().beginTransaction();
 
                 // TODO delete if always loaded from local db
-                /*
+
                 if (backPressed) {
                     fragmentTransaction.setCustomAnimations(R.anim.enter_from_left, R.anim.exit_to_right);
                 } else if (!fragmentAnimated) {
                     fragmentTransaction.setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left);
                     fragmentAnimated = true;
                 }
-                */
+
 
                 fragmentTransaction.replace(R.id.fragment_container_users, fragment);
                 fragmentTransaction.commit();
-
+                */
             }
 
         });

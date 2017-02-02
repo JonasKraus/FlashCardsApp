@@ -1,5 +1,11 @@
 package de.uulm.einhoernchen.flashcardsapp.Fragment.Dataset;
 
+import android.graphics.Color;
+import android.util.Log;
+
+import com.amulyakhare.textdrawable.TextDrawable;
+import com.amulyakhare.textdrawable.util.ColorGenerator;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,6 +14,7 @@ import de.uulm.einhoernchen.flashcardsapp.AsyncTask.Local.AsyncGetLocalUsers;
 import de.uulm.einhoernchen.flashcardsapp.AsyncTask.Local.AsyncSaveLocalUsers;
 import de.uulm.einhoernchen.flashcardsapp.AsyncTask.Remote.GET.AsyncGetRemoteUsers;
 import de.uulm.einhoernchen.flashcardsapp.Database.DbManager;
+import de.uulm.einhoernchen.flashcardsapp.Fragment.Adapter.RecyclerViewAdapterUsers;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.FragmentUserGroups;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.FragmentUsers;
 import de.uulm.einhoernchen.flashcardsapp.Model.User;
@@ -29,7 +36,7 @@ public class ContentUsers {
 
     private static boolean isUpToDate = false;
     private static DbManager db = Globals.getDb();
-
+    private List<User> usersOfGroup;
 
 
     /**
@@ -53,6 +60,7 @@ public class ContentUsers {
                 isUpToDate = true;
 
                 fragment = new FragmentUsers();
+                fragment.setUsersOfGroup(usersOfGroup);
                 fragment.setItemList(users);
                 fragment.setUpToDate(isUpToDate);
 
@@ -104,6 +112,7 @@ public class ContentUsers {
                 isUpToDate = false;
 
                 fragment = new FragmentUsers();
+                fragment.setUsersOfGroup(usersOfGroup);
                 fragment.setItemList(users);
                 fragment.setUpToDate(isUpToDate);
 
@@ -131,4 +140,8 @@ public class ContentUsers {
 
     }
 
+    public void setUsersOfGroup(List<User> usersOfGroup) {
+        this.usersOfGroup = usersOfGroup;
+    }
+    
 }

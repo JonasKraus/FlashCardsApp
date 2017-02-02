@@ -1,6 +1,7 @@
 package de.uulm.einhoernchen.flashcardsapp.Fragment.Adapter;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -30,6 +31,7 @@ public class RecyclerViewAdapterUsers extends RecyclerView.Adapter<RecyclerViewA
 
 
     private final List<User> users;
+    private final List<User> usersOfGroup;
     private final List<ViewHolder> holders = new ArrayList<ViewHolder>();
     private final OnFragmentInteractionListenerUser mListener;
     private final boolean isUpToDate;
@@ -41,14 +43,15 @@ public class RecyclerViewAdapterUsers extends RecyclerView.Adapter<RecyclerViewA
      * Constructs the recycler views
      *
      * @author Jonas Kraus jonas.kraus@uni-ulm.de
-     *
-     * @param items
+     *@param items
+     * @param usersOfGroup
      * @param listener
      * @param isUpToDate
      */
-    public RecyclerViewAdapterUsers(List<User> items, OnFragmentInteractionListenerUser listener, boolean isUpToDate) {
+    public RecyclerViewAdapterUsers(List<User> items, List<User> usersOfGroup, OnFragmentInteractionListenerUser listener, boolean isUpToDate) {
         users = items;
         mListener = listener;
+        this.usersOfGroup = usersOfGroup;
         this.isUpToDate = isUpToDate;
     }
 
@@ -83,6 +86,35 @@ public class RecyclerViewAdapterUsers extends RecyclerView.Adapter<RecyclerViewA
                 }
             }
         });
+
+        checkUsersOfGroup(holder, users.get(position));
+    }
+
+    /**
+     * checks the users that are in the clicked group
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     * @since 2017-02-01
+     *
+     * @param item
+     * @param user
+     */
+    public void checkUsersOfGroup(RecyclerViewAdapterUsers.ViewHolder item, User user) {
+
+        TextDrawable drawable;
+        ColorGenerator generator = ColorGenerator.MATERIAL; // or use DEFAULT
+        // generate random color
+        Log.d("check", "hier1");
+        if (usersOfGroup != null && usersOfGroup.contains(user)) {
+            Log.d("check", "hier");
+            drawable = TextDrawable.builder()
+                    .buildRound(String.valueOf("✓"), Color.GRAY); // radius in px
+            item.imageView.setTag("checked");
+
+            item.imageView.setImageDrawable(drawable);
+        }
+
+
     }
 
 

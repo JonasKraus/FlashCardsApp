@@ -2134,16 +2134,16 @@ public class DbManager extends DbHelper{
 
             do {
                 try {
-                    long id = cursor.getLong(cursor.getColumnIndex(TABLE_USER + "." + COLUMN_USER_ID));
-                    String name = cursor.getString(cursor.getColumnIndex(TABLE_USER + "." + COLUMN_USER_NAME));
-                    String avatar = cursor.getString(cursor.getColumnIndex(TABLE_USER + "." + COLUMN_USER_AVATAR));
+                    long id = cursor.getLong(cursor.getColumnIndex( COLUMN_USER_ID));
+                    String name = cursor.getString(cursor.getColumnIndex(COLUMN_USER_NAME));
+                    String avatar = cursor.getString(cursor.getColumnIndex(COLUMN_USER_AVATAR));
                     // no pwd saved
-                    String email = cursor.getString(cursor.getColumnIndex(TABLE_USER + "." + COLUMN_USER_EMAIL));
-                    int rating = cursor.getInt(cursor.getColumnIndex(TABLE_USER + "." + COLUMN_USER_RATING));
+                    String email = cursor.getString(cursor.getColumnIndex(COLUMN_USER_EMAIL));
+                    int rating = cursor.getInt(cursor.getColumnIndex(COLUMN_USER_RATING));
 
                     //long groupId = cursor.getLong(5); not needed here
-                    String created = cursor.getString(cursor.getColumnIndex(TABLE_USER + "." + COLUMN_USER_CREATED));
-                    String lastLogin = cursor.getString(cursor.getColumnIndex(TABLE_USER + "." + COLUMN_USER_LAST_LOGIN));
+                    String created = cursor.getString(cursor.getColumnIndex(COLUMN_USER_CREATED));
+                    String lastLogin = cursor.getString(cursor.getColumnIndex(COLUMN_USER_LAST_LOGIN));
 
                     users.add(new User(id, avatar, name, email, rating, created, lastLogin));
 

@@ -33,6 +33,7 @@ public class UsersActivity extends AppCompatActivity implements OnFragmentIntera
     private DbManager db;
     private ArrayList<User> checkedUsers = new ArrayList<>();
     private TextView textViewToolbarCheckedUsers;
+    private List<User> usersOfGroup;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
