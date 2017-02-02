@@ -3,6 +3,7 @@ package de.uulm.einhoernchen.flashcardsapp.AsyncTask.Remote.POST;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -16,6 +17,7 @@ import de.uulm.einhoernchen.flashcardsapp.Activity.MainActivity;
 import de.uulm.einhoernchen.flashcardsapp.Activity.UserGroupsActivity;
 import de.uulm.einhoernchen.flashcardsapp.AsyncTask.Remote.PATCH.AsyncPatchRemoteCategory;
 import de.uulm.einhoernchen.flashcardsapp.Const.Routes;
+import de.uulm.einhoernchen.flashcardsapp.R;
 import de.uulm.einhoernchen.flashcardsapp.Util.Globals;
 import de.uulm.einhoernchen.flashcardsapp.Util.JsonKeys;
 import de.uulm.einhoernchen.flashcardsapp.Util.JsonParser;
@@ -94,6 +96,7 @@ public class AsyncPostRemoteUserGroup extends AsyncTask<Long, Long, Long> {
         if (id != null) {
 
             Globals.getContext().startActivity(new Intent(Globals.getContext(), UserGroupsActivity.class));
+            Toast.makeText(Globals.getContext(), R.string.saved_successfully, Toast.LENGTH_SHORT).show();
 
         } else {
             Log.w("POST FAILED", this.getClass().getName());

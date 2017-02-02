@@ -1,14 +1,10 @@
 package de.uulm.einhoernchen.flashcardsapp.Activity;
 
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
@@ -20,14 +16,12 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.uulm.einhoernchen.flashcardsapp.AsyncTask.Remote.PATCH.AsyncPatchRemoteCard;
 import de.uulm.einhoernchen.flashcardsapp.AsyncTask.Remote.POST.AsyncPostRemoteUserGroup;
+import de.uulm.einhoernchen.flashcardsapp.AsyncTask.Remote.PATCH.AsyncPatchRemoteUserGroup;
 import de.uulm.einhoernchen.flashcardsapp.Database.DbManager;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.Adapter.RecyclerViewAdapterUsers;
-import de.uulm.einhoernchen.flashcardsapp.Fragment.Dataset.ContentUsers;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.FragmentUsers;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.Interface.OnFragmentInteractionListenerUser;
-import de.uulm.einhoernchen.flashcardsapp.Fragment.Interface.OnFragmentInteractionListenerUserGroup;
 import de.uulm.einhoernchen.flashcardsapp.Model.User;
 import de.uulm.einhoernchen.flashcardsapp.Model.UserGroup;
 import de.uulm.einhoernchen.flashcardsapp.R;
@@ -40,7 +34,7 @@ public class UserGroupDetailsActivity extends AppCompatActivity  implements OnFr
     private EditText editTextName;
     private EditText editTextDescription;
     private ArrayList<User> users;
-    private Long groupId;
+    private Long groupId = null;
     private UserGroup selectedUserGroup;
     private DbManager db = Globals.getDb();
 
@@ -73,6 +67,7 @@ public class UserGroupDetailsActivity extends AppCompatActivity  implements OnFr
         users = bundle.getParcelableArrayList("data");
         groupId = bundle.getLong("group_id");
 
+        // Check if a group was selected and must be edited
         if (groupId != null) {
 
             selectedUserGroup = db.getUserGroup(groupId);
@@ -120,16 +115,34 @@ public class UserGroupDetailsActivity extends AppCompatActivity  implements OnFr
             e.printStackTrace();
         }
 
-        AsyncPostRemoteUserGroup task = new AsyncPostRemoteUserGroup(jsonObjectGroup);
+        if (groupId == null) {
 
-        if (ProcessConnectivity.isOk(this)) {
+            AsyncPostRemoteUserGroup task = new AsyncPostRemoteUserGroup(jsonObjectGroup);
 
-            task.execute();
+            if (ProcessConnectivity.isOk(this)) {
+
+                task.execute(groupId);
+            } else {
+
+                // TODO show some error message
+                return;
+            }
         } else {
 
-            // TODO show some error message
-            return;
+            // Update group
+            AsyncPatchRemoteUserGroup task = new AsyncPatchRemoteUserGroup(jsonObjectGroup);
+
+            if (ProcessConnectivity.isOk(this)) {
+
+                task.execute(groupId);
+            } else {
+
+                // TODO show some error message
+                return;
+            }
         }
+
+
     }
 
 
