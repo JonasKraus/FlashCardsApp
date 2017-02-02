@@ -32,12 +32,14 @@ public class RecyclerViewAdapterUsers extends RecyclerView.Adapter<RecyclerViewA
 
     private final List<User> users;
     private final List<User> usersOfGroup;
+    private final List<Long> userIdsOfGroup;
     private final List<ViewHolder> holders = new ArrayList<ViewHolder>();
     private final OnFragmentInteractionListenerUser mListener;
     private final boolean isUpToDate;
     private final Context context = Globals.getContext();
     private final DbManager db = Globals.getDb();
     private final ProgressBar progressBar = Globals.getProgressBar();
+
 
     /**
      * Constructs the recycler views
@@ -53,6 +55,18 @@ public class RecyclerViewAdapterUsers extends RecyclerView.Adapter<RecyclerViewA
         mListener = listener;
         this.usersOfGroup = usersOfGroup;
         this.isUpToDate = isUpToDate;
+
+        this.userIdsOfGroup = new ArrayList<>();
+
+        // Only do this if a group was checked
+        if (usersOfGroup != null) {
+
+            // get all ids in an list to check if it contains
+            for (User user : usersOfGroup) {
+
+                userIdsOfGroup.add(user.getId());
+            }
+        }
     }
 
     @Override
@@ -90,6 +104,7 @@ public class RecyclerViewAdapterUsers extends RecyclerView.Adapter<RecyclerViewA
         checkUsersOfGroup(holder, users.get(position));
     }
 
+
     /**
      * checks the users that are in the clicked group
      *
@@ -101,17 +116,18 @@ public class RecyclerViewAdapterUsers extends RecyclerView.Adapter<RecyclerViewA
      */
     public void checkUsersOfGroup(RecyclerViewAdapterUsers.ViewHolder item, User user) {
 
-        TextDrawable drawable;
-        ColorGenerator generator = ColorGenerator.MATERIAL; // or use DEFAULT
-        // generate random color
-        Log.d("check", "hier1");
-        if (usersOfGroup != null && usersOfGroup.contains(user)) {
-            Log.d("check", "hier");
-            drawable = TextDrawable.builder()
+
+        if (userIdsOfGroup != null && userIdsOfGroup.size() > 0 && userIdsOfGroup.contains(user.getId())) {
+
+            TextDrawable drawable = TextDrawable.builder()
                     .buildRound(String.valueOf("✓"), Color.GRAY); // radius in px
             item.imageView.setTag("checked");
 
             item.imageView.setImageDrawable(drawable);
+
+            // Set to null, so its unclickable
+            //item.mView.setOnClickListener(null);
+            item.mView.setEnabled(false);
         }
 
 

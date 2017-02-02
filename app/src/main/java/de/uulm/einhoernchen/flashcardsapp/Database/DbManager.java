@@ -2112,10 +2112,7 @@ public class DbManager extends DbHelper{
      */
     public List<User> getUsersOfUserGroup(Long userGroupId) {
 
-        Log.d("hier", "user group " + userGroupId);
         SQLiteQueryBuilder qb = new SQLiteQueryBuilder();
-
-
 
         List<User> users = new ArrayList<>();
 
@@ -2128,7 +2125,6 @@ public class DbManager extends DbHelper{
         qb.appendWhere(TABLE_USER_GROUP_JOIN_TABLE + "." + COLUMN_USER_GROUP_JOIN_TABLE_GROUP_ID  + "=" + userGroupId);
 
         Cursor cursor = qb.query(database, null, null, null, null, null, null);
-
 
         if (cursor.moveToFirst()) {
 

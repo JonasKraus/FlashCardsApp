@@ -292,8 +292,6 @@ public class FragmentFlashCardCreate extends Fragment implements View.OnClickLis
      */
     private void setMedia(String uriString) {
 
-        Log.d("hier", "setMedia");
-
         Globals.getProgressBar().setVisibility(View.VISIBLE);
 
         if (uriString.contains("youtube")) {

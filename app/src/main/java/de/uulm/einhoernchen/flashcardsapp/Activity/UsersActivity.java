@@ -30,10 +30,39 @@ import de.uulm.einhoernchen.flashcardsapp.Util.Globals;
 
 public class UsersActivity extends AppCompatActivity implements OnFragmentInteractionListenerUser {
 
-    private DbManager db;
+    private DbManager db = Globals.getDb();
     private ArrayList<User> checkedUsers = new ArrayList<>();
     private TextView textViewToolbarCheckedUsers;
     private List<User> usersOfGroup;
+    private Long groupId = null;
+
+    @Override
+    protected void onPostResume() {
+        super.onPostResume();
+
+        setUsersOFGroupToCheckedList();
+    }
+
+
+    /**
+     * Sets the list of group users to the checked list and adds them to the header list in the view
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     * @since 2017-02-02
+     */
+    private void setUsersOFGroupToCheckedList() {
+
+        if (groupId != null) {
+            usersOfGroup = db.getUsersOfUserGroup(groupId);
+
+            for (User user : usersOfGroup) {
+
+                checkedUsers.add(user);
+            }
+
+            // Set if users are checked because a group was selected
+            setCheckedUsersList();
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,18 +74,20 @@ public class UsersActivity extends AppCompatActivity implements OnFragmentIntera
 
         if (extras != null) {
 
-
-            Long groupId = extras.getLong("group_id");
+            groupId = extras.getLong("group_id");
 
             ContentUsersOfUserGroup contentUsersOfUserGroup = new ContentUsersOfUserGroup();
             contentUsersOfUserGroup.collectItemsFromDb(false, groupId);
             contentUsersOfUserGroup.collectItemsFromServer(false, groupId);
+
         } else {
 
+            // directly call this content to go faster
             ContentUsers contentUsers = new ContentUsers();
             contentUsers.collectItemsFromDb(false);
             contentUsers.collectItemsFromServer(false);
         }
+
 
         setContentView(R.layout.activity_users);
 
@@ -82,8 +113,6 @@ public class UsersActivity extends AppCompatActivity implements OnFragmentIntera
             }
         });
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-
 
     }
 
@@ -134,7 +163,6 @@ public class UsersActivity extends AppCompatActivity implements OnFragmentIntera
 
         if (item.imageView.getTag().equals("checked")) {
 
-            Log.d("click", "un check it");
             checkedUsers.remove(item.mItem);
 
             final int color = generator.getColor(item.mItem.getId());
@@ -144,7 +172,7 @@ public class UsersActivity extends AppCompatActivity implements OnFragmentIntera
             item.imageView.setTag("unchecked");
 
         } else {
-            Log.d("click", "check it");
+
             checkedUsers.add(item.mItem);
 
             drawable = TextDrawable.builder()
@@ -155,7 +183,5 @@ public class UsersActivity extends AppCompatActivity implements OnFragmentIntera
         item.imageView.setImageDrawable(drawable);
 
         setCheckedUsersList();
-
-        Log.d("click", item.mItem.toString());
     }
 }
