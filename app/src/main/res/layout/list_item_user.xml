@@ -1,10 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+
+
+        <variable
+            name="listener"
+            type="de.uulm.einhoernchen.flashcardsapp.Fragment.Interface.OnFragmentInteractionListenerUserBinding" />
+
+        <variable
+            name="model"
+            type="de.uulm.einhoernchen.flashcardsapp.Model.User"/>
+
+    </data>
+
+<LinearLayout
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
     app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -63,7 +80,7 @@
                     android:id="@+id/textview_user_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Name"
+                    android:text="@{model.name}"
                     android:textAppearance="?attr/textAppearanceListItem" />
 
                 <TextView
@@ -71,7 +88,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:lines="2"
-                    android:text="Description"
+                    android:text="@{model.email}"
                     android:textSize="@dimen/item_small_text_size" />
 
 
@@ -91,3 +108,4 @@
         android:layout_height="1dp"
         android:background="@color/divider"/>
 </LinearLayout>
+    </layout>

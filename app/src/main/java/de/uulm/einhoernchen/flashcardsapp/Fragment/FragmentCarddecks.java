@@ -134,7 +134,7 @@ public class FragmentCarddecks extends Fragment implements View.OnClickListener{
 
 
     /**
-     * Implements the onClick method
+     * Implements the onClickUser method
      *
      * @author Jonas Kraus jonas.kraus@uni-ulm.de
      * @since 2017-01-07

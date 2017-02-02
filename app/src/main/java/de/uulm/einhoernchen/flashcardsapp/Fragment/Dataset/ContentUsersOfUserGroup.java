@@ -11,6 +11,7 @@ import de.uulm.einhoernchen.flashcardsapp.AsyncTask.Remote.GET.AsyncGetRemoteUse
 import de.uulm.einhoernchen.flashcardsapp.AsyncTask.Remote.GET.AsyncGetRemoteUsersOfUserGroup;
 import de.uulm.einhoernchen.flashcardsapp.Database.DbManager;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.FragmentUsers;
+import de.uulm.einhoernchen.flashcardsapp.Fragment.FragmentUsersBinding;
 import de.uulm.einhoernchen.flashcardsapp.Model.User;
 import de.uulm.einhoernchen.flashcardsapp.R;
 import de.uulm.einhoernchen.flashcardsapp.Util.Globals;
@@ -23,7 +24,7 @@ import de.uulm.einhoernchen.flashcardsapp.Util.ProcessConnectivity;
  */
 public class ContentUsersOfUserGroup {
 
-    public static FragmentUsers fragment;
+    public static FragmentUsersBinding fragment;
 
     private static boolean isUpToDate = false;
     private static DbManager db = Globals.getDb();
@@ -111,11 +112,6 @@ public class ContentUsersOfUserGroup {
 
                 isUpToDate = false;
 
-                fragment = new FragmentUsers();
-                fragment.setItemList(users);
-                fragment.setUpToDate(isUpToDate);
-
-
                 ContentUsers contentUsers = new ContentUsers();
                 contentUsers.setUsersOfGroup(users);
                 contentUsers.collectItemsFromDb(false);
@@ -124,6 +120,10 @@ public class ContentUsersOfUserGroup {
                 // Dont do anything
 
                 /*
+                fragment = new FragmentUsersBinding();
+                fragment.setItemList(users);
+                fragment.setUpToDate(isUpToDate);
+
                 android.support.v4.app.FragmentTransaction fragmentTransaction =
                         Globals.getFragmentManager().beginTransaction();
 

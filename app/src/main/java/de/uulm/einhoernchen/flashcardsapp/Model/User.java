@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import de.uulm.einhoernchen.flashcardsapp.Fragment.Adapter.SortedListAdapter;
 import de.uulm.einhoernchen.flashcardsapp.Util.JsonKeys;
 
 /**
@@ -26,7 +27,7 @@ import de.uulm.einhoernchen.flashcardsapp.Util.JsonKeys;
  */
 
 @JsonPropertyOrder({ JsonKeys.USER_ID})
-public class User implements Parcelable {
+public class User implements Parcelable, SortedListAdapter.ViewModel {
 
     private Long id;
 

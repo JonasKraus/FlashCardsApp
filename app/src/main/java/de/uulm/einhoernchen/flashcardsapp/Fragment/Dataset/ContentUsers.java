@@ -17,6 +17,7 @@ import de.uulm.einhoernchen.flashcardsapp.Database.DbManager;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.Adapter.RecyclerViewAdapterUsers;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.FragmentUserGroups;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.FragmentUsers;
+import de.uulm.einhoernchen.flashcardsapp.Fragment.FragmentUsersBinding;
 import de.uulm.einhoernchen.flashcardsapp.Model.User;
 import de.uulm.einhoernchen.flashcardsapp.Model.UserGroup;
 import de.uulm.einhoernchen.flashcardsapp.R;
@@ -32,7 +33,7 @@ public class ContentUsers {
 
     private static List<User> users = new ArrayList<User>();
 
-    public static FragmentUsers fragment;
+    public static FragmentUsersBinding fragment;
 
     private static boolean isUpToDate = false;
     private static DbManager db = Globals.getDb();
@@ -59,7 +60,7 @@ public class ContentUsers {
                 ContentUsers.users = users;
                 isUpToDate = true;
 
-                fragment = new FragmentUsers();
+                fragment = new FragmentUsersBinding();
                 fragment.setUsersOfGroup(usersOfGroup);
                 fragment.setItemList(users);
                 fragment.setUpToDate(isUpToDate);
@@ -111,7 +112,7 @@ public class ContentUsers {
                 ContentUsers.users = users;
                 isUpToDate = false;
 
-                fragment = new FragmentUsers();
+                fragment = new FragmentUsersBinding();
                 fragment.setUsersOfGroup(usersOfGroup);
                 fragment.setItemList(users);
                 fragment.setUpToDate(isUpToDate);

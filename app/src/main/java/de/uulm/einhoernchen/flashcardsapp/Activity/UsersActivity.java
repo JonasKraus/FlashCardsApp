@@ -112,6 +112,7 @@ public class UsersActivity extends AppCompatActivity implements OnFragmentIntera
 
         textViewToolbarCheckedUsers = (TextView) findViewById(R.id.textView_checked_users);
 
+        /*
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -130,6 +131,7 @@ public class UsersActivity extends AppCompatActivity implements OnFragmentIntera
                 startActivity(intent);
             }
         });
+        */
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
     }
@@ -201,5 +203,10 @@ public class UsersActivity extends AppCompatActivity implements OnFragmentIntera
         item.imageView.setImageDrawable(drawable);
 
         setCheckedUsersList();
+    }
+
+
+    public Long getGroupId() {
+        return groupId;
     }
 }
