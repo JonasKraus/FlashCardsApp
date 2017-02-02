@@ -101,13 +101,15 @@ public class UsersActivity extends AppCompatActivity implements OnFragmentIntera
             @Override
             public void onClick(View view) {
 
-                for (User user : checkedUsers) {
-                    //Log.d("create group", "usersId " + user.getId());
-                }
-
-                Intent intent = new Intent(getApplicationContext(),UserGroupDetailsActivity.class);
+                Intent intent = new Intent(getApplicationContext(), UserGroupDetailsActivity.class);
                 Bundle bundle = new Bundle();
                 bundle.putParcelableArrayList("data", checkedUsers);
+
+                if (groupId != null) {
+
+                    intent.putExtra("group_id", groupId);
+                }
+
                 intent.putExtras(bundle);
                 startActivity(intent);
             }

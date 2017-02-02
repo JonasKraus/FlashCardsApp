@@ -202,7 +202,6 @@ public class RecyclerViewAdapterUsers extends RecyclerView.Adapter<RecyclerViewA
 
 
 
-
     /**
      * Gets the view elements and sets them to the holder
      *

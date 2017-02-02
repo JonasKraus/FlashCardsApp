@@ -78,7 +78,7 @@ public class UserGroup {
 	 */
 	public UserGroup() {
 		this.name = "";
-		this.description = "no group available";
+		this.description = "";
 	}
 
 	public Long getId() {

@@ -887,7 +887,7 @@ public class DbManager extends DbHelper{
      * @param cardDeckGroupId
      * @return
      */
-    private UserGroup getUserGroup(long cardDeckGroupId) {
+    public UserGroup getUserGroup(long cardDeckGroupId) {
 
         UserGroup userGroup = null;
 

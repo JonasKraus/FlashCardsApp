@@ -22,6 +22,7 @@ import java.util.List;
 
 import de.uulm.einhoernchen.flashcardsapp.AsyncTask.Remote.PATCH.AsyncPatchRemoteCard;
 import de.uulm.einhoernchen.flashcardsapp.AsyncTask.Remote.POST.AsyncPostRemoteUserGroup;
+import de.uulm.einhoernchen.flashcardsapp.Database.DbManager;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.Adapter.RecyclerViewAdapterUsers;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.Dataset.ContentUsers;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.FragmentUsers;
@@ -39,6 +40,9 @@ public class UserGroupDetailsActivity extends AppCompatActivity  implements OnFr
     private EditText editTextName;
     private EditText editTextDescription;
     private ArrayList<User> users;
+    private Long groupId;
+    private UserGroup selectedUserGroup;
+    private DbManager db = Globals.getDb();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,10 +71,13 @@ public class UserGroupDetailsActivity extends AppCompatActivity  implements OnFr
 
         Bundle bundle = getIntent().getExtras();
         users = bundle.getParcelableArrayList("data");
+        groupId = bundle.getLong("group_id");
 
-        Log.d("parcel", users.size() + "");
-        for (User user : users) {
-            Log.d("details group", "usersId " + user.getId());
+        if (groupId != null) {
+
+            selectedUserGroup = db.getUserGroup(groupId);
+            editTextName.setText(selectedUserGroup.getName());
+            editTextDescription.setText(selectedUserGroup.getDescription());
         }
 
         setUsersListFragment(users);
