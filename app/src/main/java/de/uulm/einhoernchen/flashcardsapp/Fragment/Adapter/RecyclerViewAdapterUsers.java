@@ -102,6 +102,7 @@ public class RecyclerViewAdapterUsers extends RecyclerView.Adapter<RecyclerViewA
         });
 
         checkUsersOfGroup(holder, users.get(position));
+        checkLoggedInUser(holder);
     }
 
 
@@ -129,8 +130,32 @@ public class RecyclerViewAdapterUsers extends RecyclerView.Adapter<RecyclerViewA
             //item.mView.setOnClickListener(null);
             item.mView.setEnabled(false);
         }
+    }
 
 
+    /**
+     * checks the logged in user
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     * @since 2017-02-01
+     *
+     * @param item
+     */
+    public void checkLoggedInUser(RecyclerViewAdapterUsers.ViewHolder item) {
+
+
+        if (item.mItem.getId() == Globals.getDb().getLoggedInUser().getId()) {
+
+            TextDrawable drawable = TextDrawable.builder()
+                    .buildRound(String.valueOf("✓"), Color.GRAY); // radius in px
+            item.imageView.setTag("checked");
+
+            item.imageView.setImageDrawable(drawable);
+
+            // Set to null, so its unclickable
+            //item.mView.setOnClickListener(null);
+            item.mView.setEnabled(false);
+        }
     }
 
 

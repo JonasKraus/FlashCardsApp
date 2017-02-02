@@ -95,9 +95,6 @@ public class UserGroupDetailsActivity extends AppCompatActivity  implements OnFr
 
         JSONArray jsonArrayUsers = new JSONArray();
 
-        // add currently logged in user to the group
-        users.add(Globals.getDb().getLoggedInUser());
-
         try {
             jsonObjectGroup.put(JsonKeys.GROUP_NAME, name);
             jsonObjectGroup.put(JsonKeys.GROUP_DESCRIPTION, description);

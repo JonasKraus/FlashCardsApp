@@ -40,7 +40,10 @@ public class UsersActivity extends AppCompatActivity implements OnFragmentIntera
     protected void onPostResume() {
         super.onPostResume();
 
+        setSelfToCheckedList();
         setUsersOFGroupToCheckedList();
+        // Set if users are checked because a group was selected
+        setCheckedUsersList();
     }
 
 
@@ -52,15 +55,28 @@ public class UsersActivity extends AppCompatActivity implements OnFragmentIntera
     private void setUsersOFGroupToCheckedList() {
 
         if (groupId != null) {
+
             usersOfGroup = db.getUsersOfUserGroup(groupId);
 
             for (User user : usersOfGroup) {
 
                 checkedUsers.add(user);
             }
+        }
+    }
 
-            // Set if users are checked because a group was selected
-            setCheckedUsersList();
+    /**
+     * Adds the logged in user to the list
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     * @since 2017-02-02
+     */
+    private void setSelfToCheckedList() {
+
+        // Add only when no group was loaded
+        // otherwise the user must be in the group
+        if (groupId == null) {
+            // add currently logged in user to the group
+            checkedUsers.add(Globals.getDb().getLoggedInUser());
         }
     }
 
