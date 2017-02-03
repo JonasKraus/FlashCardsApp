@@ -78,6 +78,8 @@ public class FragmentUsersBinding extends Fragment implements SearchView.OnQuery
 
     private TextView textViewToolbarCheckedUsers;
     private Long groupId = null;
+    private static List<ListItemUserBinding> checkedBindings = new ArrayList<>();
+    private RecyclerViewAdapterUsersBinding mAdapterClean;
 
 
     public RecyclerView getRecyclerView() {
@@ -126,6 +128,7 @@ public class FragmentUsersBinding extends Fragment implements SearchView.OnQuery
         mBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_item_list, container, false);
 
         mAdapter = new RecyclerViewAdapterUsersBinding(this.getContext(), ALPHABETICAL_COMPARATOR, isUpToDate, this, usersOfGroup);
+        mAdapterClean = mAdapter;
 
         mBinding.list.setLayoutManager(new LinearLayoutManager(this.getContext()));
         mBinding.list.setAdapter(mAdapter);
@@ -209,11 +212,13 @@ public class FragmentUsersBinding extends Fragment implements SearchView.OnQuery
 
     @Override
     public boolean onQueryTextChange(String query) {
+
         final List<User> filteredModelList = filter(itemList, query);
         mAdapter.edit()
                 .replaceAll(filteredModelList)
                 .commit();
         mBinding.list.scrollToPosition(0);
+
         return true;
     }
 
@@ -232,6 +237,7 @@ public class FragmentUsersBinding extends Fragment implements SearchView.OnQuery
                 filteredModelList.add(model);
             }
         }
+
         return filteredModelList;
     }
 
@@ -244,31 +250,37 @@ public class FragmentUsersBinding extends Fragment implements SearchView.OnQuery
     }
 
     @Override
-    public void onClickBinding(ListItemUserBinding binding) {
+    public void onClickBinding(ListItemUserBinding listItemUserBinding) {
         TextDrawable drawable;
         ColorGenerator generator = ColorGenerator.MATERIAL; // or use DEFAULT
         // generate random color
 
-        if (binding.imageViewRoundIcon.getTag().equals("checked")) {
+        if (listItemUserBinding.imageViewRoundIcon.getTag().equals("checked")) {
 
-            checkedUsers.remove(binding.getModel());
+            checkedUsers.remove(listItemUserBinding.getModel());
+            checkedBindings.remove(listItemUserBinding);
 
-            final int color = generator.getColor(binding.getModel().getId());
+            final int color = generator.getColor(listItemUserBinding.getModel().getId());
 
             drawable = TextDrawable.builder()
-                    .buildRound(binding.getModel().getName().charAt(0) + "", color); // radius in px
-            binding.imageViewRoundIcon.setTag("unchecked");
+                    .buildRound(listItemUserBinding.getModel().getName().charAt(0) + "", color); // radius in px
+            listItemUserBinding.imageViewRoundIcon.setTag("unchecked");
+
+            listItemUserBinding.getModel().setChecked(false);
 
         } else {
 
-            checkedUsers.add(binding.getModel());
+            checkedUsers.add(listItemUserBinding.getModel());
+            checkedBindings.add(listItemUserBinding);
 
             drawable = TextDrawable.builder()
                     .buildRound(String.valueOf("✓"), Color.GRAY); // radius in px
-            binding.imageViewRoundIcon.setTag("checked");
+            listItemUserBinding.imageViewRoundIcon.setTag("checked");
+
+            listItemUserBinding.getModel().setChecked(true);
         }
 
-        binding.imageViewRoundIcon.setImageDrawable(drawable);
+        listItemUserBinding.imageViewRoundIcon.setImageDrawable(drawable);
 
         setCheckedUsersListToolbar();
     }
@@ -346,6 +358,7 @@ public class FragmentUsersBinding extends Fragment implements SearchView.OnQuery
         setUsersOfGroupToCheckedList();
         // Set if users are checked because a group was selected
         setCheckedUsersListToolbar();
+
     }
 
 }

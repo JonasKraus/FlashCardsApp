@@ -88,14 +88,12 @@ public class UserViewHolder extends SortedListAdapter.ViewHolder<User> {
     public boolean setCheckIcon(ListItemUserBinding mBinding) {
 
         if (
-            (userIdsOfGroup.size() > 0
-                    && userIdsOfGroup.contains(mBinding.getModel().getId())
-            )
-            || (mBinding.getModel().getId()
-                    == Globals.getDb().getLoggedInUser().getId()
-                    && userIdsOfGroup.size() == 0
-            )
+            (userIdsOfGroup.size() > 0 && userIdsOfGroup.contains(mBinding.getModel().getId()))
+            || (mBinding.getModel().getId() == Globals.getDb().getLoggedInUser().getId() && userIdsOfGroup.size() == 0)
+            || mBinding.getModel().isChecked()
             ) {
+
+            mBinding.getModel().setChecked(true);
 
             TextDrawable drawable = TextDrawable.builder()
                     .buildRound(String.valueOf("✓"), Color.GRAY); // radius in px

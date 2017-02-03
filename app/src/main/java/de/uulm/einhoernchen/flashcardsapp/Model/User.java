@@ -29,6 +29,8 @@ import de.uulm.einhoernchen.flashcardsapp.Util.JsonKeys;
 @JsonPropertyOrder({ JsonKeys.USER_ID})
 public class User implements Parcelable, SortedListAdapter.ViewModel {
 
+    private boolean isChecked;
+
     private Long id;
 
     private String avatar;
@@ -133,6 +135,8 @@ public class User implements Parcelable, SortedListAdapter.ViewModel {
             this.lastLogin = new Date();
             Log.w("ERROR parse Date", e.getMessage());
         }
+
+        this.isChecked = false;
     }
 
     public Long getId() {
@@ -344,5 +348,13 @@ public class User implements Parcelable, SortedListAdapter.ViewModel {
         result = 31 * result + (userGroups != null ? userGroups.hashCode() : 0);
         result = 31 * result + (authTokenList != null ? authTokenList.hashCode() : 0);
         return result;
+    }
+
+    public boolean isChecked() {
+        return isChecked;
+    }
+
+    public void setChecked(boolean checked) {
+        isChecked = checked;
     }
 }
