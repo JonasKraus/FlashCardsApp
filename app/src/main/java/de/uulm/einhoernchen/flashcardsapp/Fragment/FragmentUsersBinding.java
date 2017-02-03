@@ -276,22 +276,18 @@ public class FragmentUsersBinding extends Fragment implements SearchView.OnQuery
     private void setCheckedUsersListToolbar() {
 
 
-        Log.d("text", textViewToolbarCheckedUsers.getText().toString());
         String text = "";
 
         for (int i = 0; i < checkedUsers.size(); i++) {
 
             text += checkedUsers.get(i).getName();
 
-            Log.d("user", i+"");
             if (i < checkedUsers.size() - 1) {
                 text += (", ");
             }
         }
 
         textViewToolbarCheckedUsers.setText(text);
-
-        Log.d("text2", textViewToolbarCheckedUsers.getText().toString());
 
     }
 
