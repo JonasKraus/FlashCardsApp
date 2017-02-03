@@ -102,7 +102,7 @@ public class RecyclerViewAdapterUsers extends RecyclerView.Adapter<RecyclerViewA
         });
 
         checkUsersOfGroup(holder, users.get(position));
-        checkLoggedInUser(holder);
+        //checkLoggedInUser(holder);
     }
 
 
