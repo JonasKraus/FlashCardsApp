@@ -308,5 +308,41 @@ public class User implements Parcelable, SortedListAdapter.ViewModel {
         }
     };
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
 
+        User user = (User) o;
+
+        if (rating != user.rating) return false;
+        if (id != null ? !id.equals(user.id) : user.id != null) return false;
+        if (avatar != null ? !avatar.equals(user.avatar) : user.avatar != null) return false;
+        if (name != null ? !name.equals(user.name) : user.name != null) return false;
+        if (password != null ? !password.equals(user.password) : user.password != null)
+            return false;
+        if (email != null ? !email.equals(user.email) : user.email != null) return false;
+        if (created != null ? !created.equals(user.created) : user.created != null) return false;
+        if (lastLogin != null ? !lastLogin.equals(user.lastLogin) : user.lastLogin != null)
+            return false;
+        if (userGroups != null ? !userGroups.equals(user.userGroups) : user.userGroups != null)
+            return false;
+        return authTokenList != null ? authTokenList.equals(user.authTokenList) : user.authTokenList == null;
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id != null ? id.hashCode() : 0;
+        result = 31 * result + (avatar != null ? avatar.hashCode() : 0);
+        result = 31 * result + (name != null ? name.hashCode() : 0);
+        result = 31 * result + (password != null ? password.hashCode() : 0);
+        result = 31 * result + (email != null ? email.hashCode() : 0);
+        result = 31 * result + rating;
+        result = 31 * result + (created != null ? created.hashCode() : 0);
+        result = 31 * result + (lastLogin != null ? lastLogin.hashCode() : 0);
+        result = 31 * result + (userGroups != null ? userGroups.hashCode() : 0);
+        result = 31 * result + (authTokenList != null ? authTokenList.hashCode() : 0);
+        return result;
+    }
 }

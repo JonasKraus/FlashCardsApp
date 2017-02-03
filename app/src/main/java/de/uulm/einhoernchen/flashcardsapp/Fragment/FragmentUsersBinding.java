@@ -40,8 +40,6 @@ import de.uulm.einhoernchen.flashcardsapp.Util.Globals;
 import de.uulm.einhoernchen.flashcardsapp.databinding.FragmentItemListBinding;
 import de.uulm.einhoernchen.flashcardsapp.databinding.ListItemUserBinding;
 
-import static de.uulm.einhoernchen.flashcardsapp.R.id.fab;
-
 /**
  * A fragment representing a list of Category Items.
  * <p/>
@@ -278,18 +276,22 @@ public class FragmentUsersBinding extends Fragment implements SearchView.OnQuery
     private void setCheckedUsersListToolbar() {
 
 
+        Log.d("text", textViewToolbarCheckedUsers.getText().toString());
         String text = "";
 
         for (int i = 0; i < checkedUsers.size(); i++) {
 
             text += checkedUsers.get(i).getName();
 
+            Log.d("user", i+"");
             if (i < checkedUsers.size() - 1) {
                 text += (", ");
             }
         }
 
         textViewToolbarCheckedUsers.setText(text);
+
+        Log.d("text2", textViewToolbarCheckedUsers.getText().toString());
 
     }
 
@@ -299,7 +301,7 @@ public class FragmentUsersBinding extends Fragment implements SearchView.OnQuery
      * @author Jonas Kraus jonas.kraus@uni-ulm.de
      * @since 2017-02-02
      */
-    private void setUsersOFGroupToCheckedList() {
+    private void setUsersOfGroupToCheckedList() {
 
         if (groupId != null) {
 
@@ -307,7 +309,9 @@ public class FragmentUsersBinding extends Fragment implements SearchView.OnQuery
 
             for (User user : usersOfGroup) {
 
-                checkedUsers.add(user);
+                if (!checkedUsers.contains(user)) {
+                    checkedUsers.add(user);
+                }
             }
         }
     }
@@ -323,7 +327,9 @@ public class FragmentUsersBinding extends Fragment implements SearchView.OnQuery
         // otherwise the user must be in the group
         if (groupId == null) {
             // add currently logged in user to the group
-            checkedUsers.add(Globals.getDb().getLoggedInUser());
+            if (!checkedUsers.contains(Globals.getDb().getLoggedInUser())) {
+                checkedUsers.add(Globals.getDb().getLoggedInUser());
+            }
         }
     }
 
@@ -333,7 +339,7 @@ public class FragmentUsersBinding extends Fragment implements SearchView.OnQuery
         super.onResume();
 
         setSelfToCheckedList();
-        setUsersOFGroupToCheckedList();
+        setUsersOfGroupToCheckedList();
         // Set if users are checked because a group was selected
         setCheckedUsersListToolbar();
     }
