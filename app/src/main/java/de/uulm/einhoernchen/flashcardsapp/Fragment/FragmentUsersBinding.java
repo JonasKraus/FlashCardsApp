@@ -62,12 +62,20 @@ public class FragmentUsersBinding extends Fragment implements SearchView.OnQuery
     private ArrayList<User> checkedUsers = new ArrayList<>();
     private FloatingActionButton fab;
 
+    /**
+     * Compare the users
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     * @since 2017-02-03
+     */
     private static final Comparator<User> ALPHABETICAL_COMPARATOR = new Comparator<User>() {
         @Override
         public int compare(User a, User b) {
+
             return a.getName().compareTo(b.getName());
         }
     };
+
     private TextView textViewToolbarCheckedUsers;
     private Long groupId = null;
 
