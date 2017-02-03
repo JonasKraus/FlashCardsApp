@@ -2,6 +2,7 @@ package de.uulm.einhoernchen.flashcardsapp.Fragment.ViewHolder;
 
 import android.graphics.Color;
 import android.os.Binder;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 
@@ -15,6 +16,7 @@ import de.uulm.einhoernchen.flashcardsapp.Fragment.Adapter.RecyclerViewAdapterUs
 import de.uulm.einhoernchen.flashcardsapp.Fragment.Adapter.SortedListAdapter;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.Interface.OnFragmentInteractionListenerUserBinding;
 import de.uulm.einhoernchen.flashcardsapp.Model.User;
+import de.uulm.einhoernchen.flashcardsapp.Util.Globals;
 import de.uulm.einhoernchen.flashcardsapp.databinding.ListItemUserBinding;
 
 /**
@@ -85,8 +87,15 @@ public class UserViewHolder extends SortedListAdapter.ViewHolder<User> {
      */
     public boolean setCheckIcon(ListItemUserBinding mBinding) {
 
-
-        if (userIdsOfGroup != null && userIdsOfGroup.size() > 0 && userIdsOfGroup.contains(mBinding.getModel().getId())) {
+        if (
+            (userIdsOfGroup.size() > 0
+                    && userIdsOfGroup.contains(mBinding.getModel().getId())
+            )
+            || (mBinding.getModel().getId()
+                    == Globals.getDb().getLoggedInUser().getId()
+                    && userIdsOfGroup.size() == 0
+            )
+            ) {
 
             TextDrawable drawable = TextDrawable.builder()
                     .buildRound(String.valueOf("✓"), Color.GRAY); // radius in px
