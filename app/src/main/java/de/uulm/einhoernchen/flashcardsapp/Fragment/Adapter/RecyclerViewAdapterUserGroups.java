@@ -6,6 +6,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -18,6 +20,7 @@ import java.util.List;
 
 import de.uulm.einhoernchen.flashcardsapp.Database.DbManager;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.Interface.OnFragmentInteractionListenerUserGroup;
+import de.uulm.einhoernchen.flashcardsapp.Model.Filter.UserGroupFilter;
 import de.uulm.einhoernchen.flashcardsapp.Model.UserGroup;
 import de.uulm.einhoernchen.flashcardsapp.R;
 import de.uulm.einhoernchen.flashcardsapp.Util.Globals;
@@ -26,16 +29,18 @@ import de.uulm.einhoernchen.flashcardsapp.Util.Globals;
  * {@link RecyclerView.Adapter} that can display a {@link de.uulm.einhoernchen.flashcardsapp.Fragment.Dataset.ContentFlashCardAnswers} and makes a call to the
  * TODO: Replace the implementation with code for your data type.
  */
-public class RecyclerViewAdapterUserGroups extends RecyclerView.Adapter<RecyclerViewAdapterUserGroups.ViewHolder> {
+public class RecyclerViewAdapterUserGroups extends RecyclerView.Adapter<RecyclerViewAdapterUserGroups.ViewHolder> implements Filterable {
 
 
     private final List<UserGroup> groups;
+    private final List<UserGroup> filteredList;
     private final List<ViewHolder> holders = new ArrayList<ViewHolder>();
     private final OnFragmentInteractionListenerUserGroup mListener;
     private final boolean isUpToDate;
     private final Context context = Globals.getContext();
     private final DbManager db = Globals.getDb();
     private final ProgressBar progressBar = Globals.getProgressBar();
+    private UserGroupFilter userGroupFilter;
 
     /**
      * Constructs the recycler views
@@ -47,8 +52,9 @@ public class RecyclerViewAdapterUserGroups extends RecyclerView.Adapter<Recycler
      * @param isUpToDate
      */
     public RecyclerViewAdapterUserGroups(List<UserGroup> items, OnFragmentInteractionListenerUserGroup listener, boolean isUpToDate) {
-        groups = items;
-        mListener = listener;
+        this.groups = items;
+        this.filteredList = new ArrayList<>();
+        this.mListener = listener;
         this.isUpToDate = isUpToDate;
     }
 
@@ -124,6 +130,19 @@ public class RecyclerViewAdapterUserGroups extends RecyclerView.Adapter<Recycler
 
     }
 
+    /**
+     * Returns the filtered list
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     * @since 2017-02-03
+     *
+     * @return
+     */
+    public List<UserGroup> getList() {
+
+        return this.groups;
+    }
+
 
 
     /**
@@ -140,6 +159,18 @@ public class RecyclerViewAdapterUserGroups extends RecyclerView.Adapter<Recycler
         }
         return 0;
     }
+
+    @Override
+    public Filter getFilter() {
+
+        if(this.userGroupFilter == null) {
+
+            this.userGroupFilter = new UserGroupFilter(this, groups);
+        }
+
+        return this.userGroupFilter;
+    }
+
 
 
 
@@ -186,5 +217,6 @@ public class RecyclerViewAdapterUserGroups extends RecyclerView.Adapter<Recycler
         public String toString() {
             return super.toString() + " '" + textviewName.getText() + "'";
         }
+
     }
 }
