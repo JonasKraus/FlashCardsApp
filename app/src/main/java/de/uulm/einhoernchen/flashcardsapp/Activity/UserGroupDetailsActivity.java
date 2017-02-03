@@ -5,6 +5,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
@@ -65,7 +66,8 @@ public class UserGroupDetailsActivity extends AppCompatActivity  implements OnFr
 
         Bundle bundle = getIntent().getExtras();
         users = bundle.getParcelableArrayList("data");
-        groupId = bundle.getLong("group_id");
+
+        groupId = bundle.containsKey("group_id") ? bundle.getLong("group_id") : null;
 
         // Check if a group was selected and must be edited
         if (groupId != null) {
@@ -117,6 +119,8 @@ public class UserGroupDetailsActivity extends AppCompatActivity  implements OnFr
             AsyncPostRemoteUserGroup task = new AsyncPostRemoteUserGroup(jsonObjectGroup);
 
             if (ProcessConnectivity.isOk(this)) {
+
+                Log.d("Create group", jsonObjectGroup.toString());
 
                 task.execute(groupId);
             } else {
