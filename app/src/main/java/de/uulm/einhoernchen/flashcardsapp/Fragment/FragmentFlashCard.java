@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
@@ -21,6 +22,7 @@ import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
@@ -36,6 +38,7 @@ import de.uulm.einhoernchen.flashcardsapp.AsyncTask.Remote.POST.AsyncPostRemoteR
 import de.uulm.einhoernchen.flashcardsapp.Database.DbManager;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.Dataset.ContentFlashCardAnswers;
 import de.uulm.einhoernchen.flashcardsapp.Model.FlashCard;
+import de.uulm.einhoernchen.flashcardsapp.Model.Tag;
 import de.uulm.einhoernchen.flashcardsapp.R;
 import de.uulm.einhoernchen.flashcardsapp.Util.Globals;
 import de.uulm.einhoernchen.flashcardsapp.Util.JsonKeys;
@@ -104,6 +107,7 @@ public class FragmentFlashCard extends Fragment implements View.OnClickListener 
     private FloatingActionButton floatingActionButtonSave;
     private FloatingActionButton floatingActionButtonAdd;
     private FloatingActionButton fabEdit;
+    private LinearLayout linearlayoutHashTags;
 
     public FragmentFlashCard() {
         // Required empty public constructor
@@ -187,6 +191,8 @@ public class FragmentFlashCard extends Fragment implements View.OnClickListener 
         editTextQuestionUri = (EditText) view.findViewById(R.id.edittext_uri);
         editTextQuestionText = (EditText) view.findViewById(R.id.edittext_content);
 
+        linearlayoutHashTags = (LinearLayout) view.findViewById(R.id.ll_hash_tags);
+
         imageViewPlay = (ImageView) view.findViewById(R.id.imageview_card_media_play);
         radioGroupAnswerCorrect = (RadioGroup) view.findViewById(R.id.radio_buttongroup_answer_editor);
         radioButtonAnswerCorrect = (RadioButton) view.findViewById(R.id.radio_button_answer_editor_correct);
@@ -205,6 +211,9 @@ public class FragmentFlashCard extends Fragment implements View.OnClickListener 
         mAuthorView.setText(flashCard.getQuestion().getAuthor().getName());
         mCardRatingView.setText(flashCard.getRatingForView());
         mDateView.setText(flashCard.getLastUpdatedString());
+
+
+        createTagViewWithListener();
 
         fabEdit = (FloatingActionButton) view.findViewById(R.id.fab_card_edit);
         fabEdit.setVisibility(View.GONE);
@@ -259,6 +268,39 @@ public class FragmentFlashCard extends Fragment implements View.OnClickListener 
 
         return view;
 
+    }
+
+
+    /**
+     * Creates textviews for every single tag and adds an listener
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     * @since 2017-02-04
+     */
+    private void createTagViewWithListener() {
+
+        AppBarLayout.LayoutParams lparams = new AppBarLayout.LayoutParams(
+                AppBarLayout.LayoutParams.WRAP_CONTENT, AppBarLayout.LayoutParams.WRAP_CONTENT);
+        lparams.rightMargin = 10;
+
+        for (Tag tag : flashCard.getTags()) {
+
+            TextView tv = new TextView(getContext());
+            tv.setLayoutParams(lparams);
+            tv.setTag(tag.getId());
+            tv.setText(tag.getName());
+
+            linearlayoutHashTags.addView(tv);
+
+            tv.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    Log.d("click", v.getTag() + " tag");
+                    // TODO add some logic
+                }
+            });
+        }
     }
 
     private void checkIfEditable() {
