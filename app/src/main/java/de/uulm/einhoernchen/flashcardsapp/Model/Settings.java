@@ -263,6 +263,10 @@ public class Settings {
 
             settings = new Settings(id, userId, allowSync, learnMode, multiplyChoiceAnswerOrderRandom, isNightMode, showLastDrawer, changeDate);
 
+        } else {
+
+            settings = new Settings(0, Globals.getDb().getLoggedInUser().getId(), true, Constants.SETTINGS_LEARN_MODE_DRAWER, false, false, true, 0);
+
         }
 
         cursor.close();

@@ -313,6 +313,8 @@ public class DbManager extends DbHelper{
                 DbHelper.COLUMN_USER_LOCAL_ACCOUNT + " = " + 1 + " AND " + DbHelper.COLUMN_USER_IS_LOGGED_IN + " = " + 1
                 , null, null, null, null);
 
+        // TODO JOIN TOKEN table
+
         if (cursor.moveToFirst()) {
             do {
                 long id = cursor.getLong(0);
@@ -320,13 +322,14 @@ public class DbManager extends DbHelper{
                 String avatar = cursor.getString(1);
                 // no pwd saved
                 String email = cursor.getString(4);
+                String pwd = cursor.getString(cursor.getColumnIndex(COLUMN_USER_PASSWORD));
                 int rating = cursor.getInt(5);
 
                 //long groupId = cursor.getLong(5); not needed here
                 String created = cursor.getString(7);
                 String lastLogin = cursor.getString(8);
 
-                user = new User(id, avatar, name, email, rating, created, lastLogin);
+                user = new User(id, avatar, name, pwd, email, rating, created, lastLogin);
 
             } while (cursor.moveToNext());
         }
@@ -335,6 +338,7 @@ public class DbManager extends DbHelper{
 
         return user;
     }
+
 
     /**
      * Gets all cards with the given CardDeckId
@@ -1544,10 +1548,12 @@ public class DbManager extends DbHelper{
         ContentValues values = new ContentValues();
         values.put(DbHelper.COLUMN_USER_IS_LOGGED_IN, 0);
 
-        // reset the class var
-        this.loggedInUser = null;
 
         database.update(DbHelper.TABLE_USER, values, DbHelper.COLUMN_USER_ID + " = " + loggedInUser.getId(), null);
+
+
+        // reset the class var
+        this.loggedInUser = null;
     }
 
 
@@ -2174,5 +2180,37 @@ public class DbManager extends DbHelper{
         values.put(DbHelper.COLUMN_USER_GROUP_JOIN_TABLE_GROUP_ID, groupId);
 
         database.insertWithOnConflict(DbHelper.TABLE_USER_GROUP_JOIN_TABLE, null, values, SQLiteDatabase.CONFLICT_REPLACE);
+    }
+
+
+    /**
+     * Saves a token for a user
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     * @since 2017-02-14
+     *
+     * @param token
+     */
+    public void saveToken(String token) {
+
+        ContentValues values = new ContentValues();
+        values.put(DbHelper.COLUMN_AUTH_TOKEN_TOKEN, token);
+        values.put(DbHelper.COLUMN_AUTH_TOKEN_USER_ID, this.getLoggedInUser().getId());
+        values.put(DbHelper.COLUMN_AUTH_TOKEN_CREATED, System.currentTimeMillis());
+
+        database.insertWithOnConflict(DbHelper.TABLE_AUTH_TOKEN, null, values, SQLiteDatabase.CONFLICT_ABORT);
+    }
+
+
+    /**
+     * Invalidates a token for a user
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     * @since 2017-02-14
+     *
+     */
+    public void invalidateToken() {
+
+        database.delete(DbHelper.TABLE_AUTH_TOKEN, COLUMN_AUTH_TOKEN_USER_ID + " = " + this.getLoggedInUser().getId(), null);
     }
 }

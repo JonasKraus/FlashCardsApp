@@ -28,11 +28,15 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.File;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.uulm.einhoernchen.flashcardsapp.AsyncTask.Remote.POST.AsyncPostRemoteToken;
 import de.uulm.einhoernchen.flashcardsapp.Database.DbManager;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.Dataset.ContentFlashCard;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.Dataset.ContentFlashCards;
@@ -57,6 +61,7 @@ import de.uulm.einhoernchen.flashcardsapp.Model.UserGroup;
 import de.uulm.einhoernchen.flashcardsapp.R;
 import de.uulm.einhoernchen.flashcardsapp.Const.Constants;
 import de.uulm.einhoernchen.flashcardsapp.Util.Globals;
+import de.uulm.einhoernchen.flashcardsapp.Util.JsonKeys;
 import de.uulm.einhoernchen.flashcardsapp.Util.ProcessConnectivity;
 import de.uulm.einhoernchen.flashcardsapp.Util.ProcessorImage;
 import de.uulm.einhoernchen.flashcardsapp.Util.PermissionManager;
@@ -149,6 +154,25 @@ public class MainActivity extends AppCompatActivity
         createFragmentHome();
 
         createToolbar();
+
+        JSONObject jsonObject = new JSONObject();
+
+        try {
+
+            jsonObject.put(JsonKeys.USER_EMAIL, db.getLoggedInUser().getEmail());
+            Log.d("mail", db.getLoggedInUser().getEmail());
+            Log.d("pwd", db.getLoggedInUser().getPassword());
+            jsonObject.put(JsonKeys.USER_PASSWORD, db.getLoggedInUser().getPassword());
+        } catch (JSONException e) {
+
+            Log.e("ERROR", "json");
+            e.printStackTrace();
+        }
+
+
+        // Gets the login token
+        AsyncPostRemoteToken asyncToken = new AsyncPostRemoteToken(jsonObject, db);
+        asyncToken.execute();
     }
 
 
@@ -619,6 +643,9 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_logout) {
 
             db.logoutUser();
+            db.invalidateToken();
+            // TODO Ascny task to server to invalidate this token
+
             startActivity(new Intent(MainActivity.this, LoginActivity.class));
         }
 

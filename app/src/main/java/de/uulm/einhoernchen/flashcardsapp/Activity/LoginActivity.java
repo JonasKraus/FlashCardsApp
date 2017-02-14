@@ -32,6 +32,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 //import org.json.simple.parser.JSONParser;
 
@@ -46,10 +47,12 @@ import java.util.List;
 import java.lang.*;
 
 import de.uulm.einhoernchen.flashcardsapp.AsyncTask.Remote.GET.AsyncGetRemoteUser;
+import de.uulm.einhoernchen.flashcardsapp.AsyncTask.Remote.POST.AsyncPostRemoteToken;
 import de.uulm.einhoernchen.flashcardsapp.Const.Routes;
 import de.uulm.einhoernchen.flashcardsapp.Database.DbManager;
 import de.uulm.einhoernchen.flashcardsapp.Model.User;
 import de.uulm.einhoernchen.flashcardsapp.R;
+import de.uulm.einhoernchen.flashcardsapp.Util.JsonKeys;
 import de.uulm.einhoernchen.flashcardsapp.Util.ProcessConnectivity;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -236,6 +239,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
             final Context c = this.context;
 
+            Log.d("new login", "UserLoginTask");
             mAuthTask = new UserLoginTask(email, userName, password, new AsyncResponseId(){
 
                 @Override
@@ -247,6 +251,10 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
                             user.setPassword(password);
                             db.saveUser(user, true);
+
+
+
+
                             startActivity(new Intent(LoginActivity.this, MainActivity.class));
                         }
                     });
@@ -262,7 +270,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             });
             //TODO: give the string if sign in or create to async task
 
-            if (ProcessConnectivity.isOk(context)) {
+            if (ProcessConnectivity.isOk(context) || true) {
 
                 mAuthTask.execute((Void) null);
             }
@@ -467,6 +475,9 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
                 urlConnection.connect();
 
+                Log.d("conn", urlConnection.toString());
+                Log.d("request", cred.toString());
+
                 //Send request
                 DataOutputStream wr = new DataOutputStream(
                         urlConnection.getOutputStream());
@@ -503,6 +514,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             } catch (Exception e) {
 
                 if (db.loginUser(mEmail, mUserName, mPassword)) {
+
                     startActivity(new Intent(LoginActivity.this, MainActivity.class));
                 }
 

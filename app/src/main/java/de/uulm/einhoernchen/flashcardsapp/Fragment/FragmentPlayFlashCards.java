@@ -8,6 +8,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.NestedScrollView;
 import android.text.Html;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -205,6 +206,8 @@ public class FragmentPlayFlashCards extends Fragment implements View.OnClickList
         nsContentAnswers = (NestedScrollView) view.findViewById(R.id.nested_scrollview_content_answers);
 
 
+        Log.d("hier content", (imageViewPlay == null) + "");
+
         // Initially set visibility of answers
         toggleStateAndFabIcon(true);
 
@@ -253,6 +256,8 @@ public class FragmentPlayFlashCards extends Fragment implements View.OnClickList
         initVariables();
 
         initViewQuestion();
+
+        Log.d("image-view", imageViewPlay.getId()+"");
 
         setMedia();
 
@@ -404,6 +409,8 @@ public class FragmentPlayFlashCards extends Fragment implements View.OnClickList
      * @since 2017-01-03
      */
     private void setMedia() {
+
+        Log.d("hier Media", (imageViewPlay == null) + "");
 
         if (currentFlashcard.getQuestion().getUri() != null && currentFlashcard.getQuestion().getUri().toString() != "") {
 

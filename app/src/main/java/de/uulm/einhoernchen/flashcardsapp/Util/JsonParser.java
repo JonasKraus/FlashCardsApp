@@ -876,6 +876,27 @@ public class JsonParser {
         }
     }
 
+
+    /**
+     * reads the responsecode from the post method of creating a rating
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     * @since 2016-12-29
+     *
+     * @param inputStream
+     * @return
+     */
+    public static String readResponseToken(InputStream inputStream) throws IOException {
+
+        JsonReader reader = new JsonReader(new InputStreamReader(inputStream, "UTF-8"));
+
+        try {
+            return readResponseToken(reader);
+        } finally {
+            reader.close();
+        }
+    }
+
     /**
      * reads the responsecode from the post method of creating a rating
      *
@@ -906,7 +927,7 @@ public class JsonParser {
                     if (statuscode < 400) {
                         created = true;
                     } else {
-                        Log.e("pars rating resp", statuscode + "");
+                        Log.e("pars token resp", statuscode + "");
                     }
 
                 } else if (stringName.equals(JsonKeys.DESCRIPTION)) {
@@ -916,6 +937,7 @@ public class JsonParser {
                     if (check != JsonToken.NULL) {
 
                         description = reader.nextString();
+                        Log.e("pars token resp", description + "");
 
                     } else {
                         reader.nextNull();
@@ -944,6 +966,76 @@ public class JsonParser {
         }
 
         return ratingId;
+    }
+
+    /**
+     * reads the response and returns the token from the post method of creating a rating
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     * @since 2016-12-29
+     *
+     * @param reader
+     * @return
+     */
+    private static String readResponseToken(JsonReader reader) {
+        if (DEBUG) Log.d("parser Method", "readResponse");
+
+        int statuscode = 400;
+        boolean created = false;
+        String description = "";
+        String token = null;
+
+        try {
+            reader.beginObject();
+            while (reader.hasNext()) {
+
+                String stringName = reader.nextName();
+
+                if (stringName.equals(JsonKeys.STATUS_CODE)) {
+
+                    statuscode = reader.nextInt();
+
+                    if (statuscode < 400) {
+                        created = true;
+                    } else {
+                        Log.e("pars rating resp", statuscode + "");
+                    }
+
+                } else if (stringName.equals(JsonKeys.DESCRIPTION)) {
+
+                    JsonToken check = reader.peek();
+
+                    if (check != JsonToken.NULL) {
+
+                        description = reader.nextString();
+
+                    } else {
+                        reader.nextNull();
+                    }
+
+                } else if (stringName.equals(JsonKeys.TOKEN)) {
+
+                    JsonToken check = reader.peek();
+
+                    if (check != JsonToken.NULL) {
+
+                        token = reader.nextString();
+
+                    } else {
+                        reader.nextNull();
+                    }
+
+                }  else {
+                    reader.skipValue();
+                }
+
+            }
+            reader.endObject();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return token;
     }
 
 
