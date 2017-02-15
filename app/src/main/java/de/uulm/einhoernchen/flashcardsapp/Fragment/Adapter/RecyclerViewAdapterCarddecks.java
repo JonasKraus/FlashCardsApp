@@ -15,6 +15,7 @@ import java.util.List;
 
 import de.uulm.einhoernchen.flashcardsapp.Database.DbManager;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.Interface.OnFragmentInteractionListenerCarddeck;
+import de.uulm.einhoernchen.flashcardsapp.Fragment.Interface.OnFragmentInteractionListenerCarddeckLongClick;
 import de.uulm.einhoernchen.flashcardsapp.Model.CardDeck;
 import de.uulm.einhoernchen.flashcardsapp.R;
 import de.uulm.einhoernchen.flashcardsapp.Util.Globals;
@@ -26,12 +27,14 @@ public class RecyclerViewAdapterCarddecks extends RecyclerView.Adapter<RecyclerV
 
     private final List<CardDeck> cardDecks;
     private final OnFragmentInteractionListenerCarddeck mListener;
+    private final OnFragmentInteractionListenerCarddeckLongClick mLongClickListener;
     private final boolean isUpToDate;
     private final DbManager db = Globals.getDb();
 
-    public RecyclerViewAdapterCarddecks(List<CardDeck> items, OnFragmentInteractionListenerCarddeck listener, boolean isUpToDate) {
+    public RecyclerViewAdapterCarddecks(List<CardDeck> items, OnFragmentInteractionListenerCarddeck listener,  OnFragmentInteractionListenerCarddeckLongClick longClickListener, boolean isUpToDate) {
         cardDecks = items;
         mListener = listener;
+        mLongClickListener = longClickListener;
         this.isUpToDate = isUpToDate;
     }
 
@@ -72,6 +75,20 @@ public class RecyclerViewAdapterCarddecks extends RecyclerView.Adapter<RecyclerV
                     // fragment is attached to one) that an item has been selected.
                     mListener.onCarddeckListFragmentInteraction(holder.mItem);
                 }
+            }
+        });
+
+        holder.mView.setOnLongClickListener(new View.OnLongClickListener() {
+
+            @Override
+            public boolean onLongClick(View v) {
+
+                if (null != mLongClickListener) {
+
+                    mLongClickListener.onCarddeckListFragmentInteractionLongClick(holder.mItem);
+                }
+
+                return true;
             }
         });
 

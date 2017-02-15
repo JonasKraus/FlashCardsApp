@@ -48,6 +48,7 @@ import de.uulm.einhoernchen.flashcardsapp.Fragment.Dataset.ContentCategories;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.FragmentPlayTabs;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.Interface.OnFragmentInteractionListenerAnswer;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.Interface.OnFragmentInteractionListenerCarddeck;
+import de.uulm.einhoernchen.flashcardsapp.Fragment.Interface.OnFragmentInteractionListenerCarddeckLongClick;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.Interface.OnFragmentInteractionListenerCategory;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.Interface.OnFragmentInteractionListenerFlashcard;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.Interface.OnFragmentInteractionListenerUserGroup;
@@ -72,6 +73,7 @@ public class MainActivity extends AppCompatActivity
         OnFragmentInteractionListenerFlashcard,
         OnFragmentInteractionListenerCategory,
         OnFragmentInteractionListenerCarddeck,
+        OnFragmentInteractionListenerCarddeckLongClick,
         FragmentFlashCard.OnFlashCardFragmentInteractionListener,
         OnFragmentInteractionListenerAnswer {
 
@@ -904,6 +906,25 @@ public class MainActivity extends AppCompatActivity
         this.childrenId = item.getId();
 
         setFlashcardList(false);
+
+    }
+
+
+    /**
+     * Long Click on CardDeck
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     *
+     * @param item
+     */
+    @Override
+    public void onCarddeckListFragmentInteractionLongClick(CardDeck item) {
+
+        Log.d("click long", item.toString());
+
+        this.parentIds.add(this.childrenId);
+        this.childrenId = item.getId();
+
 
     }
 

@@ -28,6 +28,7 @@ import de.uulm.einhoernchen.flashcardsapp.AsyncTask.Remote.POST.AsyncPostRemoteU
 import de.uulm.einhoernchen.flashcardsapp.AsyncTask.Remote.PUT.AsyncPutRemoteCategory;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.Adapter.RecyclerViewAdapterCarddecks;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.Interface.OnFragmentInteractionListenerCarddeck;
+import de.uulm.einhoernchen.flashcardsapp.Fragment.Interface.OnFragmentInteractionListenerCarddeckLongClick;
 import de.uulm.einhoernchen.flashcardsapp.Model.CardDeck;
 import de.uulm.einhoernchen.flashcardsapp.R;
 import de.uulm.einhoernchen.flashcardsapp.Util.Globals;
@@ -46,6 +47,7 @@ public class FragmentCarddecks extends Fragment implements View.OnClickListener{
     public static final String ARG_PARENT_ID = "parentId";
     private int mColumnCount = 1;
     private OnFragmentInteractionListenerCarddeck mListener;
+    private OnFragmentInteractionListenerCarddeckLongClick mLongClickListener;
     private List<CardDeck> itemList;
     private boolean isUpToDate;
     private View viewFragment;
@@ -100,7 +102,7 @@ public class FragmentCarddecks extends Fragment implements View.OnClickListener{
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
 
-            recyclerView.setAdapter(new RecyclerViewAdapterCarddecks(itemList, mListener, isUpToDate));
+            recyclerView.setAdapter(new RecyclerViewAdapterCarddecks(itemList, mListener, mLongClickListener, isUpToDate));
         }
         return viewFragment;
     }
@@ -110,6 +112,7 @@ public class FragmentCarddecks extends Fragment implements View.OnClickListener{
         super.onAttach(context);
         if (context instanceof OnFragmentInteractionListenerCarddeck) {
             mListener = (OnFragmentInteractionListenerCarddeck) context;
+            mLongClickListener = (OnFragmentInteractionListenerCarddeckLongClick) context;
         } else {
             throw new RuntimeException(context.toString()
                     + " must implement OnListFragmentInteractionListener");
@@ -121,6 +124,7 @@ public class FragmentCarddecks extends Fragment implements View.OnClickListener{
         super.onDetach();
 
         mListener = null;
+        mLongClickListener = null;
     }
 
     public void setItemList(List<CardDeck> itemList) {
