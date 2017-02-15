@@ -10,6 +10,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -41,13 +42,12 @@ import de.uulm.einhoernchen.flashcardsapp.Util.ProcessConnectivity;
  * Activities containing this fragment MUST implement the {@link OnFragmentInteractionListenerCarddeck}
  * interface.
  */
-public class FragmentCarddecks extends Fragment implements View.OnClickListener{
+public class FragmentCarddecks extends Fragment implements View.OnClickListener, OnFragmentInteractionListenerCarddeckLongClick {
 
     private static final String ARG_COLUMN_COUNT = "column-count";
     public static final String ARG_PARENT_ID = "parentId";
     private int mColumnCount = 1;
     private OnFragmentInteractionListenerCarddeck mListener;
-    private OnFragmentInteractionListenerCarddeckLongClick mLongClickListener;
     private List<CardDeck> itemList;
     private boolean isUpToDate;
     private View viewFragment;
@@ -102,7 +102,7 @@ public class FragmentCarddecks extends Fragment implements View.OnClickListener{
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
 
-            recyclerView.setAdapter(new RecyclerViewAdapterCarddecks(itemList, mListener, mLongClickListener, isUpToDate));
+            recyclerView.setAdapter(new RecyclerViewAdapterCarddecks(itemList, mListener, this, isUpToDate));
         }
         return viewFragment;
     }
@@ -112,7 +112,6 @@ public class FragmentCarddecks extends Fragment implements View.OnClickListener{
         super.onAttach(context);
         if (context instanceof OnFragmentInteractionListenerCarddeck) {
             mListener = (OnFragmentInteractionListenerCarddeck) context;
-            mLongClickListener = (OnFragmentInteractionListenerCarddeckLongClick) context;
         } else {
             throw new RuntimeException(context.toString()
                     + " must implement OnListFragmentInteractionListener");
@@ -124,7 +123,6 @@ public class FragmentCarddecks extends Fragment implements View.OnClickListener{
         super.onDetach();
 
         mListener = null;
-        mLongClickListener = null;
     }
 
     public void setItemList(List<CardDeck> itemList) {
@@ -159,6 +157,23 @@ public class FragmentCarddecks extends Fragment implements View.OnClickListener{
 
                 break;
         }
+    }
+
+    /**
+     * Long Click on CardDeck
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     *
+     * @param item
+     */
+    @Override
+    public void onCarddeckListFragmentInteractionLongClick(CardDeck item) {
+
+        Log.d("click long", item.toString());
+
+        createDialog(item);
+
+
     }
 
 
@@ -221,6 +236,7 @@ public class FragmentCarddecks extends Fragment implements View.OnClickListener{
                         JSONObject jsonObjectDeck = new JSONObject();
                         JSONObject jsonObjectGroup = new JSONObject();
                         JSONArray groupUsers = new JSONArray();
+                        JSONObject jsonObjectUser = new JSONObject();
 
                         try {
 
@@ -231,8 +247,101 @@ public class FragmentCarddecks extends Fragment implements View.OnClickListener{
                             jsonObjectGroup.put(JsonKeys.GROUP_NAME, groupName.getText().toString());
                             jsonObjectGroup.put(JsonKeys.GROUP_DESCRIPTION, groupDescription.getText().toString());
 
-                            groupUsers.put(Globals.getDb().getLoggedInUser().getId());
+                            jsonObjectUser.put(JsonKeys.USER_ID, Globals.getDb().getLoggedInUser().getId());
+                            groupUsers.put(jsonObjectUser);
+                            jsonObjectGroup.put(JsonKeys.GROUP_USERS, groupUsers);
 
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                        AsyncPostRemoteUserGroupAndDeck tasksCombined = new AsyncPostRemoteUserGroupAndDeck(jsonObjectGroup, jsonObjectDeck);
+
+                        if (ProcessConnectivity.isOk(Globals.getContext())) {
+
+                            tasksCombined.execute(parentId);
+                        }
+                    }
+                }
+            })
+            .setNegativeButton(R.string.cancel, null);
+
+        builder.create().show();
+    }
+
+
+    /**
+     * Creates a custom dialog for creating an new carddeck
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     * @since 2017-01-08
+     *
+     */
+    private void createDialog(CardDeck deck) {
+
+        final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+
+        final LayoutInflater inflater = getActivity().getLayoutInflater();
+
+        final View view = inflater.inflate(R.layout.dialog_edittext_carddeck, null);
+
+        final EditText text = (EditText) view.findViewById(R.id.carddeck_name);
+        text.setText(deck.getName());
+
+        final EditText description = (EditText) view.findViewById(R.id.carddeck_description);
+        description.setText(deck.getDescription());
+
+        final EditText groupName = (EditText) view.findViewById(R.id.carddeck_group_name);
+        groupName.setText(deck.getUserGroup().getName());
+        groupName.setEnabled(false);
+
+        final EditText groupDescription = (EditText) view.findViewById(R.id.carddeck_group_description);
+        groupDescription.setText(deck.getUserGroup().getDescription());
+        groupDescription.setEnabled(false);
+
+        final Spinner groupSpinner = (Spinner) view.findViewById(R.id.carddeck_group_name_spinner);
+        groupSpinner.setVisibility(View.GONE);
+
+        final CheckBox visible = (CheckBox) view.findViewById(R.id.checkbox_carddeck_visible);
+
+        final View v = viewFragment;
+
+        text.requestFocus();
+
+        builder.setView(view)
+            // Add action buttons
+            .setPositiveButton(R.string.save, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int id) {
+
+                    String textString = text.getText().toString();
+                    String descriptionString = description.getText().toString();
+                    boolean isVisible = visible.isChecked();
+
+                    if (textString == null || textString.equals("")) {
+
+                        Snackbar.make(v, R.string.insert_text, Snackbar.LENGTH_SHORT).show();
+
+                    } else if (!ProcessConnectivity.isOk(getContext(), true)){
+                        // Do nothing
+                    } else {
+
+                        JSONObject jsonObjectDeck = new JSONObject();
+                        JSONObject jsonObjectGroup = new JSONObject();
+                        JSONArray groupUsers = new JSONArray();
+                        JSONObject jsonObjectUser = new JSONObject();
+
+                        try {
+
+                            jsonObjectDeck.put(JsonKeys.CARDDECK_NAME, textString);
+                            jsonObjectDeck.put(JsonKeys.CARDDECK_DESCRIPTION, descriptionString);
+                            jsonObjectDeck.put(JsonKeys.CARDDECK_VISIBLE, isVisible);
+
+                            jsonObjectGroup.put(JsonKeys.GROUP_NAME, groupName.getText().toString());
+                            jsonObjectGroup.put(JsonKeys.GROUP_DESCRIPTION, groupDescription.getText().toString());
+
+                            jsonObjectUser.put(JsonKeys.USER_ID, Globals.getDb().getLoggedInUser().getId());
+                            groupUsers.put(jsonObjectUser);
                             jsonObjectGroup.put(JsonKeys.GROUP_USERS, groupUsers);
 
                         } catch (JSONException e) {

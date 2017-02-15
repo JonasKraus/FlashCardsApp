@@ -73,7 +73,6 @@ public class MainActivity extends AppCompatActivity
         OnFragmentInteractionListenerFlashcard,
         OnFragmentInteractionListenerCategory,
         OnFragmentInteractionListenerCarddeck,
-        OnFragmentInteractionListenerCarddeckLongClick,
         FragmentFlashCard.OnFlashCardFragmentInteractionListener,
         OnFragmentInteractionListenerAnswer {
 
@@ -906,25 +905,6 @@ public class MainActivity extends AppCompatActivity
         this.childrenId = item.getId();
 
         setFlashcardList(false);
-
-    }
-
-
-    /**
-     * Long Click on CardDeck
-     *
-     * @author Jonas Kraus jonas.kraus@uni-ulm.de
-     *
-     * @param item
-     */
-    @Override
-    public void onCarddeckListFragmentInteractionLongClick(CardDeck item) {
-
-        Log.d("click long", item.toString());
-
-        this.parentIds.add(this.childrenId);
-        this.childrenId = item.getId();
-
 
     }
 

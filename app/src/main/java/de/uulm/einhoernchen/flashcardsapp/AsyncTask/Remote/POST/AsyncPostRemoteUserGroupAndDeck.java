@@ -82,7 +82,7 @@ public class AsyncPostRemoteUserGroupAndDeck extends AsyncTask<Long, Long, Long>
             wr.writeBytes(jsonObjectGroup.toString());
             wr.flush();
 
-            //Log.d(urlConnection.getRequestMethod() + " json", jsonObjectGroup.toString());
+            Log.d(urlConnection.getRequestMethod() + " json", jsonObjectGroup.toString());
 
             if (urlConnection.getResponseCode() >= 400) {
 
