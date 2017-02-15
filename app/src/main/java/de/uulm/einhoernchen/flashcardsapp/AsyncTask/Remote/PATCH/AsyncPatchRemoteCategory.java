@@ -2,6 +2,7 @@ package de.uulm.einhoernchen.flashcardsapp.AsyncTask.Remote.PATCH;
 
 import android.os.AsyncTask;
 import android.util.Log;
+import android.widget.Toast;
 
 import org.json.JSONObject;
 
@@ -65,6 +66,7 @@ public class AsyncPatchRemoteCategory extends AsyncTask<Long, Long, Long> {
                 urlConnection.setChunkedStreamingMode(0);
                 urlConnection.setRequestProperty("Accept", "application/json");
                 urlConnection.setRequestProperty("Content-Type", "application/json");
+                urlConnection.setRequestProperty("Authorization", "Bearer " + Globals.getToken());
                 urlConnection.setRequestMethod("PATCH");
 
                 urlConnection.connect();
@@ -77,7 +79,13 @@ public class AsyncPatchRemoteCategory extends AsyncTask<Long, Long, Long> {
 
                 //kLog.d(urlConnection.getRequestMethod() + " json", jsonObject.toString());
 
-                //Log.d("resp", urlConnection.getResponseCode()+"");
+                // TODO give message to main thread
+                /*
+                if (urlConnection.getResponseCode() >= 400) {
+
+                    Toast.makeText(Globals.getContext(),urlConnection.getResponseMessage(), Toast.LENGTH_SHORT);
+                }
+                */
 
                 return JsonParser.readResponse(urlConnection.getInputStream());
 

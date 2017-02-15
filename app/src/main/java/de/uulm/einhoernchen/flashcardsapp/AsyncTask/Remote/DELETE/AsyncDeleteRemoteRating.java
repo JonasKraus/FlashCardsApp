@@ -7,6 +7,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 import de.uulm.einhoernchen.flashcardsapp.Const.Routes;
+import de.uulm.einhoernchen.flashcardsapp.Util.Globals;
 
 /**
  * @author Jonas Kraus jonas.kraus@uni-ulm.de
@@ -53,6 +54,7 @@ public class AsyncDeleteRemoteRating extends AsyncTask<Long, Long, Boolean> {
             urlConnection.setChunkedStreamingMode(0);
             urlConnection.setRequestProperty("Accept", "application/json");
             urlConnection.setRequestProperty("Content-Type", "application/json");
+            urlConnection.setRequestProperty("Authorization", "Bearer " + Globals.getToken());
             urlConnection.setRequestMethod("DELETE");
 
             urlConnection.connect();

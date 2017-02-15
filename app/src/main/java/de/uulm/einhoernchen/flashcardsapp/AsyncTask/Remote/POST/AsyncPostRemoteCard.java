@@ -69,6 +69,7 @@ public class AsyncPostRemoteCard extends AsyncTask<Long, Long, Long> {
                 urlConnection.setChunkedStreamingMode(0);
                 urlConnection.setRequestProperty("Accept", "application/json");
                 urlConnection.setRequestProperty("Content-Type", "application/json");
+                urlConnection.setRequestProperty("Authorization", "Bearer " + Globals.getToken());
                 urlConnection.setRequestMethod("POST");
 
                 urlConnection.connect();

@@ -662,8 +662,9 @@ public class MainActivity extends AppCompatActivity
 
         } else if (id == R.id.nav_logout) {
 
-            db.logoutUser();
             // TODO Ascny task to server to invalidate this token
+            // What todo when offline wihle logoff
+            db.logoutUser();
 
             startActivity(new Intent(MainActivity.this, LoginActivity.class));
         }

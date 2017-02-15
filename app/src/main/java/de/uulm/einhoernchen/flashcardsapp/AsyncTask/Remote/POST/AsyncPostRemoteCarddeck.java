@@ -13,6 +13,7 @@ import java.net.URL;
 
 import de.uulm.einhoernchen.flashcardsapp.AsyncTask.Remote.PATCH.AsyncPatchRemoteCategory;
 import de.uulm.einhoernchen.flashcardsapp.Const.Routes;
+import de.uulm.einhoernchen.flashcardsapp.Util.Globals;
 import de.uulm.einhoernchen.flashcardsapp.Util.JsonKeys;
 import de.uulm.einhoernchen.flashcardsapp.Util.JsonParser;
 
@@ -67,6 +68,7 @@ public class AsyncPostRemoteCarddeck extends AsyncTask<Long, Long, Long> {
                 urlConnection.setChunkedStreamingMode(0);
                 urlConnection.setRequestProperty("Accept", "application/json");
                 urlConnection.setRequestProperty("Content-Type", "application/json");
+                urlConnection.setRequestProperty("Authorization", "Bearer " + Globals.getToken());
                 urlConnection.setRequestMethod("POST");
 
                 urlConnection.connect();
