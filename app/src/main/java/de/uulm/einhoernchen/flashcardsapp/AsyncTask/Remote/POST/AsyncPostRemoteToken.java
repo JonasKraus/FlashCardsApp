@@ -74,6 +74,11 @@ public class AsyncPostRemoteToken extends AsyncTask<Long, String, String> {
 
             Log.d(urlConnection.getRequestMethod() + " json", jsonObject.toString());
 
+            if (urlConnection.getResponseCode() >= 400) {
+
+                Log.e("resp", urlConnection.getResponseCode()+ " " + urlConnection.getResponseMessage() + "");
+            }
+
             return JsonParser.readResponseToken(urlConnection.getInputStream());
 
         } catch (Exception e) {

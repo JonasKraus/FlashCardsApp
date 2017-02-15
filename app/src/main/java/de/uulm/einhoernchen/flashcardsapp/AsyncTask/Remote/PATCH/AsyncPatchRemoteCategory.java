@@ -87,6 +87,11 @@ public class AsyncPatchRemoteCategory extends AsyncTask<Long, Long, Long> {
                 }
                 */
 
+                if (urlConnection.getResponseCode() >= 400) {
+
+                    Log.e("resp", urlConnection.getResponseCode()+ " " + urlConnection.getResponseMessage() + "");
+                }
+
                 return JsonParser.readResponse(urlConnection.getInputStream());
 
             } catch (Exception e) {

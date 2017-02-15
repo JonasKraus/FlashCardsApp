@@ -74,7 +74,12 @@ public class AsyncPatchRemoteCarddeck extends AsyncTask<Long, Long, Long> {
 
                 Log.d(urlConnection.getRequestMethod() + " json", jsonObject.toString());
 
-                //Log.d("resp", urlConnection.getResponseCode()+"");
+                //Log.e("resp", urlConnection.getResponseCode()+"");
+
+                if (urlConnection.getResponseCode() >= 400) {
+
+                    Log.e("resp", urlConnection.getResponseCode()+ " " + urlConnection.getResponseMessage() + "");
+                }
 
                 return JsonParser.readResponse(urlConnection.getInputStream());
 

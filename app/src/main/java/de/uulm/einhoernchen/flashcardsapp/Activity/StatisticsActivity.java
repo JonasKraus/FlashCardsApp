@@ -2,8 +2,10 @@ package de.uulm.einhoernchen.flashcardsapp.Activity;
 
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.View;
 import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.BarChart;
@@ -31,6 +33,8 @@ import de.uulm.einhoernchen.flashcardsapp.R;
 import de.uulm.einhoernchen.flashcardsapp.Util.Globals;
 import de.uulm.einhoernchen.flashcardsapp.Util.ProcessorDate;
 
+import static de.uulm.einhoernchen.flashcardsapp.Util.Globals.getContext;
+
 public class StatisticsActivity extends AppCompatActivity {
 
 
@@ -50,12 +54,13 @@ public class StatisticsActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.fragment_statistics);
 
         statistics = Statistic.getStatistics();
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_statistics);
-        ((MainActivity) Globals.getContext()).setSupportActionBar(toolbar);
+        ((MainActivity) getContext()).setSupportActionBar(toolbar);
 
         setSupportActionBar(toolbar);
 
@@ -67,8 +72,13 @@ public class StatisticsActivity extends AppCompatActivity {
 
         findViewElements();
 
-        setElementValues();
 
+        if (statistics.size() > 0) {
+            setElementValues();
+        } else {
+
+            Snackbar.make(this.findViewById(android.R.id.content).getRootView(), R.string.no_stats_available, Snackbar.LENGTH_LONG).show();
+        }
     }
 
     /**
@@ -86,56 +96,6 @@ public class StatisticsActivity extends AppCompatActivity {
         LineData lineData = new LineData(lineDataSet);
         lineChartTest.setData(lineData);
         lineChartTest.invalidate(); // refresh
-
-/*
-        List<BarEntry> barEntries = new ArrayList<BarEntry>();
-
-        float numDrawer0 = 0;
-        float numDrawer1 = 0;
-        float numDrawer2 = 0;
-        float numDrawer3 = 0;
-        float numDrawer4 = 0;
-        float numDrawer5 = 0;
-        float numDrawer6 = 0;
-
-        for (Statistic stat: statistics) {
-
-            switch (stat.getDrawer()) {
-
-                case 0:
-                    numDrawer0++;
-                    break;
-                case 1:
-                    numDrawer1++;
-                    break;
-                case 2:
-                    numDrawer2++;
-                    break;
-                case 3:
-                    numDrawer3++;
-                    break;
-                case 4:
-                    numDrawer4++;
-                    break;
-                case 5:
-                    numDrawer5++;
-                    break;
-                case 6:
-                    numDrawer6++;
-                    break;
-            }
-        }
-
-        barEntries.add(new BarEntry(0f, numDrawer0));
-        barEntries.add(new BarEntry(1f, numDrawer1));
-        barEntries.add(new BarEntry(2f, numDrawer2));
-        barEntries.add(new BarEntry(3f, numDrawer3));
-        barEntries.add(new BarEntry(4f, numDrawer4));
-        barEntries.add(new BarEntry(5f, numDrawer5));
-        barEntries.add(new BarEntry(6f, numDrawer6));
-
-        BarDataSet set = new BarDataSet(barEntries, "ads");
-*/
 
         BarDataSet set = new BarDataSet(Globals.getDb().getEntriesForBarChart(), "BarDataSet");
 
@@ -164,13 +124,15 @@ public class StatisticsActivity extends AppCompatActivity {
         pieChartTest.invalidate(); // refresh
 
         // SET TextViews
-        textViewNumCards.setText(statistics.size() +"");
+        textViewNumCards.setText(statistics.size() + "");
         textViewDuration.setText(ProcessorDate.convertMillisToHMS(Statistic.getDurationOfSelection()));
+
         textViewDurationPerCard.setText(
                 ProcessorDate.convertMillisToHMS(
                         Statistic.getDurationOfSelection() / statistics.size()
                 )
         );
+
         textViewAverageKnowledge.setText(Statistic.getAverageKnowledgeOfSelection() + "%");
 
     }

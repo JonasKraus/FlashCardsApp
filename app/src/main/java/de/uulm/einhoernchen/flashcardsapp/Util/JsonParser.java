@@ -927,7 +927,7 @@ public class JsonParser {
                     if (statuscode < 400) {
                         created = true;
                     } else {
-                        //Log.d("parse token resp", statuscode + "");
+                        Log.d("parse resp", statuscode + "");
                     }
 
                 } else if (stringName.equals(JsonKeys.DESCRIPTION)) {
@@ -937,7 +937,7 @@ public class JsonParser {
                     if (check != JsonToken.NULL) {
 
                         description = reader.nextString();
-                        //Log.d("parse token resp", description + "");
+                        Log.d("parse descriptions", description + "");
 
                     } else {
                         reader.nextNull();
@@ -978,7 +978,7 @@ public class JsonParser {
      * @return
      */
     private static String readResponseToken(JsonReader reader) {
-        if (DEBUG) Log.d("parser Method", "readResponse");
+        if (DEBUG) Log.d("parser Method", "readResponseToken");
 
         int statuscode = 400;
         boolean created = false;
@@ -998,7 +998,7 @@ public class JsonParser {
                     if (statuscode < 400) {
                         created = true;
                     } else {
-                       // Log.e("parse rating resp", statuscode + "");
+                       Log.e("parse rating resp", statuscode + "");
                     }
 
                 } else if (stringName.equals(JsonKeys.DESCRIPTION)) {
@@ -1008,6 +1008,8 @@ public class JsonParser {
                     if (check != JsonToken.NULL) {
 
                         description = reader.nextString();
+
+                        Log.d("description", description);
 
                     } else {
                         reader.nextNull();

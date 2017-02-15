@@ -80,6 +80,11 @@ public class AsyncPostRemoteUserGroup extends AsyncTask<Long, Long, Long> {
 
             //Log.d(urlConnection.getRequestMethod() + " json", jsonObject.toString());
 
+            if (urlConnection.getResponseCode() >= 400) {
+
+                Log.e("resp", urlConnection.getResponseCode()+ " " + urlConnection.getResponseMessage() + "");
+            }
+
             return JsonParser.readResponse(urlConnection.getInputStream());
 
         } catch (Exception e) {

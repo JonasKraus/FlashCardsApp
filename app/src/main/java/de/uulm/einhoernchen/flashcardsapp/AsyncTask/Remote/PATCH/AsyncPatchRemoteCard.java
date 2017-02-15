@@ -73,7 +73,12 @@ public class AsyncPatchRemoteCard extends AsyncTask<Long, Long, Long> {
 
             //Log.d("json", jsonObject.toString());
 
-            //Log.d("resp", urlConnection.getResponseCode()+"");
+            //Log.e("resp", urlConnection.getResponseCode()+"");
+
+            if (urlConnection.getResponseCode() >= 400) {
+
+                Log.e("resp", urlConnection.getResponseCode()+ " " + urlConnection.getResponseMessage() + "");
+            }
 
             return JsonParser.readResponse(urlConnection.getInputStream());
 
