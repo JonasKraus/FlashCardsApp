@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SimpleCursorAdapter;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -14,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.Spinner;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -22,6 +24,7 @@ import org.json.JSONObject;
 import java.util.List;
 
 import de.uulm.einhoernchen.flashcardsapp.AsyncTask.Remote.POST.AsyncPostRemoteCarddeck;
+import de.uulm.einhoernchen.flashcardsapp.AsyncTask.Remote.POST.AsyncPostRemoteUserGroupAndDeck;
 import de.uulm.einhoernchen.flashcardsapp.AsyncTask.Remote.PUT.AsyncPutRemoteCategory;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.Adapter.RecyclerViewAdapterCarddecks;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.Interface.OnFragmentInteractionListenerCarddeck;
@@ -172,7 +175,22 @@ public class FragmentCarddecks extends Fragment implements View.OnClickListener{
 
         final EditText text = (EditText) view.findViewById(R.id.carddeck_name);
         final EditText description = (EditText) view.findViewById(R.id.carddeck_description);
+        final EditText groupName = (EditText) view.findViewById(R.id.carddeck_group_name);
+        final EditText groupDescription = (EditText) view.findViewById(R.id.carddeck_group_description);
+        final Spinner groupSpinner = (Spinner) view.findViewById(R.id.carddeck_group_name_spinner);
+        groupSpinner.setVisibility(View.GONE);
         final CheckBox visible = (CheckBox) view.findViewById(R.id.checkbox_carddeck_visible);
+
+        text.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+
+                if (!hasFocus) {
+
+                    groupName.setText(text.getText().toString() + "_" +  getContext().getString(R.string.group));
+                }
+            }
+        });
 
         final View v = viewFragment;
 
@@ -196,27 +214,32 @@ public class FragmentCarddecks extends Fragment implements View.OnClickListener{
                         // Do nothing
                     } else {
 
-                        JSONObject jsonObject = new JSONObject();
+                        JSONObject jsonObjectDeck = new JSONObject();
                         JSONObject jsonObjectGroup = new JSONObject();
+                        JSONArray groupUsers = new JSONArray();
 
                         try {
 
-                            jsonObject.put(JsonKeys.CARDDECK_NAME, textString);
-                            jsonObject.put(JsonKeys.CARDDECK_DESCRIPTION, descriptionString);
-                            jsonObject.put(JsonKeys.CARDDECK_VISIBLE, isVisible);
-                            jsonObjectGroup.put(JsonKeys.GROUP_ID, null); // TODO jonas Add group
-                            jsonObject.put(JsonKeys.CARDDECK_GROUP, jsonObjectGroup);
+                            jsonObjectDeck.put(JsonKeys.CARDDECK_NAME, textString);
+                            jsonObjectDeck.put(JsonKeys.CARDDECK_DESCRIPTION, descriptionString);
+                            jsonObjectDeck.put(JsonKeys.CARDDECK_VISIBLE, isVisible);
+
+                            jsonObjectGroup.put(JsonKeys.GROUP_NAME, groupName.getText().toString());
+                            jsonObjectGroup.put(JsonKeys.GROUP_DESCRIPTION, groupDescription.getText().toString());
+
+                            groupUsers.put(Globals.getDb().getLoggedInUser().getId());
+
+                            jsonObjectGroup.put(JsonKeys.GROUP_USERS, groupUsers);
 
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
 
-                        // TODO save
-                        AsyncPostRemoteCarddeck task = new AsyncPostRemoteCarddeck(jsonObject);
+                        AsyncPostRemoteUserGroupAndDeck tasksCombined = new AsyncPostRemoteUserGroupAndDeck(jsonObjectGroup, jsonObjectDeck);
 
                         if (ProcessConnectivity.isOk(Globals.getContext())) {
 
-                            task.execute(parentId);
+                            tasksCombined.execute(parentId);
                         }
                     }
                 }

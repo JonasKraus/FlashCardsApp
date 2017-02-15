@@ -215,6 +215,9 @@
     <string name="title_activity_main2">Main2Activity</string>
     <string name="saved_successfully">saved successfully</string>
     <string name="no_stats_available">no statistics available</string>
+    <string name="prompt_carddeck_group_name">group name</string>
+    <string name="group">group</string>
+    <string name="prompt_carddeck_group_description">group description</string>
 
 
 </resources>

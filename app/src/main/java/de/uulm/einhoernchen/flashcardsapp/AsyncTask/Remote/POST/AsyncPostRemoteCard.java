@@ -25,6 +25,7 @@ public class AsyncPostRemoteCard extends AsyncTask<Long, Long, Long> {
 
     private JSONObject jsonObject;
     private Long carddeckId;
+    private Long userGroupId;
 
 
 
@@ -49,6 +50,8 @@ public class AsyncPostRemoteCard extends AsyncTask<Long, Long, Long> {
     protected Long doInBackground(Long... params) {
 
         this.carddeckId = params[0];
+
+        this.userGroupId = Globals.getDb().getUserGroup(carddeckId).getId();
 
         for (Long carddeckId : params) {
 
@@ -114,6 +117,7 @@ public class AsyncPostRemoteCard extends AsyncTask<Long, Long, Long> {
                 jsonObjectFlashcardID.put(JsonKeys.FLASHCARD_ID, id);
                 jsonArray.put(jsonObjectFlashcardID);
                 jsonObjectCards.put(JsonKeys.CARDS, jsonArray);
+                jsonObjectCards.put(JsonKeys.CARDDECK_GROUP, this.userGroupId);
             } catch (JSONException e) {
 
                 e.printStackTrace();
