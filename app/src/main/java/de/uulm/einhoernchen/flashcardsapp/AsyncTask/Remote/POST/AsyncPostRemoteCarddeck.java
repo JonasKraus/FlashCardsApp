@@ -79,6 +79,8 @@ public class AsyncPostRemoteCarddeck extends AsyncTask<Long, Long, Long> {
                 wr.writeBytes(jsonObject.toString());
                 wr.flush();
 
+
+                Log.d("body carddeck create ", jsonObject.toString());
                 //Log.d(urlConnection.getRequestMethod() + " json", jsonObject.toString());
 
                 return JsonParser.readResponse(urlConnection.getInputStream());

@@ -145,9 +145,17 @@ public class DbHelper extends SQLiteOpenHelper {
     public static final String COLUMN_STATISTICS_START_DATE = "startDate";                  //5
     public static final String COLUMN_STATISTICS_END_DATE = "endDate";                      //6
 
+    public static final String TABLE_MESSAGE = "message";
+    public static final String COLUMN_MESSAGE_ID = "messageId";                       //0
+    public static final String COLUMN_MESSAGE_TYPE = "messageType";                   //1
+    public static final String COLUMN_MESSAGE_RECEIPIENT = "receipient";           //2
+    public static final String COLUMN_MESSAGE_CONTENT= "content";                  //3
+    public static final String COLUMN_MESSAGE_DATE_CREATED = "created";            //4
+    public static final String COLUMN_MESSAGE_TARGET_DECK = "targetDeck";          //5
+
     // Database name and version - increase when existing table is altered
     private static final String DATABASE_NAME = "flashcardsDb.db";
-    private static final int DATABASE_VERSION = 23; // @TODO revert version before first release
+    private static final int DATABASE_VERSION = 24; // @TODO revert version before first release
 
     /**
      * Database creation sql statement for table user
@@ -432,6 +440,23 @@ public class DbHelper extends SQLiteOpenHelper {
             + " time timestamp default (strftime('%s', 'now'))"
             + ");";
 
+
+    private static final String MESSAGE_CREATE = "create table "
+            + TABLE_MESSAGE + "("
+            + COLUMN_MESSAGE_ID
+            + " integer primary key NOT NULL, "
+            + COLUMN_MESSAGE_TYPE
+            + " text not null, "
+            + COLUMN_MESSAGE_RECEIPIENT
+            + " integer not null, "
+            + COLUMN_MESSAGE_CONTENT
+            + " text, "
+            + COLUMN_MESSAGE_DATE_CREATED
+            + " time timestamp default (strftime('%s', 'now')),"
+            + COLUMN_MESSAGE_TARGET_DECK
+            + " integer not null"
+            + ");";
+
     private static final String VOTING_CREATE_UNIQUE_INDEX_1 =
             "CREATE UNIQUE INDEX " + TABLE_VOTING + "_user_card "
                     + "ON " + TABLE_VOTING + "(" + COLUMN_VOTING_USER_ID + ", " + COLUMN_VOTING_CARD_ID + "); ";
@@ -472,6 +497,7 @@ public class DbHelper extends SQLiteOpenHelper {
         db.execSQL(SETTINGS_CREATE);
         db.execSQL(VOTING_CREATE);
         db.execSQL(STATISTICS_CREATE);
+        db.execSQL(MESSAGE_CREATE);
         db.execSQL(VOTING_CREATE_UNIQUE_INDEX_1);
         db.execSQL(VOTING_CREATE_UNIQUE_INDEX_2);
         db.execSQL(USER_GROUP_JOIN_TABLE_CREATE_UNIQUE_INDEX);
@@ -500,6 +526,7 @@ public class DbHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_VOTING);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_SETTINGS);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_STATISTICS);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_MESSAGE);
 
         onCreate(db);
     }
@@ -657,6 +684,16 @@ public class DbHelper extends SQLiteOpenHelper {
             COLUMN_STATISTICS_DRAWER,        //4
             COLUMN_STATISTICS_START_DATE,    //5
             COLUMN_STATISTICS_END_DATE       //6
+    };
+
+
+    public static String[] allMessageColumns = {
+            COLUMN_MESSAGE_ID,                  //0
+            COLUMN_MESSAGE_TYPE,                //1
+            COLUMN_MESSAGE_RECEIPIENT,          //2
+            COLUMN_MESSAGE_CONTENT,             //3
+            COLUMN_MESSAGE_DATE_CREATED,        //4
+            COLUMN_MESSAGE_TARGET_DECK          //5
     };
 }
 

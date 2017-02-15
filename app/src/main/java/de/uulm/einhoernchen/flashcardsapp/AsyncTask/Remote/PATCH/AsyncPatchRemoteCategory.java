@@ -77,7 +77,8 @@ public class AsyncPatchRemoteCategory extends AsyncTask<Long, Long, Long> {
                 wr.writeBytes(jsonObject.toString());
                 wr.flush();
 
-                //kLog.d(urlConnection.getRequestMethod() + " json", jsonObject.toString());
+                Log.d("body category append", jsonObject.toString());
+                //Log.d(urlConnection.getRequestMethod() + " json", jsonObject.toString());
 
                 // TODO give message to main thread
                 /*
@@ -90,6 +91,7 @@ public class AsyncPatchRemoteCategory extends AsyncTask<Long, Long, Long> {
                 if (urlConnection.getResponseCode() >= 400) {
 
                     Log.e("resp", urlConnection.getResponseCode()+ " " + urlConnection.getResponseMessage() + "");
+                    JsonParser.readResponse(urlConnection.getInputStream());
                 }
 
                 return JsonParser.readResponse(urlConnection.getInputStream());

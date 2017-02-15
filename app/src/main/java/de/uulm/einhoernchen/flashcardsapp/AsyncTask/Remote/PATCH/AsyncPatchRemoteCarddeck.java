@@ -6,6 +6,7 @@ import android.util.Log;
 import org.json.JSONObject;
 
 import java.io.DataOutputStream;
+import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
@@ -72,13 +73,15 @@ public class AsyncPatchRemoteCarddeck extends AsyncTask<Long, Long, Long> {
                 wr.writeBytes(jsonObject.toString());
                 wr.flush();
 
-                Log.d(urlConnection.getRequestMethod() + " json", jsonObject.toString());
+                Log.d(urlConnection.getRequestMethod() + " carddeck json", jsonObject.toString());
+
 
                 //Log.e("resp", urlConnection.getResponseCode()+"");
 
                 if (urlConnection.getResponseCode() >= 400) {
 
-                    Log.e("resp", urlConnection.getResponseCode()+ " " + urlConnection.getResponseMessage() + "");
+                    Log.e("resp patch carddeck", urlConnection.getResponseCode()+ " " + urlConnection.getResponseMessage() + "");
+
                 }
 
                 return JsonParser.readResponse(urlConnection.getInputStream());
