@@ -24,6 +24,7 @@ import org.json.JSONObject;
 
 import java.util.List;
 
+import de.uulm.einhoernchen.flashcardsapp.AsyncTask.Remote.PATCH.AsyncPatchRemoteCarddeck;
 import de.uulm.einhoernchen.flashcardsapp.AsyncTask.Remote.POST.AsyncPostRemoteCarddeck;
 import de.uulm.einhoernchen.flashcardsapp.AsyncTask.Remote.POST.AsyncPostRemoteUserGroupAndDeck;
 import de.uulm.einhoernchen.flashcardsapp.AsyncTask.Remote.PUT.AsyncPutRemoteCategory;
@@ -52,6 +53,7 @@ public class FragmentCarddecks extends Fragment implements View.OnClickListener,
     private boolean isUpToDate;
     private View viewFragment;
     private long parentId;
+    private RecyclerView.Adapter carddeckAdapter;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -102,7 +104,8 @@ public class FragmentCarddecks extends Fragment implements View.OnClickListener,
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
 
-            recyclerView.setAdapter(new RecyclerViewAdapterCarddecks(itemList, mListener, this, isUpToDate));
+            this.carddeckAdapter = new RecyclerViewAdapterCarddecks(itemList, mListener, this, isUpToDate);
+            recyclerView.setAdapter(this.carddeckAdapter);
         }
         return viewFragment;
     }
@@ -277,7 +280,7 @@ public class FragmentCarddecks extends Fragment implements View.OnClickListener,
      * @since 2017-01-08
      *
      */
-    private void createDialog(CardDeck deck) {
+    private void createDialog(final CardDeck deck) {
 
         final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
@@ -308,6 +311,8 @@ public class FragmentCarddecks extends Fragment implements View.OnClickListener,
 
         text.requestFocus();
 
+        final RecyclerView.Adapter adapter = this.carddeckAdapter;
+
         builder.setView(view)
             // Add action buttons
             .setPositiveButton(R.string.save, new DialogInterface.OnClickListener() {
@@ -327,32 +332,23 @@ public class FragmentCarddecks extends Fragment implements View.OnClickListener,
                     } else {
 
                         JSONObject jsonObjectDeck = new JSONObject();
-                        JSONObject jsonObjectGroup = new JSONObject();
-                        JSONArray groupUsers = new JSONArray();
-                        JSONObject jsonObjectUser = new JSONObject();
 
                         try {
 
                             jsonObjectDeck.put(JsonKeys.CARDDECK_NAME, textString);
                             jsonObjectDeck.put(JsonKeys.CARDDECK_DESCRIPTION, descriptionString);
                             jsonObjectDeck.put(JsonKeys.CARDDECK_VISIBLE, isVisible);
-
-                            jsonObjectGroup.put(JsonKeys.GROUP_NAME, groupName.getText().toString());
-                            jsonObjectGroup.put(JsonKeys.GROUP_DESCRIPTION, groupDescription.getText().toString());
-
-                            jsonObjectUser.put(JsonKeys.USER_ID, Globals.getDb().getLoggedInUser().getId());
-                            groupUsers.put(jsonObjectUser);
-                            jsonObjectGroup.put(JsonKeys.GROUP_USERS, groupUsers);
+                            // jsonObjectDeck.put(JsonKeys.CARDDECK_GROUP, deck.getUserGroup().getId());
 
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
 
-                        AsyncPostRemoteUserGroupAndDeck tasksCombined = new AsyncPostRemoteUserGroupAndDeck(jsonObjectGroup, jsonObjectDeck);
+                        AsyncPatchRemoteCarddeck task = new AsyncPatchRemoteCarddeck(jsonObjectDeck, false);
 
                         if (ProcessConnectivity.isOk(Globals.getContext())) {
 
-                            tasksCombined.execute(parentId);
+                            task.execute(deck.getId());
                         }
                     }
                 }

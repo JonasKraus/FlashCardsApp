@@ -124,7 +124,7 @@ public class AsyncPostRemoteCard extends AsyncTask<Long, Long, Long> {
             }
 
             //patch carddeck mit carddeckid und cardid
-            AsyncPatchRemoteCarddeck task = new AsyncPatchRemoteCarddeck(jsonObjectCards);
+            AsyncPatchRemoteCarddeck task = new AsyncPatchRemoteCarddeck(jsonObjectCards, true);
             task.execute(this.carddeckId);
 
             MainActivity mainActivity = (MainActivity) Globals.getContext();

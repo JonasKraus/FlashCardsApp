@@ -1,6 +1,7 @@
 package de.uulm.einhoernchen.flashcardsapp.AsyncTask.Remote.PATCH;
 
 import android.os.AsyncTask;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 
 import org.json.JSONObject;
@@ -10,6 +11,7 @@ import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+import de.uulm.einhoernchen.flashcardsapp.Activity.MainActivity;
 import de.uulm.einhoernchen.flashcardsapp.Const.Routes;
 import de.uulm.einhoernchen.flashcardsapp.Util.Globals;
 import de.uulm.einhoernchen.flashcardsapp.Util.JsonParser;
@@ -21,6 +23,8 @@ import de.uulm.einhoernchen.flashcardsapp.Util.JsonParser;
 public class AsyncPatchRemoteCarddeck extends AsyncTask<Long, Long, Long> {
 
     private JSONObject jsonObject;
+    private boolean append;
+    private RecyclerView.Adapter adapter;
 
 
     /**
@@ -29,9 +33,11 @@ public class AsyncPatchRemoteCarddeck extends AsyncTask<Long, Long, Long> {
      *
      * @param jsonObject
      */
-    public AsyncPatchRemoteCarddeck(JSONObject jsonObject) {
+    public AsyncPatchRemoteCarddeck(JSONObject jsonObject, boolean append) {
 
+        this.append = append;
         this.jsonObject = jsonObject;
+        this.adapter = adapter;
     }
 
 
@@ -46,7 +52,13 @@ public class AsyncPatchRemoteCarddeck extends AsyncTask<Long, Long, Long> {
 
         for (Long carddeckId : params) {
 
-            String urlString = Routes.URL + Routes.SLASH + Routes.CARD_DECKS + Routes.SLASH + carddeckId + Routes.QUESTION_MARK + Routes.APPEND + Routes.EQUAL + Routes.BOOL_TRUE;
+            String urlString = Routes.URL + Routes.SLASH + Routes.CARD_DECKS + Routes.SLASH + carddeckId;
+
+            // Only append if necessary
+            if (append) {
+
+                urlString +=  Routes.QUESTION_MARK + Routes.APPEND + Routes.EQUAL + Routes.BOOL_TRUE;
+            }
 
             Log.d("back call to", urlString);
 
@@ -102,6 +114,11 @@ public class AsyncPatchRemoteCarddeck extends AsyncTask<Long, Long, Long> {
         super.onPostExecute(id);
 
         if (id != null) {
+
+            if (!append) {
+
+                ((MainActivity)Globals.getContext()).setCarddeckList(false);
+            }
 
         } else {
             Log.w("PATCH DECK", "FAILED");
