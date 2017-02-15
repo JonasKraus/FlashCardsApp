@@ -155,24 +155,44 @@ public class MainActivity extends AppCompatActivity
 
         createToolbar();
 
-        JSONObject jsonObject = new JSONObject();
+        requestUserToken();
+    }
 
-        try {
 
-            jsonObject.put(JsonKeys.USER_EMAIL, db.getLoggedInUser().getEmail());
-            Log.d("mail", db.getLoggedInUser().getEmail());
-            Log.d("pwd", db.getLoggedInUser().getPassword());
-            jsonObject.put(JsonKeys.USER_PASSWORD, db.getLoggedInUser().getPassword());
-        } catch (JSONException e) {
+    /**
+     * Gets the token from local storage if already existent
+     * otherwise requests it frfom the server
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     * @since 2017-02-15
+     */
+    private void requestUserToken() {
 
-            Log.e("ERROR", "json");
-            e.printStackTrace();
+        String localToken = db.getToken(db.getLoggedInUser().getId());
+
+        if (localToken == null) {
+
+            // Get the token from the server if no token exists
+            JSONObject jsonObject = new JSONObject();
+
+            try {
+
+                jsonObject.put(JsonKeys.USER_EMAIL, db.getLoggedInUser().getEmail());
+                jsonObject.put(JsonKeys.USER_PASSWORD, db.getLoggedInUser().getPassword());
+
+            } catch (JSONException e) {
+
+                Log.e("ERROR", "json token");
+                e.printStackTrace();
+            }
+
+            // Gets the login token
+            AsyncPostRemoteToken asyncToken = new AsyncPostRemoteToken(jsonObject, db);
+            asyncToken.execute();
+        } else {
+
+            Globals.setToken(localToken);
         }
-
-
-        // Gets the login token
-        AsyncPostRemoteToken asyncToken = new AsyncPostRemoteToken(jsonObject, db);
-        asyncToken.execute();
     }
 
 
@@ -643,7 +663,6 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_logout) {
 
             db.logoutUser();
-            db.invalidateToken();
             // TODO Ascny task to server to invalidate this token
 
             startActivity(new Intent(MainActivity.this, LoginActivity.class));

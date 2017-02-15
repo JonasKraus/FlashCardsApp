@@ -20,6 +20,7 @@ import java.util.List;
 
 import de.uulm.einhoernchen.flashcardsapp.Const.Constants;
 import de.uulm.einhoernchen.flashcardsapp.Model.Answer;
+import de.uulm.einhoernchen.flashcardsapp.Model.AuthToken;
 import de.uulm.einhoernchen.flashcardsapp.Model.CardDeck;
 import de.uulm.einhoernchen.flashcardsapp.Model.Category;
 import de.uulm.einhoernchen.flashcardsapp.Model.FlashCard;
@@ -1551,6 +1552,7 @@ public class DbManager extends DbHelper{
 
         database.update(DbHelper.TABLE_USER, values, DbHelper.COLUMN_USER_ID + " = " + loggedInUser.getId(), null);
 
+        invalidateToken();
 
         // reset the class var
         this.loggedInUser = null;
@@ -2203,6 +2205,41 @@ public class DbManager extends DbHelper{
 
 
     /**
+     * Gets the token for a given user
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     * @since 2017-02-15
+     *
+     * @param userId
+     * @return
+     */
+    public String getToken(long userId) {
+
+        String token = null;
+        Cursor cursor = database.query(
+                DbHelper.TABLE_AUTH_TOKEN,
+                allAuthTokenColumns,
+                COLUMN_AUTH_TOKEN_USER_ID  + "=" + userId,
+                null, null, null, null);
+
+        if (cursor.moveToFirst()) {
+
+            try {
+                token = cursor.getString(cursor.getColumnIndex(COLUMN_AUTH_TOKEN_TOKEN));
+
+            } catch (Exception e) {
+                System.out.print(e.getMessage());
+            }
+
+        }
+
+        cursor.close();
+
+        return token;
+    }
+
+
+    /**
      * Invalidates a token for a user
      *
      * @author Jonas Kraus jonas.kraus@uni-ulm.de
@@ -2211,6 +2248,8 @@ public class DbManager extends DbHelper{
      */
     public void invalidateToken() {
 
-        database.delete(DbHelper.TABLE_AUTH_TOKEN, COLUMN_AUTH_TOKEN_USER_ID + " = " + this.getLoggedInUser().getId(), null);
+        database.delete(DbHelper.TABLE_AUTH_TOKEN,
+                COLUMN_AUTH_TOKEN_USER_ID + " = " + this.getLoggedInUser().getId(),
+                null);
     }
 }

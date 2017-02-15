@@ -26,6 +26,7 @@ public class Globals {
     private static FloatingActionButton floatingActionButton;
     private static FloatingActionButton floatingActionButtonAdd;
     private static int scrollX;
+    private static String token;
 
 
     /**
@@ -157,5 +158,31 @@ public class Globals {
      */
     public static void setVisibilityFabAdd(int visibilityFab) {
         Globals.floatingActionButtonAdd.setVisibility(visibilityFab);
+    }
+
+
+    /**
+     * Sets the token of the currentl logged in user
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     * @since 2017-02-15
+     *
+     * @param token
+     */
+    public static void setToken(String token) {
+        Globals.token = token;
+    }
+
+
+    /**
+     * Gets the token of the currently logged in users
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     * @since 2017-02-15
+     *
+     * @return
+     */
+    public static String getToken() {
+        return token;
     }
 }

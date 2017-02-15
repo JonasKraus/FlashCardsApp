@@ -583,7 +583,6 @@ public class DbHelper extends SQLiteOpenHelper {
     };
 
     public static String[] allAuthTokenColumns = {
-            COLUMN_RATING_ID,                //0
             COLUMN_AUTH_TOKEN_ID,            //1
             COLUMN_AUTH_TOKEN_USER_ID,       //2
             COLUMN_AUTH_TOKEN_TOKEN,         //3

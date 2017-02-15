@@ -92,6 +92,7 @@ public class AsyncPostRemoteToken extends AsyncTask<Long, String, String> {
         if (token != null) {
 
             db.saveToken(token);
+            Globals.setToken(token);
             Log.d("token", token);
 
         } else {
