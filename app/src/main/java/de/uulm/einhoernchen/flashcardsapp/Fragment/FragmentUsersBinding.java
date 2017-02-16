@@ -28,6 +28,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
+import de.uulm.einhoernchen.flashcardsapp.Activity.MessageDetailsActivity;
 import de.uulm.einhoernchen.flashcardsapp.Activity.UserGroupDetailsActivity;
 import de.uulm.einhoernchen.flashcardsapp.Activity.UsersActivity;
 import de.uulm.einhoernchen.flashcardsapp.Database.DbManager;
@@ -80,6 +81,7 @@ public class FragmentUsersBinding extends Fragment implements SearchView.OnQuery
     private Long groupId = null;
     private static List<ListItemUserBinding> checkedBindings = new ArrayList<>();
     private RecyclerViewAdapterUsersBinding mAdapterClean;
+    private boolean createMessage;
 
 
     public RecyclerView getRecyclerView() {
@@ -154,14 +156,24 @@ public class FragmentUsersBinding extends Fragment implements SearchView.OnQuery
             @Override
             public void onClick(View view) {
 
-                Intent intent = new Intent(((AppCompatActivity) getActivity()).getApplicationContext(), UserGroupDetailsActivity.class);
+                Intent intent = null;
                 Bundle bundle = new Bundle();
-                bundle.putParcelableArrayList("data", checkedUsers);
 
-                if (groupId != null) {
+                if (!createMessage) {
+                    intent = new Intent(((AppCompatActivity) getActivity()).getApplicationContext(), UserGroupDetailsActivity.class);
 
-                    intent.putExtra("group_id", groupId);
+                    if (groupId != null) {
+
+                        intent.putExtra("group_id", groupId);
+                    }
+                } else if (createMessage) {
+
+
+                    intent = new Intent(((AppCompatActivity) getActivity()).getApplicationContext(), MessageDetailsActivity.class);
+                    intent.putExtra("deckId", new Long(1)); // TODO get deck id from bundle
                 }
+
+                bundle.putParcelableArrayList("data", checkedUsers);
 
                 intent.putExtras(bundle);
                 startActivity(intent);
@@ -361,4 +373,12 @@ public class FragmentUsersBinding extends Fragment implements SearchView.OnQuery
 
     }
 
+
+    /**
+     * Sets if a user group is created or a message
+     * @param createMessage
+     */
+    public void setCreateMessage(boolean createMessage) {
+        this.createMessage = createMessage;
+    }
 }

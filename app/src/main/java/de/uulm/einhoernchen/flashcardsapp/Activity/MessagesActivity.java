@@ -42,7 +42,10 @@ public class MessagesActivity extends AppCompatActivity implements OnFragmentInt
             @Override
             public void onClick(View view) {
 
-                // TODO create new message
+                Intent intent = new Intent(MessagesActivity.this, UsersActivity.class);
+
+                intent.putExtra("create_message", true);
+                startActivity(intent);
             }
         });
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);

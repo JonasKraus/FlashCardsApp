@@ -96,6 +96,15 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="de.uulm.einhoernchen.flashcardsapp.Activity.UsersActivity" />
         </activity>
+        <activity
+            android:name=".Activity.MessageDetailsActivity"
+            android:label="@string/title_activity_message_details"
+            android:parentActivityName=".Activity.UsersActivity"
+            android:theme="@style/AppTheme">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="de.uulm.einhoernchen.flashcardsapp.Activity.UsersActivity" />
+        </activity>
     </application>
 
 </manifest>

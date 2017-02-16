@@ -475,9 +475,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
                 urlConnection.connect();
 
-                Log.d("conn", urlConnection.toString());
-                Log.d("request", cred.toString());
-
                 //Send request
                 DataOutputStream wr = new DataOutputStream(
                         urlConnection.getOutputStream());

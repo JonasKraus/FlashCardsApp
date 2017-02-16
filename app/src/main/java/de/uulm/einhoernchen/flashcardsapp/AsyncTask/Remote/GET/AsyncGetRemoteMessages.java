@@ -60,16 +60,13 @@ public class AsyncGetRemoteMessages extends AsyncTask<Long, Void, List<Message>>
 
             int response = urlConnection.getResponseCode();
 
-            Log.d("response messages", response + " " + urlConnection.getResponseMessage());
+            //Log.d("response messages", response + " " + urlConnection.getResponseMessage());
 
             if (response >= 200 && response <=399){
 
 
                 messages = JsonParser.parseMessages(urlConnection.getInputStream());
 
-                for (Message m : messages) {
-                    Log.d("return", m.toString());
-                }
                 return messages;
             }
 

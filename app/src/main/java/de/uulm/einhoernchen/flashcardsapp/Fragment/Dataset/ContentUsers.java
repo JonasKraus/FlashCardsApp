@@ -38,6 +38,7 @@ public class ContentUsers {
     private static boolean isUpToDate = false;
     private static DbManager db = Globals.getDb();
     private List<User> usersOfGroup;
+    private boolean createMessage = false;
 
 
     /**
@@ -64,6 +65,7 @@ public class ContentUsers {
                 fragment.setUsersOfGroup(usersOfGroup);
                 fragment.setItemList(users);
                 fragment.setUpToDate(isUpToDate);
+                fragment.setCreateMessage(createMessage);
 
                 android.support.v4.app.FragmentTransaction fragmentTransaction =
                         Globals.getFragmentManager().beginTransaction();
@@ -116,6 +118,8 @@ public class ContentUsers {
                 fragment.setUsersOfGroup(usersOfGroup);
                 fragment.setItemList(users);
                 fragment.setUpToDate(isUpToDate);
+                fragment.setCreateMessage(createMessage);
+
 
                 android.support.v4.app.FragmentTransaction fragmentTransaction =
                         Globals.getFragmentManager().beginTransaction();
@@ -144,5 +148,8 @@ public class ContentUsers {
     public void setUsersOfGroup(List<User> usersOfGroup) {
         this.usersOfGroup = usersOfGroup;
     }
-    
+
+    public void setCreateMessage(boolean createMessage) {
+        this.createMessage = createMessage;
+    }
 }

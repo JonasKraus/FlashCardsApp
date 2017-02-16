@@ -51,13 +51,24 @@ public class UsersActivity extends AppCompatActivity implements OnFragmentIntera
 
         Globals.setFragmentManager(getSupportFragmentManager());
 
-        if (extras != null) {
+        if (extras != null && extras.containsKey("group_id")) {
 
             groupId = extras.getLong("group_id");
 
             ContentUsersOfUserGroup contentUsersOfUserGroup = new ContentUsersOfUserGroup();
             contentUsersOfUserGroup.collectItemsFromDb(false, groupId);
             contentUsersOfUserGroup.collectItemsFromServer(false, groupId);
+
+        } else if (extras != null && extras.containsKey("create_message")) {
+
+            //this.createMessage = true;
+            Log.d("create ", "message");
+
+            // directly call this content to go faster
+            ContentUsers contentUsers = new ContentUsers();
+            contentUsers.setCreateMessage(true);
+            contentUsers.collectItemsFromDb(false);
+            contentUsers.collectItemsFromServer(false);
 
         } else {
 
