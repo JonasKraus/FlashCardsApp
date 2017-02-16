@@ -814,12 +814,19 @@ public class DbManager extends DbHelper{
 
         SQLiteQueryBuilder qb = new SQLiteQueryBuilder();
 
-        qb.setTables(DbHelper.TABLE_CARD_DECK +
+        // base query
+        String query = DbHelper.TABLE_CARD_DECK +
                 " LEFT JOIN " + DbHelper.TABLE_SELECTION + " ON "
                 + DbHelper.TABLE_CARD_DECK + "." + DbHelper.COLUMN_CARD_DECK_ID + " = " +  DbHelper.TABLE_SELECTION + "." + DbHelper.COLUMN_SELECTION_CARD_DECK_ID
-                + " AND " + DbHelper.TABLE_SELECTION + "." + DbHelper.COLUMN_SELECTION_USER_ID + " = " + loggedInUser.getId()
-                + " WHERE " + DbHelper.COLUMN_CARD_DECK_PARENT + " = " + parentId
-        );
+                + " AND " + DbHelper.TABLE_SELECTION + "." + DbHelper.COLUMN_SELECTION_USER_ID + " = " + loggedInUser.getId();
+
+        // if null then get all carddecks
+        if (parentId != null) {
+
+            query += " WHERE " + DbHelper.COLUMN_CARD_DECK_PARENT + " = " + parentId;
+        }
+
+        qb.setTables(query);
 
         Cursor cursor = qb.query(database, null, null, null, null, null, null);
 

@@ -52,6 +52,17 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="de.uulm.einhoernchen.flashcardsapp.Activity.MainActivity" />
         </activity>
+
+        <activity
+            android:name=".Activity.CarddecksActivity"
+            android:label="@string/title_activity_all_carddecks"
+            android:parentActivityName=".Activity.MessagesActivity"
+            android:theme="@style/AppTheme">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="de.uulm.einhoernchen.flashcardsapp.Activity.MessagesActivity" />
+        </activity>
+
         <activity
             android:name=".Activity.StatisticsActivity"
             android:label="@string/title_activity_statistics"

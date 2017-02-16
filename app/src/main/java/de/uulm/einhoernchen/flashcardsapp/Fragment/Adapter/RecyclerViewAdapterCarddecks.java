@@ -5,6 +5,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -17,19 +19,23 @@ import de.uulm.einhoernchen.flashcardsapp.Database.DbManager;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.Interface.OnFragmentInteractionListenerCarddeck;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.Interface.OnFragmentInteractionListenerCarddeckLongClick;
 import de.uulm.einhoernchen.flashcardsapp.Model.CardDeck;
+import de.uulm.einhoernchen.flashcardsapp.Model.Filter.CarddeckFilter;
+import de.uulm.einhoernchen.flashcardsapp.Model.Filter.UserGroupFilter;
+import de.uulm.einhoernchen.flashcardsapp.Model.UserGroup;
 import de.uulm.einhoernchen.flashcardsapp.R;
 import de.uulm.einhoernchen.flashcardsapp.Util.Globals;
 
 /**
  * {@link RecyclerView.Adapter} that can display a {@link de.uulm.einhoernchen.flashcardsapp.Fragment.Dataset.ContentCarddecks} and makes a call to the
  */
-public class RecyclerViewAdapterCarddecks extends RecyclerView.Adapter<RecyclerViewAdapterCarddecks.ViewHolder> {
+public class RecyclerViewAdapterCarddecks extends RecyclerView.Adapter<RecyclerViewAdapterCarddecks.ViewHolder> implements Filterable {
 
     private final List<CardDeck> cardDecks;
     private final OnFragmentInteractionListenerCarddeck mListener;
     private final OnFragmentInteractionListenerCarddeckLongClick mLongClickListener;
     private final boolean isUpToDate;
     private final DbManager db = Globals.getDb();
+    private CarddeckFilter carddeckFilter;
 
     public RecyclerViewAdapterCarddecks(List<CardDeck> items, OnFragmentInteractionListenerCarddeck listener,  OnFragmentInteractionListenerCarddeckLongClick longClickListener, boolean isUpToDate) {
         cardDecks = items;
@@ -162,6 +168,41 @@ public class RecyclerViewAdapterCarddecks extends RecyclerView.Adapter<RecyclerV
         }
         return 0;
     }
+
+
+    /**
+     * The filter for filtering the carddecks
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     * @since 2017-02-17
+     *
+     * @return
+     */
+    @Override
+    public Filter getFilter() {
+
+        if(this.carddeckFilter == null) {
+
+            this.carddeckFilter = new CarddeckFilter(this, cardDecks);
+        }
+
+        return this.carddeckFilter;
+    }
+
+
+    /**
+     * Returns the filtered list
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     * @since 2017-02-03
+     *
+     * @return
+     */
+    public List<CardDeck> getList() {
+
+        return this.cardDecks;
+    }
+
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         public final View mView;

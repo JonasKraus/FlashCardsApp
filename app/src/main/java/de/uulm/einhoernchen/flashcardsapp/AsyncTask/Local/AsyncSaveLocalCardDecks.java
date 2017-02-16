@@ -32,7 +32,12 @@ public class AsyncSaveLocalCardDecks extends AsyncTask<Long, Long, Void> {
 
     @Override
     protected Void doInBackground(Long... params) {
-        Globals.getDb().saveCardDecks(cardDecks, parentId);
+
+        // Only save if a valid parent id is given
+        if (parentId != null) {
+
+            Globals.getDb().saveCardDecks(cardDecks, parentId);
+        }
 
         return null;
     }

@@ -82,6 +82,7 @@ public class FragmentUsersBinding extends Fragment implements SearchView.OnQuery
     private static List<ListItemUserBinding> checkedBindings = new ArrayList<>();
     private RecyclerViewAdapterUsersBinding mAdapterClean;
     private boolean createMessage;
+    private Long deckId;
 
 
     public RecyclerView getRecyclerView() {
@@ -119,11 +120,16 @@ public class FragmentUsersBinding extends Fragment implements SearchView.OnQuery
             mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
         }
 
+
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
+
+        Bundle bundle = getActivity().getIntent().getExtras();
+        deckId = bundle.getLong("deckId");
 
         groupId = ((UsersActivity)getActivity()).getGroupId();
 
@@ -168,9 +174,8 @@ public class FragmentUsersBinding extends Fragment implements SearchView.OnQuery
                     }
                 } else if (createMessage) {
 
-
                     intent = new Intent(((AppCompatActivity) getActivity()).getApplicationContext(), MessageDetailsActivity.class);
-                    intent.putExtra("deckId", new Long(1)); // TODO get deck id from bundle
+                    intent.putExtra("deckId", deckId); // TODO get deck id from bundle
                 }
 
                 bundle.putParcelableArrayList("data", checkedUsers);

@@ -61,8 +61,6 @@ public class UsersActivity extends AppCompatActivity implements OnFragmentIntera
 
         } else if (extras != null && extras.containsKey("create_message")) {
 
-            //this.createMessage = true;
-            Log.d("create ", "message");
 
             // directly call this content to go faster
             ContentUsers contentUsers = new ContentUsers();

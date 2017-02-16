@@ -45,8 +45,17 @@ public class AsyncGetRemoteCarddecks extends AsyncTask<Long, Long, List<CardDeck
     @Override
     protected List<CardDeck> doInBackground(Long... params) {
 
+        String urlString = "";
 
-        String urlString = Routes.URL + Routes.SLASH + Routes.CATEGORIES + Routes.SLASH + parentId + Routes.SLASH + Routes.DECKS; // URL to call
+        // Get carddecks of a specific category
+        if (parentId != null) {
+            urlString = Routes.URL + Routes.SLASH + Routes.CATEGORIES + Routes.SLASH + parentId + Routes.SLASH + Routes.DECKS; // URL to call
+
+        } else {
+
+            urlString = Routes.URL + Routes.SLASH + Routes.CARD_DECKS;// URL to call
+        }
+
         Log.d("back call to ", urlString);
         HttpURLConnection urlConnection = null;
 
@@ -78,6 +87,7 @@ public class AsyncGetRemoteCarddecks extends AsyncTask<Long, Long, List<CardDeck
     @Override
     protected void onPostExecute(List<CardDeck> cardDecks) {
         super.onPostExecute(cardDecks);
+        
         if (cardDecks == null || cardDecks.size() == 0) {
 
             // TODO just for testing purpose change to data from sqlite
