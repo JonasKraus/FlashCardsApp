@@ -132,7 +132,6 @@ public class UsersActivity extends AppCompatActivity implements OnFragmentIntera
     }
 
 
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 

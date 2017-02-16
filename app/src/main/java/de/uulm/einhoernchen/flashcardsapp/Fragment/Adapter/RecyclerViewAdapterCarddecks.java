@@ -113,12 +113,13 @@ public class RecyclerViewAdapterCarddecks extends RecyclerView.Adapter<RecyclerV
 
         TextDrawable drawable;
 
-        if (holder.imageView.getTag().equals(false)) {
+
+        // LongClick listener is null when this recycler view is used in messages
+        if (holder.imageView.getTag().equals(false) || mLongClickListener == null) {
 
             drawable = TextDrawable.builder()
                     .buildRound(firstLetter, color); // radius in px
             holder.imageView.setTag(false);
-
 
         } else {
 
@@ -129,35 +130,39 @@ public class RecyclerViewAdapterCarddecks extends RecyclerView.Adapter<RecyclerV
 
         holder.imageView.setImageDrawable(drawable);
 
-        holder.imageView.setOnClickListener(new View.OnClickListener(){
+        // Only add click listener if this is not used in messages
+        if (mLongClickListener != null) {
 
-            @Override
-            public void onClick(View v) {
-                //v.startAnimation(AnimationUtils.loadAnimation(v.getContext(), R.anim.card_flip_left_out));
-                
-                TextDrawable drawable;
+            holder.imageView.setOnClickListener(new View.OnClickListener(){
 
-                // @TODO Set card as checked
-                if (holder.imageView.getTag().equals(true)) {
+                @Override
+                public void onClick(View v) {
+                    //v.startAnimation(AnimationUtils.loadAnimation(v.getContext(), R.anim.card_flip_left_out));
 
-                    drawable = TextDrawable.builder()
-                            .buildRound(firstLetter, color); // radius in px
-                    holder.imageView.setTag(false);
+                    TextDrawable drawable;
 
-                    db.deselectCarddeck(carddeckID);
+                    // @TODO Set card as checked
+                    if (holder.imageView.getTag().equals(true)) {
 
-                } else {
+                        drawable = TextDrawable.builder()
+                                .buildRound(firstLetter, color); // radius in px
+                        holder.imageView.setTag(false);
 
-                    db.selectCarddeck(carddeckID);
-                    String firstLetter = String.valueOf("✓"); // hier wird der buchstabe gesetzt
-                    drawable = TextDrawable.builder()
-                            .buildRound(firstLetter, Color.GRAY); // radius in px
-                    holder.imageView.setTag(true);
+                        db.deselectCarddeck(carddeckID);
+
+                    } else {
+
+                        db.selectCarddeck(carddeckID);
+                        String firstLetter = String.valueOf("✓"); // hier wird der buchstabe gesetzt
+                        drawable = TextDrawable.builder()
+                                .buildRound(firstLetter, Color.GRAY); // radius in px
+                        holder.imageView.setTag(true);
+                    }
+
+                    holder.imageView.setImageDrawable(drawable);
                 }
-
-                holder.imageView.setImageDrawable(drawable);
-            }
-        });
+            });
+        }
     }
 
     @Override
