@@ -26,10 +26,13 @@ import de.uulm.einhoernchen.flashcardsapp.Model.Answer;
 import de.uulm.einhoernchen.flashcardsapp.Model.CardDeck;
 import de.uulm.einhoernchen.flashcardsapp.Model.Category;
 import de.uulm.einhoernchen.flashcardsapp.Model.FlashCard;
+import de.uulm.einhoernchen.flashcardsapp.Model.Message;
 import de.uulm.einhoernchen.flashcardsapp.Model.Question;
 import de.uulm.einhoernchen.flashcardsapp.Model.Tag;
 import de.uulm.einhoernchen.flashcardsapp.Model.User;
 import de.uulm.einhoernchen.flashcardsapp.Model.UserGroup;
+
+import static android.R.attr.description;
 
 /**
  * @author Jonas Kraus jonas.kraus@uni-ulm.de
@@ -594,6 +597,37 @@ public class JsonParser {
         return groups;
     }
 
+
+    /**
+     * Reads an array of messages
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     * @since 2017-02-17
+     *
+     * @param reader
+     * @return
+     */
+    private static List<Message> readMessageArray(JsonReader reader) {
+        if (DEBUG) Log.d("parser Method", "readMessageArray");
+
+        List<Message> messages = new ArrayList<Message>();
+
+        try {
+            reader.beginArray();
+
+            while (reader.hasNext()) {
+
+                messages.add(readMessage(reader));
+            }
+            reader.endArray();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return messages;
+    }
+
+
+
     private static Question readQuestion(JsonReader reader) {
         if (DEBUG) Log.d("parser Method", "readQuestion");
 
@@ -733,6 +767,112 @@ public class JsonParser {
             e.printStackTrace();
         }
         return new UserGroup(id, name, description);
+    }
+
+
+    /**
+     * Parses a Message object and Creates a Model of it
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     * @since 2017-02-17
+     *
+     * @param reader
+     * @return
+     */
+    private static Message readMessage(JsonReader reader) {
+        if (DEBUG) Log.d("parser Method", "readMessage");
+
+        long id = -1;
+        Message.MessageType messageType = Message.MessageType.DECK_CHALLENGE_MESSAGE;
+        long recipient = -1;
+        String content = "";
+        long created = -1;
+        long targetDeck = -1;
+
+        try {
+            reader.beginObject();
+            while (reader.hasNext()) {
+
+                String stringName = reader.nextName();
+
+                if (stringName.equals(JsonKeys.MESSAGE_ID)) {
+
+                    id = reader.nextLong();
+
+                } else if (stringName.equals(JsonKeys.MESSAGE_TYPE)) {
+
+                    JsonToken check = reader.peek();
+
+                    if (check != JsonToken.NULL) {
+
+                        messageType = Message.MessageType.valueOf(reader.nextString());
+                    } else {
+
+                        reader.nextNull();
+                    }
+
+                } else if (stringName.equals(JsonKeys.MESSAGE_RECIPIENT)) {
+
+                    JsonToken check = reader.peek();
+
+                    if (check != JsonToken.NULL) {
+
+                        recipient = readUser(reader).getId();
+                    } else {
+
+                        reader.nextNull();
+                    }
+
+                } else if (stringName.equals(JsonKeys.MESSAGE_CONTENT)) {
+
+                    JsonToken check = reader.peek();
+
+                    if (check != JsonToken.NULL) {
+
+                        content = reader.nextString();
+                    } else {
+
+                        reader.nextNull();
+                    }
+
+                } else if (stringName.equals(JsonKeys.MESSAGE_CREATED)) {
+
+                    JsonToken check = reader.peek();
+
+                    if (check != JsonToken.NULL) {
+
+                        created = stringToDate(reader.nextString()).getTime();
+                    } else {
+
+                        reader.nextNull();
+                    }
+
+                } else if (stringName.equals(JsonKeys.MESSAGE_TARGET_DECK)) {
+
+                    JsonToken check = reader.peek();
+
+                    if (check != JsonToken.NULL) {
+
+                        targetDeck = readCarddeck(reader).getId();
+                    } else {
+
+                        reader.nextNull();
+                    }
+
+                } else {
+
+                    reader.skipValue();
+                }
+
+            }
+            reader.endObject();
+
+        } catch (IOException e) {
+
+            Log.e("error parse", e.getMessage());
+            e.printStackTrace();
+        }
+        return new Message(id, messageType, recipient, content, created, targetDeck);
     }
 
 
@@ -1105,5 +1245,31 @@ public class JsonParser {
         }
 
         return users;
+    }
+
+    public static List<Message> parseMessages(InputStream inputStream) {
+
+        if (DEBUG) Log.d("parser Method", "parseMEssages");
+
+        List<Message> messages = null;
+        JsonReader reader = null;
+        try {
+            reader = new JsonReader(new InputStreamReader(inputStream, "UTF-8"));
+
+            messages = readMessageArray(reader);
+        } catch (UnsupportedEncodingException e) {
+
+            e.printStackTrace();
+        } finally {
+
+            try {
+                reader.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+                Log.d("json parse messages", e.getMessage());
+            }
+        }
+
+        return messages;
     }
 }

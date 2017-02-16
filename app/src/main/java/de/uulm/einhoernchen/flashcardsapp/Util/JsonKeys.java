@@ -109,4 +109,11 @@ public class JsonKeys {
     public static final String CURRENT_DATE = "currentDate";
     public static final String ID = "id";
     public static final String CARDS = "cards";
+
+    public static final String MESSAGE_ID = "messageId";
+    public static final String MESSAGE_TYPE = "messagetype";
+    public static final String MESSAGE_RECIPIENT = "recipient";
+    public static final String MESSAGE_CONTENT = "content";
+    public static final String MESSAGE_CREATED = "created";
+    public static final String MESSAGE_TARGET_DECK = "targetDeck";
 }

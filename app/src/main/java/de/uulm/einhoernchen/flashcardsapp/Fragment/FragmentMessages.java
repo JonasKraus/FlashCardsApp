@@ -3,10 +3,15 @@ package de.uulm.einhoernchen.flashcardsapp.Fragment;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -14,11 +19,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.uulm.einhoernchen.flashcardsapp.Database.DbManager;
-import de.uulm.einhoernchen.flashcardsapp.Fragment.Adapter.RecyclerViewAdapterFlashCardAnswers;
-import de.uulm.einhoernchen.flashcardsapp.Fragment.Interface.OnFragmentInteractionListenerAnswer;
-import de.uulm.einhoernchen.flashcardsapp.Fragment.Interface.OnFragmentInteractionListenerCategory;
-import de.uulm.einhoernchen.flashcardsapp.Model.Answer;
-import de.uulm.einhoernchen.flashcardsapp.Model.Statistic;
+import de.uulm.einhoernchen.flashcardsapp.Fragment.Adapter.RecyclerViewAdapterMessages;
+import de.uulm.einhoernchen.flashcardsapp.Fragment.Interface.OnFragmentInteractionListenerMessage;
+import de.uulm.einhoernchen.flashcardsapp.Fragment.Interface.OnFragmentInteractionListenerUserGroup;
+import de.uulm.einhoernchen.flashcardsapp.Model.Message;
+import de.uulm.einhoernchen.flashcardsapp.Model.UserGroup;
 import de.uulm.einhoernchen.flashcardsapp.R;
 import de.uulm.einhoernchen.flashcardsapp.Util.Globals;
 
@@ -27,17 +32,16 @@ import de.uulm.einhoernchen.flashcardsapp.Util.Globals;
  * <p/>
  * interface.
  */
-public class FragmentFlashCardAnswers extends Fragment {
+public class FragmentMessages extends Fragment implements SearchView.OnQueryTextListener {
 
     private static final String ARG_COLUMN_COUNT = "column-count";
     private int mColumnCount = 1;
-    private OnFragmentInteractionListenerAnswer mListener;
-    private List<Answer> itemList = new ArrayList<>();
+    private OnFragmentInteractionListenerMessage mListener;
+    private List<Message> itemList = new ArrayList<>();
     private DbManager db = Globals.getDb();
     private boolean isUpToDate;
     private RecyclerView recyclerView;
-    private boolean isPlayMultiplyChoiceMode;
-    private RecyclerViewAdapterFlashCardAnswers recyclerViewAdapterFlashCardAnswers;
+    private RecyclerViewAdapterMessages recyclerViewAdapterMessages;
 
     public RecyclerView getRecyclerView() {
         return recyclerView;
@@ -47,15 +51,15 @@ public class FragmentFlashCardAnswers extends Fragment {
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
      */
-    public FragmentFlashCardAnswers() {
+    public FragmentMessages() {
     }
 
 
     // TODO: Customize parameter initialization
     @SuppressWarnings("unused")
-    public static FragmentFlashCardAnswers newInstance(int columnCount) {
+    public static FragmentMessages newInstance(int columnCount) {
 
-        FragmentFlashCardAnswers fragment = new FragmentFlashCardAnswers();
+        FragmentMessages fragment = new FragmentMessages();
 
         Bundle args = new Bundle();
         args.putInt(ARG_COLUMN_COUNT, columnCount);
@@ -66,10 +70,26 @@ public class FragmentFlashCardAnswers extends Fragment {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
+
         if (getArguments() != null) {
             mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
         }
+
+        setHasOptionsMenu(true);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+
+        inflater.inflate(R.menu.menu_search, menu);
+        final MenuItem searchItem = menu.findItem(R.id.action_search);
+        final SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
+        searchView.setOnQueryTextListener(this);
+
+        super.onCreateOptionsMenu(menu, inflater);
+
     }
 
     @Override
@@ -88,10 +108,10 @@ public class FragmentFlashCardAnswers extends Fragment {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
 
-            recyclerViewAdapterFlashCardAnswers =
-                    new RecyclerViewAdapterFlashCardAnswers(itemList, mListener, isUpToDate, isPlayMultiplyChoiceMode);
+            recyclerViewAdapterMessages =
+                    new RecyclerViewAdapterMessages(itemList, mListener, isUpToDate);
 
-            recyclerView.setAdapter(recyclerViewAdapterFlashCardAnswers);
+            recyclerView.setAdapter(recyclerViewAdapterMessages);
         }
         return view;
     }
@@ -99,11 +119,11 @@ public class FragmentFlashCardAnswers extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListenerAnswer) {
-            mListener = (OnFragmentInteractionListenerAnswer) context;
+        if (context instanceof OnFragmentInteractionListenerMessage) {
+            mListener = (OnFragmentInteractionListenerMessage) context;
         } else {
             throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListenerAnswer");
+                    + " must implement OnFragmentInteractionListenerMessage");
         }
     }
 
@@ -113,7 +133,7 @@ public class FragmentFlashCardAnswers extends Fragment {
         mListener = null;
     }
 
-    public void setItemList(List<Answer> itemList) {
+    public void setItemList(List<Message> itemList) {
         this.itemList = itemList;
     }
 
@@ -121,22 +141,17 @@ public class FragmentFlashCardAnswers extends Fragment {
         this.isUpToDate = isUpToDate;
     }
 
+    @Override
+    public boolean onQueryTextSubmit(String query) {
 
-    /**
-     * Sets if the question is in playmode and the card is of type multiple choice
-     *
-     * @author Jonas Kraus jonas.kraus@uni-ulm.de
-     * @since 2017-01-13
-     *
-     * @param playMode
-     */
-    public void setPlayMultiplyChoiceMode(boolean playMode) {
-        this.isPlayMultiplyChoiceMode = playMode;
+        return false;
     }
 
-    public void validateAnswers(Statistic statistics) {
+    @Override
+    public boolean onQueryTextChange(String query) {
 
-        recyclerViewAdapterFlashCardAnswers.validateAnswers(statistics);
+        recyclerViewAdapterMessages.getFilter().filter(query);
 
+        return true;
     }
 }

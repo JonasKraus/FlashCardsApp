@@ -24,6 +24,7 @@ import de.uulm.einhoernchen.flashcardsapp.Model.AuthToken;
 import de.uulm.einhoernchen.flashcardsapp.Model.CardDeck;
 import de.uulm.einhoernchen.flashcardsapp.Model.Category;
 import de.uulm.einhoernchen.flashcardsapp.Model.FlashCard;
+import de.uulm.einhoernchen.flashcardsapp.Model.Message;
 import de.uulm.einhoernchen.flashcardsapp.Model.Question;
 import de.uulm.einhoernchen.flashcardsapp.Model.Settings;
 import de.uulm.einhoernchen.flashcardsapp.Model.Tag;
@@ -2251,5 +2252,121 @@ public class DbManager extends DbHelper{
         database.delete(DbHelper.TABLE_AUTH_TOKEN,
                 COLUMN_AUTH_TOKEN_USER_ID + " = " + this.getLoggedInUser().getId(),
                 null);
+    }
+
+
+    /**
+     * Gets the messages for the logged in user
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     * @since 2017-02-17
+     *
+     * @return
+     */
+    public List<Message> getMessages() {
+
+        List<Message> messages = new ArrayList<Message>();
+
+        Cursor cursor = database.query(
+                DbHelper.TABLE_MESSAGE,
+                allMessageColumns,
+                COLUMN_MESSAGE_RECEIPIENT  + "=" + loggedInUser.getId(),
+                null, null, null, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                try {
+
+                    long id = cursor.getLong(cursor.getColumnIndex(COLUMN_MESSAGE_ID));
+                    Message.MessageType messageType = Message.MessageType.valueOf(cursor.getString(cursor.getColumnIndex(COLUMN_MESSAGE_TYPE)));
+                    long recipient = cursor.getLong(cursor.getColumnIndex(COLUMN_MESSAGE_RECEIPIENT));
+                    String content = cursor.getString(cursor.getColumnIndex(COLUMN_MESSAGE_CONTENT));
+                    long created = cursor.getLong(cursor.getColumnIndex(COLUMN_MESSAGE_DATE_CREATED));
+                    long targetDeck = cursor.getLong(cursor.getColumnIndex(COLUMN_MESSAGE_TARGET_DECK));
+
+                    messages.add(new Message(id, messageType, recipient, content, created, targetDeck));
+                } catch (Exception e) {
+                    System.out.print(e.getMessage());
+                }
+            } while (cursor.moveToNext());
+        }
+
+        cursor.close();
+
+        return messages;
+    }
+
+
+    /**
+     * Saves messages to the local db
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     * @since 2017-02-17
+     *
+     * @param messages
+     */
+    public void saveMessages(List<Message> messages) {
+
+        for (Message message : messages) {
+
+            saveMessage(message);
+        }
+    }
+
+
+    /**
+     * Saves a message to the local db
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     * @since 2017-02-17
+     *
+     * @param message
+     */
+    private void saveMessage(Message message) {
+
+        ContentValues values = new ContentValues();
+        values.put(DbHelper.COLUMN_MESSAGE_ID, message.getId());
+        values.put(DbHelper.COLUMN_MESSAGE_TYPE, message.getMessageType().toString());
+        values.put(DbHelper.COLUMN_MESSAGE_RECEIPIENT, message.getReceipient());
+        values.put(DbHelper.COLUMN_MESSAGE_CONTENT, message.getContent());
+        values.put(DbHelper.COLUMN_MESSAGE_DATE_CREATED, message.getCreated());
+        values.put(DbHelper.COLUMN_MESSAGE_TARGET_DECK, message.getTargetDeck());
+
+        database.insertWithOnConflict(TABLE_MESSAGE, null, values, SQLiteDatabase.CONFLICT_REPLACE);
+    }
+
+
+    /**
+     * Returns the name of a carddeck
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     * @since 2017-02-17
+     *
+     * @param targetDeck
+     * @return
+     */
+    public String  getCardDeckName(long targetDeck) {
+
+        String name = "";
+        Cursor cursor = database.query(
+                DbHelper.TABLE_CARD_DECK,
+                allCardDeckColumns,
+                COLUMN_CARD_DECK_ID  + "=" + targetDeck,
+                null, null, null, null);
+
+        if (cursor.moveToFirst()) {
+
+            try {
+                name = cursor.getString(cursor.getColumnIndex(COLUMN_CARD_DECK_NAME));
+
+            } catch (Exception e) {
+                System.out.print(e.getMessage());
+            }
+
+        }
+
+        cursor.close();
+
+        return name;
     }
 }

@@ -28,6 +28,8 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.google.android.gms.nearby.messages.Messages;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -626,6 +628,8 @@ public class MainActivity extends AppCompatActivity
             startActivity(new Intent(MainActivity.this, StatisticsActivity.class));
 
         } else if (id == R.id.nav_challenge) {
+
+            startActivity(new Intent(MainActivity.this, MessagesActivity.class));
 
         } else if (id == R.id.nav_settings) {
 

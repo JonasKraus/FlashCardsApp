@@ -218,6 +218,7 @@
     <string name="prompt_carddeck_group_name">group name</string>
     <string name="group">group</string>
     <string name="prompt_carddeck_group_description">group description</string>
+    <string name="title_activity_messages">Messages</string>
 
 
 </resources>

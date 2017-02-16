@@ -44,6 +44,15 @@
                 android:value="de.uulm.einhoernchen.flashcardsapp.Activity.MainActivity" />
         </activity>
         <activity
+            android:name=".Activity.MessagesActivity"
+            android:label="@string/title_activity_messages"
+            android:parentActivityName=".Activity.MainActivity"
+            android:theme="@style/AppTheme">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="de.uulm.einhoernchen.flashcardsapp.Activity.MainActivity" />
+        </activity>
+        <activity
             android:name=".Activity.StatisticsActivity"
             android:label="@string/title_activity_statistics"
             android:parentActivityName=".Activity.MainActivity"
