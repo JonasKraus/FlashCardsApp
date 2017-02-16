@@ -2233,24 +2233,22 @@ public class DbManager extends DbHelper{
         Cursor cursor = database.query(
                 DbHelper.TABLE_MESSAGE,
                 allMessageColumns,
-                COLUMN_MESSAGE_RECIPIENT + "=" + loggedInUser.getId(),
+                COLUMN_MESSAGE_RECIPIENT + "=" + getLoggedInUser().getId(),
                 null, null, null, null);
+
 
         if (cursor.moveToFirst()) {
             do {
-                try {
 
-                    long id = cursor.getLong(cursor.getColumnIndex(COLUMN_MESSAGE_ID));
-                    Message.MessageType messageType = Message.MessageType.valueOf(cursor.getString(cursor.getColumnIndex(COLUMN_MESSAGE_TYPE)));
-                    long recipient = cursor.getLong(cursor.getColumnIndex(COLUMN_MESSAGE_RECIPIENT));
-                    String content = cursor.getString(cursor.getColumnIndex(COLUMN_MESSAGE_CONTENT));
-                    long created = cursor.getLong(cursor.getColumnIndex(COLUMN_MESSAGE_DATE_CREATED));
-                    long targetDeck = cursor.getLong(cursor.getColumnIndex(COLUMN_MESSAGE_TARGET_DECK));
+                long id = cursor.getLong(cursor.getColumnIndex(COLUMN_MESSAGE_ID));
+                String type = cursor.getString(cursor.getColumnIndex(COLUMN_MESSAGE_TYPE));
+                Message.MessageType messageType = Message.MessageType.convert(type);
+                long recipient = cursor.getLong(cursor.getColumnIndex(COLUMN_MESSAGE_RECIPIENT));
+                String content = cursor.getString(cursor.getColumnIndex(COLUMN_MESSAGE_CONTENT));
+                long created = cursor.getLong(cursor.getColumnIndex(COLUMN_MESSAGE_DATE_CREATED));
+                long targetDeck = cursor.getLong(cursor.getColumnIndex(COLUMN_MESSAGE_TARGET_DECK));
+                messages.add(new Message(id, messageType, recipient, content, created, targetDeck));
 
-                    messages.add(new Message(id, messageType, recipient, content, created, targetDeck));
-                } catch (Exception e) {
-                    System.out.print(e.getMessage());
-                }
             } while (cursor.moveToNext());
         }
 

@@ -1,5 +1,7 @@
 package de.uulm.einhoernchen.flashcardsapp.Fragment.Dataset;
 
+import android.util.Log;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -100,14 +102,15 @@ public class ContentMessages {
         AsyncGetLocalMessages asyncGetLocalMessages = new AsyncGetLocalMessages(new AsyncGetLocalMessages.AsyncResponseLocalMessages() {
 
             @Override
-            public void processFinish(List<Message> messag) {
+            public void processFinish(List<Message> messages) {
 
 
-                ContentMessages.messages = messag;
+                Log.d("messages", messages.size() + "");
+                ContentMessages.messages = messages;
                 isUpToDate = false;
 
                 fragment = new FragmentMessages();
-                fragment.setItemList(messag);
+                fragment.setItemList(messages);
                 fragment.setUpToDate(isUpToDate);
 
                 android.support.v4.app.FragmentTransaction fragmentTransaction =

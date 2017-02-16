@@ -16,6 +16,25 @@ public class Message {
             this.text = text;
         }
 
+        /**
+         * Converts string to Enum
+         *
+         * @author Jonas Kraus jonas.kraus@uni-ulm.de
+         * @since 2017-02-17
+         *
+         * @param type
+         * @return
+         */
+        public static MessageType convert(String type) {
+
+            if (type.equals(DECK_CHALLENGE_MESSAGE.toString())) {
+
+                return DECK_CHALLENGE_MESSAGE;
+            }
+
+            return DECK_CHALLENGE_MESSAGE;
+        }
+
         @Override
         public String toString() {
             return text;

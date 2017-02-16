@@ -1,6 +1,7 @@
 package de.uulm.einhoernchen.flashcardsapp.AsyncTask.Local;
 
 import android.os.AsyncTask;
+import android.util.Log;
 import android.view.View;
 
 import java.util.List;
