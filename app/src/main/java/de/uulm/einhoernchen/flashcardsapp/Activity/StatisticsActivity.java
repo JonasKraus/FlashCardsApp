@@ -5,7 +5,6 @@ import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.View;
 import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.BarChart;
@@ -14,7 +13,6 @@ import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.charts.RadarChart;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
-import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
@@ -25,7 +23,6 @@ import com.github.mikephil.charting.data.RadarDataSet;
 import com.github.mikephil.charting.formatter.PercentFormatter;
 import com.github.mikephil.charting.utils.ColorTemplate;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import de.uulm.einhoernchen.flashcardsapp.Model.Statistic;
@@ -57,7 +54,7 @@ public class StatisticsActivity extends AppCompatActivity {
 
         setContentView(R.layout.fragment_statistics);
 
-        statistics = Statistic.getStatistics();
+        statistics = Statistic.getStatisticsOfSelectedCards(null);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_statistics);
         ((MainActivity) getContext()).setSupportActionBar(toolbar);

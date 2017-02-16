@@ -7,7 +7,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.util.Log;
 
-import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.PieEntry;
@@ -20,7 +19,6 @@ import java.util.List;
 
 import de.uulm.einhoernchen.flashcardsapp.Const.Constants;
 import de.uulm.einhoernchen.flashcardsapp.Model.Answer;
-import de.uulm.einhoernchen.flashcardsapp.Model.AuthToken;
 import de.uulm.einhoernchen.flashcardsapp.Model.CardDeck;
 import de.uulm.einhoernchen.flashcardsapp.Model.Category;
 import de.uulm.einhoernchen.flashcardsapp.Model.FlashCard;
@@ -30,41 +28,6 @@ import de.uulm.einhoernchen.flashcardsapp.Model.Settings;
 import de.uulm.einhoernchen.flashcardsapp.Model.Tag;
 import de.uulm.einhoernchen.flashcardsapp.Model.User;
 import de.uulm.einhoernchen.flashcardsapp.Model.UserGroup;
-
-import static de.uulm.einhoernchen.flashcardsapp.Database.DbHelper.COLUMN_ANSWER_ID;
-import static de.uulm.einhoernchen.flashcardsapp.Database.DbHelper.COLUMN_ANSWER_PARENT_CARD_ID;
-import static de.uulm.einhoernchen.flashcardsapp.Database.DbHelper.COLUMN_FLASHCARD_CARDDECK_ID;
-import static de.uulm.einhoernchen.flashcardsapp.Database.DbHelper.COLUMN_FLASHCARD_CREATED;
-import static de.uulm.einhoernchen.flashcardsapp.Database.DbHelper.COLUMN_FLASHCARD_ID;
-import static de.uulm.einhoernchen.flashcardsapp.Database.DbHelper.COLUMN_FLASHCARD_LAST_UPDATED;
-import static de.uulm.einhoernchen.flashcardsapp.Database.DbHelper.COLUMN_FLASHCARD_MULTIPLE_CHOICE;
-import static de.uulm.einhoernchen.flashcardsapp.Database.DbHelper.COLUMN_FLASHCARD_QUESTION_ID;
-import static de.uulm.einhoernchen.flashcardsapp.Database.DbHelper.COLUMN_FLASHCARD_RATING;
-import static de.uulm.einhoernchen.flashcardsapp.Database.DbHelper.COLUMN_FLASHCARD_USER_ID;
-import static de.uulm.einhoernchen.flashcardsapp.Database.DbHelper.COLUMN_SELECTION_CARD_DECK_ID;
-import static de.uulm.einhoernchen.flashcardsapp.Database.DbHelper.COLUMN_SELECTION_CARD_ID;
-import static de.uulm.einhoernchen.flashcardsapp.Database.DbHelper.COLUMN_SELECTION_DATE;
-import static de.uulm.einhoernchen.flashcardsapp.Database.DbHelper.COLUMN_SELECTION_USER_ID;
-import static de.uulm.einhoernchen.flashcardsapp.Database.DbHelper.COLUMN_SETTINGS_ID;
-import static de.uulm.einhoernchen.flashcardsapp.Database.DbHelper.COLUMN_SETTINGS_USER_ID;
-import static de.uulm.einhoernchen.flashcardsapp.Database.DbHelper.COLUMN_USER_ID;
-import static de.uulm.einhoernchen.flashcardsapp.Database.DbHelper.COLUMN_USER_IS_LOGGED_IN;
-import static de.uulm.einhoernchen.flashcardsapp.Database.DbHelper.TABLE_ANSWER;
-import static de.uulm.einhoernchen.flashcardsapp.Database.DbHelper.TABLE_FLASHCARD;
-import static de.uulm.einhoernchen.flashcardsapp.Database.DbHelper.TABLE_SELECTION;
-import static de.uulm.einhoernchen.flashcardsapp.Database.DbHelper.TABLE_SETTINGS;
-import static de.uulm.einhoernchen.flashcardsapp.Database.DbHelper.TABLE_USER;
-import static de.uulm.einhoernchen.flashcardsapp.Database.DbHelper.allAnswerColumns;
-import static de.uulm.einhoernchen.flashcardsapp.Database.DbHelper.allCardTagColumns;
-import static de.uulm.einhoernchen.flashcardsapp.Database.DbHelper.allCategoryColumns;
-import static de.uulm.einhoernchen.flashcardsapp.Database.DbHelper.allFlashCardColumns;
-import static de.uulm.einhoernchen.flashcardsapp.Database.DbHelper.allQuestionColumns;
-import static de.uulm.einhoernchen.flashcardsapp.Database.DbHelper.allSelectionColumns;
-import static de.uulm.einhoernchen.flashcardsapp.Database.DbHelper.allSettingsColumns;
-import static de.uulm.einhoernchen.flashcardsapp.Database.DbHelper.allTagColumns;
-import static de.uulm.einhoernchen.flashcardsapp.Database.DbHelper.allUserColumns;
-import static de.uulm.einhoernchen.flashcardsapp.Database.DbHelper.allUserGroupColumns;
-import static de.uulm.einhoernchen.flashcardsapp.Database.DbHelper.allVotingColumns;
 
 /**
  * Created by Jonas on 02.07.2016.
@@ -2270,7 +2233,7 @@ public class DbManager extends DbHelper{
         Cursor cursor = database.query(
                 DbHelper.TABLE_MESSAGE,
                 allMessageColumns,
-                COLUMN_MESSAGE_RECEIPIENT  + "=" + loggedInUser.getId(),
+                COLUMN_MESSAGE_RECIPIENT + "=" + loggedInUser.getId(),
                 null, null, null, null);
 
         if (cursor.moveToFirst()) {
@@ -2279,7 +2242,7 @@ public class DbManager extends DbHelper{
 
                     long id = cursor.getLong(cursor.getColumnIndex(COLUMN_MESSAGE_ID));
                     Message.MessageType messageType = Message.MessageType.valueOf(cursor.getString(cursor.getColumnIndex(COLUMN_MESSAGE_TYPE)));
-                    long recipient = cursor.getLong(cursor.getColumnIndex(COLUMN_MESSAGE_RECEIPIENT));
+                    long recipient = cursor.getLong(cursor.getColumnIndex(COLUMN_MESSAGE_RECIPIENT));
                     String content = cursor.getString(cursor.getColumnIndex(COLUMN_MESSAGE_CONTENT));
                     long created = cursor.getLong(cursor.getColumnIndex(COLUMN_MESSAGE_DATE_CREATED));
                     long targetDeck = cursor.getLong(cursor.getColumnIndex(COLUMN_MESSAGE_TARGET_DECK));
@@ -2327,7 +2290,7 @@ public class DbManager extends DbHelper{
         ContentValues values = new ContentValues();
         values.put(DbHelper.COLUMN_MESSAGE_ID, message.getId());
         values.put(DbHelper.COLUMN_MESSAGE_TYPE, message.getMessageType().toString());
-        values.put(DbHelper.COLUMN_MESSAGE_RECEIPIENT, message.getReceipient());
+        values.put(DbHelper.COLUMN_MESSAGE_RECIPIENT, message.getReceipient());
         values.put(DbHelper.COLUMN_MESSAGE_CONTENT, message.getContent());
         values.put(DbHelper.COLUMN_MESSAGE_DATE_CREATED, message.getCreated());
         values.put(DbHelper.COLUMN_MESSAGE_TARGET_DECK, message.getTargetDeck());

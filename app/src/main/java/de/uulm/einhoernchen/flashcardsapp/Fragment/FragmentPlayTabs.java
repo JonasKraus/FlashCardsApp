@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import de.uulm.einhoernchen.flashcardsapp.Fragment.Adapter.FragmentPagerAdapterPlay;
+import de.uulm.einhoernchen.flashcardsapp.Model.Message;
 import de.uulm.einhoernchen.flashcardsapp.R;
 
 /**
@@ -22,6 +23,8 @@ import de.uulm.einhoernchen.flashcardsapp.R;
  */
 public class FragmentPlayTabs extends Fragment {
 
+
+    private Message challenge = null;
 
     public FragmentPlayTabs() {
         // Required empty public constructor
@@ -69,7 +72,10 @@ public class FragmentPlayTabs extends Fragment {
 
         FragmentPagerAdapterPlay adapter = new FragmentPagerAdapterPlay(getChildFragmentManager());
 
-        adapter.addFragment(new FragmentPlayFlashCards(), getResources().getString(R.string.tab_play));
+        FragmentPlayFlashCards fragmentPlayFlashCards = new FragmentPlayFlashCards();
+        fragmentPlayFlashCards.setChallenge(challenge);
+
+        adapter.addFragment(fragmentPlayFlashCards, getResources().getString(R.string.tab_play));
         adapter.addFragment(new FragmentStatistics(), getResources().getString(R.string.toolbar_title_statistic));
 
         viewPager.setAdapter(adapter);
@@ -87,5 +93,10 @@ public class FragmentPlayTabs extends Fragment {
     @Override
     public void onDetach() {
         super.onDetach();
+    }
+
+    public void setChallenge(Message challenge) {
+
+        this.challenge = challenge;
     }
 }

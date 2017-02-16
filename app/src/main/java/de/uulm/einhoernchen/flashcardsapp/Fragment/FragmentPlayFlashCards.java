@@ -33,6 +33,7 @@ import de.uulm.einhoernchen.flashcardsapp.Database.DbManager;
 import de.uulm.einhoernchen.flashcardsapp.Dialog.DialogKnowledge;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.Dataset.ContentFlashCardAnswers;
 import de.uulm.einhoernchen.flashcardsapp.Model.FlashCard;
+import de.uulm.einhoernchen.flashcardsapp.Model.Message;
 import de.uulm.einhoernchen.flashcardsapp.Model.Statistic;
 import de.uulm.einhoernchen.flashcardsapp.R;
 import de.uulm.einhoernchen.flashcardsapp.Util.Globals;
@@ -93,6 +94,7 @@ public class FragmentPlayFlashCards extends Fragment implements View.OnClickList
     private ContentFlashCardAnswers contentAnswers;
     private Statistic statistic;
     private List<Statistic> statistics;
+    private Message challenge;
 
 
     public FragmentPlayFlashCards() {
@@ -146,7 +148,7 @@ public class FragmentPlayFlashCards extends Fragment implements View.OnClickList
         Globals.getProgressBar().setVisibility(View.VISIBLE);
         Globals.getProgressBar().setVisibility(View.GONE);
 
-        statistics = Statistic.getStatistics();
+        statistics = Statistic.getStatisticsOfSelectedCards(challenge); // TODO
 
         if (statistics.size() == 0) {
 
@@ -204,9 +206,6 @@ public class FragmentPlayFlashCards extends Fragment implements View.OnClickList
         //frameLayoutAnswers.setVisibility(View.GONE);
 
         nsContentAnswers = (NestedScrollView) view.findViewById(R.id.nested_scrollview_content_answers);
-
-
-        Log.d("hier content", (imageViewPlay == null) + "");
 
         // Initially set visibility of answers
         toggleStateAndFabIcon(true);
@@ -690,4 +689,40 @@ public class FragmentPlayFlashCards extends Fragment implements View.OnClickList
 
     }
 
+
+    /**
+     * Sets the challenge
+     * null if usual mode
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     * @since 2017-02-17
+     *
+     * @param challenge
+     */
+    public void setChallenge(Message challenge) {
+
+        this.challenge = challenge;
+
+    }
+
+
+    /**
+     * Sets the fab or navigating if this fragment is not placed in the mainActivity where you can
+     * get the fab from the globals
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     * @since 2017-02-17
+     *
+     * @param fab
+     */
+    public void setFab(FloatingActionButton fab) {
+
+        if (fab != null) {
+
+            this.fab = fab;
+        } else {
+
+            this.fab = Globals.getFloatingActionButton();
+        }
+    }
 }

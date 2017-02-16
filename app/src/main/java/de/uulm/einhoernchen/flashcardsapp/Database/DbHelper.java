@@ -148,7 +148,7 @@ public class DbHelper extends SQLiteOpenHelper {
     public static final String TABLE_MESSAGE = "message";
     public static final String COLUMN_MESSAGE_ID = "messageId";                       //0
     public static final String COLUMN_MESSAGE_TYPE = "messageType";                   //1
-    public static final String COLUMN_MESSAGE_RECEIPIENT = "receipient";           //2
+    public static final String COLUMN_MESSAGE_RECIPIENT = "receipient";           //2
     public static final String COLUMN_MESSAGE_CONTENT= "content";                  //3
     public static final String COLUMN_MESSAGE_DATE_CREATED = "created";            //4
     public static final String COLUMN_MESSAGE_TARGET_DECK = "targetDeck";          //5
@@ -447,7 +447,7 @@ public class DbHelper extends SQLiteOpenHelper {
             + " integer primary key NOT NULL, "
             + COLUMN_MESSAGE_TYPE
             + " text not null, "
-            + COLUMN_MESSAGE_RECEIPIENT
+            + COLUMN_MESSAGE_RECIPIENT
             + " integer not null, "
             + COLUMN_MESSAGE_CONTENT
             + " text, "
@@ -690,7 +690,7 @@ public class DbHelper extends SQLiteOpenHelper {
     public static String[] allMessageColumns = {
             COLUMN_MESSAGE_ID,                  //0
             COLUMN_MESSAGE_TYPE,                //1
-            COLUMN_MESSAGE_RECEIPIENT,          //2
+            COLUMN_MESSAGE_RECIPIENT,          //2
             COLUMN_MESSAGE_CONTENT,             //3
             COLUMN_MESSAGE_DATE_CREATED,        //4
             COLUMN_MESSAGE_TARGET_DECK          //5

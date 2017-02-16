@@ -13,6 +13,9 @@ import de.uulm.einhoernchen.flashcardsapp.Const.Constants;
 import de.uulm.einhoernchen.flashcardsapp.Database.DbHelper;
 import de.uulm.einhoernchen.flashcardsapp.Util.Globals;
 
+import static de.uulm.einhoernchen.flashcardsapp.Database.DbHelper.COLUMN_FLASHCARD_ID;
+import static de.uulm.einhoernchen.flashcardsapp.Database.DbHelper.COLUMN_MESSAGE_RECIPIENT;
+import static de.uulm.einhoernchen.flashcardsapp.Database.DbHelper.COLUMN_MESSAGE_TARGET_DECK;
 import static de.uulm.einhoernchen.flashcardsapp.Database.DbHelper.COLUMN_SELECTION_CARD_ID;
 import static de.uulm.einhoernchen.flashcardsapp.Database.DbHelper.COLUMN_SELECTION_USER_ID;
 import static de.uulm.einhoernchen.flashcardsapp.Database.DbHelper.COLUMN_STATISTICS_CARD_ID;
@@ -21,8 +24,10 @@ import static de.uulm.einhoernchen.flashcardsapp.Database.DbHelper.COLUMN_STATIS
 import static de.uulm.einhoernchen.flashcardsapp.Database.DbHelper.COLUMN_STATISTICS_KNOWLEDGE;
 import static de.uulm.einhoernchen.flashcardsapp.Database.DbHelper.COLUMN_STATISTICS_START_DATE;
 import static de.uulm.einhoernchen.flashcardsapp.Database.DbHelper.COLUMN_STATISTICS_USER_ID;
+import static de.uulm.einhoernchen.flashcardsapp.Database.DbHelper.COLUMN_USER_ID;
 import static de.uulm.einhoernchen.flashcardsapp.Database.DbHelper.TABLE_FLASHCARD;
 import static de.uulm.einhoernchen.flashcardsapp.Database.DbHelper.TABLE_STATISTICS;
+import static de.uulm.einhoernchen.flashcardsapp.Database.DbHelper.allMessageColumns;
 import static de.uulm.einhoernchen.flashcardsapp.Database.DbHelper.allStatisticsColumns;
 
 /**
@@ -206,7 +211,7 @@ public class Statistic {
      *
      * @return
      */
-    public static List<Statistic> getStatistics() {
+    public static List<Statistic> getStatisticsOfSelectedCards(Message challenge) {
 
         Settings settings = Settings.getSettings();
         Constants learnMode = settings.getLearnMode();
@@ -248,20 +253,37 @@ public class Statistic {
 
         SQLiteDatabase database = Globals.getDb().getSQLiteDatabase();
 
-        Cursor cursor = database.rawQuery("SELECT selection.userId, selection.cardId, knowledge, drawer, startDate, endDate " +
-                "FROM selection\n" +
-                "    LEFT JOIN statistics ON selection.cardId = statistics.cardId\n" +
-                "    JOIN user ON user.isLoggedIn = 1\n" +
-                "    WHERE selection.cardId NOT NULL\n" +
-                "     GROUP BY (selection.cardId)\n" +
-                "    " + orderBy, null);
+        Cursor cursor = null;
 
+        // Can be called via normal mode or challenge mode
+        if (challenge == null) {
+
+            cursor = database.rawQuery("SELECT selection.userId, selection.cardId, knowledge, drawer, startDate, endDate " +
+                    "FROM selection\n" +
+                    "    LEFT JOIN statistics ON selection.cardId = statistics.cardId\n" +
+                    "    JOIN user ON user.isLoggedIn = 1\n" +
+                    "    WHERE selection.cardId NOT NULL\n" +
+                    "     GROUP BY (selection.cardId)\n" +
+                    "    " + orderBy, null);
+
+        } else {
+
+            String query = "SELECT user.userId , flashcard.flashcardId, knowledge, drawer, startDate, endDate " +
+                    "FROM flashcard\n" +
+                    "    LEFT JOIN statistics ON flashcard.flashcardId = statistics.cardId\n" +
+                    "    JOIN user ON user.isLoggedIn = 1\n" +
+                    "    WHERE flashcard.cardDeckId = " + challenge.getTargetDeck() +
+                    "     GROUP BY (flashcard.flashcardId)\n" +
+                    "    " + orderBy;
+
+            cursor = database.rawQuery(query, null);
+        }
 
         if (cursor.moveToFirst()) {
             do {
 
-                long cardId = cursor.getLong(cursor.getColumnIndex(COLUMN_SELECTION_CARD_ID));
-                long userId = cursor.getLong(cursor.getColumnIndex(COLUMN_SELECTION_USER_ID));
+                long cardId = cursor.getLong(cursor.getColumnIndex(challenge == null ? COLUMN_SELECTION_CARD_ID : COLUMN_FLASHCARD_ID));
+                long userId = cursor.getLong(cursor.getColumnIndex(challenge == null ? COLUMN_SELECTION_USER_ID : COLUMN_USER_ID));
                 float knowledge = cursor.getFloat(cursor.getColumnIndex(COLUMN_STATISTICS_KNOWLEDGE));
                 int drawer = cursor.getInt(cursor.getColumnIndex(COLUMN_STATISTICS_DRAWER));
                 long startDate = cursor.getLong(cursor.getColumnIndex(COLUMN_STATISTICS_START_DATE));

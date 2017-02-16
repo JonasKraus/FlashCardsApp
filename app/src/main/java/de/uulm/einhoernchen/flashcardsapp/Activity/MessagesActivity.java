@@ -14,6 +14,7 @@ import de.uulm.einhoernchen.flashcardsapp.Const.Constants;
 import de.uulm.einhoernchen.flashcardsapp.Database.DbManager;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.Dataset.ContentMessages;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.Dataset.ContentUserGroups;
+import de.uulm.einhoernchen.flashcardsapp.Fragment.FragmentPlayFlashCards;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.FragmentPlayTabs;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.Interface.OnFragmentInteractionListenerAnswer;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.Interface.OnFragmentInteractionListenerMessage;
@@ -27,6 +28,7 @@ import de.uulm.einhoernchen.flashcardsapp.Util.Globals;
 public class MessagesActivity extends AppCompatActivity implements OnFragmentInteractionListenerMessage, OnFragmentInteractionListenerAnswer {
 
     private DbManager db;
+    private FloatingActionButton fab;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,7 +37,7 @@ public class MessagesActivity extends AppCompatActivity implements OnFragmentInt
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -62,16 +64,26 @@ public class MessagesActivity extends AppCompatActivity implements OnFragmentInt
      * @since 2017-01-13
      *
      */
-    private void inflateFragmentPlay() {
+    private void inflateFragmentPlay(Message message) {
 
+        /*
+        FragmentPlayTabs fragment = new FragmentPlayTabs();
+        */
 
-        FragmentPlayTabs fragmentPlay = new FragmentPlayTabs();
+        FragmentPlayFlashCards fragment = new FragmentPlayFlashCards();
+
+        fragment.setChallenge(message);
+        fragment.setFab(this.fab);
+
         android.support.v4.app.FragmentTransaction fragmentTransaction =
                 getSupportFragmentManager().beginTransaction();
 
         // Keep attention that this is replaced and not added
-        fragmentTransaction.replace(R.id.fragment_container_messages, fragmentPlay);
+        fragmentTransaction.replace(R.id.fragment_container_messages, fragment);
         fragmentTransaction.commit();
+
+
+
 
     }
 
@@ -79,7 +91,11 @@ public class MessagesActivity extends AppCompatActivity implements OnFragmentInt
     @Override
     public void onMessageListFragmentInteraction(Message item) {
 
-        inflateFragmentPlay();
+        if (item.getMessageType().equals(Message.MessageType.DECK_CHALLENGE_MESSAGE)) {
+
+            inflateFragmentPlay(item);
+        }
+
         Log.d("click", item.toString());
 
     }
