@@ -21,10 +21,12 @@ import de.uulm.einhoernchen.flashcardsapp.Const.Constants;
 import de.uulm.einhoernchen.flashcardsapp.Model.Answer;
 import de.uulm.einhoernchen.flashcardsapp.Model.CardDeck;
 import de.uulm.einhoernchen.flashcardsapp.Model.Category;
+import de.uulm.einhoernchen.flashcardsapp.Model.Challenge;
 import de.uulm.einhoernchen.flashcardsapp.Model.FlashCard;
 import de.uulm.einhoernchen.flashcardsapp.Model.Message;
 import de.uulm.einhoernchen.flashcardsapp.Model.Question;
 import de.uulm.einhoernchen.flashcardsapp.Model.Settings;
+import de.uulm.einhoernchen.flashcardsapp.Model.Statistic;
 import de.uulm.einhoernchen.flashcardsapp.Model.Tag;
 import de.uulm.einhoernchen.flashcardsapp.Model.User;
 import de.uulm.einhoernchen.flashcardsapp.Model.UserGroup;
@@ -852,6 +854,44 @@ public class DbManager extends DbHelper{
 
 
         return cardDecks;
+    }
+
+    /**
+     * Collects a Carddeck by the given deck id
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     * @since 2017-02-19
+     *
+     * @param carddeckId
+     * @return
+     */
+    public CardDeck getCardDeck(Long carddeckId) {
+
+
+        Cursor cursor = database.query(
+                DbHelper.TABLE_CARD_DECK,
+                allCardDeckColumns,
+                COLUMN_CARD_DECK_ID  + "=" + carddeckId,
+                null, null, null, null);
+
+        CardDeck cardDeck = null;
+
+        if (cursor.moveToFirst()) {
+
+            long cardDeckId = cursor.getLong(cursor.getColumnIndex(COLUMN_CARD_DECK_ID));
+            String cardDeckName = cursor.getString(cursor.getColumnIndex(COLUMN_CARD_DECK_NAME));
+            String cardDeckDescription = cursor.getString(cursor.getColumnIndex(COLUMN_CARD_DECK_DESCRIPTION));
+            boolean cardDeckVisible = cursor.getInt(cursor.getColumnIndex(COLUMN_CARD_DECK_VISIBLE)) > 0;
+            long cardDeckGroupId = cursor.getLong(cursor.getColumnIndex(COLUMN_CARD_DECK_GROUP));
+            long cardDeckParentId = cursor.getLong(cursor.getColumnIndex(COLUMN_CARD_DECK_PARENT));
+
+            UserGroup userGroup = getUserGroup(cardDeckGroupId);
+
+            cardDeck = new CardDeck(cardDeckId, cardDeckVisible, userGroup,cardDeckName, cardDeckDescription);
+
+        }
+
+        return cardDeck;
     }
 
 
@@ -2290,7 +2330,7 @@ public class DbManager extends DbHelper{
      *
      * @param message
      */
-    private void saveMessage(Message message) {
+    private long saveMessage(Message message) {
 
         ContentValues values = new ContentValues();
         values.put(DbHelper.COLUMN_MESSAGE_ID, message.getId());
@@ -2300,7 +2340,7 @@ public class DbManager extends DbHelper{
         values.put(DbHelper.COLUMN_MESSAGE_DATE_CREATED, message.getCreated());
         values.put(DbHelper.COLUMN_MESSAGE_TARGET_DECK, message.getTargetDeck());
 
-        database.insertWithOnConflict(TABLE_MESSAGE, null, values, SQLiteDatabase.CONFLICT_REPLACE);
+        return database.insertWithOnConflict(TABLE_MESSAGE, null, values, SQLiteDatabase.CONFLICT_REPLACE);
     }
 
 
@@ -2336,5 +2376,200 @@ public class DbManager extends DbHelper{
         cursor.close();
 
         return name;
+    }
+
+
+    /**
+     * Counts the cards of an carddeck
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     * @since 2017-02-19
+     *
+     * @param deckIds
+     * @return
+     */
+    public int  countCardDeckCards(long deckIds) {
+
+        int count = 0;
+        Cursor cursor = database.query(
+                DbHelper.TABLE_FLASHCARD,
+                allFlashCardColumns,
+                COLUMN_FLASHCARD_CARDDECK_ID  + "=" + deckIds,
+                null, null, null, null);
+
+
+
+        if (cursor.moveToFirst()) {
+
+            try {
+                count = cursor.getCount();
+
+            } catch (Exception e) {
+                System.out.print(e.getMessage());
+            }
+
+        }
+
+        cursor.close();
+
+        return count;
+    }
+
+
+    /**
+     * Saves a challenge to the local db
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     * @since 2017-02-19
+     *
+     * @param messageId
+     * @param statisticId
+     */
+    public void saveChallenge(long messageId, long statisticId) {
+
+        ContentValues values = new ContentValues();
+        values.put(DbHelper.COLUMN_CHALLENGE_MESSAGE_ID, messageId);
+        values.put(DbHelper.COLUMN_CHALLENGE_STATISTIC_ID, statisticId);
+
+        database.insertWithOnConflict(TABLE_CHALLENGE, null, values, SQLiteDatabase.CONFLICT_REPLACE);
+    }
+
+
+    /**
+     * gets a challenge by the message id
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     * @since 2017-02-19
+     *
+     * @param messageId
+     * @return
+     */
+    public Challenge getChallengeByMessageId(long messageId) {
+
+        List<Statistic> statistics = new ArrayList<Statistic>();
+        Challenge challenge = null;
+        long carddeckId = -1;
+        Message message = null;
+        CardDeck cardDeck = null;
+        long id = -1;
+
+
+        SQLiteQueryBuilder qb = new SQLiteQueryBuilder();
+
+        // base query
+        String query =
+                DbHelper.TABLE_CHALLENGE
+                + " JOIN " + DbHelper.TABLE_STATISTICS + " ON "
+                + DbHelper.TABLE_CHALLENGE + "." + DbHelper.COLUMN_CHALLENGE_STATISTIC_ID
+                        + " = " +  DbHelper.TABLE_STATISTICS + "." + DbHelper.COLUMN_STATISTICS_ID
+                + " JOIN " + DbHelper.TABLE_MESSAGE + " ON "
+                + DbHelper.TABLE_CHALLENGE + "." + DbHelper.COLUMN_CHALLENGE_MESSAGE_ID
+                        + " = " +  DbHelper.TABLE_MESSAGE + "." + DbHelper.COLUMN_MESSAGE_ID;
+
+        String where =
+                " WHERE " + TABLE_CHALLENGE + "." + COLUMN_CHALLENGE_MESSAGE_ID +  " = " + messageId
+                + " AND " + TABLE_STATISTICS + "." + COLUMN_STATISTICS_USER_ID + " = " + getLoggedInUser().getId();
+
+        qb.setTables(query + where);
+
+        Cursor cursor = qb.query(database, null, null, null, null, null, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+
+                id = cursor.getLong(cursor.getColumnIndex(COLUMN_CHALLENGE_ID));
+
+                if (message == null) {
+
+                    String type = cursor.getString(cursor.getColumnIndex(COLUMN_MESSAGE_TYPE));
+                    Message.MessageType messageType = Message.MessageType.convert(type);
+                    long recipient = cursor.getLong(cursor.getColumnIndex(COLUMN_MESSAGE_RECIPIENT));
+                    String content = cursor.getString(cursor.getColumnIndex(COLUMN_MESSAGE_CONTENT));
+                    long created = cursor.getLong(cursor.getColumnIndex(COLUMN_MESSAGE_DATE_CREATED));
+                    long targetDeck = cursor.getLong(cursor.getColumnIndex(COLUMN_MESSAGE_TARGET_DECK));
+                    message = new Message(id, messageType, recipient, content, created, targetDeck);
+                }
+
+                if (cardDeck == null) {
+
+                    carddeckId = cursor.getLong(cursor.getColumnIndex(COLUMN_MESSAGE_TARGET_DECK));
+                    cardDeck = getCardDeck(carddeckId);
+                }
+
+                long cardId = cursor.getLong(cursor.getColumnIndex(COLUMN_STATISTICS_CARD_ID));
+                long userId = getLoggedInUser().getId();
+                float knowledge = cursor.getFloat(cursor.getColumnIndex(COLUMN_STATISTICS_KNOWLEDGE));
+                int drawer = cursor.getInt(cursor.getColumnIndex(COLUMN_STATISTICS_DRAWER));
+                long startDate = cursor.getLong(cursor.getColumnIndex(COLUMN_STATISTICS_START_DATE));
+                long endDate = cursor.getLong(cursor.getColumnIndex(COLUMN_STATISTICS_END_DATE));
+
+                Statistic statistic = new Statistic(userId, cardId, knowledge, drawer, startDate, endDate);
+
+                statistics.add(statistic);
+
+            } while (cursor.moveToNext());
+        }
+
+        cursor.close();
+
+        challenge = new Challenge(id, message, cardDeck, statistics, isChallengeCompleted(messageId, carddeckId));
+
+        return challenge;
+    }
+
+
+    /**
+     * Checks if all cards of a challenge are played
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     * @since 2017-02-19
+     *
+     * @param messageId
+     * @param deckId
+     * @return
+     */
+    public boolean isChallengeCompleted (long messageId, long deckId) {
+
+
+        int countPlayed = 0;
+
+
+        SQLiteQueryBuilder qb = new SQLiteQueryBuilder();
+
+        // base query
+        String query =
+                DbHelper.TABLE_FLASHCARD
+                        + " JOIN " + DbHelper.TABLE_STATISTICS + " ON "
+                        + DbHelper.TABLE_FLASHCARD + "." + DbHelper.COLUMN_FLASHCARD_ID
+                        + " = " +  DbHelper.TABLE_STATISTICS + "." + DbHelper.COLUMN_STATISTICS_CARD_ID
+                        + " JOIN " + DbHelper.TABLE_CHALLENGE + " ON "
+                        + DbHelper.TABLE_CHALLENGE + "." + DbHelper.COLUMN_CHALLENGE_STATISTIC_ID
+                        + " = " +  DbHelper.TABLE_STATISTICS + "." + DbHelper.COLUMN_STATISTICS_ID
+                        + " JOIN " + DbHelper.TABLE_MESSAGE + " ON "
+                        + DbHelper.TABLE_CHALLENGE + "." + DbHelper.COLUMN_CHALLENGE_MESSAGE_ID
+                        + " = " +  DbHelper.TABLE_MESSAGE + "." + DbHelper.COLUMN_MESSAGE_ID + " ";
+
+        String where =
+                 TABLE_CHALLENGE + "." + COLUMN_CHALLENGE_MESSAGE_ID +  " = " + messageId
+                        + " AND " + TABLE_STATISTICS + "." + COLUMN_STATISTICS_USER_ID + " = " + getLoggedInUser().getId()
+                        + " AND " + TABLE_FLASHCARD + "." + COLUMN_FLASHCARD_CARDDECK_ID + " = " + COLUMN_MESSAGE_TARGET_DECK ;
+
+        qb.setTables(query);
+
+        qb.setDistinct(true);
+
+        String[] columns = {
+                TABLE_FLASHCARD + "." + COLUMN_FLASHCARD_ID
+        };
+
+        Cursor cursor = qb.query(database, columns, where, null, null, null, null);
+
+        if (cursor.moveToFirst()) {
+
+            countPlayed = cursor.getCount();
+
+        }
+
+        return countPlayed == countCardDeckCards(deckId);
     }
 }

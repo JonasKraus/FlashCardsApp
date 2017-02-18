@@ -101,6 +101,24 @@ public class CardDeck {
         this.selectionDate = selectionDate;
     }
 
+    /**
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     * @since 2017-02-19
+     *
+     * @param id
+     * @param visible
+     * @param userGroup
+     * @param name
+     * @param description
+     */
+    public CardDeck(long id, boolean visible, UserGroup userGroup, String name, String description) {
+        this.id = id;
+        this.visible = visible;
+        this.userGroup = userGroup;
+        this.name = name;
+        this.description = description;
+    }
+
     public long getSelectionDate() {
         return selectionDate;
     }

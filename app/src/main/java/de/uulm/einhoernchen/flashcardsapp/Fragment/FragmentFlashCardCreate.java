@@ -401,7 +401,6 @@ public class FragmentFlashCardCreate extends Fragment implements View.OnClickLis
             case R.id.fab_card_answer_add:
             case R.id.button_answer_editor_add:
 
-                Log.d("add", "answer");
                 addAnswerToListView();
 
                 break;

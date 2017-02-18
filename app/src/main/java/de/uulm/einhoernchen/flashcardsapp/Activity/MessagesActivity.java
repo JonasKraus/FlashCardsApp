@@ -10,18 +10,13 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 
-import de.uulm.einhoernchen.flashcardsapp.Const.Constants;
 import de.uulm.einhoernchen.flashcardsapp.Database.DbManager;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.Dataset.ContentMessages;
-import de.uulm.einhoernchen.flashcardsapp.Fragment.Dataset.ContentUserGroups;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.FragmentPlayFlashCards;
-import de.uulm.einhoernchen.flashcardsapp.Fragment.FragmentPlayTabs;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.Interface.OnFragmentInteractionListenerAnswer;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.Interface.OnFragmentInteractionListenerMessage;
-import de.uulm.einhoernchen.flashcardsapp.Fragment.Interface.OnFragmentInteractionListenerUserGroup;
 import de.uulm.einhoernchen.flashcardsapp.Model.Answer;
 import de.uulm.einhoernchen.flashcardsapp.Model.Message;
-import de.uulm.einhoernchen.flashcardsapp.Model.UserGroup;
 import de.uulm.einhoernchen.flashcardsapp.R;
 import de.uulm.einhoernchen.flashcardsapp.Util.Globals;
 
@@ -75,7 +70,7 @@ public class MessagesActivity extends AppCompatActivity implements OnFragmentInt
 
         FragmentPlayFlashCards fragment = new FragmentPlayFlashCards();
 
-        fragment.setChallenge(message);
+        fragment.setMessage(message);
         fragment.setFab(this.fab);
 
         android.support.v4.app.FragmentTransaction fragmentTransaction =
@@ -99,7 +94,6 @@ public class MessagesActivity extends AppCompatActivity implements OnFragmentInt
             inflateFragmentPlay(item);
         }
 
-        Log.d("click", item.toString());
 
     }
 

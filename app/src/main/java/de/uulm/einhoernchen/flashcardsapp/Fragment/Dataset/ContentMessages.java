@@ -104,8 +104,6 @@ public class ContentMessages {
             @Override
             public void processFinish(List<Message> messages) {
 
-
-                Log.d("messages", messages.size() + "");
                 ContentMessages.messages = messages;
                 isUpToDate = false;
 

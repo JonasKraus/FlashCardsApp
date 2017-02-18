@@ -68,9 +68,7 @@ public class MessageDetailsActivity extends AppCompatActivity  implements OnFrag
         users = bundle.getParcelableArrayList("data");
         deckId = bundle.getLong("deckId");
 
-        Log.d("hier", "deckId" + deckId);
         String deckname = db.getCardDeckName(deckId);
-        Log.d("deckname", deckname);
         textViewTargetDeck.setText(deckname);
 
         setUsersListFragment(users);

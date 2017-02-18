@@ -153,9 +153,14 @@ public class DbHelper extends SQLiteOpenHelper {
     public static final String COLUMN_MESSAGE_DATE_CREATED = "created";            //4
     public static final String COLUMN_MESSAGE_TARGET_DECK = "targetDeck";          //5
 
+    public static final String TABLE_CHALLENGE = "challenge";
+    public static final String COLUMN_CHALLENGE_ID = "challengeId";                     //0
+    public static final String COLUMN_CHALLENGE_MESSAGE_ID = "messageId";               //1
+    public static final String COLUMN_CHALLENGE_STATISTIC_ID = "statisticId";           //2
+
     // Database name and version - increase when existing table is altered
     private static final String DATABASE_NAME = "flashcardsDb.db";
-    private static final int DATABASE_VERSION = 24; // @TODO revert version before first release
+    private static final int DATABASE_VERSION = 25; // @TODO revert version before first release
 
     /**
      * Database creation sql statement for table user
@@ -457,6 +462,18 @@ public class DbHelper extends SQLiteOpenHelper {
             + " integer not null"
             + ");";
 
+    private static final String CHALLENGE_CREATE = "create table "
+            + TABLE_CHALLENGE + "("
+            + COLUMN_CHALLENGE_ID
+            + " integer primary key NOT NULL, "
+            + COLUMN_CHALLENGE_MESSAGE_ID
+            + " integer NOT NULL , "
+            + COLUMN_CHALLENGE_STATISTIC_ID
+            + " integer NOT NULL, "
+            + " FOREIGN KEY(" + COLUMN_CHALLENGE_STATISTIC_ID + ") REFERENCES "  + TABLE_STATISTICS + "(" + COLUMN_STATISTICS_ID + "), "
+            + " FOREIGN KEY(" + COLUMN_CHALLENGE_MESSAGE_ID + ") REFERENCES "  + TABLE_MESSAGE + "(" + COLUMN_MESSAGE_ID + ") "
+            + ");";
+
     private static final String VOTING_CREATE_UNIQUE_INDEX_1 =
             "CREATE UNIQUE INDEX " + TABLE_VOTING + "_user_card "
                     + "ON " + TABLE_VOTING + "(" + COLUMN_VOTING_USER_ID + ", " + COLUMN_VOTING_CARD_ID + "); ";
@@ -498,6 +515,7 @@ public class DbHelper extends SQLiteOpenHelper {
         db.execSQL(VOTING_CREATE);
         db.execSQL(STATISTICS_CREATE);
         db.execSQL(MESSAGE_CREATE);
+        db.execSQL(CHALLENGE_CREATE);
         db.execSQL(VOTING_CREATE_UNIQUE_INDEX_1);
         db.execSQL(VOTING_CREATE_UNIQUE_INDEX_2);
         db.execSQL(USER_GROUP_JOIN_TABLE_CREATE_UNIQUE_INDEX);
@@ -527,6 +545,7 @@ public class DbHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_SETTINGS);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_STATISTICS);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_MESSAGE);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_CHALLENGE);
 
         onCreate(db);
     }
@@ -694,6 +713,13 @@ public class DbHelper extends SQLiteOpenHelper {
             COLUMN_MESSAGE_CONTENT,             //3
             COLUMN_MESSAGE_DATE_CREATED,        //4
             COLUMN_MESSAGE_TARGET_DECK          //5
+    };
+
+
+    public static String[] allChallengeColumns = {
+            COLUMN_CHALLENGE_ID,                    //0
+            COLUMN_CHALLENGE_MESSAGE_ID,            //1
+            COLUMN_CHALLENGE_STATISTIC_ID,          //2
     };
 }
 

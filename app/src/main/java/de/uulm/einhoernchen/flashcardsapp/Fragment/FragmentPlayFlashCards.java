@@ -94,7 +94,7 @@ public class FragmentPlayFlashCards extends Fragment implements View.OnClickList
     private ContentFlashCardAnswers contentAnswers;
     private Statistic statistic;
     private List<Statistic> statistics;
-    private Message challenge;
+    private Message message;
 
 
     public FragmentPlayFlashCards() {
@@ -148,7 +148,7 @@ public class FragmentPlayFlashCards extends Fragment implements View.OnClickList
         Globals.getProgressBar().setVisibility(View.VISIBLE);
         Globals.getProgressBar().setVisibility(View.GONE);
 
-        statistics = Statistic.getStatisticsOfSelectedCards(challenge); // TODO
+        statistics = Statistic.getStatisticsOfSelectedCards(message); // TODO
 
         if (statistics.size() == 0) {
 
@@ -637,6 +637,17 @@ public class FragmentPlayFlashCards extends Fragment implements View.OnClickList
                     nsContentAnswers.setVisibility(View.VISIBLE);
                 }
 
+                Log.d("messaeg null?", (message ==null)+"");
+
+                if (message != null) {
+
+                    db.saveChallenge(message.getId(), statistic.getId());
+
+                    Log.d("challenge",db.getChallengeByMessageId(message.getId()).isCompleted()+"");
+
+
+                }
+
                 // Next state will be to play next card
                 state = Constants.PLAY_QUESTION;
 
@@ -691,17 +702,17 @@ public class FragmentPlayFlashCards extends Fragment implements View.OnClickList
 
 
     /**
-     * Sets the challenge
+     * Sets the message
      * null if usual mode
      *
      * @author Jonas Kraus jonas.kraus@uni-ulm.de
      * @since 2017-02-17
      *
-     * @param challenge
+     * @param message
      */
-    public void setChallenge(Message challenge) {
+    public void setMessage(Message message) {
 
-        this.challenge = challenge;
+        this.message = message;
 
     }
 

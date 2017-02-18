@@ -72,7 +72,7 @@ public class Statistic {
      * @param startDate
      * @param endDate
      */
-    private Statistic(long userId, long cardId, float knowledge, int drawer, long startDate, long endDate) {
+    public Statistic(long userId, long cardId, float knowledge, int drawer, long startDate, long endDate) {
         this.userId = userId;
         this.cardId = cardId;
         this.knowledge = knowledge;
@@ -135,7 +135,7 @@ public class Statistic {
      *
      * @return
      */
-    public boolean save(float knowledge) {
+    public long save(float knowledge) {
 
         int drawer = getLatestDrawer(this.getCardId(), userId);
 
@@ -157,9 +157,11 @@ public class Statistic {
         values.put(COLUMN_STATISTICS_START_DATE, this.getStartDate());
         values.put(COLUMN_STATISTICS_END_DATE, System.currentTimeMillis());
 
-        database.insert(TABLE_STATISTICS, null, values);
+        long id = database.insert(TABLE_STATISTICS, null, values);
 
-        return true;
+        this.id = id;
+
+        return id;
     }
 
 
@@ -360,5 +362,9 @@ public class Statistic {
         cursor.close();
 
         return averageKnowledge;
+    }
+
+    public long getId() {
+        return id;
     }
 }

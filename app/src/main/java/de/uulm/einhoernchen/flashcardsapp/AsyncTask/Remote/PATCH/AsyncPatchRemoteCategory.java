@@ -77,7 +77,6 @@ public class AsyncPatchRemoteCategory extends AsyncTask<Long, Long, Long> {
                 wr.writeBytes(jsonObject.toString());
                 wr.flush();
 
-                Log.d("body category append", jsonObject.toString());
                 //Log.d(urlConnection.getRequestMethod() + " json", jsonObject.toString());
 
                 // TODO give message to main thread

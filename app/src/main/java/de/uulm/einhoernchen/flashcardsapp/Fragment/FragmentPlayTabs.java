@@ -73,7 +73,7 @@ public class FragmentPlayTabs extends Fragment {
         FragmentPagerAdapterPlay adapter = new FragmentPagerAdapterPlay(getChildFragmentManager());
 
         FragmentPlayFlashCards fragmentPlayFlashCards = new FragmentPlayFlashCards();
-        fragmentPlayFlashCards.setChallenge(challenge);
+        fragmentPlayFlashCards.setMessage(challenge);
 
         adapter.addFragment(fragmentPlayFlashCards, getResources().getString(R.string.tab_play));
         adapter.addFragment(new FragmentStatistics(), getResources().getString(R.string.toolbar_title_statistic));

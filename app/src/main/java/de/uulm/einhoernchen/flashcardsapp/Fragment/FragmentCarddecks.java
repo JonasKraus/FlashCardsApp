@@ -172,8 +172,6 @@ public class FragmentCarddecks extends Fragment implements View.OnClickListener,
     @Override
     public void onCarddeckListFragmentInteractionLongClick(CardDeck item) {
 
-        Log.d("click long", item.toString());
-
         createDialog(item);
 
 
