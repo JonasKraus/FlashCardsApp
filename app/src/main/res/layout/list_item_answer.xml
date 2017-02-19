@@ -1,19 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/card_view"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:layout_marginTop="5dp"
+    android:layout_marginBottom="5dp"
+    android:layout_marginLeft="-1dp"
+    android:layout_marginRight="-1dp"
+    android:padding="5dp"
+    card_view:cardCornerRadius="1dp">
+<LinearLayout
+
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_height="wrap_content"
     android:layout_width="match_parent"
-    app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    android:background="?android:attr/selectableItemBackground"
+    android:background="@color/white"
+    android:padding="@dimen/activity_horizontal_margin"
     android:orientation="vertical" >
 
+    <!--
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_marginBottom="4dp"
         android:layout_marginTop="6dp"
         android:background="@color/colorAccent"/>
+        -->
 
     <TextView
         android:id="@+id/id"
@@ -45,6 +60,15 @@
                 android:src="@drawable/ic_expand_less"
                 android:id="@+id/button_up_vote"
                 />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="-13dp"
+                android:paddingLeft="22dp"
+                android:textSize="@dimen/item_small_text_size"
+                android:id="@+id/text_view_listItem_card_rating"
+                android:text="+0"/>
 
             <ImageView
                 android:layout_width="50dp"
@@ -210,22 +234,10 @@
                 android:textSize="@dimen/item_small_text_size"
                 android:text="23.04.2016"/>
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingLeft="5dp"
-                android:paddingRight="5dp"
-                android:textSize="@dimen/item_small_text_size"
-                android:text="•"/>
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="@dimen/item_small_text_size"
-                android:id="@+id/text_view_listItem_card_rating"
-                android:text="+666"/>
         </LinearLayout>
 
     </LinearLayout>
 
 </LinearLayout>
+    </android.support.v7.widget.CardView>

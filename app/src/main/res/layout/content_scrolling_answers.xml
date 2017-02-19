@@ -5,16 +5,21 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/nested_scrollview_content_answers"
-    app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="de.uulm.einhoernchen.flashcardsapp.Activity.MainActivity"
-    tools:showIn="@layout/fragment_flashcard_parallax">
+    tools:showIn="@layout/fragment_flashcard_parallax"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior" >
 
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior">
+            android:orientation="vertical">
+
+
+            <FrameLayout
+                android:id="@+id/fragment_container_card_answer"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
 
             <Button
                 android:layout_width="wrap_content"
@@ -23,15 +28,6 @@
                 android:backgroundTint="@color/colorPrimary"
                 android:visibility="gone"
                 android:text="@string/answer_add"/>
-
-
-            <FrameLayout
-                android:id="@+id/fragment_container_card_answer"
-                app:layout_behavior="@string/appbar_scrolling_view_behavior"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-            </FrameLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -68,7 +64,6 @@
                 android:id="@+id/include_answer_editor"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="-29dp"
                 android:layout_marginBottom="@dimen/padding_list_bottom"/>
 
 
