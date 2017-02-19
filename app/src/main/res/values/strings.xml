@@ -223,6 +223,8 @@
     <string name="message_message">Message</string>
     <string name="title_activity_message_details">message details</string>
     <string name="title_activity_all_carddecks">all carddecks</string>
+    <string name="nav_challengeRanking">challenge ranking</string>
+    <string name="title_activity_challenges_ranking">challenges ranking</string>
 
 
 </resources>

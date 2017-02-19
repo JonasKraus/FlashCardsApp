@@ -25,9 +25,11 @@ import java.util.Locale;
 import de.uulm.einhoernchen.flashcardsapp.Model.Answer;
 import de.uulm.einhoernchen.flashcardsapp.Model.CardDeck;
 import de.uulm.einhoernchen.flashcardsapp.Model.Category;
+import de.uulm.einhoernchen.flashcardsapp.Model.Challenge;
 import de.uulm.einhoernchen.flashcardsapp.Model.FlashCard;
 import de.uulm.einhoernchen.flashcardsapp.Model.Message;
 import de.uulm.einhoernchen.flashcardsapp.Model.Question;
+import de.uulm.einhoernchen.flashcardsapp.Model.Statistic;
 import de.uulm.einhoernchen.flashcardsapp.Model.Tag;
 import de.uulm.einhoernchen.flashcardsapp.Model.User;
 import de.uulm.einhoernchen.flashcardsapp.Model.UserGroup;
@@ -628,6 +630,36 @@ public class JsonParser {
 
 
 
+    /**
+     * Reads an array of challenges
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     * @since 2017-02-19
+     *
+     * @param reader
+     * @return
+     */
+    private static List<Challenge> readChallengesArray(JsonReader reader) {
+        if (DEBUG) Log.d("parser Method", "readChallengesArray");
+
+        List<Challenge> challenges = new ArrayList<Challenge>();
+
+        try {
+            reader.beginArray();
+
+            while (reader.hasNext()) {
+
+                challenges.add(readChallenge(reader));
+            }
+            reader.endArray();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return challenges;
+    }
+
+
+
     private static Question readQuestion(JsonReader reader) {
         if (DEBUG) Log.d("parser Method", "readQuestion");
 
@@ -873,6 +905,68 @@ public class JsonParser {
             e.printStackTrace();
         }
         return new Message(id, messageType, recipient, content, created, targetDeck);
+    }
+
+
+    /**
+     * Parses a Challenge object and Creates a Model of it
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     * @since 2017-02-17
+     *
+     * @param reader
+     * @return
+     */
+    private static Challenge readChallenge(JsonReader reader) {
+        if (DEBUG) Log.d("parser Method", "readChallenge");
+
+        long id = -1;
+        Message message = null;
+        List<Statistic> statistics = new ArrayList<>();
+        boolean completed = false;
+        CardDeck cardDeck = null;
+
+        try {
+            reader.beginObject();
+            while (reader.hasNext()) {
+
+                String stringName = reader.nextName();
+
+                if (stringName.equals(JsonKeys.CHALLENGE_ID)) {
+
+                    id = reader.nextLong();
+
+                } else if (stringName.equals(JsonKeys.CHALLENGE_MESSAGE)) {
+
+                    message = readMessage(reader);
+
+                } else if (stringName.equals(JsonKeys.CHALLENGE_STATISTICS)) {
+
+                    //statistics = readStatistics(reader); TODO next
+
+                } else if (stringName.equals(JsonKeys.CHALLENGE_COMPLETED)) {
+
+                    completed = reader.nextBoolean();
+
+                } else {
+
+                    reader.skipValue();
+                }
+
+            }
+            reader.endObject();
+
+        } catch (IOException e) {
+
+            Log.e("error parse", e.getMessage());
+            e.printStackTrace();
+        }
+
+        if (message != null) {
+
+            cardDeck = Globals.getDb().getCardDeck(message.getTargetDeck());
+        }
+        return new Challenge(id, message, cardDeck, statistics, completed);
     }
 
 
@@ -1271,5 +1365,30 @@ public class JsonParser {
         }
 
         return messages;
+    }
+
+    public static List<Challenge> parseChallenges(InputStream inputStream) {
+        if (DEBUG) Log.d("parser Method", "parseChallenges");
+
+        List<Challenge> challenges = null;
+        JsonReader reader = null;
+        try {
+            reader = new JsonReader(new InputStreamReader(inputStream, "UTF-8"));
+
+            challenges = readChallengesArray(reader);
+        } catch (UnsupportedEncodingException e) {
+
+            e.printStackTrace();
+        } finally {
+
+            try {
+                reader.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+                Log.d("json parse users", e.getMessage());
+            }
+        }
+
+        return challenges;
     }
 }

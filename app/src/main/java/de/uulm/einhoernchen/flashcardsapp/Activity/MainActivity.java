@@ -631,6 +631,10 @@ public class MainActivity extends AppCompatActivity
 
             startActivity(new Intent(MainActivity.this, MessagesActivity.class));
 
+        }else if (id == R.id.nav_challengeRanking) {
+
+            startActivity(new Intent(MainActivity.this, ChallengesRankingActivity.class));
+
         } else if (id == R.id.nav_settings) {
 
             /* Uncomment to start Settings as fragment

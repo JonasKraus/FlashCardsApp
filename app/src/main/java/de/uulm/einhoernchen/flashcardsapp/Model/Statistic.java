@@ -165,6 +165,44 @@ public class Statistic {
     }
 
 
+/**
+     * Saves a statistic to the local database
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     * @since 2017-01-15
+     *
+     * @return
+     */
+    public long save() {
+
+        int drawer = getLatestDrawer(this.getCardId(), userId);
+
+        if (knowledge != 100 && drawer > 0) {
+
+            drawer = 0;
+        } else if (knowledge == 100 && drawer < Constants.COUNT_DRAWER) {
+
+            drawer += 1;
+        }
+
+        SQLiteDatabase database = Globals.getDb().getSQLiteDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_STATISTICS_USER_ID, this.getUserId());
+        values.put(COLUMN_STATISTICS_CARD_ID, this.getCardId());
+        values.put(COLUMN_STATISTICS_KNOWLEDGE, this.knowledge);
+        values.put(COLUMN_STATISTICS_DRAWER, this.drawer);
+        values.put(COLUMN_STATISTICS_START_DATE, this.getStartDate());
+        values.put(COLUMN_STATISTICS_END_DATE, this.endDate);
+
+        long id = database.insert(TABLE_STATISTICS, null, values);
+
+        this.id = id;
+
+        return id;
+    }
+
+
     /**
      * Gets the drawer where the card was before
      *

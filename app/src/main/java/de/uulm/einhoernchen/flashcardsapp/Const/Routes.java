@@ -39,4 +39,5 @@ public class Routes {
     public static final String USER_GROUPS = "groups";
     public static final String LOGIN = "login";
     public static final String MESSAGES = "messages";
+    public static final String CHALlENGES = "challenges";
 }

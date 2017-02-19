@@ -1,21 +1,14 @@
 package de.uulm.einhoernchen.flashcardsapp.Fragment.Dataset;
 
-import android.util.Log;
-
 import java.util.ArrayList;
 import java.util.List;
 
 import de.uulm.einhoernchen.flashcardsapp.AsyncTask.Local.AsyncGetLocalMessages;
-import de.uulm.einhoernchen.flashcardsapp.AsyncTask.Local.AsyncGetLocalUserGroups;
 import de.uulm.einhoernchen.flashcardsapp.AsyncTask.Local.AsyncSaveLocalMessages;
-import de.uulm.einhoernchen.flashcardsapp.AsyncTask.Local.AsyncSaveLocalUserGroups;
 import de.uulm.einhoernchen.flashcardsapp.AsyncTask.Remote.GET.AsyncGetRemoteMessages;
-import de.uulm.einhoernchen.flashcardsapp.AsyncTask.Remote.GET.AsyncGetRemoteUserGroups;
 import de.uulm.einhoernchen.flashcardsapp.Database.DbManager;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.FragmentMessages;
-import de.uulm.einhoernchen.flashcardsapp.Fragment.FragmentUserGroups;
 import de.uulm.einhoernchen.flashcardsapp.Model.Message;
-import de.uulm.einhoernchen.flashcardsapp.Model.UserGroup;
 import de.uulm.einhoernchen.flashcardsapp.R;
 import de.uulm.einhoernchen.flashcardsapp.Util.Globals;
 import de.uulm.einhoernchen.flashcardsapp.Util.ProcessConnectivity;

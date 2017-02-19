@@ -1,25 +1,14 @@
 package de.uulm.einhoernchen.flashcardsapp.Fragment.Dataset;
 
-import android.graphics.Color;
-import android.util.Log;
-
-import com.amulyakhare.textdrawable.TextDrawable;
-import com.amulyakhare.textdrawable.util.ColorGenerator;
-
 import java.util.ArrayList;
 import java.util.List;
 
-import de.uulm.einhoernchen.flashcardsapp.AsyncTask.Local.AsyncGetLocalUserGroups;
 import de.uulm.einhoernchen.flashcardsapp.AsyncTask.Local.AsyncGetLocalUsers;
 import de.uulm.einhoernchen.flashcardsapp.AsyncTask.Local.AsyncSaveLocalUsers;
 import de.uulm.einhoernchen.flashcardsapp.AsyncTask.Remote.GET.AsyncGetRemoteUsers;
 import de.uulm.einhoernchen.flashcardsapp.Database.DbManager;
-import de.uulm.einhoernchen.flashcardsapp.Fragment.Adapter.RecyclerViewAdapterUsers;
-import de.uulm.einhoernchen.flashcardsapp.Fragment.FragmentUserGroups;
-import de.uulm.einhoernchen.flashcardsapp.Fragment.FragmentUsers;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.FragmentUsersBinding;
 import de.uulm.einhoernchen.flashcardsapp.Model.User;
-import de.uulm.einhoernchen.flashcardsapp.Model.UserGroup;
 import de.uulm.einhoernchen.flashcardsapp.R;
 import de.uulm.einhoernchen.flashcardsapp.Util.Globals;
 import de.uulm.einhoernchen.flashcardsapp.Util.ProcessConnectivity;

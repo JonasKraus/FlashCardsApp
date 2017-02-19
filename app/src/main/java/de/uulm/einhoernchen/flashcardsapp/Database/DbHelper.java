@@ -696,30 +696,30 @@ public class DbHelper extends SQLiteOpenHelper {
 
 
     public static String[] allStatisticsColumns = {
-            COLUMN_STATISTICS_ID,            //0
-            COLUMN_STATISTICS_USER_ID,       //1
-            COLUMN_STATISTICS_CARD_ID,       //2
-            COLUMN_STATISTICS_KNOWLEDGE,     //3
-            COLUMN_STATISTICS_DRAWER,        //4
-            COLUMN_STATISTICS_START_DATE,    //5
-            COLUMN_STATISTICS_END_DATE       //6
+            TABLE_STATISTICS + "." + COLUMN_STATISTICS_ID,            //0
+            TABLE_STATISTICS + "." + COLUMN_STATISTICS_USER_ID,       //1
+            TABLE_STATISTICS + "." + COLUMN_STATISTICS_CARD_ID,       //2
+            TABLE_STATISTICS + "." + COLUMN_STATISTICS_KNOWLEDGE,     //3
+            TABLE_STATISTICS + "." + COLUMN_STATISTICS_DRAWER,        //4
+            TABLE_STATISTICS + "." + COLUMN_STATISTICS_START_DATE,    //5
+            TABLE_STATISTICS + "." + COLUMN_STATISTICS_END_DATE       //6
     };
 
 
     public static String[] allMessageColumns = {
-            COLUMN_MESSAGE_ID,                  //0
-            COLUMN_MESSAGE_TYPE,                //1
-            COLUMN_MESSAGE_RECIPIENT,          //2
-            COLUMN_MESSAGE_CONTENT,             //3
-            COLUMN_MESSAGE_DATE_CREATED,        //4
-            COLUMN_MESSAGE_TARGET_DECK          //5
+            TABLE_MESSAGE + "." + COLUMN_MESSAGE_ID,                  //0
+            TABLE_MESSAGE + "." + COLUMN_MESSAGE_TYPE,                //1
+            TABLE_MESSAGE + "." + COLUMN_MESSAGE_RECIPIENT,          //2
+            TABLE_MESSAGE + "." + COLUMN_MESSAGE_CONTENT,             //3
+            TABLE_MESSAGE + "." + COLUMN_MESSAGE_DATE_CREATED,        //4
+            TABLE_MESSAGE + "." + COLUMN_MESSAGE_TARGET_DECK          //5
     };
 
 
     public static String[] allChallengeColumns = {
-            COLUMN_CHALLENGE_ID,                    //0
-            COLUMN_CHALLENGE_MESSAGE_ID,            //1
-            COLUMN_CHALLENGE_STATISTIC_ID,          //2
+            TABLE_CHALLENGE + "." + COLUMN_CHALLENGE_ID,                    //0
+            TABLE_CHALLENGE + "." + COLUMN_CHALLENGE_MESSAGE_ID,            //1
+            TABLE_CHALLENGE + "." + COLUMN_CHALLENGE_STATISTIC_ID,          //2
     };
 }
 

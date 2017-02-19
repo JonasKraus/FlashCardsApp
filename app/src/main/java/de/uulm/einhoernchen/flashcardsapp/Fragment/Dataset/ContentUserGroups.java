@@ -1,23 +1,14 @@
 package de.uulm.einhoernchen.flashcardsapp.Fragment.Dataset;
 
-import android.os.Bundle;
-import android.util.Log;
-
 import java.util.ArrayList;
 import java.util.List;
 
-import de.uulm.einhoernchen.flashcardsapp.AsyncTask.Local.AsyncGetLocalFlashCardAnswers;
 import de.uulm.einhoernchen.flashcardsapp.AsyncTask.Local.AsyncGetLocalUserGroups;
-import de.uulm.einhoernchen.flashcardsapp.AsyncTask.Local.AsyncSaveLocalFlashCardAnswers;
 import de.uulm.einhoernchen.flashcardsapp.AsyncTask.Local.AsyncSaveLocalUserGroups;
-import de.uulm.einhoernchen.flashcardsapp.AsyncTask.Remote.GET.AsyncGetRemoteFlashCardAnswers;
 import de.uulm.einhoernchen.flashcardsapp.AsyncTask.Remote.GET.AsyncGetRemoteUserGroups;
 import de.uulm.einhoernchen.flashcardsapp.Database.DbManager;
-import de.uulm.einhoernchen.flashcardsapp.Fragment.FragmentFlashCardAnswers;
-import de.uulm.einhoernchen.flashcardsapp.Fragment.FragmentFlashcards;
+import de.uulm.einhoernchen.flashcardsapp.Fragment.FragmentChallengesRanking;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.FragmentUserGroups;
-import de.uulm.einhoernchen.flashcardsapp.Model.Answer;
-import de.uulm.einhoernchen.flashcardsapp.Model.Statistic;
 import de.uulm.einhoernchen.flashcardsapp.Model.UserGroup;
 import de.uulm.einhoernchen.flashcardsapp.R;
 import de.uulm.einhoernchen.flashcardsapp.Util.Globals;

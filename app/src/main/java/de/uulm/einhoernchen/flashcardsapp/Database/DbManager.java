@@ -44,6 +44,7 @@ public class DbManager extends DbHelper{
     private List<BarEntry> entriesForBarChart;
     private List<RadarEntry> entriesForRadarChart;
     private List<PieEntry> entriesForPieChart;
+    private List<Challenge> challenges;
 
 
     /**
@@ -2304,6 +2305,37 @@ public class DbManager extends DbHelper{
         return messages;
     }
 
+    public List<Challenge> getChallenges() {
+
+        List<Challenge> challenges = new ArrayList<>();
+
+        Cursor cursor = database.query(
+                DbHelper.TABLE_CHALLENGE
+                + " JOIN " + TABLE_MESSAGE + " ON " + TABLE_MESSAGE + "." + COLUMN_MESSAGE_ID + "=" + TABLE_CHALLENGE + "." + COLUMN_CHALLENGE_MESSAGE_ID,
+                allChallengeColumns,
+                COLUMN_MESSAGE_RECIPIENT + "=" + getLoggedInUser().getId(),
+                null, null, null, null);
+
+
+        if (cursor.moveToFirst()) {
+            do {
+
+                long id = cursor.getLong(cursor.getColumnIndex(COLUMN_CHALLENGE_ID));
+                /* TODO next
+                Message message = new Message();
+                long messageId = cursor.getLong(cursor.getColumnIndex(COLUMN_MESSAGE_ID));
+
+                challenges.add(new Challenge(id, ));
+                */
+
+            } while (cursor.moveToNext());
+        }
+
+        cursor.close();
+
+        return challenges;
+    }
+
 
     /**
      * Saves messages to the local db
@@ -2572,4 +2604,5 @@ public class DbManager extends DbHelper{
 
         return countPlayed == countCardDeckCards(deckId);
     }
+
 }

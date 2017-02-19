@@ -53,6 +53,15 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="de.uulm.einhoernchen.flashcardsapp.Activity.MainActivity" />
         </activity>
+        <activity
+            android:name=".Activity.ChallengesRankingActivity"
+            android:label="@string/title_activity_challenges_ranking"
+            android:parentActivityName=".Activity.MainActivity"
+            android:theme="@style/AppTheme">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="de.uulm.einhoernchen.flashcardsapp.Activity.MainActivity" />
+        </activity>
 
         <activity
             android:name=".Activity.CarddecksActivity"
