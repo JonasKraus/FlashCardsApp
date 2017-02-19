@@ -820,6 +820,7 @@ public class JsonParser {
         String content = "";
         long created = -1;
         long targetDeck = -1;
+        long sender = -1;
 
         try {
             reader.beginObject();
@@ -891,6 +892,18 @@ public class JsonParser {
                         reader.nextNull();
                     }
 
+                } else if (stringName.equals(JsonKeys.MESSAGE_SENDER)) {
+
+                    JsonToken check = reader.peek();
+
+                    if (check != JsonToken.NULL) {
+
+                        sender = readUser(reader).getId();
+                    } else {
+
+                        reader.nextNull();
+                    }
+
                 } else {
 
                     reader.skipValue();
@@ -904,7 +917,7 @@ public class JsonParser {
             Log.e("error parse", e.getMessage());
             e.printStackTrace();
         }
-        return new Message(id, messageType, recipient, content, created, targetDeck);
+        return new Message(id, messageType, recipient, content, created, targetDeck, sender);
     }
 
 

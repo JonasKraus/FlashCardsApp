@@ -152,6 +152,7 @@ public class DbHelper extends SQLiteOpenHelper {
     public static final String COLUMN_MESSAGE_CONTENT= "content";                  //3
     public static final String COLUMN_MESSAGE_DATE_CREATED = "created";            //4
     public static final String COLUMN_MESSAGE_TARGET_DECK = "targetDeck";          //5
+    public static final String COLUMN_MESSAGE_SENDER = "sender";                    //6
 
     public static final String TABLE_CHALLENGE = "challenge";
     public static final String COLUMN_CHALLENGE_ID = "challengeId";                     //0
@@ -160,7 +161,7 @@ public class DbHelper extends SQLiteOpenHelper {
 
     // Database name and version - increase when existing table is altered
     private static final String DATABASE_NAME = "flashcardsDb.db";
-    private static final int DATABASE_VERSION = 25; // @TODO revert version before first release
+    private static final int DATABASE_VERSION = 27; // @TODO revert version before first release
 
     /**
      * Database creation sql statement for table user
@@ -459,7 +460,9 @@ public class DbHelper extends SQLiteOpenHelper {
             + COLUMN_MESSAGE_DATE_CREATED
             + " time timestamp default (strftime('%s', 'now')),"
             + COLUMN_MESSAGE_TARGET_DECK
-            + " integer not null"
+            + " integer not null, "
+            + COLUMN_MESSAGE_SENDER
+            + " integer "
             + ");";
 
     private static final String CHALLENGE_CREATE = "create table "
@@ -712,7 +715,8 @@ public class DbHelper extends SQLiteOpenHelper {
             TABLE_MESSAGE + "." + COLUMN_MESSAGE_RECIPIENT,          //2
             TABLE_MESSAGE + "." + COLUMN_MESSAGE_CONTENT,             //3
             TABLE_MESSAGE + "." + COLUMN_MESSAGE_DATE_CREATED,        //4
-            TABLE_MESSAGE + "." + COLUMN_MESSAGE_TARGET_DECK          //5
+            TABLE_MESSAGE + "." + COLUMN_MESSAGE_TARGET_DECK,          //5
+            TABLE_MESSAGE + "." + COLUMN_MESSAGE_SENDER         //5
     };
 
 

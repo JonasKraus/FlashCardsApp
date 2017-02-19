@@ -116,6 +116,7 @@ public class JsonKeys {
     public static final String MESSAGE_CONTENT = "content";
     public static final String MESSAGE_CREATED = "created";
     public static final String MESSAGE_TARGET_DECK = "targetDeck";
+    public static final String MESSAGE_SENDER = "sender";
 
     public static final String CHALLENGE_ID = "challengeId";
     public static final String CHALLENGE_MESSAGE_ID = "messageId";

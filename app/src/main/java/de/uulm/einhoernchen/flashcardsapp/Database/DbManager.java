@@ -2295,7 +2295,8 @@ public class DbManager extends DbHelper{
                 String content = cursor.getString(cursor.getColumnIndex(COLUMN_MESSAGE_CONTENT));
                 long created = cursor.getLong(cursor.getColumnIndex(COLUMN_MESSAGE_DATE_CREATED));
                 long targetDeck = cursor.getLong(cursor.getColumnIndex(COLUMN_MESSAGE_TARGET_DECK));
-                messages.add(new Message(id, messageType, recipient, content, created, targetDeck));
+                long sender = cursor.getLong(cursor.getColumnIndex(COLUMN_MESSAGE_SENDER));
+                messages.add(new Message(id, messageType, recipient, content, created, targetDeck, sender));
 
             } while (cursor.moveToNext());
         }
@@ -2371,6 +2372,7 @@ public class DbManager extends DbHelper{
         values.put(DbHelper.COLUMN_MESSAGE_CONTENT, message.getContent());
         values.put(DbHelper.COLUMN_MESSAGE_DATE_CREATED, message.getCreated());
         values.put(DbHelper.COLUMN_MESSAGE_TARGET_DECK, message.getTargetDeck());
+        values.put(DbHelper.COLUMN_MESSAGE_SENDER, message.getSender());
 
         return database.insertWithOnConflict(TABLE_MESSAGE, null, values, SQLiteDatabase.CONFLICT_REPLACE);
     }
@@ -2519,7 +2521,8 @@ public class DbManager extends DbHelper{
                     String content = cursor.getString(cursor.getColumnIndex(COLUMN_MESSAGE_CONTENT));
                     long created = cursor.getLong(cursor.getColumnIndex(COLUMN_MESSAGE_DATE_CREATED));
                     long targetDeck = cursor.getLong(cursor.getColumnIndex(COLUMN_MESSAGE_TARGET_DECK));
-                    message = new Message(id, messageType, recipient, content, created, targetDeck);
+                    long sender = cursor.getLong(cursor.getColumnIndex(COLUMN_MESSAGE_SENDER));
+                    message = new Message(id, messageType, recipient, content, created, targetDeck, sender);
                 }
 
                 if (cardDeck == null) {

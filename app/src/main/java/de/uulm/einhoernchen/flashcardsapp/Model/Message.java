@@ -47,10 +47,11 @@ public class Message {
     private String content;
     private long created;
     private long targetDeck;
-
+    private long sender;
 
     // For parsing and faster access to the items
     private User receipientUser;
+    private User senderUser;
     private CardDeck targetCardDeck;
 
 
@@ -66,14 +67,16 @@ public class Message {
      * @param content
      * @param created
      * @param targetDeck
+     * @param sender
      */
-    public Message(long id, MessageType messageType, long receipient, String content, long created, long targetDeck) {
+    public Message(long id, MessageType messageType, long receipient, String content, long created, long targetDeck, long sender) {
         this.id = id;
         this.messageType = messageType;
         this.receipient = receipient;
         this.content = content;
         this.created = created;
         this.targetDeck = targetDeck;
+        this.sender = sender;
     }
 
 
@@ -88,13 +91,15 @@ public class Message {
      * @param content
      * @param created
      * @param targetDeck
+     * @param sender
      */
-    public Message(MessageType messageType, long receipient, String content, long created, long targetDeck) {
+    public Message(MessageType messageType, long receipient, String content, long created, long targetDeck, long sender) {
         this.messageType = messageType;
         this.receipient = receipient;
         this.content = content;
         this.created = created;
         this.targetDeck = targetDeck;
+        this.sender = sender;
     }
 
 
@@ -112,13 +117,15 @@ public class Message {
      * @param created
      * @param targetDeck
      */
-    public Message(long id, MessageType messageType, User recipient, String content, long created, CardDeck targetDeck) {
+    public Message(long id, MessageType messageType, User recipient, String content, long created, CardDeck targetDeck, User senderUser) {
+        this.id = id;
 
         this.messageType = messageType;
         this.receipientUser = recipient;
         this.content = content;
         this.created = created;
         this.targetCardDeck = targetDeck;
+        this.senderUser = senderUser;
     }
 
     public long getId() {
@@ -167,6 +174,38 @@ public class Message {
 
     public void setTargetDeck(long targetDeck) {
         this.targetDeck = targetDeck;
+    }
+
+    public long getSender() {
+        return sender;
+    }
+
+    public void setSender(long sender) {
+        this.sender = sender;
+    }
+
+    public User getReceipientUser() {
+        return receipientUser;
+    }
+
+    public void setReceipientUser(User receipientUser) {
+        this.receipientUser = receipientUser;
+    }
+
+    public User getSenderUser() {
+        return senderUser;
+    }
+
+    public void setSenderUser(User senderUser) {
+        this.senderUser = senderUser;
+    }
+
+    public CardDeck getTargetCardDeck() {
+        return targetCardDeck;
+    }
+
+    public void setTargetCardDeck(CardDeck targetCardDeck) {
+        this.targetCardDeck = targetCardDeck;
     }
 
     @Override

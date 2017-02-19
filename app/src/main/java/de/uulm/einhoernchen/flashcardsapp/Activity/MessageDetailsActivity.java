@@ -95,8 +95,11 @@ public class MessageDetailsActivity extends AppCompatActivity  implements OnFrag
                 JSONObject jsonObjectMessage = new JSONObject();
 
                 JSONObject jsonObjectUser = new JSONObject();
+                JSONObject jsonObjectUserSender = new JSONObject();
                 jsonObjectUser.put(JsonKeys.USER_ID, users.get(i).getId());
                 jsonObjectMessage.put(JsonKeys.MESSAGE_RECIPIENT, jsonObjectUser);
+                jsonObjectUserSender.put(JsonKeys.USER_ID, Globals.getDb().getLoggedInUser().getId());
+                jsonObjectMessage.put(JsonKeys.MESSAGE_SENDER, jsonObjectUserSender);
 
 
                 jsonObjectMessage.put(JsonKeys.MESSAGE_CONTENT, content);
