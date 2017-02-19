@@ -146,7 +146,6 @@ public class FragmentPlayFlashCards extends Fragment implements View.OnClickList
         fab.setOnClickListener(this);
 
         Globals.getProgressBar().setVisibility(View.VISIBLE);
-        Globals.getProgressBar().setVisibility(View.GONE);
 
         statistics = Statistic.getStatisticsOfSelectedCards(message); // TODO
 
@@ -161,6 +160,9 @@ public class FragmentPlayFlashCards extends Fragment implements View.OnClickList
 
             currentFlashcard = db.getFlashCard(statistics.get(position).getCardId());
         }
+
+        Globals.getProgressBar().setVisibility(View.GONE);
+
     }
 
 
@@ -351,7 +353,7 @@ public class FragmentPlayFlashCards extends Fragment implements View.OnClickList
             nsContentAnswers.setVisibility(View.VISIBLE);
         } else {
 
-            nsContentAnswers.setVisibility(View.GONE);
+            nsContentAnswers.setVisibility(View.INVISIBLE);
         }
 
         // Set the cardid to the statistic object
