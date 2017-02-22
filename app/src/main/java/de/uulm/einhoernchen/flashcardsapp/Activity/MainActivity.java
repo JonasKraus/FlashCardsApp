@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.SearchView;
 import android.util.Log;
@@ -355,17 +356,32 @@ public class MainActivity extends AppCompatActivity
      */
     private void inflateFragmentPlay() {
 
-        catalogueState = Constants.PLAY;
+        if (db.countSelection() > 0) {
 
-        Log.d("frag", (fragmentPlay == null) + "");
+            catalogueState = Constants.PLAY;
 
-        fragmentPlay = fragmentPlay == null ? new FragmentPlayTabs() : fragmentPlay;
-        android.support.v4.app.FragmentTransaction fragmentTransaction =
-                getSupportFragmentManager().beginTransaction();
 
-        // Keep attention that this is replaced and not added
-        fragmentTransaction.replace(R.id.fragment_container_main, fragmentPlay);
-        fragmentTransaction.commit();
+            fragmentPlay = fragmentPlay == null ? new FragmentPlayTabs() : fragmentPlay;
+            android.support.v4.app.FragmentTransaction fragmentTransaction =
+                    getSupportFragmentManager().beginTransaction();
+
+            // Keep attention that this is replaced and not added
+            fragmentTransaction.replace(R.id.fragment_container_main, fragmentPlay);
+            fragmentTransaction.commit();
+        } else {
+
+            Snackbar snackbar = Snackbar
+                    .make(this.findViewById(R.id.fragment_container_main), R.string.snackbar_no_selected_cards, Snackbar.LENGTH_LONG)
+                    .setAction(R.string.snackbar_action_go_to_catalog, new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+
+                            setCategoryList(false);
+                        }
+                    });
+
+            snackbar.show();
+        }
 
     }
 

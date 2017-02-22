@@ -225,6 +225,8 @@
     <string name="title_activity_all_carddecks">all carddecks</string>
     <string name="nav_challengeRanking">challenge ranking</string>
     <string name="title_activity_challenges_ranking">challenges ranking</string>
+    <string name="snackbar_no_selected_cards">no selected cards</string>
+    <string name="snackbar_action_go_to_catalog">go to catalog</string>
 
 
 </resources>

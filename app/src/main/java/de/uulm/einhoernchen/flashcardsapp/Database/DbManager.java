@@ -2046,6 +2046,33 @@ public class DbManager extends DbHelper{
 
 
     /**
+     * Counts how many cards are selected
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     * @since 2017-02-22
+     *
+     * @return count
+     */
+    public float countSelection() {
+        String[] columns = {COLUMN_SELECTION_ID};
+
+        float count = 0;
+
+        Cursor cursor = database.query(TABLE_SELECTION,
+                columns,
+                COLUMN_SELECTION_USER_ID + "=" + getLoggedInUser().getId(),
+                null, null,
+                null, null);
+
+        if (cursor.moveToFirst()) {
+             count = cursor.getCount();
+        }
+
+        return count;
+    }
+
+
+    /**
      * Saves a list of user groups to the db
      *
      * @author Jonas Kraus jonas.kraus@uni-ulm.de
