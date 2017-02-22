@@ -816,11 +816,11 @@ public class JsonParser {
 
         long id = -1;
         Message.MessageType messageType = Message.MessageType.DECK_CHALLENGE_MESSAGE;
-        long recipient = -1;
+        User recipient = null;
         String content = "";
         long created = -1;
-        long targetDeck = -1;
-        long sender = -1;
+        CardDeck targetDeck = null;
+        User sender = null;
 
         try {
             reader.beginObject();
@@ -850,7 +850,7 @@ public class JsonParser {
 
                     if (check != JsonToken.NULL) {
 
-                        recipient = readUser(reader).getId();
+                        recipient = readUser(reader);
                     } else {
 
                         reader.nextNull();
@@ -886,7 +886,7 @@ public class JsonParser {
 
                     if (check != JsonToken.NULL) {
 
-                        targetDeck = readCarddeck(reader).getId();
+                        targetDeck = readCarddeck(reader);
                     } else {
 
                         reader.nextNull();
@@ -898,7 +898,7 @@ public class JsonParser {
 
                     if (check != JsonToken.NULL) {
 
-                        sender = readUser(reader).getId();
+                        sender = readUser(reader);
                     } else {
 
                         reader.nextNull();
@@ -977,7 +977,7 @@ public class JsonParser {
 
         if (message != null) {
 
-            cardDeck = Globals.getDb().getCardDeck(message.getTargetDeck());
+            cardDeck = message.getTargetCardDeck();
         }
         return new Challenge(id, message, cardDeck, statistics, completed);
     }

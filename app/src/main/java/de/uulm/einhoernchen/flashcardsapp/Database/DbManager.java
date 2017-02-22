@@ -2318,12 +2318,20 @@ public class DbManager extends DbHelper{
                 long id = cursor.getLong(cursor.getColumnIndex(COLUMN_MESSAGE_ID));
                 String type = cursor.getString(cursor.getColumnIndex(COLUMN_MESSAGE_TYPE));
                 Message.MessageType messageType = Message.MessageType.convert(type);
+
                 long recipient = cursor.getLong(cursor.getColumnIndex(COLUMN_MESSAGE_RECIPIENT));
+                User userRecipient = getUser(recipient);
+
                 String content = cursor.getString(cursor.getColumnIndex(COLUMN_MESSAGE_CONTENT));
                 long created = cursor.getLong(cursor.getColumnIndex(COLUMN_MESSAGE_DATE_CREATED));
+
                 long targetDeck = cursor.getLong(cursor.getColumnIndex(COLUMN_MESSAGE_TARGET_DECK));
+                CardDeck cardDeck = getCardDeck(targetDeck);
+
                 long sender = cursor.getLong(cursor.getColumnIndex(COLUMN_MESSAGE_SENDER));
-                messages.add(new Message(id, messageType, recipient, content, created, targetDeck, sender));
+                User userSender = getUser(sender);
+
+                messages.add(new Message(id, messageType, userRecipient, content, created, cardDeck, userSender));
 
             } while (cursor.moveToNext());
         }
@@ -2395,11 +2403,11 @@ public class DbManager extends DbHelper{
         ContentValues values = new ContentValues();
         values.put(DbHelper.COLUMN_MESSAGE_ID, message.getId());
         values.put(DbHelper.COLUMN_MESSAGE_TYPE, message.getMessageType().toString());
-        values.put(DbHelper.COLUMN_MESSAGE_RECIPIENT, message.getReceipient());
+        values.put(DbHelper.COLUMN_MESSAGE_RECIPIENT, message.getRecipient().getId());
         values.put(DbHelper.COLUMN_MESSAGE_CONTENT, message.getContent());
         values.put(DbHelper.COLUMN_MESSAGE_DATE_CREATED, message.getCreated());
-        values.put(DbHelper.COLUMN_MESSAGE_TARGET_DECK, message.getTargetDeck());
-        values.put(DbHelper.COLUMN_MESSAGE_SENDER, message.getSender());
+        values.put(DbHelper.COLUMN_MESSAGE_TARGET_DECK, message.getTargetCardDeck().getId());
+        values.put(DbHelper.COLUMN_MESSAGE_SENDER, message.getSender().getId());
 
         return database.insertWithOnConflict(TABLE_MESSAGE, null, values, SQLiteDatabase.CONFLICT_REPLACE);
     }
@@ -2542,20 +2550,23 @@ public class DbManager extends DbHelper{
 
                 if (message == null) {
 
+                    messageId = cursor.getLong(cursor.getColumnIndex(COLUMN_MESSAGE_ID));
                     String type = cursor.getString(cursor.getColumnIndex(COLUMN_MESSAGE_TYPE));
                     Message.MessageType messageType = Message.MessageType.convert(type);
+
                     long recipient = cursor.getLong(cursor.getColumnIndex(COLUMN_MESSAGE_RECIPIENT));
+                    User userRecipient = getUser(recipient);
+
                     String content = cursor.getString(cursor.getColumnIndex(COLUMN_MESSAGE_CONTENT));
                     long created = cursor.getLong(cursor.getColumnIndex(COLUMN_MESSAGE_DATE_CREATED));
+
                     long targetDeck = cursor.getLong(cursor.getColumnIndex(COLUMN_MESSAGE_TARGET_DECK));
+                    cardDeck = getCardDeck(targetDeck);
+
                     long sender = cursor.getLong(cursor.getColumnIndex(COLUMN_MESSAGE_SENDER));
-                    message = new Message(id, messageType, recipient, content, created, targetDeck, sender);
-                }
+                    User userSender = getUser(sender);
 
-                if (cardDeck == null) {
-
-                    carddeckId = cursor.getLong(cursor.getColumnIndex(COLUMN_MESSAGE_TARGET_DECK));
-                    cardDeck = getCardDeck(carddeckId);
+                    message = new Message(messageId, messageType, userRecipient, content, created, cardDeck, userSender);
                 }
 
                 long cardId = cursor.getLong(cursor.getColumnIndex(COLUMN_STATISTICS_CARD_ID));

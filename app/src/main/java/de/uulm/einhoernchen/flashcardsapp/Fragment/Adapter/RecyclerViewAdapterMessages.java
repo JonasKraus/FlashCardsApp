@@ -21,9 +21,7 @@ import java.util.List;
 import de.uulm.einhoernchen.flashcardsapp.Database.DbManager;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.Interface.OnFragmentInteractionListenerMessage;
 import de.uulm.einhoernchen.flashcardsapp.Model.Filter.MessagesFilter;
-import de.uulm.einhoernchen.flashcardsapp.Model.Filter.UserGroupFilter;
 import de.uulm.einhoernchen.flashcardsapp.Model.Message;
-import de.uulm.einhoernchen.flashcardsapp.Model.UserGroup;
 import de.uulm.einhoernchen.flashcardsapp.R;
 import de.uulm.einhoernchen.flashcardsapp.Util.Globals;
 
@@ -71,10 +69,11 @@ public class RecyclerViewAdapterMessages extends RecyclerView.Adapter<RecyclerVi
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.mItem = messages.get(position);
         // holder.mIdView.setText(messages.get(position).getId()+""); TODO Wird das benötigt?
-        holder.textviewMessageType.setText(messages.get(position).getMessageType().toString());
+        holder.textViewMessageType.setText(messages.get(position).getMessageType().toString());
+        holder.textViewMessageSender.setText(messages.get(position).getSender().getName());
 
         holder.textViewMessageContent.setText(messages.get(position).getContent());
-        holder.textViewMessageTargetDeck.setText(Globals.getDb().getCardDeckName(messages.get(position).getTargetDeck()));
+        holder.textViewMessageTargetDeck.setText(messages.get(position).getTargetCardDeck().getName());
         holder.textViewMessageDate.setText((new Date(messages.get(position).getCreated())).toGMTString());
 
         setViewState(holder, position);
@@ -185,7 +184,8 @@ public class RecyclerViewAdapterMessages extends RecyclerView.Adapter<RecyclerVi
     public class ViewHolder extends RecyclerView.ViewHolder {
         public final View mView;
         public final TextView mIdView;
-        public final TextView textviewMessageType;
+        public final TextView textViewMessageType;
+        public final TextView textViewMessageSender;
         public final TextView textViewMessageContent;
         public final TextView textViewMessageTargetDeck;
         public final TextView textViewMessageDate;
@@ -207,7 +207,8 @@ public class RecyclerViewAdapterMessages extends RecyclerView.Adapter<RecyclerVi
 
             mView = view;
             mIdView = (TextView) view.findViewById(R.id.id);
-            textviewMessageType = (TextView) view.findViewById(R.id.textview_message_type);
+            textViewMessageType = (TextView) view.findViewById(R.id.textview_message_type);
+            textViewMessageSender = (TextView) view.findViewById(R.id.textview_message_sender);
             textViewMessageContent = (TextView) view.findViewById(R.id.textview_message_content);
             textViewMessageTargetDeck = (TextView) view.findViewById(R.id.textview_message_target_deck);
             textViewMessageDate = (TextView) view.findViewById(R.id.textview_message_date);
@@ -220,7 +221,7 @@ public class RecyclerViewAdapterMessages extends RecyclerView.Adapter<RecyclerVi
 
         @Override
         public String toString() {
-            return super.toString() + " '" + textviewMessageType.getText() + "'";
+            return super.toString() + " '" + textViewMessageType.getText() + "'";
         }
 
     }

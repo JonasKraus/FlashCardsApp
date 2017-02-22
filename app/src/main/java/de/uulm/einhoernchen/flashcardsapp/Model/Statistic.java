@@ -312,7 +312,7 @@ public class Statistic {
                     "FROM flashcard\n" +
                     "    LEFT JOIN statistics ON flashcard.flashcardId = statistics.cardId\n" +
                     "    JOIN user ON user.isLoggedIn = 1\n" +
-                    "    WHERE flashcard.cardDeckId = " + challenge.getTargetDeck() +
+                    "    WHERE flashcard.cardDeckId = " + challenge.getTargetCardDeck().getId() +
                     "     GROUP BY (flashcard.flashcardId)\n" +
                     "    " + orderBy;
 

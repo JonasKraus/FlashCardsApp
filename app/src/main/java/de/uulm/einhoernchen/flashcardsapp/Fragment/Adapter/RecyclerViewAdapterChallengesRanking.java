@@ -66,7 +66,7 @@ public class RecyclerViewAdapterChallengesRanking extends RecyclerView.Adapter<R
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.mItem = challenges.get(position);
         // holder.mIdView.setText(challenges.get(position).getId()+""); TODO Wird das benötigt?
-        holder.textviewName.setText(Globals.getDb().getCardDeckName(challenges.get(position).getMessage().getTargetDeck()));
+        holder.textviewName.setText(challenges.get(position).getMessage().getTargetCardDeck().getName());
         holder.textViewdescription.setVisibility(View.VISIBLE);
         holder.textViewdescription.setText(challenges.get(position).getMessage().getContent());
 

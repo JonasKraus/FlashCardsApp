@@ -8,6 +8,7 @@ package de.uulm.einhoernchen.flashcardsapp.Model;
 public class Message {
 
     public enum MessageType {
+
         DECK_CHALLENGE_MESSAGE("deckChallengeMessage");
 
         private final String text;
@@ -43,64 +44,11 @@ public class Message {
 
     private long id;
     private MessageType messageType;
-    private long receipient;
     private String content;
     private long created;
-    private long targetDeck;
-    private long sender;
-
-    // For parsing and faster access to the items
-    private User receipientUser;
-    private User senderUser;
+    private User recipient;
+    private User sender;
     private CardDeck targetCardDeck;
-
-
-    /**
-     * Constructor for a received message
-     *
-     * @author Jonas Kraus jonas.kraus@uni-ulm.de
-     * @since 2017-02-15
-     *
-     * @param id
-     * @param messageType
-     * @param receipient
-     * @param content
-     * @param created
-     * @param targetDeck
-     * @param sender
-     */
-    public Message(long id, MessageType messageType, long receipient, String content, long created, long targetDeck, long sender) {
-        this.id = id;
-        this.messageType = messageType;
-        this.receipient = receipient;
-        this.content = content;
-        this.created = created;
-        this.targetDeck = targetDeck;
-        this.sender = sender;
-    }
-
-
-    /**
-     * Constructor for constructing a message and send it
-     *
-     * @author Jonas Kraus jonas.kraus@uni-ulm.de
-     * @since 2017-02-15
-     *
-     * @param messageType
-     * @param receipient
-     * @param content
-     * @param created
-     * @param targetDeck
-     * @param sender
-     */
-    public Message(MessageType messageType, long receipient, String content, long created, long targetDeck, long sender) {
-        this.messageType = messageType;
-        this.receipient = receipient;
-        this.content = content;
-        this.created = created;
-        this.targetDeck = targetDeck;
-        this.sender = sender;
-    }
 
 
     /**
@@ -121,11 +69,11 @@ public class Message {
         this.id = id;
 
         this.messageType = messageType;
-        this.receipientUser = recipient;
+        this.recipient = recipient;
         this.content = content;
         this.created = created;
         this.targetCardDeck = targetDeck;
-        this.senderUser = senderUser;
+        this.sender = senderUser;
     }
 
     public long getId() {
@@ -144,14 +92,6 @@ public class Message {
         this.messageType = messageType;
     }
 
-    public long getReceipient() {
-        return receipient;
-    }
-
-    public void setReceipient(long receipient) {
-        this.receipient = receipient;
-    }
-
     public String getContent() {
         return content;
     }
@@ -168,36 +108,20 @@ public class Message {
         this.created = created;
     }
 
-    public long getTargetDeck() {
-        return targetDeck;
-    }
-
-    public void setTargetDeck(long targetDeck) {
-        this.targetDeck = targetDeck;
-    }
-
-    public long getSender() {
+    public User getSender() {
         return sender;
     }
 
-    public void setSender(long sender) {
+    public void setSender(User sender) {
         this.sender = sender;
     }
 
-    public User getReceipientUser() {
-        return receipientUser;
+    public User getRecipient() {
+        return recipient;
     }
 
-    public void setReceipientUser(User receipientUser) {
-        this.receipientUser = receipientUser;
-    }
-
-    public User getSenderUser() {
-        return senderUser;
-    }
-
-    public void setSenderUser(User senderUser) {
-        this.senderUser = senderUser;
+    public void setRecipient(User recipient) {
+        this.recipient = recipient;
     }
 
     public CardDeck getTargetCardDeck() {
@@ -213,10 +137,10 @@ public class Message {
         return "Message{" +
                 "id=" + id +
                 ", messageType=" + messageType +
-                ", receipient=" + receipient +
+                ", receipient=" + recipient.getName() +
                 ", content='" + content + '\'' +
                 ", created=" + created +
-                ", targetDeck=" + targetDeck +
+                ", targetDeck=" + targetCardDeck.getName() +
                 '}';
     }
 }
