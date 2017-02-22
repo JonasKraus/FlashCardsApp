@@ -22,6 +22,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import de.uulm.einhoernchen.flashcardsapp.AsyncTask.Local.AsyncSaveLocalFlashCards;
 import de.uulm.einhoernchen.flashcardsapp.Model.Answer;
 import de.uulm.einhoernchen.flashcardsapp.Model.CardDeck;
 import de.uulm.einhoernchen.flashcardsapp.Model.Category;
@@ -267,8 +268,10 @@ public class JsonParser {
                         reader.nextNull();
                     }
 
-                /*} else if (stringName.equals(JsonKeys.CARDDECK_CARDS)) {
-                    cards = readFlashCardArray(reader);*/
+                } else if (stringName.equals(JsonKeys.CARDDECK_CARDS)) {
+
+                    //cards = readFlashCardArray(reader);
+
                 } else {
                     reader.skipValue();
                 }

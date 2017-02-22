@@ -3,6 +3,7 @@ package de.uulm.einhoernchen.flashcardsapp.Model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import de.uulm.einhoernchen.flashcardsapp.Util.JsonKeys;
@@ -34,52 +35,8 @@ public class CardDeck {
     //this cascades from the "tag" to "join_cards_tag" - e.g. tag.delete -> delete evey entry with tag.id
     @JsonProperty(JsonKeys.CARDDECK_CARDS)
     private List<FlashCard> cards;
-
-    public CardDeck(String name) {
-        this.name = name;
-    }
-
-    public CardDeck(String name, String description, List<FlashCard> cards) {
-        this.name = name;
-        this.description = description;
-        this.cards = cards;
-    }
-
-    public CardDeck(String name, String description) {
-        this.name = name;
-        this.description = description;
-    }
-
-    public CardDeck(CardDeck otherDeck) {
-        this.name = otherDeck.getName();
-        this.description = otherDeck.getDescription();
-        this.cards = otherDeck.getCards();
-        this.userGroup=otherDeck.getUserGroup();
-        userGroup.addDeck(this);
-        this.visible=otherDeck.isVisible();
-    }
-
     private int rating = 0;
 
-    /**
-     * @author Jonas Kraus jonas.kraus@uni-ulm.de
-     *
-     * @param id
-     * @param visible
-     * @param userGroup
-     * @param name
-     * @param description
-     * @param cards
-     */
-    public CardDeck(long id, boolean visible, UserGroup userGroup, String name, String description, List<FlashCard> cards) {
-        this.id = id;
-        this.visible = visible;
-        this.userGroup = userGroup;
-        this.name = name;
-        this.description = description;
-        this.cards = cards;
-        userGroup.addDeck(this);
-    }
 
     /**
      *
@@ -101,23 +58,6 @@ public class CardDeck {
         this.selectionDate = selectionDate;
     }
 
-    /**
-     * @author Jonas Kraus jonas.kraus@uni-ulm.de
-     * @since 2017-02-19
-     *
-     * @param id
-     * @param visible
-     * @param userGroup
-     * @param name
-     * @param description
-     */
-    public CardDeck(long id, boolean visible, UserGroup userGroup, String name, String description) {
-        this.id = id;
-        this.visible = visible;
-        this.userGroup = userGroup;
-        this.name = name;
-        this.description = description;
-    }
 
     public long getSelectionDate() {
         return selectionDate;

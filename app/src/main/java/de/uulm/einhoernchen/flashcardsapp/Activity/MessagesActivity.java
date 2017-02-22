@@ -3,6 +3,7 @@ package de.uulm.einhoernchen.flashcardsapp.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -19,6 +20,7 @@ import de.uulm.einhoernchen.flashcardsapp.Model.Answer;
 import de.uulm.einhoernchen.flashcardsapp.Model.Message;
 import de.uulm.einhoernchen.flashcardsapp.R;
 import de.uulm.einhoernchen.flashcardsapp.Util.Globals;
+import de.uulm.einhoernchen.flashcardsapp.Util.ProcessConnectivity;
 
 public class MessagesActivity extends AppCompatActivity implements OnFragmentInteractionListenerMessage, OnFragmentInteractionListenerAnswer {
 
@@ -38,7 +40,13 @@ public class MessagesActivity extends AppCompatActivity implements OnFragmentInt
             public void onClick(View view) {
 
 
-                startActivity(new Intent(MessagesActivity.this, CarddecksActivity.class));
+                if (ProcessConnectivity.isOk(getApplicationContext())) {
+
+                    startActivity(new Intent(MessagesActivity.this, CarddecksActivity.class));
+                } else {
+
+                    Snackbar.make(view.getRootView(), getApplicationContext().getString(R.string.service_unavailable), Snackbar.LENGTH_LONG).show();
+                }
 
 
             }

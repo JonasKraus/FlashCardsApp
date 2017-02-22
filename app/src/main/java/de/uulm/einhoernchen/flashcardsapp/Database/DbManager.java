@@ -848,6 +848,7 @@ public class DbManager extends DbHelper{
                 boolean isSelected = selectionDate > 0;
 
                 UserGroup userGroup = getUserGroup(cardDeckGroupId);
+
                 cardDecks.add(new CardDeck(cardDeckId,cardDeckVisible, userGroup,cardDeckName, cardDeckDescription, selectionDate));
 
             } while (cursor.moveToNext());
@@ -888,7 +889,7 @@ public class DbManager extends DbHelper{
 
             UserGroup userGroup = getUserGroup(cardDeckGroupId);
 
-            cardDeck = new CardDeck(cardDeckId, cardDeckVisible, userGroup,cardDeckName, cardDeckDescription);
+            cardDeck = new CardDeck(cardDeckId, cardDeckVisible, userGroup,cardDeckName, cardDeckDescription, 0);
 
         }
 

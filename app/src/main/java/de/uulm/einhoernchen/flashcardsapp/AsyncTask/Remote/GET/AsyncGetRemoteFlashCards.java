@@ -9,6 +9,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.List;
 
+import de.uulm.einhoernchen.flashcardsapp.AsyncTask.Local.AsyncSaveLocalFlashCards;
 import de.uulm.einhoernchen.flashcardsapp.Const.Routes;
 import de.uulm.einhoernchen.flashcardsapp.Model.FlashCard;
 import de.uulm.einhoernchen.flashcardsapp.Util.Globals;
@@ -89,7 +90,17 @@ public class AsyncGetRemoteFlashCards extends AsyncTask<Long, Long, List<FlashCa
         }
 
         progressBar.setVisibility(View.GONE);
-        delegate.processFinish(flashCards);
+
+        if (delegate != null) {
+
+            delegate.processFinish(flashCards);
+        } else {
+
+            AsyncSaveLocalFlashCards asyncSaveLocalFlashCards = new AsyncSaveLocalFlashCards(parentId);
+            asyncSaveLocalFlashCards.setFlashCards(flashCards);
+
+            asyncSaveLocalFlashCards.execute();
+        }
 
     }
 

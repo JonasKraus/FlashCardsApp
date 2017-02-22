@@ -9,6 +9,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 
+import de.uulm.einhoernchen.flashcardsapp.AsyncTask.Remote.GET.AsyncGetRemoteCarddecks;
+import de.uulm.einhoernchen.flashcardsapp.AsyncTask.Remote.GET.AsyncGetRemoteFlashCards;
 import de.uulm.einhoernchen.flashcardsapp.Database.DbManager;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.Dataset.ContentAllCarddecks;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.Dataset.ContentCarddecks;
@@ -72,6 +74,9 @@ public class CarddecksActivity extends AppCompatActivity implements OnFragmentIn
     public void onCarddeckListFragmentInteraction(CardDeck item) {
 
         Intent intent = new Intent(CarddecksActivity.this, UsersActivity.class);
+
+        AsyncGetRemoteFlashCards asyncGetRemoteFlashCards = new AsyncGetRemoteFlashCards(item.getId(), null);
+        asyncGetRemoteFlashCards.execute();
 
         intent.putExtra("create_message", true);
         intent.putExtra("deckId", item.getId());
