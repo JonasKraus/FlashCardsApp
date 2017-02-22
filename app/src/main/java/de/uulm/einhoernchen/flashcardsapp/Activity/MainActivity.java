@@ -629,6 +629,8 @@ public class MainActivity extends AppCompatActivity
 
         } else if (id == R.id.nav_profile) {
 
+            startActivity(new Intent(MainActivity.this, ProfileActivity.class));
+
         } else if (id == R.id.nav_statistics) {
 
             /* Uncomment to start Statistic as fragment

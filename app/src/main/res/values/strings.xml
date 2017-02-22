@@ -227,6 +227,12 @@
     <string name="title_activity_challenges_ranking">challenges ranking</string>
     <string name="snackbar_no_selected_cards">no selected cards</string>
     <string name="snackbar_action_go_to_catalog">go to catalog</string>
+    <string name="title_activity_profile">Profile</string>
+    <string name="toolbar_title_profile">profile</string>
+    <string name="toolbar_rating">rating</string>
+    <string name="label_rating">rating</string>
+    <string name="user_created">created</string>
+    <string name="user_lastlogin">last login</string>
 
 
 </resources>
