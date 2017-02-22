@@ -32,7 +32,9 @@
         </android.support.design.widget.CollapsingToolbarLayout>
     </android.support.design.widget.AppBarLayout>
 
-    <include layout="@layout/content_messages" />
+    <include layout="@layout/content_messages"
+        android:id="@+id/content_messages"
+        />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"

@@ -45,7 +45,11 @@ public class MessagesActivity extends AppCompatActivity implements OnFragmentInt
                     startActivity(new Intent(MessagesActivity.this, CarddecksActivity.class));
                 } else {
 
-                    Snackbar.make(view.getRootView(), getApplicationContext().getString(R.string.service_unavailable), Snackbar.LENGTH_LONG).show();
+                    Snackbar.make(
+                            findViewById(R.id.content_messages),
+                            getApplicationContext().getString(R.string.service_unavailable),
+                            Snackbar.LENGTH_LONG)
+                            .show();
                 }
 
 
