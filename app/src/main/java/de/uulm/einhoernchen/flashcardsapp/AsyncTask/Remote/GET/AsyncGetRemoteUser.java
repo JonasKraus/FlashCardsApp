@@ -5,7 +5,10 @@ import android.util.Log;
 
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
+import de.uulm.einhoernchen.flashcardsapp.AsyncTask.Local.AsyncSaveLocalUsers;
 import de.uulm.einhoernchen.flashcardsapp.Const.Routes;
 import de.uulm.einhoernchen.flashcardsapp.Model.User;
 import de.uulm.einhoernchen.flashcardsapp.Util.JsonParser;
@@ -75,7 +78,16 @@ public class AsyncGetRemoteUser extends AsyncTask<Long, Void, User>{
 
         if (user != null) {
 
-            delegate.processFinish(user);
+            if (delegate != null) {
+                delegate.processFinish(user);
+            } else {
+
+                List<User> users = new ArrayList<>();
+                users.add(user);
+
+                AsyncSaveLocalUsers saveLocalUsers = new AsyncSaveLocalUsers();
+                saveLocalUsers.execute(users);
+            }
 
         }
     }

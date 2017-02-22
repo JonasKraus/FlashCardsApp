@@ -21,15 +21,23 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.File;
 
 import de.uulm.einhoernchen.flashcardsapp.AsyncTask.Remote.GET.AsyncGetRemoteUser;
+import de.uulm.einhoernchen.flashcardsapp.AsyncTask.Remote.PATCH.AsyncPatchRemoteUser;
+import de.uulm.einhoernchen.flashcardsapp.AsyncTask.Remote.PATCH.AsyncPatchRemoteUserGroup;
 import de.uulm.einhoernchen.flashcardsapp.Model.User;
 import de.uulm.einhoernchen.flashcardsapp.R;
 import de.uulm.einhoernchen.flashcardsapp.Util.Globals;
+import de.uulm.einhoernchen.flashcardsapp.Util.JsonKeys;
 import de.uulm.einhoernchen.flashcardsapp.Util.PermissionManager;
 import de.uulm.einhoernchen.flashcardsapp.Util.ProcessConnectivity;
 import de.uulm.einhoernchen.flashcardsapp.Util.ProcessorImage;
+
+import static de.uulm.einhoernchen.flashcardsapp.R.id.fab;
 
 public class ProfileActivity extends AppCompatActivity {
 
@@ -40,6 +48,8 @@ public class ProfileActivity extends AppCompatActivity {
     private EditText editTextEmail;
     private EditText editTextPassword;
     private ImageView imageViewProfile;
+
+    private FloatingActionButton fab;
 
     private String ratingLabel;
 
@@ -59,14 +69,20 @@ public class ProfileActivity extends AppCompatActivity {
 
         ratingLabel = getResources().getString(R.string.label_rating) + ": ";
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
+
             @Override
             public void onClick(View view) {
 
-                toggleEditTexts();
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                if (ProcessConnectivity.isOk(ProfileActivity.this)) {
+
+                    toggleEditTexts();
+                    toggleFabAction();
+                } else {
+
+                    Snackbar.make(view, Globals.getContext().getString(R.string.service_unavailable), Snackbar.LENGTH_LONG).show();
+                }
             }
         });
 
@@ -92,6 +108,47 @@ public class ProfileActivity extends AppCompatActivity {
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
+    }
+
+
+    /**
+     * Toggles icon and action of the fab
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     * @since 2017-02-22
+     */
+    private void toggleFabAction() {
+
+        boolean editMode = editTextName.isEnabled();
+
+        if (editMode) {
+
+            fab.setImageDrawable(getResources().getDrawable(R.drawable.ic_check));
+        } else {
+
+            fab.setImageDrawable(getResources().getDrawable(R.drawable.ic_mode_edit));
+
+            // TODO update user
+
+
+            JSONObject jsonObjectUser = new JSONObject();
+
+            try {
+
+                jsonObjectUser.put(JsonKeys.USER_NAME, editTextName.getText().toString());
+                jsonObjectUser.put(JsonKeys.USER_EMAIL, editTextEmail.getText().toString());
+                jsonObjectUser.put(JsonKeys.USER_PASSWORD, editTextPassword.getText().toString());
+            } catch (JSONException e) {
+
+                e.printStackTrace();
+            }
+
+            AsyncPatchRemoteUser asyncPatchRemoteUser = new AsyncPatchRemoteUser(jsonObjectUser);
+            asyncPatchRemoteUser.execute(user.getId());
+        }
+
+
+
     }
 
 
