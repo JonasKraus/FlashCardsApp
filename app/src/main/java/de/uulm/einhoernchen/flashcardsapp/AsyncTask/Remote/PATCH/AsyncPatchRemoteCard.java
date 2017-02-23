@@ -101,7 +101,7 @@ public class AsyncPatchRemoteCard extends AsyncTask<Long, Long, Long> {
             wr.writeBytes(jsonObject.toString());
             wr.flush();
 
-            Log.d("json", urlConnection.getRequestProperty("Authorization") + " \n" + jsonObject.toString() + "\n" + urlConnection.getRequestMethod());
+            //Log.d("json", urlConnection.getRequestProperty("Authorization") + " \n" + jsonObject.toString() + "\n" + urlConnection.getRequestMethod());
 
             //Log.e("resp", urlConnection.getResponseCode()+"");
 
