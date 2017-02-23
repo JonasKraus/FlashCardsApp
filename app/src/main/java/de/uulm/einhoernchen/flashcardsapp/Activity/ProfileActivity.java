@@ -120,7 +120,6 @@ public class ProfileActivity extends AppCompatActivity {
      */
     private void toggleFabAction() {
 
-
         boolean editMode = editTextName.isEnabled();
 
         if (editMode) {
@@ -129,8 +128,6 @@ public class ProfileActivity extends AppCompatActivity {
         } else {
 
             fab.setImageDrawable(getResources().getDrawable(R.drawable.ic_mode_edit));
-
-            // TODO update user
 
 
             JSONObject jsonObjectUser = new JSONObject();
@@ -167,8 +164,6 @@ public class ProfileActivity extends AppCompatActivity {
             asyncPatchRemoteUser.execute(user.getId());
         }
 
-
-
     }
 
 
@@ -185,6 +180,7 @@ public class ProfileActivity extends AppCompatActivity {
         } else {
 
             setUserContent();
+
             collapsingToolbar.setTitle(ratingLabel + user.getRating());
         }
 
