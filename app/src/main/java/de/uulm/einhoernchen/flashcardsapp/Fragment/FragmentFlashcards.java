@@ -75,6 +75,8 @@ public class FragmentFlashcards extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_item_list_cards, container, false);
 
+        Globals.getFloatingActionButton().setVisibility(View.VISIBLE);
+
         RecyclerView mRecyclerView = (RecyclerView) view.findViewById(R.id.recycler_view_cards);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 

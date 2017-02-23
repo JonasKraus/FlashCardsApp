@@ -626,20 +626,17 @@ public class FragmentPlayFlashCards extends Fragment implements View.OnClickList
 
             case PLAY_ANSWER:
 
-                fab.setImageDrawable(Globals.getContext().getResources().getDrawable(R.drawable.ic_forward));
+                fab.setImageDrawable(Globals.getContext().getResources().getDrawable(R.drawable.ic_arrow_forward));
 
                 if (currentFlashcard.isMultipleChoice()) {
 
                     contentAnswers.validateAnswers(statistic);
 
-                    //TODO check if answers are correct
                 } else {
 
                     // Do nothing else just show the answers
                     nsContentAnswers.setVisibility(View.VISIBLE);
                 }
-
-                Log.d("messaeg null?", (message ==null)+"");
 
                 if (message != null) {
 

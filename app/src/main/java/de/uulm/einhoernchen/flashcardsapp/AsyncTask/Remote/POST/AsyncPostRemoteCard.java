@@ -83,7 +83,8 @@ public class AsyncPostRemoteCard extends AsyncTask<Long, Long, Long> {
                 wr.writeBytes(jsonObject.toString());
                 wr.flush();
 
-                //Log.d(urlConnection.getRequestMethod() + " json", jsonObject.toString());
+                Log.d(urlConnection.getRequestMethod() + " json", jsonObject.toString());
+                Log.d("Auth", urlConnection.getRequestProperty("Authorization"));
 
                 if (urlConnection.getResponseCode() >= 400) {
 
@@ -111,13 +112,15 @@ public class AsyncPostRemoteCard extends AsyncTask<Long, Long, Long> {
             JSONObject jsonObjectFlashcardID = new JSONObject();
             JSONObject jsonObjectCards = new JSONObject();
             JSONArray jsonArray = new JSONArray();
+            JSONObject jsonObjectGroup = new JSONObject();
 
             try {
 
                 jsonObjectFlashcardID.put(JsonKeys.FLASHCARD_ID, id);
                 jsonArray.put(jsonObjectFlashcardID);
                 jsonObjectCards.put(JsonKeys.CARDS, jsonArray);
-                jsonObjectCards.put(JsonKeys.CARDDECK_GROUP, this.userGroupId);
+                jsonObjectGroup.put(JsonKeys.GROUP_ID, this.userGroupId);
+                jsonObjectCards.put(JsonKeys.CARDDECK_GROUP, jsonObjectGroup);
             } catch (JSONException e) {
 
                 e.printStackTrace();

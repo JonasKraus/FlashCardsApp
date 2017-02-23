@@ -153,6 +153,8 @@ public class FragmentFlashCard extends Fragment implements View.OnClickListener 
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_flashcard_parallax, container, false);
 
+        Globals.getFloatingActionButton().setVisibility(View.GONE);
+
         // Load answers
         ContentFlashCardAnswers contentFlashCardAnswers = new ContentFlashCardAnswers();
         contentFlashCardAnswers.collectItemsFromDb(flashCard.getId(), false, false);
@@ -735,11 +737,13 @@ public class FragmentFlashCard extends Fragment implements View.OnClickListener 
             }
 
             jsonUser.put(JsonKeys.USER_ID, db.getLoggedInUser().getId());
-            //author.put(JsonKeys.AUTHOR, jsonUser);
+            author.put(JsonKeys.AUTHOR, jsonUser);
+
             questionData.put(JsonKeys.QUESTION_TEXT, newQuestionText);
             questionData.put(JsonKeys.URI, newUri);
             jsonObjectQuestion.put(JsonKeys.FLASHCARD_QUESTION, questionData);
-            jsonObjectQuestion.put(JsonKeys.AUTHOR, jsonUser);
+
+            //jsonObjectQuestion.put(JsonKeys.AUTHOR, jsonUser);
             questionData.put(JsonKeys.AUTHOR, jsonUser);
 
         } catch (JSONException e) {
