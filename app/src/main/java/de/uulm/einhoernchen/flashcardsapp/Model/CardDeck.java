@@ -119,22 +119,6 @@ public class CardDeck {
         this.visible = visible;
     }
 
-    public void delete() {
-        userGroup.deleteDeck(this);
-        for (FlashCard card : cards) {
-/*            card.setDeck(null);
-            card.update();*/
-            card.delete();
-        }
-        String gIds="";
-
-        StringBuilder b = new StringBuilder();
-
-        //userGroup.getDecks().forEach(deck->b.append(deck.getId()+"; "));  TODO to be implemented
-
-        //super.delete(); TODO to be implemented
-    }
-
     @Override
     public String toString() {
         return "CardDeck{" +
@@ -149,7 +133,6 @@ public class CardDeck {
 
 
     public int getRating() {
-        // TODO to be implemented
         return rating;
     }
 

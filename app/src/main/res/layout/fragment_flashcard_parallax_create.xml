@@ -28,12 +28,9 @@
                 app:popupTheme="@style/AppTheme.PopupOverlay"/>
 
 
-
         </android.support.design.widget.CollapsingToolbarLayout>
 
-    </android.support.design.widget.AppBarLayout>
-
-
+    </android.support.design.widget.AppBarLayout>s
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab_card_create"

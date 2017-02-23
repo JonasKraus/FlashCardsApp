@@ -42,6 +42,7 @@ import de.uulm.einhoernchen.flashcardsapp.Fragment.Adapter.RecyclerViewAdapterFl
 import de.uulm.einhoernchen.flashcardsapp.Model.Answer;
 import de.uulm.einhoernchen.flashcardsapp.Model.FlashCard;
 import de.uulm.einhoernchen.flashcardsapp.Model.Question;
+import de.uulm.einhoernchen.flashcardsapp.Model.Tag;
 import de.uulm.einhoernchen.flashcardsapp.R;
 import de.uulm.einhoernchen.flashcardsapp.Util.Globals;
 import de.uulm.einhoernchen.flashcardsapp.Util.JsonKeys;
@@ -88,6 +89,7 @@ public class FragmentFlashCardCreate extends Fragment implements View.OnClickLis
 
     private EditText editTextQuestionUri;
     private EditText editTextQuestionText;
+    private EditText editTextQuestionTags;
 
     private TextInputLayout textInputLayoutUri;
     private TextInputLayout textInputLayoutContent;
@@ -107,6 +109,7 @@ public class FragmentFlashCardCreate extends Fragment implements View.OnClickLis
     private FloatingActionButton floatingActionButtonAnswerAdd;
     private FloatingActionButton floatingActionButtonAnswerSave;
     private FloatingActionButton floatingActionButtonCardAnswerAdd;
+
 
     public FragmentFlashCardCreate() {
         // Required empty public constructor
@@ -149,7 +152,7 @@ public class FragmentFlashCardCreate extends Fragment implements View.OnClickLis
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        // Inflate the layout for this fragment TODO
+        // Inflate the layout for this fragment
         final View view = inflater.inflate(R.layout.fragment_flashcard_parallax_create, container, false);
 
         // Make toolbar of activity main invisible
@@ -199,6 +202,7 @@ public class FragmentFlashCardCreate extends Fragment implements View.OnClickLis
         */
 
         editTextQuestionText = (EditText) view.findViewById(R.id.edittext_content);
+        editTextQuestionTags = (EditText) view.findViewById(R.id.edittext_tags);
 
         imageViewPlay = (ImageView) view.findViewById(R.id.imageview_card_media_play);
         radioGroupAnswerCorrect = (RadioGroup) view.findViewById(R.id.radio_buttongroup_answer_editor);
@@ -232,6 +236,14 @@ public class FragmentFlashCardCreate extends Fragment implements View.OnClickLis
 
         editTextQuestionText.setText(flashCard.getQuestion().getQuestionText());
         editTextQuestionUri.setText(flashCard.getQuestion().getUri().toString());
+
+        String tagsForEditText = "";
+
+        for (Tag tag : flashCard.getTags()) {
+
+            tagsForEditText += "#" + tag.getName();
+        }
+        editTextQuestionTags.setText(tagsForEditText);
 
         // the header action button to save the card
         floatingActionButtonCardCreate = (FloatingActionButton) view.findViewById(R.id.fab_card_create);
@@ -401,7 +413,13 @@ public class FragmentFlashCardCreate extends Fragment implements View.OnClickLis
             case R.id.fab_card_answer_add:
             case R.id.button_answer_editor_add:
 
-                addAnswerToListView();
+                if (ProcessConnectivity.isOk(this.getContext())) {
+
+                    addAnswerToListView();
+                } else {
+
+                    Snackbar.make(v, Globals.getContext().getString(R.string.service_unavailable), Snackbar.LENGTH_SHORT).show();
+                }
 
                 break;
 
@@ -413,13 +431,19 @@ public class FragmentFlashCardCreate extends Fragment implements View.OnClickLis
                 // Check if the text is not empty
                 if (answerText != null && !answerText.equals("")) {
 
-                    addAnswerToListView();
+                    if (ProcessConnectivity.isOk(this.getContext())) {
+
+                        addAnswerToListView();
+                    } else {
+
+                        Snackbar.make(v, Globals.getContext().getString(R.string.service_unavailable), Snackbar.LENGTH_SHORT).show();
+                    }
                 }
 
                 // Check if multiple choice - so you need to set two answers
-                if (checkBoxMultipleChoice.isChecked() && answers.size() < 2) {
+                if (checkBoxMultipleChoice.isChecked() && answers.size() < 1) {
 
-                    Snackbar.make(v, getContext().getString(R.string.add_second_answer), Snackbar.LENGTH_LONG).show();
+                    Snackbar.make(v, getContext().getString(R.string.add_one_answer), Snackbar.LENGTH_LONG).show();
                 }
 
                 saveQuestion();
@@ -469,7 +493,7 @@ public class FragmentFlashCardCreate extends Fragment implements View.OnClickLis
 
         if (answerText == null || answerText.equals("")) {
 
-            Toast.makeText(getContext(), getContext().getText(R.string.insert_text), Toast.LENGTH_SHORT).show();
+            Snackbar.make(this.getView(), getContext().getText(R.string.insert_text), Snackbar.LENGTH_SHORT).show();
             return;
         }
 
@@ -486,7 +510,7 @@ public class FragmentFlashCardCreate extends Fragment implements View.OnClickLis
 
             if (!radioButtonAnswerCorrect.isChecked() && !radioButtonAnswerIncorrect.isChecked()) {
 
-                Toast.makeText(getContext(), getContext().getText(R.string.set_is_correct), Toast.LENGTH_SHORT).show();
+                Snackbar.make(this.getView(), getContext().getText(R.string.set_is_correct), Snackbar.LENGTH_SHORT).show();
                 return;
             }
 
