@@ -1181,6 +1181,7 @@ public class JsonParser {
                         Log.d("parser response", statuscode + "");
                     }
 
+                    Log.d("parser response", statuscode + "");
                 } else if (stringName.equals(JsonKeys.DESCRIPTION)) {
 
                     JsonToken check = reader.peek();
@@ -1191,6 +1192,7 @@ public class JsonParser {
                         if (statuscode > 400) {
                             Log.d("parse description", description + "");
                         }
+                        Log.d("parse description", description + "");
 
                     } else {
                         reader.nextNull();

@@ -71,20 +71,20 @@ public class AsyncPatchRemoteCard extends AsyncTask<Long, Long, Long> {
             wr.writeBytes(jsonObject.toString());
             wr.flush();
 
-            //Log.d("json", jsonObject.toString());
+            Log.d("json", jsonObject.toString());
 
             //Log.e("resp", urlConnection.getResponseCode()+"");
 
             if (urlConnection.getResponseCode() >= 400) {
 
-                Log.e("resp", urlConnection.getResponseCode()+ " " + urlConnection.getResponseMessage() + "");
+                Log.e("resp", urlConnection.getResponseCode()+ "\n " + urlConnection.getResponseMessage() + "\n " + urlConnection.getRequestProperty("Authorization"));
             }
 
             return JsonParser.readResponse(urlConnection.getInputStream());
 
         } catch (Exception e) {
 
-            Log.e("doInBack card " + urlConnection.getRequestMethod(), e.toString() + " body: " + jsonObject.toString());
+            Log.e("doInBack card " + urlConnection.getRequestMethod(), e.toString() + "\n body: " + jsonObject.toString());
             System.out.println(e.toString());
             return null;
 

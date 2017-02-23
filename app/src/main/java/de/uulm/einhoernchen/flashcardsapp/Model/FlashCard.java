@@ -248,14 +248,6 @@ public class FlashCard {
     }
 
 
-    public void addTag(Tag tag){
-        if(!tags.contains(tag)){
-            tags.add(tag);
-            tag.addFlashCard(this);
-        }
-    }
-
-
     public List<Tag> getTags() {
         return tags;
     }

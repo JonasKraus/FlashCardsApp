@@ -32,6 +32,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.List;
+
 import de.uulm.einhoernchen.flashcardsapp.AsyncTask.Remote.DELETE.AsyncDeleteRemoteRating;
 import de.uulm.einhoernchen.flashcardsapp.AsyncTask.Remote.PATCH.AsyncPatchRemoteCard;
 import de.uulm.einhoernchen.flashcardsapp.AsyncTask.Remote.POST.AsyncPostRemoteRating;
@@ -41,6 +43,7 @@ import de.uulm.einhoernchen.flashcardsapp.Model.FlashCard;
 import de.uulm.einhoernchen.flashcardsapp.Model.Tag;
 import de.uulm.einhoernchen.flashcardsapp.R;
 import de.uulm.einhoernchen.flashcardsapp.Util.Globals;
+import de.uulm.einhoernchen.flashcardsapp.Util.HashtagParser;
 import de.uulm.einhoernchen.flashcardsapp.Util.JsonKeys;
 import de.uulm.einhoernchen.flashcardsapp.Util.ProcessConnectivity;
 import de.uulm.einhoernchen.flashcardsapp.Util.ProcessorImage;
@@ -108,6 +111,8 @@ public class FragmentFlashCard extends Fragment implements View.OnClickListener 
     private FloatingActionButton floatingActionButtonAdd;
     private FloatingActionButton fabEdit;
     private LinearLayout linearlayoutHashTags;
+    private EditText editTextQuestionTags;
+    private TextInputLayout textInputLayoutTags;
 
     public FragmentFlashCard() {
         // Required empty public constructor
@@ -190,7 +195,9 @@ public class FragmentFlashCard extends Fragment implements View.OnClickListener 
 
         editTextQuestionUri = (EditText) view.findViewById(R.id.edittext_uri);
         editTextQuestionText = (EditText) view.findViewById(R.id.edittext_content);
+        editTextQuestionTags = (EditText) view.findViewById(R.id.edittext_tags);
 
+        textInputLayoutTags = (TextInputLayout) view.findViewById(R.id.textInputLayout_tags);
         linearlayoutHashTags = (LinearLayout) view.findViewById(R.id.ll_hash_tags);
 
         imageViewPlay = (ImageView) view.findViewById(R.id.imageview_card_media_play);
@@ -217,9 +224,6 @@ public class FragmentFlashCard extends Fragment implements View.OnClickListener 
 
         fabEdit = (FloatingActionButton) view.findViewById(R.id.fab_card_edit);
         fabEdit.setVisibility(View.GONE);
-
-
-        //mIsCorrect =; TODO
 
         checkIfEditable();
 
@@ -248,23 +252,20 @@ public class FragmentFlashCard extends Fragment implements View.OnClickListener 
         int voting = db.getCardVoting(flashCard.getId());
 
         switch (voting) {
+
             case -1:
+
                 imageViewVoteDown.setColorFilter(getResources().getColor(R.color.colorAccent));
                 mCardRatingView.setTextColor(getResources().getColor(R.color.colorAccent));
                 break;
             case 1:
+
                 imageViewVoteUp.setColorFilter(getResources().getColor(R.color.colorAccent));
                 mCardRatingView.setTextColor(getResources().getColor(R.color.colorAccent));
                 break;
-
         }
 
         setListener();
-
-        /*
-        FrameLayout container1 = (FrameLayout) view.findViewById(R.id.fragment_container_card_answer);
-        RecyclerView recyclerView = (RecyclerView) container1.findViewById(R.id.list);
-        recyclerView.setAdapter(new RecyclerViewAdapterFlashCardAnswers(db, itemList, mListener, isUpToDate, context));*/
 
         return view;
 
@@ -303,31 +304,22 @@ public class FragmentFlashCard extends Fragment implements View.OnClickListener 
         }
     }
 
+
+    /**
+     * Check if this card is created by the user and is edible
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     *
+     */
     private void checkIfEditable() {
 
         // check if the question was created by the current user - so set the edit button enabled
         if (flashCard.getQuestion().getAuthor().getId() == db.getLoggedInUser().getId()) {
 
-            /* TODO Jonas delete if unsused
-            imageViewEditQuestion.setAlpha(1f);
-            imageViewEditQuestion.setOnClickListener(this);
-
-            Globals.getFloatingActionButtonAdd().setVisibility(View.VISIBLE);
-            Globals.getFloatingActionButtonAdd().setTag("mode_edit");
-            Globals.getFloatingActionButtonAdd().setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_mode_edit));
-            Globals.getFloatingActionButtonAdd().setOnClickListener(this);
-            */
-
             fabEdit.setVisibility(View.VISIBLE);
             fabEdit.setTag("mode_edit");
             fabEdit.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_mode_edit));
             fabEdit.setOnClickListener(this);
-
-        } else {
-
-            /* TODO Jonas delete if unused
-            imageViewEditQuestion.setAlpha(.1f);
-            */
 
         }
     }
@@ -508,37 +500,35 @@ public class FragmentFlashCard extends Fragment implements View.OnClickListener 
     @Override
     public void onResume() {
         super.onResume();
-        // TODO Jonas hier kommt der code
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
+
+
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {
             mListener.onFragmentInteraction(uri);
         }
     }
 
+
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+
         if (context instanceof OnFlashCardFragmentInteractionListener) {
+
             mListener = (OnFlashCardFragmentInteractionListener) context;
         } else {
+
             throw new RuntimeException(context.toString()
                     + " must implement OnFlashCardFragmentInteractionListener");
         }
     }
 
+
     @Override
     public void onDetach() {
         super.onDetach();
-
-        /* TODO Delete Jonas if unused Reset add button
-        Globals.getFloatingActionButtonAdd().setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_action_add));
-        Globals.getFloatingActionButtonAdd().setOnClickListener(null);
-        Globals.getFloatingActionButtonAdd().setVisibility(View.GONE);
-        Globals.getFloatingActionButtonAdd().setTag(null);
-        */
 
         fabEdit.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_mode_edit));
         fabEdit.setOnClickListener(null);
@@ -547,12 +537,27 @@ public class FragmentFlashCard extends Fragment implements View.OnClickListener 
         mListener = null;
     }
 
+
+    /**
+     * Use setter after instantiate this fragment
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     *
+     * @param flashCard
+     */
     public void setItem(FlashCard flashCard) {
 
         this.flashCard = flashCard;
     }
 
 
+    /**
+     * Sets if the data is synced with the server
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     *
+     * @param isUpToDate
+     */
     public void setUpToDate(boolean isUpToDate) {
         this.isUpToDate = isUpToDate;
     }
@@ -692,6 +697,7 @@ public class FragmentFlashCard extends Fragment implements View.OnClickListener 
 
         String newUri = editTextQuestionUri.getText().toString();
         String newQuestionText = editTextQuestionText.getText().toString();
+        List<String> tagStrings = HashtagParser.parse(editTextQuestionTags.getText().toString());
 
         // sets the new values to the flashcard
         flashCard.getQuestion().setQuestionText(newQuestionText);
@@ -703,22 +709,30 @@ public class FragmentFlashCard extends Fragment implements View.OnClickListener 
         textInputLayoutContent.setVisibility(View.GONE);
         textInputLayoutUri.setVisibility(View.GONE);
 
-        /* TODO Jonas delete if unused
-        imageViewEditQuestion.setVisibility(View.VISIBLE);
-        imageViewSaveQuestion.setVisibility(View.GONE);
-        */
-
-
-        // TODO Start async task to save answer
-        // TODO reload question
+        textInputLayoutTags.setVisibility(View.GONE);
+        linearlayoutHashTags.setVisibility(View.VISIBLE);
 
         JSONObject jsonObjectQuestion = new JSONObject();
         JSONObject questionData = new JSONObject();
         JSONObject author = new JSONObject();
         JSONObject jsonUser = new JSONObject();
-
+        JSONArray jsonArrayTags = new JSONArray();
 
         try {
+
+            // Get tags and set them to array
+            for (String tag : tagStrings) {
+
+                JSONObject jsonObjectTag = new JSONObject();
+                jsonObjectTag.put(JsonKeys.TAG_NAME, tag);
+                jsonArrayTags.put(jsonObjectTag);
+            }
+
+            // only set tags attribute when necessary
+            if (tagStrings.size() > 0) {
+
+                jsonObjectQuestion.put(JsonKeys.FLASHCARD_TAGS, jsonArrayTags);
+            }
 
             jsonUser.put(JsonKeys.USER_ID, db.getLoggedInUser().getId());
             //author.put(JsonKeys.AUTHOR, jsonUser);
@@ -756,16 +770,15 @@ public class FragmentFlashCard extends Fragment implements View.OnClickListener 
         mContentView.setVisibility(View.GONE);
         textInputLayoutContent.setVisibility(View.VISIBLE);
         textInputLayoutUri.setVisibility(View.VISIBLE);
+        textInputLayoutTags.setVisibility(View.VISIBLE);
 
-        /* TODO Jonas delete if unused
-        imageViewEditQuestion.setVisibility(View.GONE);
-        imageViewSaveQuestion.setVisibility(View.VISIBLE);
-        */
+        linearlayoutHashTags.setVisibility(View.GONE);
 
         imageViewSaveQuestion.setOnClickListener(this);
 
         editTextQuestionText.setText(flashCard.getQuestion().getQuestionText());
         editTextQuestionUri.setText(flashCard.getQuestion().getUri().toString());
+        editTextQuestionTags.setText(HashtagParser.getString(flashCard.getTags()));
     }
 
     public void setCarddeckId(long carddeckId) {

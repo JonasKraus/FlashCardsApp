@@ -30,10 +30,6 @@ public class Tag {
         this.name = name;
     }
 
-    public Tag(String name, List<FlashCard> cards) {
-        this.name = name;
-        this.cards = cards;
-    }
 
     /**
      * @author Jonas Kraus jonas.kraus@uni-ulm.de
@@ -71,24 +67,6 @@ public class Tag {
         this.cards = cards;
     }
 
-    public void addFlashCard(FlashCard flashCard){
-        if(!cards.contains(flashCard)){
-            cards.add(flashCard);
-            this.update();
-            flashCard.addTag(this);
-        }
-    }
-
-    /**
-     *  Deletes the given card from he list hen it is an element
-     * @param flashCard - will be removed
-     */
-    public void removeFlashCard(FlashCard flashCard){
-        if (cards.contains( flashCard)){
-            cards.remove(flashCard);
-            this.update();
-        }
-    }
     @Override
     public String toString() {
         return "Tag{" +
@@ -98,12 +76,9 @@ public class Tag {
                 '}';
     }
 
-    public static void update() {
-        // @TODO to be implemented
+    public String toStringForView() {
+        return "#" + name;
     }
 
-    public void save() {
-        //@TODO to be implemented
-    }
 }
 

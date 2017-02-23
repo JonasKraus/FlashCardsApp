@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import de.uulm.einhoernchen.flashcardsapp.Model.Tag;
+
 /**
  * @author Jonas Kraus jonas.kraus@uni-ulm.de
  * @since 2017.02.23
@@ -34,5 +36,27 @@ public class HashtagParser {
         }
 
         return tags;
+    }
+
+
+    /**
+     * Generates a string from tags that ca be placed in an edittext
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     * @since 2017-02-23
+     *
+     * @param tags
+     * @return
+     */
+    public static String getString(List<Tag> tags) {
+
+        String string = "";
+
+        for (Tag tag : tags) {
+
+            string += tag.toStringForView() + " ";
+        }
+
+        return string;
     }
 }

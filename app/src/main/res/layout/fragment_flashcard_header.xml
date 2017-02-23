@@ -209,7 +209,7 @@
     </LinearLayout>
 
     <LinearLayout
-
+        android:animateLayoutChanges="true"
         android:id="@+id/ll_hash_tags"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

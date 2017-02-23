@@ -79,48 +79,6 @@ public class JsonUtil {
         return result;
     }
 
-    /**
-     * Reads all tags either via their id, or creates a new tag when it does not exist at the moment.
-     *
-     * @param json the root json object
-     * @return a list of tags
-     */
-    public static List<Tag> retrieveTags(JsonNode json) {
-        List<Tag> tags = new ArrayList<>();
-        //get the specific nods in the json
-        JsonNode tagNode = json.findValue(JsonKeys.FLASHCARD_TAGS);
-        // Loop through all objects in the values associated with the
-        // "users" key.
-        for (JsonNode node : tagNode) {
-            // when a user id is found we will get the object and add them to the userList.
-            System.out.println("Node=" + node);
-            if (node.has(JsonKeys.TAG_ID)) {
-                Tag found = null; //@TODO to be implemented //Tag.find.byId(node.get(JsonKeys.TAG_ID).asLong());
-                System.out.println(">> tag: " + found);
-                tags.add(found);
-            } else {
-                try {
-                    Tag tmpT = parseTag(node);
-                    Tag lookupTag = null; //@TODO to be implemented //Tag.find.where().eq(JsonKeys.TAG_NAME,tmpT.getName()).findUnique();
-                    //check if the tag is unique
-                    if(lookupTag==null){
-                        tmpT.save();
-                        System.out.println(">> tag: " + tmpT);
-                        //save our new tag so that no foreign constraint fails
-                        //((`flashcards`.`card_tag`, CONSTRAINT `fk_card_tag_tag_02` FOREIGN KEY (`tag_id`) REFERENCES `tag` (`tagId`))]]
-                        tags.add(tmpT);
-                    }
-                    else{
-                        tags.add(lookupTag);
-                    }
-
-                } catch (URISyntaxException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-        return tags;
-    }
 
     /**
      * Parses a question from the given JsonNode node.
