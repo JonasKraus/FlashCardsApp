@@ -35,6 +35,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import de.uulm.einhoernchen.flashcardsapp.AsyncTask.Remote.POST.AsyncPostRemoteCard;
 import de.uulm.einhoernchen.flashcardsapp.Database.DbManager;
@@ -45,6 +46,7 @@ import de.uulm.einhoernchen.flashcardsapp.Model.Question;
 import de.uulm.einhoernchen.flashcardsapp.Model.Tag;
 import de.uulm.einhoernchen.flashcardsapp.R;
 import de.uulm.einhoernchen.flashcardsapp.Util.Globals;
+import de.uulm.einhoernchen.flashcardsapp.Util.HashtagParser;
 import de.uulm.einhoernchen.flashcardsapp.Util.JsonKeys;
 import de.uulm.einhoernchen.flashcardsapp.Util.ProcessConnectivity;
 import de.uulm.einhoernchen.flashcardsapp.Util.ProcessorImage;
@@ -331,7 +333,7 @@ public class FragmentFlashCardCreate extends Fragment implements View.OnClickLis
 
             } else if (uriString.equals("")) {
 
-                uriString = "http://134.60.51.72:9000/";
+                uriString = "http://134.60.51.72:9000/"; // TODO from Routes
             }
 
 
@@ -366,10 +368,9 @@ public class FragmentFlashCardCreate extends Fragment implements View.OnClickLis
     @Override
     public void onResume() {
         super.onResume();
-        // TODO Jonas hier kommt der code
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
+
     public void onButtonPressed(Uri uri) {
 
     }
@@ -559,6 +560,7 @@ public class FragmentFlashCardCreate extends Fragment implements View.OnClickLis
         String newUri = editTextQuestionUri.getText().toString();
         String newQuestionText = editTextQuestionText.getText().toString();
         boolean isMultiplyChoice = checkBoxMultipleChoice.isChecked();
+        List<String> tagStrings = HashtagParser.parse(editTextQuestionTags.getText().toString());
 
         // sets the new values to the flashcard
         flashCard.getQuestion().setQuestionText(newQuestionText);
@@ -567,6 +569,7 @@ public class FragmentFlashCardCreate extends Fragment implements View.OnClickLis
         // TODO Start async task to save answer
         // TODO reload question
 
+        JSONArray jsonArrayTags = new JSONArray();
         JSONObject jsonObjectQuestion = new JSONObject();
         JSONObject questionData = new JSONObject();
         JSONObject author = new JSONObject();
@@ -574,6 +577,20 @@ public class FragmentFlashCardCreate extends Fragment implements View.OnClickLis
         JSONObject jsonObjectAnswers = new JSONObject();
 
         try {
+
+            // Get tags and set them to array
+            for (String tag : tagStrings) {
+
+                JSONObject jsonObjectTag = new JSONObject();
+                jsonObjectTag.put(JsonKeys.TAG_NAME, tag);
+                jsonArrayTags.put(jsonObjectTag);
+            }
+
+            // only set tags attribute when necessary
+            if (tagStrings.size() > 0) {
+
+                jsonObjectQuestion.put(JsonKeys.FLASHCARD_TAGS, jsonArrayTags);
+            }
 
             jsonUser.put(JsonKeys.USER_ID, db.getLoggedInUser().getId());
             //author.put(JsonKeys.AUTHOR, jsonUser);
