@@ -183,6 +183,7 @@
                 <ImageView
                     android:id="@+id/image_view_iscorrect"
                     android:layout_width="wrap_content"
+                    android:visibility="gone"
                     android:layout_height="47dp"
                     android:layout_gravity="right"
                     android:layout_marginRight="-4.5dp"
