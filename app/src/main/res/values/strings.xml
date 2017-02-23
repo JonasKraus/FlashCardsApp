@@ -41,7 +41,7 @@
 
     <!-- Strings related to menu and navigation -->
     <string name="nav_home">Home</string>
-    <string name="nav_catalogue">Catalogue</string>
+    <string name="nav_catalog">Catalog</string>
     <string name="nav_challenge">Challenge</string>
     <string name="nav_profile">Profile</string>
 
@@ -58,181 +58,92 @@
     <string name="insert_text">Please insert some text</string>
 
 
-    <string name="answer_add">add answer</string>
-    <string name="card_add">add card</string>
+    <string name="answer_add">Add answer</string>
+    <string name="card_add">Add card</string>
 
     <!-- General buttons -->
-    <string name="save">save</string>
-    <string name="cancel">cancel</string>
-    <string name="correct">correct</string>
-    <string name="incorrect">incorrect</string>
+    <string name="save">Aave</string>
+    <string name="cancel">Cancel</string>
+    <string name="correct">Correct</string>
+    <string name="incorrect">Incorrect</string>
 
 
-    <string name="answer_editor_text">answer</string>
-    <string name="question_editor_text">question</string>
-    <string name="answer_editor_hint">hint</string>
-    <string name="answer_editor_uri">uri</string>
+    <string name="answer_editor_text">Answer</string>
+    <string name="question_editor_text">Question</string>
+    <string name="answer_editor_hint">Hint</string>
+    <string name="answer_editor_uri">Uri</string>
 
     <!-- Network -->
     <string name="no_connection">You have no internet connection. Check either your wifi settings or your mobile data.</string>
     <string name="service_unavailable">The service is currently unavailable.</string>
-    <string name="multiple_choice">multiple choice</string>
+    <string name="multiple_choice">Multiple choice</string>
     <string name="set_is_correct">Set if the answer is correct.</string>
     <string name="white">#ffffff</string>
     <string name="add_second_answer">\"You have to add at least two answers.\"</string>
-    <string name="action_sync">sync</string>
-    <string name="action_search">search</string>
+    <string name="action_sync">Sync</string>
+    <string name="action_search">Search</string>
     <string name="title_activity_scrolling">ScrollingActivity</string>
-    <string name="large_text">
-        "Material is the metaphor.\n\n"
 
-        "A material metaphor is the unifying theory of a rationalized space and a system of motion."
-        "The material is grounded in tactile reality, inspired by the study of paper and ink, yet "
-        "technologically advanced and open to imagination and magic.\n"
-        "Surfaces and edges of the material provide visual cues that are grounded in reality. The "
-        "use of familiar tactile attributes helps users quickly understand affordances. Yet the "
-        "flexibility of the material creates new affordances that supercede those in the physical "
-        "world, without breaking the rules of physics.\n"
-        "The fundamentals of light, surface, and movement are key to conveying how objects move, "
-        "interact, and exist in space and in relation to each other. Realistic lighting shows "
-        "seams, divides space, and indicates moving parts.\n\n"
-
-        "Bold, graphic, intentional.\n\n"
-
-        "The foundational elements of print based design typography, grids, space, scale, color, "
-        "and use of imagery guide visual treatments. These elements do far more than please the "
-        "eye. They create hierarchy, meaning, and focus. Deliberate color choices, edge to edge "
-        "imagery, large scale typography, and intentional white space create a bold and graphic "
-        "interface that immerse the user in the experience.\n"
-        "An emphasis on user actions makes core functionality immediately apparent and provides "
-        "waypoints for the user.\n\n"
-
-        "Motion provides meaning.\n\n"
-
-        "Motion respects and reinforces the user as the prime mover. Primary user actions are "
-        "inflection points that initiate motion, transforming the whole design.\n"
-        "All action takes place in a single environment. Objects are presented to the user without "
-        "breaking the continuity of experience even as they transform and reorganize.\n"
-        "Motion is meaningful and appropriate, serving to focus attention and maintain continuity. "
-        "Feedback is subtle yet clear. Transitions are efﬁcient yet coherent.\n\n"
-
-        "3D world.\n\n"
-
-        "The material environment is a 3D space, which means all objects have x, y, and z "
-        "dimensions. The z-axis is perpendicularly aligned to the plane of the display, with the "
-        "positive z-axis extending towards the viewer. Every sheet of material occupies a single "
-        "position along the z-axis and has a standard 1dp thickness.\n"
-        "On the web, the z-axis is used for layering and not for perspective. The 3D world is "
-        "emulated by manipulating the y-axis.\n\n"
-
-        "Light and shadow.\n\n"
-
-        "Within the material environment, virtual lights illuminate the scene. Key lights create "
-        "directional shadows, while ambient light creates soft shadows from all angles.\n"
-        "Shadows in the material environment are cast by these two light sources. In Android "
-        "development, shadows occur when light sources are blocked by sheets of material at "
-        "various positions along the z-axis. On the web, shadows are depicted by manipulating the "
-        "y-axis only. The following example shows the card with a height of 6dp.\n\n"
-
-        "Resting elevation.\n\n"
-
-        "All material objects, regardless of size, have a resting elevation, or default elevation "
-        "that does not change. If an object changes elevation, it should return to its resting "
-        "elevation as soon as possible.\n\n"
-
-        "Component elevations.\n\n"
-
-        "The resting elevation for a component type is consistent across apps (e.g., FAB elevation "
-        "does not vary from 6dp in one app to 16dp in another app).\n"
-        "Components may have different resting elevations across platforms, depending on the depth "
-        "of the environment (e.g., TV has a greater depth than mobile or desktop).\n\n"
-
-        "Responsive elevation and dynamic elevation offsets.\n\n"
-
-        "Some component types have responsive elevation, meaning they change elevation in response "
-        "to user input (e.g., normal, focused, and pressed) or system events. These elevation "
-        "changes are consistently implemented using dynamic elevation offsets.\n"
-        "Dynamic elevation offsets are the goal elevation that a component moves towards, relative "
-        "to the component’s resting state. They ensure that elevation changes are consistent "
-        "across actions and component types. For example, all components that lift on press have "
-        "the same elevation change relative to their resting elevation.\n"
-        "Once the input event is completed or cancelled, the component will return to its resting "
-        "elevation.\n\n"
-
-        "Avoiding elevation interference.\n\n"
-
-        "Components with responsive elevations may encounter other components as they move between "
-        "their resting elevations and dynamic elevation offsets. Because material cannot pass "
-        "through other material, components avoid interfering with one another any number of ways, "
-        "whether on a per component basis or using the entire app layout.\n"
-        "On a component level, components can move or be removed before they cause interference. "
-        "For example, a floating action button (FAB) can disappear or move off screen before a "
-        "user picks up a card, or it can move if a snackbar appears.\n"
-        "On the layout level, design your app layout to minimize opportunities for interference. "
-        "For example, position the FAB to one side of stream of a cards so the FAB won’t interfere "
-        "when a user tries to pick up one of cards.\n\n"
-    </string>
-    <string name="dialog_message_carddeck_create">name</string>
+    <string name="dialog_message_carddeck_create">Name</string>
     <string name="dialog_title_carddeck_create">Create new carddeck</string>
-    <string name="prompt_carddeck_name">name</string>
-    <string name="prompt_carddeck_description">description</string>
-    <string name="failed_to_save">failed to save</string>
-    <string name="prompt_carddeck_visible">visible</string>
-    <string name="dialog_header_confirm">confirm</string>
+    <string name="prompt_carddeck_name">Name</string>
+    <string name="prompt_carddeck_description">Description</string>
+    <string name="failed_to_save">Failed to save</string>
+    <string name="prompt_carddeck_visible">Visible</string>
+    <string name="dialog_header_confirm">Confirm</string>
     <string name="dialog_content_unsaved">Do you really want to go back? Unsaved changes will be lost.</string>
-    <string name="select_card">select at least one flashcard</string>
-    <string name="nav_play">learn</string>
-    <string name="tab_play">play</string>
-    <string name="tab_home">home</string>
+    <string name="select_card">Select at least one flashcard</string>
+    <string name="nav_play">Learn</string>
+    <string name="tab_play">Play</string>
+    <string name="tab_home">Home</string>
     <string name="title_activity_settings">SettingsActivity</string>
-    <string name="settings_learn_mode">learn mode</string>
-    <string name="settings_learn_mode_drawer">drawer</string>
-    <string name="settings_learn_mode_knowledge">knowledge</string>
-    <string name="settings_learn_mode_date">date</string>
+    <string name="settings_learn_mode">Learn mode</string>
+    <string name="settings_learn_mode_drawer">Drawer</string>
+    <string name="settings_learn_mode_knowledge">Knowledge</string>
+    <string name="settings_learn_mode_date">Date</string>
     <string name="settings_answer_multiplychoice_order">Random ordering multiple choice answers</string>
-    <string name="settings_nightmode">night mode</string>
-    <string name="settings_learn_mode_random">random</string>
-    <string name="settings_view_last_drawer">hide last drawer</string>
-    <string name="settings_sync">sync with server</string>
-    <string name="toolbar_title_settings">settings</string>
-    <string name="dialog_header_knowedge">did you knew?</string>
-    <string name="dialog_content_knowledge">set your knowsledge in percent:</string>
-    <string name="prompt_incorrect">incorrect</string>
-    <string name="prompt_correct">correct</string>
+    <string name="settings_nightmode">Night mode</string>
+    <string name="settings_learn_mode_random">Random</string>
+    <string name="settings_view_last_drawer">Hide last drawer</string>
+    <string name="settings_sync">Sync with server</string>
+    <string name="toolbar_title_settings">Settings</string>
+    <string name="dialog_header_knowedge">Did you knew?</string>
+    <string name="dialog_content_knowledge">Set knowledge in percent:</string>
+    <string name="prompt_incorrect">Incorrect</string>
+    <string name="prompt_correct">Correct</string>
     <string name="title_activity_statistics">StatisticsActivity</string>
     <string name="toolbar_title_statistic">Statistics</string>
-    <string name="statistcis_num_selected_cards">selected cards</string>
-    <string name="statistcis_duration">entire duration</string>
-    <string name="statistcis_duration_per_card">duration / card</string>
-    <string name="statistcis_duration_average_knowledge">average knowledge</string>
-    <string name="knowledge">knowledge</string>
-    <string name="title_activity_user_groups">User Groups</string>
-    <string name="nav_user_groups">user groups</string>
+    <string name="statistcis_num_selected_cards">Selected cards</string>
+    <string name="statistcis_duration">Entire duration</string>
+    <string name="statistcis_duration_per_card">Duration / card</string>
+    <string name="statistcis_duration_average_knowledge">Average knowledge</string>
+    <string name="knowledge">Knowledge</string>
+    <string name="title_activity_user_groups">User groups</string>
+    <string name="nav_user_groups">User groups</string>
     <string name="title_activity_users">Users</string>
-    <string name="title_activity_user_group_details">User Group Details</string>
+    <string name="title_activity_user_group_details">User group details</string>
     <string name="usergroup_name">Name</string>
     <string name="usergroup_description">Description</string>
-    <string name="title_activity_main2">Main2Activity</string>
-    <string name="saved_successfully">saved successfully</string>
-    <string name="no_stats_available">no statistics available</string>
-    <string name="prompt_carddeck_group_name">group name</string>
-    <string name="group">group</string>
-    <string name="prompt_carddeck_group_description">group description</string>
+    <string name="saved_successfully">Saved successfully</string>
+    <string name="no_stats_available">No statistics available</string>
+    <string name="prompt_carddeck_group_name">Group name</string>
+    <string name="group">Group</string>
+    <string name="prompt_carddeck_group_description">Group description</string>
     <string name="title_activity_messages">Messages</string>
     <string name="title_activity_message_detail">MessageDetailActivity</string>
     <string name="message_message">Message</string>
-    <string name="title_activity_message_details">message details</string>
-    <string name="title_activity_all_carddecks">all carddecks</string>
-    <string name="nav_challengeRanking">challenge ranking</string>
-    <string name="title_activity_challenges_ranking">challenges ranking</string>
-    <string name="snackbar_no_selected_cards">no selected cards</string>
-    <string name="snackbar_action_go_to_catalog">go to catalog</string>
+    <string name="title_activity_message_details">Message details</string>
+    <string name="title_activity_all_carddecks">All carddecks</string>
+    <string name="nav_challengeRanking">Challenge ranking</string>
+    <string name="title_activity_challenges_ranking">Challenges ranking</string>
+    <string name="snackbar_no_selected_cards">No selected cards</string>
+    <string name="snackbar_action_go_to_catalog">Go to catalog</string>
     <string name="title_activity_profile">Profile</string>
-    <string name="toolbar_title_profile">profile</string>
-    <string name="toolbar_rating">rating</string>
-    <string name="label_rating">rating</string>
-    <string name="user_created">created</string>
-    <string name="user_lastlogin">last login</string>
+    <string name="toolbar_title_profile">Profile</string>
+    <string name="toolbar_rating">Rating</string>
+    <string name="label_rating">Rating</string>
+    <string name="user_created">Created</string>
+    <string name="user_lastlogin">Last login</string>
 
 
 </resources>

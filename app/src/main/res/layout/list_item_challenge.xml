@@ -63,7 +63,7 @@
                     android:id="@+id/textview_user_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Name"
+                    android:text="User Name"
                     android:textAppearance="?attr/textAppearanceListItem" />
 
                 <TextView
@@ -71,7 +71,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:lines="2"
-                    android:text="Description"
+                    android:text="Description message content"
                     android:textSize="@dimen/item_small_text_size" />
 
 
@@ -82,6 +82,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:orientation="vertical">
+
             </LinearLayout>
        </LinearLayout>
     </LinearLayout>

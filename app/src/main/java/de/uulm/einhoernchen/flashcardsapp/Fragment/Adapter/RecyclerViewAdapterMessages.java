@@ -2,6 +2,7 @@ package de.uulm.einhoernchen.flashcardsapp.Fragment.Adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -92,8 +93,40 @@ public class RecyclerViewAdapterMessages extends RecyclerView.Adapter<RecyclerVi
                 }
             }
         });
+
+        setMessageTypeIcon(position, holder);
     }
 
+
+    /**
+     * Checks witch type the message is of and sets the corresponding icon
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     * @since 2017-02-23
+     *
+     * @param position
+     * @param holder
+     */
+    private void setMessageTypeIcon(int position, ViewHolder holder) {
+
+        if (Message.MessageType.DECK_CHALLENGE_MESSAGE == messages.get(position).getMessageType()) {
+
+            holder.mCarddeckChallenge.setVisibility(View.VISIBLE);
+        } else {
+
+            holder.mCarddeckChallenge.setVisibility(View.INVISIBLE);
+        }
+    }
+
+
+    /**
+     * Sets the round icon with the first letter of the data
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     *
+     * @param message
+     * @param holder
+     */
     private void setRoundIcon(Message message, ViewHolder holder) {
         //get first letter of each String item
         final String firstLetter = String.valueOf(message.getMessageType().toString().charAt(0)); // hier wird der buchstabe gesetzt
@@ -108,6 +141,7 @@ public class RecyclerViewAdapterMessages extends RecyclerView.Adapter<RecyclerVi
 
         holder.imageView.setImageDrawable(drawable);
     }
+
 
     /**
      * Sets the visibilities and states of the gui elements
@@ -191,6 +225,7 @@ public class RecyclerViewAdapterMessages extends RecyclerView.Adapter<RecyclerVi
         public final TextView textViewMessageDate;
         public final ImageView mLocalView;
         public final ImageView imageView; // Text icon
+        public final ImageView mCarddeckChallenge;
 
         public Message mItem;
 
@@ -214,6 +249,7 @@ public class RecyclerViewAdapterMessages extends RecyclerView.Adapter<RecyclerVi
             textViewMessageDate = (TextView) view.findViewById(R.id.textview_message_date);
 
             mLocalView = (ImageView) view.findViewById(R.id.image_view_offline);
+            mCarddeckChallenge = (ImageView) view.findViewById(R.id.image_view_carddeckchallenge);
 
             imageView = (ImageView) view.findViewById(R.id.image_view_round_icon);
 
