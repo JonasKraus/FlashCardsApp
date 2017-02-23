@@ -5,12 +5,10 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
-import android.support.v4.widget.SimpleCursorAdapter;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,9 +23,7 @@ import org.json.JSONObject;
 import java.util.List;
 
 import de.uulm.einhoernchen.flashcardsapp.AsyncTask.Remote.PATCH.AsyncPatchRemoteCarddeck;
-import de.uulm.einhoernchen.flashcardsapp.AsyncTask.Remote.POST.AsyncPostRemoteCarddeck;
 import de.uulm.einhoernchen.flashcardsapp.AsyncTask.Remote.POST.AsyncPostRemoteUserGroupAndDeck;
-import de.uulm.einhoernchen.flashcardsapp.AsyncTask.Remote.PUT.AsyncPutRemoteCategory;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.Adapter.RecyclerViewAdapterCarddecks;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.Interface.OnFragmentInteractionListenerCarddeck;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.Interface.OnFragmentInteractionListenerCarddeckLongClick;
@@ -343,10 +339,14 @@ public class FragmentCarddecks extends Fragment implements View.OnClickListener,
                         }
 
                         AsyncPatchRemoteCarddeck task = new AsyncPatchRemoteCarddeck(jsonObjectDeck, false);
+                        task.setCallingView(v);
 
                         if (ProcessConnectivity.isOk(Globals.getContext())) {
 
                             task.execute(deck.getId());
+                        } else {
+
+                            Snackbar.make(v, R.string.service_unavailable, Snackbar.LENGTH_SHORT).show();
                         }
                     }
                 }

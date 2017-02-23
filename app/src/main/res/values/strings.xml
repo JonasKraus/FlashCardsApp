@@ -62,7 +62,7 @@
     <string name="card_add">Add card</string>
 
     <!-- General buttons -->
-    <string name="save">Aave</string>
+    <string name="save">Save</string>
     <string name="cancel">Cancel</string>
     <string name="correct">Correct</string>
     <string name="incorrect">Incorrect</string>

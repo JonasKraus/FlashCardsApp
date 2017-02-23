@@ -1,13 +1,15 @@
 package de.uulm.einhoernchen.flashcardsapp.AsyncTask.Remote.PATCH;
 
 import android.os.AsyncTask;
+import android.support.design.widget.Snackbar;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.View;
+import android.widget.Toast;
 
 import org.json.JSONObject;
 
 import java.io.DataOutputStream;
-import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
@@ -26,6 +28,10 @@ public class AsyncPatchRemoteCarddeck extends AsyncTask<Long, Long, Long> {
     private boolean append;
     private RecyclerView.Adapter adapter;
 
+    private int responseCode = 0;
+    private String responseMessage = null;
+    private View view;
+
 
     /**
      * @author Jonas Kraus jonas.kraus@uni-ulm.de
@@ -38,6 +44,11 @@ public class AsyncPatchRemoteCarddeck extends AsyncTask<Long, Long, Long> {
         this.append = append;
         this.jsonObject = jsonObject;
         this.adapter = adapter;
+    }
+
+    public void setCallingView(View view) {
+
+        this.view = view;
     }
 
 
@@ -90,7 +101,10 @@ public class AsyncPatchRemoteCarddeck extends AsyncTask<Long, Long, Long> {
 
                 //Log.e("resp", urlConnection.getResponseCode()+"");
 
-                if (urlConnection.getResponseCode() >= 400) {
+                responseCode = urlConnection.getResponseCode();
+                responseMessage = urlConnection.getResponseMessage();
+
+                if (responseCode >= 400) {
 
                     Log.e("resp patch carddeck", urlConnection.getResponseCode()+ " " + urlConnection.getResponseMessage() + "");
 
@@ -122,6 +136,12 @@ public class AsyncPatchRemoteCarddeck extends AsyncTask<Long, Long, Long> {
 
         } else {
             Log.w("PATCH DECK", "FAILED");
+
+            if (this.view != null) {
+
+                Snackbar.make(this.view, responseMessage, Snackbar.LENGTH_SHORT).show();
+            }
+
         }
 
     }
