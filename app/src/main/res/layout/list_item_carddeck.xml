@@ -92,7 +92,7 @@
                         android:alpha=".3"
                         android:layout_marginBottom="25dp"
                         android:layout_gravity="bottom"
-                        android:src="@drawable/ic_library_books"/>
+                        android:src="@drawable/ic_carddeck"/>
 
                     <ImageView
                         android:id="@+id/image_view_offline"

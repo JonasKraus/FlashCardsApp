@@ -103,10 +103,11 @@
                         android:id="@+id/image_view_group"
                         android:layout_width="15dp"
                         android:layout_height="15dp"
+                        android:padding="1.5dp"
                         android:alpha=".3"
                         android:layout_marginBottom="25dp"
                         android:layout_gravity="bottom"
-                        android:src="@drawable/ic_help_outline"/>
+                        android:src="@drawable/ic_card"/>
 
                     <ImageView
                         android:id="@+id/image_view_offline"
