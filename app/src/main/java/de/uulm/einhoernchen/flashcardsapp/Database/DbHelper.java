@@ -424,7 +424,7 @@ public class DbHelper extends SQLiteOpenHelper {
             + COLUMN_SETTINGS_SHOW_LAST_DRAWER
             + " integer default 1, "
             + COLUMN_SETTINGS_DATE
-            + " LONG DEFAULT CURRENT_TIMESTAMP"
+            + " LONG DEFAULT 0"
             + ");";
 
 
