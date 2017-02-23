@@ -34,6 +34,8 @@ public class AsyncPatchRemoteCard extends AsyncTask<Long, Long, Long> {
 
 
     /**
+     * Constructor if no delegate is nedded
+     *
      * @author Jonas Kraus jonas.kraus@uni-ulm.de
      * @since 2016-12-30
      *
