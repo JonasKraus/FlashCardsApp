@@ -180,22 +180,7 @@ public class ProfileActivity extends AppCompatActivity {
 
         if (ProcessConnectivity.isOk(this)) {
 
-            AsyncGetRemoteUser asyncGetUser = new AsyncGetRemoteUser(Globals.getDb().getLoggedInUser().getId(), new AsyncGetRemoteUser.AsyncResponseUser() {
-
-                @Override
-                public void processFinish(User refreshedUser) {
-
-                    Globals.getDb().saveUser(refreshedUser, true);
-
-                    user = refreshedUser;
-
-                    setUserContent();
-
-                    collapsingToolbar.setTitle(ratingLabel + user.getRating());
-                }
-            });
-
-            asyncGetUser.execute();
+            asyncGetUser();
 
         } else {
 
@@ -204,6 +189,34 @@ public class ProfileActivity extends AppCompatActivity {
         }
 
 
+    }
+
+
+    /**
+     * Async task to get the users data
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     * @since 2017-02-23
+     *
+     */
+    private void asyncGetUser() {
+
+        AsyncGetRemoteUser asyncGetUser = new AsyncGetRemoteUser(Globals.getDb().getLoggedInUser().getId(), new AsyncGetRemoteUser.AsyncResponseUser() {
+
+            @Override
+            public void processFinish(User refreshedUser) {
+
+                Globals.getDb().saveUser(refreshedUser, true);
+
+                user = refreshedUser;
+
+                setUserContent();
+
+                collapsingToolbar.setTitle(ratingLabel + user.getRating());
+            }
+        });
+
+        asyncGetUser.execute();
     }
 
 
