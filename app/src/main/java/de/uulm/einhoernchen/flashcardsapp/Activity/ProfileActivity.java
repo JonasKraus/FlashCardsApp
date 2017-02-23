@@ -94,6 +94,7 @@ public class ProfileActivity extends AppCompatActivity {
 
         buttonLogout = (Button) findViewById(R.id.button_profile_logout);
         buttonLogout.setOnClickListener(new View.OnClickListener() {
+
             @Override
             public void onClick(View v) {
 
@@ -119,6 +120,7 @@ public class ProfileActivity extends AppCompatActivity {
      */
     private void toggleFabAction() {
 
+
         boolean editMode = editTextName.isEnabled();
 
         if (editMode) {
@@ -135,9 +137,27 @@ public class ProfileActivity extends AppCompatActivity {
 
             try {
 
-                jsonObjectUser.put(JsonKeys.USER_NAME, editTextName.getText().toString());
-                jsonObjectUser.put(JsonKeys.USER_EMAIL, editTextEmail.getText().toString());
-                jsonObjectUser.put(JsonKeys.USER_PASSWORD, editTextPassword.getText().toString());
+                this.user = Globals.getDb().getLoggedInUser();
+
+                String editName = editTextName.getText().toString();
+                String editEmail = editTextEmail.getText().toString();
+                String editPwd = editTextPassword.getText().toString();
+
+                if (!user.getName().equals(editName)) {
+
+                    jsonObjectUser.put(JsonKeys.USER_NAME, editName);
+                }
+
+                if (!user.getEmail().equals(editEmail)) {
+
+                    jsonObjectUser.put(JsonKeys.USER_EMAIL, editEmail);
+                }
+
+                if (!Globals.getDb().getLoggedInUser().getPassword().equals(editPwd)) {
+
+                    jsonObjectUser.put(JsonKeys.USER_PASSWORD, editPwd);
+                }
+
             } catch (JSONException e) {
 
                 e.printStackTrace();
@@ -168,7 +188,6 @@ public class ProfileActivity extends AppCompatActivity {
                     Globals.getDb().saveUser(refreshedUser, true);
 
                     user = refreshedUser;
-                    // TODO fill gui
 
                     setUserContent();
 
@@ -228,12 +247,19 @@ public class ProfileActivity extends AppCompatActivity {
      */
     private void setUserContent() {
 
-        textViewLastlogin.setText(user.getLastLogin().toGMTString());
-        textViewCreated.setText(user.getCreated().toGMTString());
+        if (user.getLastLogin() != null) {
+
+            textViewLastlogin.setText(user.getLastLogin().toGMTString());
+        }
+
+        if (user.getCreated() != null) {
+
+            textViewCreated.setText(user.getCreated().toGMTString());
+        }
 
         editTextName.setText(user.getName());
         editTextEmail.setText(user.getEmail());
-        editTextPassword.setText("xxxxxxxxxx");
+        editTextPassword.setText(Globals.getDb().getLoggedInUser().getPassword());
 
     }
 

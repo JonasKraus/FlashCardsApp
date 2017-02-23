@@ -5,9 +5,12 @@ import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.Toast;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.DataOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
@@ -16,6 +19,7 @@ import de.uulm.einhoernchen.flashcardsapp.AsyncTask.Remote.GET.AsyncGetRemoteUse
 import de.uulm.einhoernchen.flashcardsapp.Const.Routes;
 import de.uulm.einhoernchen.flashcardsapp.R;
 import de.uulm.einhoernchen.flashcardsapp.Util.Globals;
+import de.uulm.einhoernchen.flashcardsapp.Util.JsonKeys;
 import de.uulm.einhoernchen.flashcardsapp.Util.JsonParser;
 
 /**
@@ -26,6 +30,7 @@ public class AsyncPatchRemoteUser extends AsyncTask<Long, Long, Long> {
     private JSONObject jsonObject;
 
     private long userId;
+    private String newPwd = null;
 
 
     /**
@@ -51,6 +56,14 @@ public class AsyncPatchRemoteUser extends AsyncTask<Long, Long, Long> {
         for (long userId: params) {
 
             this.userId = userId;
+
+            try {
+                this.newPwd = jsonObject.getString(JsonKeys.USER_PASSWORD);
+
+            } catch (JSONException e) {
+
+                // e.printStackTrace();
+            }
 
             String urlString = Routes.URL + Routes.SLASH + Routes.USERS + Routes.SLASH + userId;
             Log.d("back call to", urlString);
@@ -78,11 +91,14 @@ public class AsyncPatchRemoteUser extends AsyncTask<Long, Long, Long> {
                 wr.writeBytes(jsonObject.toString());
                 wr.flush();
 
-                // Log.d(urlConnection.getRequestMethod() + " json", jsonObject.toString());
+                Log.d(urlConnection.getRequestMethod() + " json", jsonObject.toString() + " " + urlConnection.getRequestProperty("Authorization"));
+
+                //JsonParser.readResponse(urlConnection.getInputStream());
 
                 if (urlConnection.getResponseCode() >= 400) {
 
-                    Log.e("resp", urlConnection.getResponseCode()+ " " + urlConnection.getResponseMessage() + "");
+                    Log.w("resp", urlConnection.getResponseCode()+ " " + urlConnection.getResponseMessage() + "");
+
                 }
 
                 return JsonParser.readResponse(urlConnection.getInputStream());
@@ -105,6 +121,11 @@ public class AsyncPatchRemoteUser extends AsyncTask<Long, Long, Long> {
 
             AsyncGetRemoteUser asyncGetRemoteUser = new AsyncGetRemoteUser(userId, null);
             asyncGetRemoteUser.execute();
+
+            if (newPwd != null) {
+
+                Globals.getDb().saveUserPassword(userId, newPwd);
+            }
 
             Toast.makeText(Globals.getContext(), R.string.saved_successfully, Toast.LENGTH_SHORT).show();
 

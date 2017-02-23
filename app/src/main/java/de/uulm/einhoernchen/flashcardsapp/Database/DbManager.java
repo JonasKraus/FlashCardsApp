@@ -271,10 +271,12 @@ public class DbManager extends DbHelper{
      */
     public User getLoggedInUser() {
 
+        /*
         if (this.loggedInUser != null) {
 
             return this.loggedInUser;
         }
+        */
 
         User user = null;
         Cursor cursor = database.query(DbHelper.TABLE_USER, allUserColumns,
@@ -2647,4 +2649,23 @@ public class DbManager extends DbHelper{
         return countPlayed == countCardDeckCards(deckId);
     }
 
+
+    /**
+     * Updates the pwd of a user
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     * @since 2017-02-22
+     *
+     * @param userId
+     * @param newPwd
+     */
+    public void saveUserPassword(long userId, String newPwd) {
+
+        loggedInUser.setPassword(newPwd);
+
+        ContentValues values = new ContentValues();
+        values.put(DbHelper.COLUMN_USER_PASSWORD, newPwd);
+
+        database.updateWithOnConflict(TABLE_USER, values, COLUMN_USER_ID + "=" + userId, null ,SQLiteDatabase.CONFLICT_REPLACE);
+    }
 }

@@ -1176,9 +1176,9 @@ public class JsonParser {
 
                     if (statuscode < 400) {
                         created = true;
-                    } else {
+                    } else if (statuscode >= 400){
 
-                        Log.d("parse resp", statuscode + "");
+                        Log.d("parser response", statuscode + "");
                     }
 
                 } else if (stringName.equals(JsonKeys.DESCRIPTION)) {
@@ -1188,7 +1188,9 @@ public class JsonParser {
                     if (check != JsonToken.NULL) {
 
                         description = reader.nextString();
-                        Log.d("parse descriptions", description + "");
+                        if (statuscode > 400) {
+                            Log.d("parse description", description + "");
+                        }
 
                     } else {
                         reader.nextNull();
