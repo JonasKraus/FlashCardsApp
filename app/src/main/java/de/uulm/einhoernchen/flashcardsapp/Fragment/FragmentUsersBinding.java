@@ -128,8 +128,12 @@ public class FragmentUsersBinding extends Fragment implements SearchView.OnQuery
                              Bundle savedInstanceState) {
 
 
-        Bundle bundle = getActivity().getIntent().getExtras();
-        deckId = bundle.getLong("deckId");
+        // Check if extras are given
+        if (getActivity().getIntent().hasExtra("deckId")) {
+
+            deckId = getActivity().getIntent().getExtras().getLong("deckId");
+        }
+
 
         groupId = ((UsersActivity)getActivity()).getGroupId();
 
