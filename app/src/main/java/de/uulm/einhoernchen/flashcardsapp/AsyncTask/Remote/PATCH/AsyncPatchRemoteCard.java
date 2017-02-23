@@ -8,8 +8,11 @@ import org.json.JSONObject;
 import java.io.DataOutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.List;
 
+import de.uulm.einhoernchen.flashcardsapp.AsyncTask.Remote.GET.AsyncGetRemoteCarddecks;
 import de.uulm.einhoernchen.flashcardsapp.Const.Routes;
+import de.uulm.einhoernchen.flashcardsapp.Model.CardDeck;
 import de.uulm.einhoernchen.flashcardsapp.Util.Globals;
 import de.uulm.einhoernchen.flashcardsapp.Util.JsonParser;
 
@@ -18,8 +21,16 @@ import de.uulm.einhoernchen.flashcardsapp.Util.JsonParser;
  */
 public class AsyncPatchRemoteCard extends AsyncTask<Long, Long, Long> {
 
+    /**
+     * Interface to receive the card in the activity that called this async task
+     */
+    public interface AsyncPatchResponseRemoteCard {
+        void processFinish(long id);
+    }
+
     private JSONObject jsonObject;
     private long cardId;
+    public AsyncPatchRemoteCard.AsyncPatchResponseRemoteCard delegate = null;
 
 
     /**
@@ -33,6 +44,25 @@ public class AsyncPatchRemoteCard extends AsyncTask<Long, Long, Long> {
         this.jsonObject = jsonObject;
         this.cardId = cardId;
     }
+
+
+
+    /**
+     * Constructor with delegate
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     * @since 2017-02-23
+     *
+     * @param jsonObject
+     * @param delegate
+     */
+    public AsyncPatchRemoteCard(JSONObject jsonObject, long cardId, AsyncPatchRemoteCard.AsyncPatchResponseRemoteCard delegate) {
+
+        this.jsonObject = jsonObject;
+        this.cardId = cardId;
+        this.delegate = delegate;
+    }
+
 
     @Override
     protected void onPreExecute() {
@@ -96,8 +126,9 @@ public class AsyncPatchRemoteCard extends AsyncTask<Long, Long, Long> {
     protected void onPostExecute(Long id) {
         super.onPostExecute(id);
 
-        if (id != null) {
+        delegate.processFinish(id);
 
+        if (id != null) {
 
         }
 

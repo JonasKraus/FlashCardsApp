@@ -35,10 +35,13 @@ import org.json.JSONObject;
 import java.util.List;
 
 import de.uulm.einhoernchen.flashcardsapp.AsyncTask.Remote.DELETE.AsyncDeleteRemoteRating;
+import de.uulm.einhoernchen.flashcardsapp.AsyncTask.Remote.GET.AsyncGetRemoteCarddecks;
 import de.uulm.einhoernchen.flashcardsapp.AsyncTask.Remote.PATCH.AsyncPatchRemoteCard;
 import de.uulm.einhoernchen.flashcardsapp.AsyncTask.Remote.POST.AsyncPostRemoteRating;
 import de.uulm.einhoernchen.flashcardsapp.Database.DbManager;
+import de.uulm.einhoernchen.flashcardsapp.Fragment.Dataset.ContentFlashCard;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.Dataset.ContentFlashCardAnswers;
+import de.uulm.einhoernchen.flashcardsapp.Model.CardDeck;
 import de.uulm.einhoernchen.flashcardsapp.Model.FlashCard;
 import de.uulm.einhoernchen.flashcardsapp.Model.Tag;
 import de.uulm.einhoernchen.flashcardsapp.R;
@@ -635,7 +638,14 @@ public class FragmentFlashCard extends Fragment implements View.OnClickListener 
 
                     jsonObject.put("answers", jsonArray);
 
-                    AsyncPatchRemoteCard task = new AsyncPatchRemoteCard(jsonObject, this.flashCard.getId());
+                    AsyncPatchRemoteCard task = new AsyncPatchRemoteCard(jsonObject, this.flashCard.getId(), new AsyncPatchRemoteCard.AsyncPatchResponseRemoteCard() {
+
+                        @Override
+                        public void processFinish(long id) {
+
+                            new ContentFlashCard().collectItemFromServer(flashCard.getId(), false);
+                        }
+                    });
 
                     if (ProcessConnectivity.isOk(getContext())) {
 
@@ -752,12 +762,23 @@ public class FragmentFlashCard extends Fragment implements View.OnClickListener 
             e.printStackTrace();
         }
 
+        AsyncPatchRemoteCard task = new AsyncPatchRemoteCard(jsonObjectQuestion, this.flashCard.getId(), new AsyncPatchRemoteCard.AsyncPatchResponseRemoteCard() {
 
-        AsyncPatchRemoteCard task = new AsyncPatchRemoteCard(jsonObjectQuestion, flashCard.getId());
+            @Override
+            public void processFinish(long id) {
+
+                Log.d("antwort", id+"");
+                new ContentFlashCard().collectItemFromServer(flashCard.getId(), false);
+            }
+        });
 
         if (ProcessConnectivity.isOk(getContext())) {
 
             task.execute();
+        } else {
+
+            Snackbar.make(this.getView(), getContext().getString(R.string.service_unavailable), Snackbar.LENGTH_LONG).show();
+            return;
         }
 
     }
