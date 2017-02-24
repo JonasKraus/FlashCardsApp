@@ -397,7 +397,7 @@ public class FragmentFlashCardCreate extends Fragment implements View.OnClickLis
         //Globals.getFloatingActionButton().setVisibility(View.VISIBLE);
 
 
-        ((AppCompatActivity) getActivity()).getSupportActionBar().show();
+
 
     }
 

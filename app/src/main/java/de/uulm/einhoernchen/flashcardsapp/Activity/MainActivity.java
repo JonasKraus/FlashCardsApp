@@ -104,7 +104,7 @@ public class MainActivity extends AppCompatActivity
     private View header;
     private FloatingActionButton floatingActionButton;
     private FloatingActionButton floatingActionButtonAdd;
-    private CollapsingToolbarLayout collapsingToolbar;
+    public CollapsingToolbarLayout collapsingToolbar;
     private FragmentPlayTabs fragmentPlay;
 
     @Override
@@ -784,7 +784,8 @@ public class MainActivity extends AppCompatActivity
 
                 confirmBackPressedToCardList();
 
-                collapsingToolbar.setVisibility(View.VISIBLE);
+                //collapsingToolbar.setVisibility(View.VISIBLE);
+
                 break;
             default:
 
@@ -825,6 +826,7 @@ public class MainActivity extends AppCompatActivity
                     public void onClick(DialogInterface dialog, int id) {
 
                         setFlashcardList(true);
+                        collapsingToolbar.setVisibility(View.VISIBLE);
                     }
                 })
                 .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
