@@ -82,11 +82,6 @@ public class FlashCard {
         this.author = author;
         if(answers!=null){
             this.answers = answers;
-            for (Answer a: answers) {
-                if(a!=null){
-                    a.setCard(this);
-                    a.update();}
-            }
         }
         if(question!=null){
             this.question = question;

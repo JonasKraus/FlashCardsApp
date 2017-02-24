@@ -31,7 +31,6 @@ public class Answer {
     @JsonProperty(JsonKeys.URI)
     private String uri;
 
-    // TODO: 11/07/16  Ist die Antwort richtig oder falsch?
     @JsonProperty(JsonKeys.AUTHOR)
     private User author;
 
@@ -50,6 +49,10 @@ public class Answer {
 
     @JsonProperty(JsonKeys.ANSWER_CORRECT)
     private boolean isCorrect;
+
+    // if the answer belongs to a card with multiple choice
+    // relevant for creating a card
+    private Boolean multipleChoiceAnswer = null;
 
     public Answer(String answerText, String hintText, User author) {
         this.answerText = answerText;
@@ -98,12 +101,13 @@ public class Answer {
      * @param isCorrect
      * @param user
      */
-    public Answer(String text, String hint, String uri, boolean isCorrect, User user) {
+    public Answer(String text, String hint, String uri, boolean isCorrect, User user, boolean multipleChoiceAnswer) {
         this.answerText = text;
         this.hintText = hint;
         this.uri = uri;
         this.isCorrect = isCorrect;
         this.author = user;
+        this.multipleChoiceAnswer = multipleChoiceAnswer;
     }
 
 
@@ -202,23 +206,9 @@ public class Answer {
 
     public void setCard(FlashCard card) {
         this.card = card;
-        // @TODO to be implemented
-        //this.update();
-    }
-    /**
-     * Adds the given rating to the current rating, updates this instance and calls the function on the corresponding user.
-     * @param ratingModifier
-     */
-    public void updateRating(int ratingModifier){
-        this.rating+=ratingModifier;
-        // @TODO to be implemented
-        //this.update();
-        //update user as well, work on the newest data from the db, not our local reference.
-        //User.find.byId(author.getId()).updateRating(ratingModifier);
     }
 
-    public static void update() {
-        // @TODO to be implemented
+    public Boolean isMultipleChoiceAnswer() {
+        return multipleChoiceAnswer;
     }
-
 }

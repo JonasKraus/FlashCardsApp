@@ -524,7 +524,7 @@ public class FragmentFlashCardCreate extends Fragment implements View.OnClickLis
         String answerUri = editTextAnswerUri.getText().toString();
         editTextAnswerUri.setText(null);
 
-        answers.add(new Answer(answerText, answerHint, answerUri, isCorrect, db.getLoggedInUser()));
+        answers.add(new Answer(answerText, answerHint, answerUri, isCorrect, db.getLoggedInUser(), checkBoxMultipleChoice.isChecked()));
         fragmentAnswers.setItemList(answers);
 
         createNewAnswerAdapter(answers, null, false);

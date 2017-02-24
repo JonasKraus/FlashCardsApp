@@ -275,11 +275,19 @@ public class RecyclerViewAdapterFlashCardAnswers extends RecyclerView.Adapter<Re
             holder.checkBoxPlay.setVisibility(View.VISIBLE);
             holder.mIsCorrect.setVisibility(View.GONE);
 
-        }else  {
+        } else  {
 
             holder.mIsCorrect.setVisibility(View.VISIBLE);
             holder.llAnswerCheck.setVisibility(View.VISIBLE);
         }
+
+        if (answers.get(position).isMultipleChoiceAnswer() != null) {
+
+            holder.mIsCorrect.setVisibility(View.VISIBLE);
+            holder.llAnswerCheck.setVisibility(View.VISIBLE);
+            holder.checkBoxPlay.setVisibility(View.GONE);
+        }
+
 
         /**
          * Check if the data is from the server or from the local db
