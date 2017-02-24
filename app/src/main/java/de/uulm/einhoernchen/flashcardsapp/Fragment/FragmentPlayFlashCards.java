@@ -264,10 +264,17 @@ public class FragmentPlayFlashCards extends Fragment implements View.OnClickList
     public void onResume() {
         super.onResume();
 
-        ((AppCompatActivity) getActivity()).getSupportActionBar();
-        Globals.setVisibilityToolbarMain(View.VISIBLE);
+        //((AppCompatActivity) getActivity()).getSupportActionBar();
+
+        Globals.setVisibilityToolbarMain(View.GONE);
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+
+        Globals.setVisibilityToolbarMain(View.VISIBLE);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -276,8 +283,6 @@ public class FragmentPlayFlashCards extends Fragment implements View.OnClickList
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_play_question, container, false);
 
-        ((AppCompatActivity) getActivity()).getSupportActionBar();
-        Globals.setVisibilityToolbarMain(View.VISIBLE);
 
         // Create statistic Object
 

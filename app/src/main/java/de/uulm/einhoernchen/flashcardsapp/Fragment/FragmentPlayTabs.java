@@ -10,9 +10,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import de.uulm.einhoernchen.flashcardsapp.Activity.MainActivity;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.Adapter.FragmentPagerAdapterPlay;
 import de.uulm.einhoernchen.flashcardsapp.Model.Message;
 import de.uulm.einhoernchen.flashcardsapp.R;
+import de.uulm.einhoernchen.flashcardsapp.Util.Globals;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -63,6 +65,7 @@ public class FragmentPlayTabs extends Fragment {
 
         TabLayout tabs = (TabLayout) view.findViewById(R.id.tabs_play);
         tabs.setupWithViewPager(viewPager);
+
 
         return view;
     }

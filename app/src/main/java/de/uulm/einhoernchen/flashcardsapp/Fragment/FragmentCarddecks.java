@@ -90,6 +90,7 @@ public class FragmentCarddecks extends Fragment implements View.OnClickListener,
 
         Globals.getFloatingActionButtonAdd().setVisibility(View.VISIBLE);
         Globals.getFloatingActionButtonAdd().setOnClickListener(this);
+        Globals.setVisibilityToolbarMain(View.VISIBLE);
 
         // Set the adapter
         if (viewFragment instanceof RecyclerView) {
