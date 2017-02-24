@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.ViewStubCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -252,11 +253,18 @@ public class RecyclerViewAdapterFlashCardAnswers extends RecyclerView.Adapter<Re
         }
 
         // Check if check icon should be visible
-        if (isPlayMultiplyChoiceMode || !Globals.getDb().isAnswerOfTypeMultiplyChoice(answers.get(position).getId())) {
+        if (!Globals.getDb().isAnswerOfTypeMultiplyChoice(answers.get(position).getId())) {
 
             holder.mIsCorrect.setVisibility(View.GONE);
             holder.llAnswerCheck.setVisibility(View.GONE);
-        } else {
+
+        } else if (isPlayMultiplyChoiceMode){
+
+            //holder.llAnswerCheck.setVisibility(View.VISIBLE);
+            holder.checkBoxPlay.setVisibility(View.VISIBLE);
+            holder.mIsCorrect.setVisibility(View.GONE);
+
+        }else  {
 
             holder.mIsCorrect.setVisibility(View.VISIBLE);
             holder.llAnswerCheck.setVisibility(View.VISIBLE);

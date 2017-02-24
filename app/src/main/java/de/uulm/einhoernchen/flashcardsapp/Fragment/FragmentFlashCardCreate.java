@@ -37,9 +37,11 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.uulm.einhoernchen.flashcardsapp.Activity.MainActivity;
 import de.uulm.einhoernchen.flashcardsapp.AsyncTask.Remote.POST.AsyncPostRemoteCard;
 import de.uulm.einhoernchen.flashcardsapp.Database.DbManager;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.Adapter.RecyclerViewAdapterFlashCardAnswers;
+import de.uulm.einhoernchen.flashcardsapp.Fragment.Dataset.ContentFlashCard;
 import de.uulm.einhoernchen.flashcardsapp.Model.Answer;
 import de.uulm.einhoernchen.flashcardsapp.Model.FlashCard;
 import de.uulm.einhoernchen.flashcardsapp.Model.Question;
@@ -391,7 +393,7 @@ public class FragmentFlashCardCreate extends Fragment implements View.OnClickLis
         Globals.getFloatingActionButton().setOnClickListener(null);
         Globals.getFloatingActionButton().setImageDrawable(Globals.getContext().getResources().getDrawable(R.drawable.ic_school));
         */
-        Globals.getFloatingActionButton().setVisibility(View.VISIBLE);
+        //Globals.getFloatingActionButton().setVisibility(View.VISIBLE);
 
 
         ((AppCompatActivity) getActivity()).getSupportActionBar().show();
@@ -630,7 +632,14 @@ public class FragmentFlashCardCreate extends Fragment implements View.OnClickLis
             e.printStackTrace();
         }
 
-        AsyncPostRemoteCard task = new AsyncPostRemoteCard(jsonObjectQuestion);
+        AsyncPostRemoteCard task = new AsyncPostRemoteCard(jsonObjectQuestion, new AsyncPostRemoteCard.AsyncPostRemoteCardResponse() {
+
+            @Override
+            public void processFinished(long id) {
+
+                new ContentFlashCard().collectItemFromServer(id, false);
+            }
+        });
 
         if (ProcessConnectivity.isOk(getContext(), true)) {
 

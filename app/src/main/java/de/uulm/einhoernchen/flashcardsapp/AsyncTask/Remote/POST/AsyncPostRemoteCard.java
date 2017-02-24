@@ -26,7 +26,13 @@ public class AsyncPostRemoteCard extends AsyncTask<Long, Long, Long> {
     private JSONObject jsonObject;
     private Long carddeckId;
     private Long userGroupId;
+    private AsyncPostRemoteCardResponse delegate;
 
+
+    public interface AsyncPostRemoteCardResponse {
+
+        public void processFinished(long id);
+    }
 
 
     /**
@@ -39,6 +45,23 @@ public class AsyncPostRemoteCard extends AsyncTask<Long, Long, Long> {
 
         this.jsonObject = jsonObject;
     }
+
+
+    /**
+     * Constructs with delegate
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     * @since 2016-12-30
+     *
+     * @param jsonObject
+     * @param delegate
+     */
+    public AsyncPostRemoteCard(JSONObject jsonObject, AsyncPostRemoteCardResponse delegate) {
+
+        this.jsonObject = jsonObject;
+        this.delegate = delegate;
+    }
+
 
     @Override
     protected void onPreExecute() {
@@ -130,8 +153,11 @@ public class AsyncPostRemoteCard extends AsyncTask<Long, Long, Long> {
             AsyncPatchRemoteCarddeck task = new AsyncPatchRemoteCarddeck(jsonObjectCards, true);
             task.execute(this.carddeckId);
 
-            MainActivity mainActivity = (MainActivity) Globals.getContext();
-            mainActivity.createFragmentFlashCardById(id,false);
+            if (delegate != null) {
+
+                delegate.processFinished(id);
+            }
+
 
         } else {
             Log.w("POST CARD", "FAILED");

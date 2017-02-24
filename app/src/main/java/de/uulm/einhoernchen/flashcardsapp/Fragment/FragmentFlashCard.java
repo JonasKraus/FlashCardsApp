@@ -512,6 +512,7 @@ public class FragmentFlashCard extends Fragment implements View.OnClickListener 
     public void onResume() {
         super.onResume();
 
+        Globals.getFloatingActionButtonAdd().setVisibility(View.GONE);
     }
 
 
