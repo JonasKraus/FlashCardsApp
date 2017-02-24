@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Process;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -422,11 +423,18 @@ public class FragmentFlashCard extends Fragment implements View.OnClickListener 
             @Override
             public void onClick(View v) {
 
+                if (!ProcessConnectivity.isOk(getContext())) {
+
+                    Snackbar.make(v, Globals.getContext().getString(R.string.service_unavailable), Snackbar.LENGTH_SHORT).show();
+                    return;
+                }
+
                 int lastVoting = db.getCardVoting(cardID);
 
                 if (!db.saveCardVoting(cardID, -1)) {
 
-                    Toast.makeText(getContext(), getResources().getText(R.string.voting_already_voted), Toast.LENGTH_SHORT).show();
+                    Snackbar.make(v, Globals.getContext().getString(R.string.voting_already_voted), Snackbar.LENGTH_SHORT).show();
+                    return;
                 } else {
 
                     Long ratingId = db.getCardVotingRatingId(cardID);
@@ -467,10 +475,17 @@ public class FragmentFlashCard extends Fragment implements View.OnClickListener 
             @Override
             public void onClick(View v) {
 
+                if (!ProcessConnectivity.isOk(getContext())) {
+
+                    Snackbar.make(v, Globals.getContext().getString(R.string.service_unavailable), Snackbar.LENGTH_SHORT).show();
+                    return;
+                }
+
                 int lastVoting = db.getCardVoting(cardID);
+
                     if (!db.saveCardVoting(cardID, +1)) {
 
-                        Toast.makeText(getContext(), getResources().getText(R.string.voting_already_voted), Toast.LENGTH_SHORT).show();
+                        Snackbar.make(v, Globals.getContext().getString(R.string.voting_already_voted), Snackbar.LENGTH_SHORT).show();
                     } else {
 
                         Long ratingId = db.getCardVotingRatingId(cardID);
