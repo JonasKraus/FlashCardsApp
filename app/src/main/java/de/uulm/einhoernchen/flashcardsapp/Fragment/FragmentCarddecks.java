@@ -236,8 +236,6 @@ public class FragmentCarddecks extends Fragment implements View.OnClickListener,
                     String descriptionString = description.getText().toString();
                     boolean isVisible = visible.isChecked();
 
-                    Log.d("validate", ValidatorInput.isNotEmpty(text)+"");
-                    Log.d("validate", ValidatorInput.isNotEmpty(groupName)+"");
 
                     if (!ValidatorInput.isNotEmpty(text)
                             || !ValidatorInput.isNotEmpty(groupName)) {
@@ -337,9 +335,10 @@ public class FragmentCarddecks extends Fragment implements View.OnClickListener,
                     String descriptionString = description.getText().toString();
                     boolean isVisible = visible.isChecked();
 
-                    if (textString == null || textString.equals("")) {
+                    if (!ValidatorInput.isNotEmpty(text)
+                            || !ValidatorInput.isNotEmpty(groupName)) {
 
-                        Snackbar.make(v, R.string.insert_text, Snackbar.LENGTH_SHORT).show();
+                        Snackbar.make(v, Globals.getContext().getString(R.string.nothing_to_save), Snackbar.LENGTH_SHORT).show();
 
                     } else if (!ProcessConnectivity.isOk(getContext(), true)){
                         // Do nothing
