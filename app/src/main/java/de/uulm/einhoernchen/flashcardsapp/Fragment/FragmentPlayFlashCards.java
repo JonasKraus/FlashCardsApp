@@ -109,6 +109,7 @@ public class FragmentPlayFlashCards extends Fragment implements View.OnClickList
     private Statistic statistic;
     private List<Statistic> statistics;
     private Message message;
+    private NestedScrollView mainScrollView;
 
 
     public FragmentPlayFlashCards() {
@@ -283,6 +284,7 @@ public class FragmentPlayFlashCards extends Fragment implements View.OnClickList
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_play_question, container, false);
 
+        mainScrollView = (NestedScrollView) view.findViewById(R.id.nested_scrollview_content_play);
 
         // Create statistic Object
 
@@ -382,6 +384,8 @@ public class FragmentPlayFlashCards extends Fragment implements View.OnClickList
      *
      */
     public void setContent() {
+
+        mainScrollView.fullScroll(NestedScrollView.FOCUS_UP);
 
         setAnswers();
 
@@ -802,7 +806,9 @@ public class FragmentPlayFlashCards extends Fragment implements View.OnClickList
             case PLAY_DIALOG:
 
                 // Custom Dialog which saves a statistic
-                new DialogKnowledge(getContext(), statistic).show();
+                DialogKnowledge dialogKnowledge = new DialogKnowledge(getContext(), statistic);
+                dialogKnowledge.setCancelable(false);
+                dialogKnowledge.show();
                 state = Constants.PLAY_QUESTION;
                 break;
 
