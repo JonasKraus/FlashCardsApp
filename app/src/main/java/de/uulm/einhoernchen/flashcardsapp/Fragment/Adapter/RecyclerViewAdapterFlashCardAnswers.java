@@ -252,10 +252,14 @@ public class RecyclerViewAdapterFlashCardAnswers extends RecyclerView.Adapter<Re
         }
 
         // Check if check icon should be visible
-        if (!isPlayMultiplyChoiceMode && !Globals.getDb().isAnswerOfTypeMultiplyChoice(answers.get(position).getId())) {
+        if (isPlayMultiplyChoiceMode || !Globals.getDb().isAnswerOfTypeMultiplyChoice(answers.get(position).getId())) {
 
             holder.mIsCorrect.setVisibility(View.GONE);
             holder.llAnswerCheck.setVisibility(View.GONE);
+        } else {
+
+            holder.mIsCorrect.setVisibility(View.VISIBLE);
+            holder.llAnswerCheck.setVisibility(View.VISIBLE);
         }
 
         /**

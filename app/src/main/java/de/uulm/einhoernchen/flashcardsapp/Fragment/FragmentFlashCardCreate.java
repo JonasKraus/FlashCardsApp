@@ -428,9 +428,20 @@ public class FragmentFlashCardCreate extends Fragment implements View.OnClickLis
             case  R.id.fab_card_create:
             case R.id.fab:
 
+                if (answers.size() > 0
+                        && (editTextAnswerText.getText().toString().equals(""))
+                        && (editTextAnswerUri.getText().toString().equals(""))
+                        && (editTextAnswerHint.getText().toString().equals(""))
+                        ) {
+                    saveQuestion();
+                    return;
+                }
+
+                if (!validateQuestion()) return;
+
                 String answerText = editTextAnswerText.getText().toString();
                 // Check if the text is not empty
-                if (answerText != null && !answerText.equals("")) {
+                if (validateAnswer()) {
 
                     if (ProcessConnectivity.isOk(this.getContext())) {
 
@@ -439,12 +450,16 @@ public class FragmentFlashCardCreate extends Fragment implements View.OnClickLis
 
                         Snackbar.make(v, Globals.getContext().getString(R.string.service_unavailable), Snackbar.LENGTH_SHORT).show();
                     }
+                } else {
+
+                    return;
                 }
 
                 // Check if multiple choice - so you need to set two answers
-                if (checkBoxMultipleChoice.isChecked() && answers.size() < 1) {
+                if (answers.size() < 1) {
 
                     Snackbar.make(v, getContext().getString(R.string.add_one_answer), Snackbar.LENGTH_LONG).show();
+                    return;
                 }
 
                 saveQuestion();
@@ -487,36 +502,24 @@ public class FragmentFlashCardCreate extends Fragment implements View.OnClickLis
      */
     private void addAnswerToListView() {
 
-        // check if values ar valid else return and do nothing
-        if (!validateAnswer()) return;
-
-        String answerText = editTextAnswerText.getText().toString();
-
-        if (answerText == null || answerText.equals("")) {
-
-            Snackbar.make(this.getView(), getContext().getText(R.string.insert_text), Snackbar.LENGTH_SHORT).show();
-            return;
-        }
-
-        editTextAnswerText.setText(null);
-        String answerHint = editTextAnswerHint.getText().toString();
-        editTextAnswerHint.setText(null);
-        String answerUri = editTextAnswerUri.getText().toString();
-        editTextAnswerUri.setText(null);
-
-
         Boolean isCorrect = true;
 
         if (checkBoxMultipleChoice.isChecked()) {
 
-            if (!radioButtonAnswerCorrect.isChecked() && !radioButtonAnswerIncorrect.isChecked()) {
+            if (!ValidatorInput.hasCheck(radioGroupAnswerCorrect)) {
 
-                Snackbar.make(this.getView(), getContext().getText(R.string.set_is_correct), Snackbar.LENGTH_SHORT).show();
                 return;
             }
 
             isCorrect = radioButtonAnswerCorrect.isChecked();
         }
+
+        String answerText = editTextAnswerText.getText().toString();
+        editTextAnswerText.setText(null);
+        String answerHint = editTextAnswerHint.getText().toString();
+        editTextAnswerHint.setText(null);
+        String answerUri = editTextAnswerUri.getText().toString();
+        editTextAnswerUri.setText(null);
 
         answers.add(new Answer(answerText, answerHint, answerUri, isCorrect, db.getLoggedInUser()));
         fragmentAnswers.setItemList(answers);
@@ -647,7 +650,15 @@ public class FragmentFlashCardCreate extends Fragment implements View.OnClickLis
      */
     private boolean validateAnswer() {
 
-        return ValidatorInput.isNotEmpty(editTextAnswerText) && ValidatorInput.isValidUri(editTextAnswerUri);
+        if(checkBoxMultipleChoice.isChecked()) {
+
+            return ValidatorInput.isNotEmpty(editTextAnswerText)
+                    && ValidatorInput.isValidUri(editTextAnswerUri)
+                    && ValidatorInput.hasCheck(radioGroupAnswerCorrect);
+        }
+
+        return ValidatorInput.isNotEmpty(editTextAnswerText)
+                && ValidatorInput.isValidUri(editTextAnswerUri);
     }
 
 
