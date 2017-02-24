@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.NestedScrollView;
 import android.text.Html;
@@ -12,10 +13,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RadioButton;
@@ -23,10 +26,15 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.List;
 
 import de.uulm.einhoernchen.flashcardsapp.Activity.MainActivity;
 import de.uulm.einhoernchen.flashcardsapp.AsyncTask.Remote.DELETE.AsyncDeleteRemoteRating;
+import de.uulm.einhoernchen.flashcardsapp.AsyncTask.Remote.PATCH.AsyncPatchRemoteCard;
 import de.uulm.einhoernchen.flashcardsapp.AsyncTask.Remote.POST.AsyncPostRemoteRating;
 import de.uulm.einhoernchen.flashcardsapp.Const.Constants;
 import de.uulm.einhoernchen.flashcardsapp.Database.DbManager;
@@ -39,6 +47,7 @@ import de.uulm.einhoernchen.flashcardsapp.R;
 import de.uulm.einhoernchen.flashcardsapp.Util.Globals;
 import de.uulm.einhoernchen.flashcardsapp.Util.ProcessConnectivity;
 import de.uulm.einhoernchen.flashcardsapp.Util.ProcessorImage;
+import de.uulm.einhoernchen.flashcardsapp.Util.ValidatorInput;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -68,6 +77,11 @@ public class FragmentPlayFlashCards extends Fragment implements View.OnClickList
     private ImageView imageViewEditQuestion;
     private ImageView imageViewSaveQuestion;
 
+    private EditText editTextAnswerText;
+    private EditText editTextAnswerHint;
+    private EditText editTextAnswerUri;
+    private FloatingActionButton buttonAnswerEditorSave;
+
     private FrameLayout frameLayoutAnswers;
 
     private WebView webViewUri;
@@ -81,7 +95,7 @@ public class FragmentPlayFlashCards extends Fragment implements View.OnClickList
     private FloatingActionButton fab = Globals.getFloatingActionButton();
 
     private DbManager db = Globals.getDb();
-    private FlashCard currentFlashcard;
+    public FlashCard currentFlashcard;
     private int position = 0;
     private Constants state = Constants.PLAY_QUESTION;
 
@@ -198,6 +212,10 @@ public class FragmentPlayFlashCards extends Fragment implements View.OnClickList
         imageViewSaveQuestion = (ImageView) view.findViewById(R.id.imageview_question_save);
 
         buttonAddAnswer = (Button) view.findViewById(R.id.button_add_answer);
+        editTextAnswerText = (EditText) view.findViewById(R.id.edittext_answer_text);
+        editTextAnswerHint = (EditText) view.findViewById(R.id.edittext_answer_hint);
+        editTextAnswerUri = (EditText) view.findViewById(R.id.edittext_answer_uri);
+        buttonAnswerEditorSave = (FloatingActionButton) view.findViewById(R.id.fab_card_details_answer_add);
 
         imageViewPlay = (ImageView) view.findViewById(R.id.imageview_card_media_play);
         radioGroupAnswerCorrect = (RadioGroup) view.findViewById(R.id.radio_buttongroup_answer_editor);
@@ -332,7 +350,10 @@ public class FragmentPlayFlashCards extends Fragment implements View.OnClickList
      */
     private void setAnswers() {
 
-        contentAnswers = new ContentFlashCardAnswers();
+        if (contentAnswers == null) {
+
+            contentAnswers = new ContentFlashCardAnswers();
+        }
         contentAnswers.collectItemsFromDb(currentFlashcard.getId(), false, currentFlashcard.isMultipleChoice());
         contentAnswers.collectItemsFromServer(currentFlashcard.getId(), false, currentFlashcard.isMultipleChoice());
     }
@@ -573,6 +594,97 @@ public class FragmentPlayFlashCards extends Fragment implements View.OnClickList
             }
         });
 
+
+        // Click listeer to add answer
+        buttonAnswerEditorSave.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if (!validateAnswer()) {
+
+                    return;
+
+                } else if (!ProcessConnectivity.isOk(getContext())) {
+
+                    Snackbar.make(v, getContext().getString(R.string.service_unavailable), Snackbar.LENGTH_LONG).show();
+                    return;
+
+                } else {
+
+                    String text = editTextAnswerText.getText().toString();
+                    String hint = editTextAnswerHint.getText().toString();
+                    String uri = editTextAnswerUri.getText().toString();
+
+                    boolean isCorrect = true;
+
+                    if (currentFlashcard.isMultipleChoice()) {
+
+                        isCorrect = radioButtonAnswerCorrect.isChecked();
+                    }
+
+                    try {
+
+                        JSONObject jsonObject = new JSONObject();
+
+                        JSONObject jsonObjectAnswer = new JSONObject();
+
+                        jsonObjectAnswer.put("answerText", text);
+                        jsonObjectAnswer.put("answerHint", hint);
+                        jsonObjectAnswer.put("mediaURI", uri);
+                        jsonObjectAnswer.put("answerCorrect", isCorrect);
+
+                        JSONObject jsonObjectAuthor = new JSONObject();
+                        jsonObjectAuthor.put("userId", db.getLoggedInUser().getId());
+
+                        jsonObjectAnswer.put("author", jsonObjectAuthor);
+
+                        JSONArray jsonArray = new JSONArray();
+                        jsonArray.put(jsonObjectAnswer);
+
+                        jsonObject.put("answers", jsonArray);
+
+                        // final view to access it from innerclass
+                        final View view = v;
+
+                        AsyncPatchRemoteCard task = new AsyncPatchRemoteCard(jsonObject, currentFlashcard.getId(), new AsyncPatchRemoteCard.AsyncPatchResponseRemoteCard() {
+
+                            @Override
+                            public void processFinish(long id) {
+
+                                //new ContentFlashCard().collectItemFromServer(flashCard.getId(), false);
+                                // Load answers
+                                ContentFlashCardAnswers contentFlashCardAnswers = new ContentFlashCardAnswers();
+                                //contentFlashCardAnswers.collectItemsFromDb(flashCard.getId(), false, false);
+                                contentFlashCardAnswers.collectItemsFromServer(currentFlashcard.getId(), false, false);
+
+                                editTextAnswerText.setText(null);
+                                editTextAnswerHint.setText(null);
+                                editTextAnswerUri.setText(null);
+
+                                // hides the softkeyboard
+                                InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                                imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+                            }
+                        });
+
+                        if (ProcessConnectivity.isOk(getContext())) {
+
+                            task.execute();
+                        } else {
+
+                            Snackbar.make(v, getContext().getString(R.string.service_unavailable), Snackbar.LENGTH_LONG).show();
+                            return;
+                        }
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                }
+
+            }
+        });
+
     }
 
 
@@ -734,5 +846,19 @@ public class FragmentPlayFlashCards extends Fragment implements View.OnClickList
 
             this.fab = Globals.getFloatingActionButton();
         }
+    }
+
+
+
+    /**
+     * Validates if the text is not empty and the uri is valid
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     *
+     * @return
+     */
+    private boolean validateAnswer() {
+
+        return ValidatorInput.isNotEmpty(editTextAnswerText) && ValidatorInput.isValidUri(editTextAnswerUri);
     }
 }
