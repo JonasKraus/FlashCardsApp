@@ -27,6 +27,7 @@ public class Globals {
     private static FloatingActionButton floatingActionButtonAdd;
     private static int scrollX;
     private static String token;
+    private final static String ADMIN_MAIL = "jonas.kraus@uni-ulm.de";
 
 
     /**
@@ -184,5 +185,9 @@ public class Globals {
      */
     public static String getToken() {
         return token;
+    }
+
+    public static String getAdminMail() {
+        return ADMIN_MAIL;
     }
 }

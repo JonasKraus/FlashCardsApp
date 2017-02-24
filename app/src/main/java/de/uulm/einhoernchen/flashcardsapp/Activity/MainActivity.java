@@ -679,7 +679,9 @@ public class MainActivity extends AppCompatActivity
 
         } else if (id == R.id.nav_feedback) {
 
-            //TODO Jonas rteditor
+            startActivity(new Intent(MainActivity.this, FeedbackActivity.class));
+
+            /*TODO Jonas rteditor
             SimpleRTEditor fragment = new SimpleRTEditor();
             android.support.v4.app.FragmentTransaction fragmentTransaction =
                     getSupportFragmentManager().beginTransaction();
@@ -687,6 +689,7 @@ public class MainActivity extends AppCompatActivity
             // Keep attention that this is replaced and not added
             fragmentTransaction.replace(R.id.fragment_container_main, fragment);
             fragmentTransaction.commit();
+            */
 
         } else if (id == R.id.nav_logout) {
 

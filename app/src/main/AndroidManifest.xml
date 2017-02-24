@@ -133,6 +133,14 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="de.uulm.einhoernchen.flashcardsapp.Activity.MainActivity" />
         </activity>
+        <activity
+            android:name=".Activity.FeedbackActivity"
+            android:label="@string/title_activity_feedback"
+            android:theme="@style/AppTheme">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="de.uulm.einhoernchen.flashcardsapp.Activity.MainActivity" />
+        </activity>
     </application>
 
 </manifest>
