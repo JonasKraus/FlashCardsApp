@@ -77,7 +77,7 @@
     <string name="no_connection">You have no internet connection. Check either your wifi settings or your mobile data.</string>
     <string name="service_unavailable">The service is currently unavailable.</string>
     <string name="multiple_choice">Multiple choice</string>
-    <string name="set_is_correct">Set if the answer is correct.</string>
+    <string name="set_is_correct">Answer must be set as correct or incorrect.</string>
     <string name="white">#ffffff</string>
     <string name="add_one_answer">You have to add at least one answers</string>
     <string name="action_sync">Sync</string>

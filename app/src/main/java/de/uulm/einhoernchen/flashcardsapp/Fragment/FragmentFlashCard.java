@@ -50,6 +50,7 @@ import de.uulm.einhoernchen.flashcardsapp.Util.HashtagParser;
 import de.uulm.einhoernchen.flashcardsapp.Util.JsonKeys;
 import de.uulm.einhoernchen.flashcardsapp.Util.ProcessConnectivity;
 import de.uulm.einhoernchen.flashcardsapp.Util.ProcessorImage;
+import de.uulm.einhoernchen.flashcardsapp.Util.ValidatorInput;
 
 
 /**
@@ -111,6 +112,7 @@ public class FragmentFlashCard extends Fragment implements View.OnClickListener 
 
     private long carddeckId;
     private FloatingActionButton floatingActionButtonSave;
+    // Should be invisible
     private FloatingActionButton floatingActionButtonAdd;
     private FloatingActionButton fabEdit;
     private LinearLayout linearlayoutHashTags;
@@ -291,6 +293,8 @@ public class FragmentFlashCard extends Fragment implements View.OnClickListener 
 
         for (Tag tag : flashCard.getTags()) {
 
+            // TODO TAG
+
             TextView tv = new TextView(getContext());
             tv.setLayoutParams(lparams);
             tv.setTag(tag.getId());
@@ -337,6 +341,8 @@ public class FragmentFlashCard extends Fragment implements View.OnClickListener 
      * @since 2017-01-03
      */
     private void setMedia() {
+
+        Log.d("hier media", flashCard.getAnswers().size()+"");
 
         if (flashCard.getQuestion().getUri() != null && flashCard.getQuestion().getUri().toString() != "") {
 
@@ -505,6 +511,7 @@ public class FragmentFlashCard extends Fragment implements View.OnClickListener 
     @Override
     public void onResume() {
         super.onResume();
+
     }
 
 
@@ -584,96 +591,124 @@ public class FragmentFlashCard extends Fragment implements View.OnClickListener 
 
                 if (fabEdit.getTag().equals("mode_edit")) {
 
-                    fabEdit.setTag("mode_save");
-                    fabEdit.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_check));
-                    setQuestionInEditMode();
-
-                } else if (fabEdit.getTag().equals("mode_save")){
-
-                    saveQuestion();
-                    fabEdit.setTag("mode_edit");
-                    fabEdit.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_mode_edit));
-
-                    // hides the softkeyboard
-                    InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-                    imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
-                }
-
-                break;
-
-            //save answer
-            case R.id.fab_card_details_answer_add:
-            case R.id.fab_answer_save:
-            case R.id.button_answer_editor_save:
-
-                String text = editTextAnswerText.getText().toString();
-                String hint = editTextAnswerHint.getText().toString();
-                String uri = editTextAnswerUri.getText().toString();
-
-                boolean isCorrect = true;
-
-                if (this.flashCard.isMultipleChoice()) {
-
-                    isCorrect = radioButtonAnswerCorrect.isChecked();
-                }
-
-                try {
-
-                    JSONObject jsonObject = new JSONObject();
-
-                    JSONObject jsonObjectAnswer = new JSONObject();
-
-                    jsonObjectAnswer.put("answerText", text);
-                    jsonObjectAnswer.put("answerHint", hint);
-                    jsonObjectAnswer.put("mediaURI", uri);
-                    jsonObjectAnswer.put("answerCorrect", isCorrect);
-
-                    JSONObject jsonObjectAuthor = new JSONObject();
-                    jsonObjectAuthor.put("userId", db.getLoggedInUser().getId());
-
-                    jsonObjectAnswer.put("author", jsonObjectAuthor);
-
-                    JSONArray jsonArray = new JSONArray();
-                    jsonArray.put(jsonObjectAnswer);
-
-                    jsonObject.put("answers", jsonArray);
-
-                    AsyncPatchRemoteCard task = new AsyncPatchRemoteCard(jsonObject, this.flashCard.getId(), new AsyncPatchRemoteCard.AsyncPatchResponseRemoteCard() {
-
-                        @Override
-                        public void processFinish(long id) {
-
-                            new ContentFlashCard().collectItemFromServer(flashCard.getId(), false);
-                        }
-                    });
-
                     if (ProcessConnectivity.isOk(getContext())) {
 
-                        task.execute();
+                        fabEdit.setTag("mode_save");
+                        fabEdit.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_check));
+                        setQuestionInEditMode();
                     } else {
 
                         Snackbar.make(v, getContext().getString(R.string.service_unavailable), Snackbar.LENGTH_LONG).show();
                         return;
                     }
 
-                } catch (JSONException e) {
-                    e.printStackTrace();
+                } else if (fabEdit.getTag().equals("mode_save")){
+
+                    if (ProcessConnectivity.isOk(getContext())) {
+
+                        saveQuestion();
+                        fabEdit.setTag("mode_edit");
+                        fabEdit.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_mode_edit));
+
+                        // hides the softkeyboard
+                        InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                        imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+                    } else {
+
+                        Snackbar.make(v, getContext().getString(R.string.service_unavailable), Snackbar.LENGTH_LONG).show();
+                        return;
+                    }
+
                 }
 
+                break;
 
-                // Load answers
-                ContentFlashCardAnswers contentFlashCardAnswers = new ContentFlashCardAnswers();
-                contentFlashCardAnswers.collectItemsFromDb(flashCard.getId(), false, false);
-                contentFlashCardAnswers.collectItemsFromServer(flashCard.getId(), false, false);
+            //save answer
+            case R.id.fab_card_details_answer_add: // TODO Unused
+            case R.id.fab_answer_save: // TODO unused
+            case R.id.button_answer_editor_save:
 
+                if (!validateAnswer()) {
 
-                editTextAnswerText.setText(null);
-                editTextAnswerHint.setText(null);
-                editTextAnswerUri.setText(null);
+                    return;
 
-                // hides the softkeyboard
-                InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-                imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+                } else if (!ProcessConnectivity.isOk(getContext())) {
+
+                    Snackbar.make(v, getContext().getString(R.string.service_unavailable), Snackbar.LENGTH_LONG).show();
+                    return;
+
+                } else {
+
+                    String text = editTextAnswerText.getText().toString();
+                    String hint = editTextAnswerHint.getText().toString();
+                    String uri = editTextAnswerUri.getText().toString();
+
+                    boolean isCorrect = true;
+
+                    if (this.flashCard.isMultipleChoice()) {
+
+                        isCorrect = radioButtonAnswerCorrect.isChecked();
+                    }
+
+                    try {
+
+                        JSONObject jsonObject = new JSONObject();
+
+                        JSONObject jsonObjectAnswer = new JSONObject();
+
+                        jsonObjectAnswer.put("answerText", text);
+                        jsonObjectAnswer.put("answerHint", hint);
+                        jsonObjectAnswer.put("mediaURI", uri);
+                        jsonObjectAnswer.put("answerCorrect", isCorrect);
+
+                        JSONObject jsonObjectAuthor = new JSONObject();
+                        jsonObjectAuthor.put("userId", db.getLoggedInUser().getId());
+
+                        jsonObjectAnswer.put("author", jsonObjectAuthor);
+
+                        JSONArray jsonArray = new JSONArray();
+                        jsonArray.put(jsonObjectAnswer);
+
+                        jsonObject.put("answers", jsonArray);
+
+                        // final view to access it from innerclass
+                        final View view = v;
+
+                        AsyncPatchRemoteCard task = new AsyncPatchRemoteCard(jsonObject, this.flashCard.getId(), new AsyncPatchRemoteCard.AsyncPatchResponseRemoteCard() {
+
+                            @Override
+                            public void processFinish(long id) {
+
+                                //new ContentFlashCard().collectItemFromServer(flashCard.getId(), false);
+                                // Load answers
+                                ContentFlashCardAnswers contentFlashCardAnswers = new ContentFlashCardAnswers();
+                                //contentFlashCardAnswers.collectItemsFromDb(flashCard.getId(), false, false);
+                                contentFlashCardAnswers.collectItemsFromServer(flashCard.getId(), false, false);
+
+                                editTextAnswerText.setText(null);
+                                editTextAnswerHint.setText(null);
+                                editTextAnswerUri.setText(null);
+
+                                // hides the softkeyboard
+                                InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                                imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+                            }
+                        });
+
+                        if (ProcessConnectivity.isOk(getContext())) {
+
+                            task.execute();
+                        } else {
+
+                            Snackbar.make(v, getContext().getString(R.string.service_unavailable), Snackbar.LENGTH_LONG).show();
+                            return;
+                        }
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                }
 
                 break;
 
@@ -695,6 +730,19 @@ public class FragmentFlashCard extends Fragment implements View.OnClickListener 
 
                 break;
         }
+    }
+
+
+    /**
+     * Validates if the text is not empty and the uri is valid
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     *
+     * @return
+     */
+    private boolean validateAnswer() {
+
+        return ValidatorInput.isNotEmpty(editTextAnswerText) && ValidatorInput.isValidUri(editTextAnswerUri);
     }
 
 
