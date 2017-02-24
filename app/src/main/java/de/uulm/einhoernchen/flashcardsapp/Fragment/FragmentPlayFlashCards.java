@@ -24,7 +24,6 @@ import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -165,8 +164,8 @@ public class FragmentPlayFlashCards extends Fragment implements View.OnClickList
 
         if (statistics.size() == 0) {
 
-            Toast.makeText(getContext(), R.string.select_card, Toast.LENGTH_SHORT).show();
-            // TODO return to catalogue
+            Snackbar.make(this.getView(), getContext().getString(R.string.select_card), Snackbar.LENGTH_LONG).show();
+
             MainActivity mainActivity = (MainActivity) Globals.getContext();
             mainActivity.onBackPressed();
 
@@ -512,11 +511,17 @@ public class FragmentPlayFlashCards extends Fragment implements View.OnClickList
             @Override
             public void onClick(View v) {
 
+                if (!ProcessConnectivity.isOk(getContext())) {
+
+                    Snackbar.make(v, getContext().getString(R.string.service_unavailable), Snackbar.LENGTH_LONG).show();
+                    return;
+                }
+
                 int lastVoting = db.getCardVoting(cardID);
 
                 if (!db.saveCardVoting(cardID, -1)) {
 
-                    Toast.makeText(getContext(), getResources().getText(R.string.voting_already_voted), Toast.LENGTH_SHORT).show();
+                    Snackbar.make(v, getContext().getString(R.string.voting_already_voted), Snackbar.LENGTH_LONG).show();
                 } else {
 
                     Long ratingId = db.getCardVotingRatingId(cardID);
@@ -557,10 +562,18 @@ public class FragmentPlayFlashCards extends Fragment implements View.OnClickList
             @Override
             public void onClick(View v) {
 
+
+            if (!ProcessConnectivity.isOk(getContext())) {
+
+                Snackbar.make(v, getContext().getString(R.string.service_unavailable), Snackbar.LENGTH_LONG).show();
+                return;
+            }
+
             int lastVoting = db.getCardVoting(cardID);
+
             if (!db.saveCardVoting(cardID, +1)) {
 
-                Toast.makeText(getContext(), getResources().getText(R.string.voting_already_voted), Toast.LENGTH_SHORT).show();
+                Snackbar.make(v, getContext().getString(R.string.voting_already_voted), Snackbar.LENGTH_LONG).show();
             } else {
 
                 Long ratingId = db.getCardVotingRatingId(cardID);
