@@ -39,6 +39,7 @@ import java.util.List;
 
 import de.uulm.einhoernchen.flashcardsapp.Activity.MainActivity;
 import de.uulm.einhoernchen.flashcardsapp.AsyncTask.Remote.POST.AsyncPostRemoteCard;
+import de.uulm.einhoernchen.flashcardsapp.Const.Constants;
 import de.uulm.einhoernchen.flashcardsapp.Database.DbManager;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.Adapter.RecyclerViewAdapterFlashCardAnswers;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.Dataset.ContentFlashCard;
@@ -638,6 +639,8 @@ public class FragmentFlashCardCreate extends Fragment implements View.OnClickLis
             public void processFinished(long id) {
 
                 new ContentFlashCard().collectItemFromServer(id, false);
+
+                ((MainActivity)Globals.getContext()).setCatalogueState(Constants.FLASH_CARD_DETAIL);
             }
         });
 
