@@ -9,6 +9,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,6 +33,7 @@ import de.uulm.einhoernchen.flashcardsapp.R;
 import de.uulm.einhoernchen.flashcardsapp.Util.Globals;
 import de.uulm.einhoernchen.flashcardsapp.Util.JsonKeys;
 import de.uulm.einhoernchen.flashcardsapp.Util.ProcessConnectivity;
+import de.uulm.einhoernchen.flashcardsapp.Util.ValidatorInput;
 
 /**
  * A fragment representing a list of Carddeck Items.
@@ -234,13 +236,19 @@ public class FragmentCarddecks extends Fragment implements View.OnClickListener,
                     String descriptionString = description.getText().toString();
                     boolean isVisible = visible.isChecked();
 
-                    if (textString == null || textString.equals("")) {
+                    Log.d("validate", ValidatorInput.isNotEmpty(text)+"");
+                    Log.d("validate", ValidatorInput.isNotEmpty(groupName)+"");
 
-                        Snackbar.make(v, R.string.insert_text, Snackbar.LENGTH_SHORT).show();
+                    if (!ValidatorInput.isNotEmpty(text)
+                            || !ValidatorInput.isNotEmpty(groupName)) {
 
-                    } else if (!ProcessConnectivity.isOk(getContext(), true)){
-                        // Do nothing
-                    } else {
+                        Snackbar.make(v, Globals.getContext().getString(R.string.nothing_to_save), Snackbar.LENGTH_SHORT).show();
+
+                    } else if (!ProcessConnectivity.isOk(getContext())){
+
+                        Snackbar.make(v, Globals.getContext().getString(R.string.service_unavailable), Snackbar.LENGTH_SHORT).show();
+
+                    }  else {
 
                         JSONObject jsonObjectDeck = new JSONObject();
                         JSONObject jsonObjectGroup = new JSONObject();

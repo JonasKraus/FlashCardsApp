@@ -145,6 +145,7 @@
     <string name="user_created">Created</string>
     <string name="user_lastlogin">Last login</string>
     <string name="question_editor_tags">Tags</string>
+    <string name="nothing_to_save">Nothing to save</string>
 
 
 </resources>
