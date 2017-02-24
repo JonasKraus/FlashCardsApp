@@ -507,6 +507,12 @@ public class FragmentFlashCardCreate extends Fragment implements View.OnClickLis
 
         Boolean isCorrect = true;
 
+        // Check if textfields are valid and not empty
+        if (!validateAnswer()) {
+
+            return;
+        }
+
         if (checkBoxMultipleChoice.isChecked()) {
 
             if (!ValidatorInput.hasCheck(radioGroupAnswerCorrect)) {

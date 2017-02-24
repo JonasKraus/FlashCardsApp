@@ -281,7 +281,8 @@ public class RecyclerViewAdapterFlashCardAnswers extends RecyclerView.Adapter<Re
             holder.llAnswerCheck.setVisibility(View.VISIBLE);
         }
 
-        if (answers.get(position).isMultipleChoiceAnswer() != null) {
+        // Checks if icons should bea added if this is a new answer within a new to be created card
+        if (answers.get(position).isMultipleChoiceAnswer() != null && answers.get(position).isMultipleChoiceAnswer()) {
 
             holder.mIsCorrect.setVisibility(View.VISIBLE);
             holder.llAnswerCheck.setVisibility(View.VISIBLE);
