@@ -152,7 +152,13 @@ public class FragmentCarddecks extends Fragment implements View.OnClickListener,
 
             case R.id.fab_add:
 
-                createDialog();
+                if (ProcessConnectivity.isOk(this.getContext())) {
+
+                    createDialog();
+                } else {
+
+                    Snackbar.make(this.getView(), Globals.getContext().getString(R.string.service_unavailable), Snackbar.LENGTH_SHORT).show();
+                }
 
                 break;
         }
@@ -168,7 +174,13 @@ public class FragmentCarddecks extends Fragment implements View.OnClickListener,
     @Override
     public void onCarddeckListFragmentInteractionLongClick(CardDeck item) {
 
-        createDialog(item);
+        if (ProcessConnectivity.isOk(this.getContext())) {
+
+            createDialog(item);
+        } else {
+
+            Snackbar.make(this.getView(), Globals.getContext().getString(R.string.service_unavailable), Snackbar.LENGTH_SHORT).show();
+        }
 
 
     }
