@@ -150,6 +150,7 @@
     <string name="send_feedback">Send Feedback</string>
     <string name="feedback">Feedback</string>
     <string name="feedback_salutation">Dear Flashcards Team,</string>
+    <string name="share_message">Try out the Flashcards App for Android</string>
 
 
 </resources>

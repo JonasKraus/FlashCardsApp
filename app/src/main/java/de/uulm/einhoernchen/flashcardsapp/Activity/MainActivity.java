@@ -673,6 +673,12 @@ public class MainActivity extends AppCompatActivity
 
         } else if (id == R.id.nav_share) {
 
+            Intent sendIntent = new Intent();
+            sendIntent.setAction(Intent.ACTION_SEND);
+            sendIntent.putExtra(Intent.EXTRA_TEXT, getString(R.string.share_message));
+            sendIntent.setType("text/plain");
+            startActivity(sendIntent);
+
         } else if (id == R.id.nav_user_groups) {
 
             startActivity(new Intent(MainActivity.this, UserGroupsActivity.class));
