@@ -2,6 +2,7 @@ package de.uulm.einhoernchen.flashcardsapp.Fragment.Adapter;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -26,6 +27,7 @@ import de.uulm.einhoernchen.flashcardsapp.Model.FlashCard;
 import de.uulm.einhoernchen.flashcardsapp.Model.Question;
 import de.uulm.einhoernchen.flashcardsapp.R;
 import de.uulm.einhoernchen.flashcardsapp.Util.Globals;
+import de.uulm.einhoernchen.flashcardsapp.Util.ProcessConnectivity;
 import de.uulm.einhoernchen.flashcardsapp.Util.ProcessorImage;
 
 import java.util.List;
@@ -311,9 +313,17 @@ public class RecyclerViewAdapterFlashcards extends RecyclerView.Adapter<Recycler
 
             case R.id.fab_add:
 
-                MainActivity mainActivity = (MainActivity) Globals.getContext();
-                mainActivity.onFlashcardListFragmentInteraction(null);
-                mainActivity.setCatalogueState(Constants.FLASH_CARD_CREATE);
+                if (ProcessConnectivity.isOk(Globals.getContext())) {
+
+                    MainActivity mainActivity = (MainActivity) Globals.getContext();
+                    mainActivity.onFlashcardListFragmentInteraction(null);
+                    mainActivity.setCatalogueState(Constants.FLASH_CARD_CREATE);
+                } else {
+
+                    Snackbar.make(v, Globals.getContext().getString(R.string.service_unavailable), Snackbar.LENGTH_LONG).show();
+                    return;
+                }
+
 
                 break;
         }

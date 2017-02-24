@@ -28,10 +28,9 @@ import de.uulm.einhoernchen.flashcardsapp.Util.Globals;
  */
 public class FragmentFlashcards extends Fragment {
 
-    // TODO: Customize parameter argument names
     private static final String ARG_COLUMN_COUNT = "column-count";
     public static final String ARG_PARENT_ID = "parentId";
-    // TODO: Customize parameters
+
     private int mColumnCount = 1;
     private OnFragmentInteractionListenerFlashcard mListener;
 
