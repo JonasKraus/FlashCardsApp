@@ -22,6 +22,7 @@
             app:contentScrim="?attr/colorPrimary"
             app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
+
             <ImageView
                 android:id="@+id/image_toolbar"
                 android:layout_width="match_parent"
@@ -30,6 +31,19 @@
                 android:fitsSystemWindows="true"
                 android:scaleType="centerCrop"
                 app:layout_collapseMode="parallax" />
+
+
+            <ImageView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/activity_vertical_margin_double"
+                android:layout_marginBottom="@dimen/activity_vertical_margin_double"
+                android:adjustViewBounds="true"
+                android:scaleType="fitCenter"
+                app:layout_collapseMode="parallax"
+                android:alpha=".1"
+                android:tint="@color/white"
+                android:src="@drawable/ic_insert_chart"/>
 
             <android.support.v7.widget.Toolbar
                 android:id="@+id/toolbar_statistics"

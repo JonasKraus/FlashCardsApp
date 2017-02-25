@@ -6,9 +6,11 @@
         android:src="@drawable/ic_action_add"
         android:layout_width="match_parent"
         android:layout_height="64dp"
+        android:tint="@color/white"
         android:scaleType="center"
         android:background="@color/colorPrimary"
         android:contentDescription="@string/app_name" />
+
 
     <android.support.design.widget.TextInputLayout
         android:layout_width="match_parent"
