@@ -79,7 +79,7 @@ public class FragmentFlashCard extends Fragment implements View.OnClickListener 
     private TextView mAuthorView;
     private TextView mCardRatingView;
     private TextView mDateView;
-    private ImageView mIsCorrect;
+    private ImageView mImageViewBookmarked;
     private ImageView mLocalView;
     private ImageView imageViewUri;
     private ImageView imageViewPlay;
@@ -172,8 +172,7 @@ public class FragmentFlashCard extends Fragment implements View.OnClickListener 
         // mGroupRatingView = (TextView) view.findViewById(R.id.text_view_listItem_group_rating);
         mCardRatingView = (TextView) view.findViewById(R.id.text_view_listItem_card_rating);
         mDateView = (TextView) view.findViewById(R.id.text_view_listItem_date);
-        mIsCorrect = (ImageView) view.findViewById(R.id.image_view_bookmarked);
-        mIsCorrect.setVisibility(flashCard.isMultipleChoice() ? View.VISIBLE : View.GONE);
+        mImageViewBookmarked = (ImageView) view.findViewById(R.id.image_view_bookmarked);
 
         mLocalView = (ImageView) view.findViewById(R.id.image_view_offline);
 
@@ -235,10 +234,25 @@ public class FragmentFlashCard extends Fragment implements View.OnClickListener 
 
         if (!isUpToDate) {
 
+            flashCard.setMarked(Globals.getDb().isCardMarkedLocally(flashCard));
             mLocalView.setVisibility(View.GONE);
         } else {
 
             mLocalView.setVisibility(View.VISIBLE);
+        }
+
+
+        // Sets the bookmark
+        if (flashCard.isMarked()) {
+
+            mImageViewBookmarked.setImageDrawable(
+                    Globals.getContext().getResources().getDrawable(R.drawable.ic_bookmark));
+
+        } else {
+
+
+            mImageViewBookmarked.setImageDrawable(
+                    Globals.getContext().getResources().getDrawable(R.drawable.ic_bookmark_border));
         }
 
         if (flashCard.isMultipleChoice()) {
@@ -517,6 +531,23 @@ public class FragmentFlashCard extends Fragment implements View.OnClickListener 
             }
         });
 
+
+        // Listener on bookmark icon
+        mImageViewBookmarked.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                db.setBookmark(flashCard);
+                flashCard.setMarked(db.isCardMarkedLocally(flashCard));
+
+                mImageViewBookmarked.setImageDrawable(
+                        Globals.getContext().getResources()
+                                .getDrawable(flashCard.isMarked()
+                                        ? R.drawable.ic_bookmark
+                                        : R.drawable.ic_bookmark_border));
+            }
+        });
+
     }
 
     @Override
@@ -559,6 +590,8 @@ public class FragmentFlashCard extends Fragment implements View.OnClickListener 
         fabEdit.setVisibility(View.GONE);
         fabEdit.setTag(null);
         mListener = null;
+
+        mImageViewBookmarked.setOnClickListener(null);
     }
 
 

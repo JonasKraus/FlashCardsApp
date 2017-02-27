@@ -123,7 +123,7 @@
                 android:id="@+id/image_view_bookmarked"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:visibility="gone"
+                android:visibility="visible"
                 android:layout_marginTop="3dp"
                 android:src="@drawable/ic_bookmark_border" />
 
