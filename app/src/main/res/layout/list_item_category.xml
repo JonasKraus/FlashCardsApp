@@ -166,7 +166,7 @@
                     android:textSize="@dimen/item_small_text_size" />
 
                 <ImageView
-                    android:id="@+id/image_view_iscorrect"
+                    android:id="@+id/image_view_bookmarked"
                     android:layout_width="wrap_content"
                     android:layout_height="47dp"
                     android:layout_gravity="right"

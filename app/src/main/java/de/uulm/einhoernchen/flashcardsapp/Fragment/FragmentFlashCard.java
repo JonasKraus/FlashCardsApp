@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Process;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -27,7 +26,6 @@ import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -36,13 +34,11 @@ import org.json.JSONObject;
 import java.util.List;
 
 import de.uulm.einhoernchen.flashcardsapp.AsyncTask.Remote.DELETE.AsyncDeleteRemoteRating;
-import de.uulm.einhoernchen.flashcardsapp.AsyncTask.Remote.GET.AsyncGetRemoteCarddecks;
 import de.uulm.einhoernchen.flashcardsapp.AsyncTask.Remote.PATCH.AsyncPatchRemoteCard;
 import de.uulm.einhoernchen.flashcardsapp.AsyncTask.Remote.POST.AsyncPostRemoteRating;
 import de.uulm.einhoernchen.flashcardsapp.Database.DbManager;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.Dataset.ContentFlashCard;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.Dataset.ContentFlashCardAnswers;
-import de.uulm.einhoernchen.flashcardsapp.Model.CardDeck;
 import de.uulm.einhoernchen.flashcardsapp.Model.FlashCard;
 import de.uulm.einhoernchen.flashcardsapp.Model.Tag;
 import de.uulm.einhoernchen.flashcardsapp.R;
@@ -176,7 +172,7 @@ public class FragmentFlashCard extends Fragment implements View.OnClickListener 
         // mGroupRatingView = (TextView) view.findViewById(R.id.text_view_listItem_group_rating);
         mCardRatingView = (TextView) view.findViewById(R.id.text_view_listItem_card_rating);
         mDateView = (TextView) view.findViewById(R.id.text_view_listItem_date);
-        mIsCorrect = (ImageView) view.findViewById(R.id.image_view_iscorrect);
+        mIsCorrect = (ImageView) view.findViewById(R.id.image_view_bookmarked);
         mIsCorrect.setVisibility(flashCard.isMultipleChoice() ? View.VISIBLE : View.GONE);
 
         mLocalView = (ImageView) view.findViewById(R.id.image_view_offline);

@@ -153,7 +153,7 @@
                 android:layout_height="30dp"
                 android:visibility="gone"
                 android:src="@drawable/ic_check"
-                android:id="@+id/image_view_iscorrect"/>
+                android:id="@+id/image_view_bookmarked"/>
 
 
             <CheckBox

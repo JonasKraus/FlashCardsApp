@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
+import android.support.v4.content.res.TypedArrayUtils;
 import android.util.Log;
 
 import com.github.mikephil.charting.data.BarEntry;
@@ -14,6 +15,7 @@ import com.github.mikephil.charting.data.RadarEntry;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -45,6 +47,7 @@ public class DbManager extends DbHelper{
     private List<RadarEntry> entriesForRadarChart;
     private List<PieEntry> entriesForPieChart;
     private List<Challenge> challenges;
+    private FlashCard bookmark;
 
 
     /**
@@ -322,7 +325,26 @@ public class DbManager extends DbHelper{
     public List<FlashCard> getFlashCards(long parentId) {
         List<FlashCard> flashCards = new ArrayList<FlashCard>();
 
-        Cursor cursor = database.query(TABLE_FLASHCARD, allFlashCardColumns, DbHelper.COLUMN_FLASHCARD_CARDDECK_ID + " = " + parentId, null, null, null, null);
+        String[] selection =  {
+            COLUMN_FLASHCARD_ID,             //0
+            COLUMN_FLASHCARD_CARDDECK_ID,    //1
+            COLUMN_FLASHCARD_RATING,         //2
+            COLUMN_FLASHCARD_QUESTION_ID,    //3
+            COLUMN_FLASHCARD_MULTIPLE_CHOICE,//4
+            COLUMN_FLASHCARD_CREATED,        //5
+            COLUMN_FLASHCARD_LAST_UPDATED,   //6
+            COLUMN_FLASHCARD_USER_ID,         //7
+            TABLE_BOOKMARK + "." + COLUMN_BOOKMARK_ID,                      //0
+            TABLE_BOOKMARK + "." + COLUMN_BOOKMARK_CARD_ID,                 //1
+            TABLE_BOOKMARK + "." + COLUMN_BOOKMARK_MARK_DATE               //2
+        };
+
+        Cursor cursor = database.query(
+                TABLE_FLASHCARD + " LEFT JOIN "  + TABLE_BOOKMARK + " ON "
+                        + TABLE_FLASHCARD + "." + COLUMN_FLASHCARD_ID + "=" + COLUMN_BOOKMARK_CARD_ID,
+                selection,
+                DbHelper.COLUMN_FLASHCARD_CARDDECK_ID + " = " + parentId,
+                null, null, null, null);
 
         if (cursor.moveToFirst()) {
             do {
@@ -339,9 +361,9 @@ public class DbManager extends DbHelper{
                 List<Tag> tags = getTags(cardId);
                 Question question = getQuestion(questionId);
                 List<Answer> answers = getAnswers(cardId);
+                boolean marked = cursor.isNull(cursor.getColumnIndex(COLUMN_BOOKMARK_ID)) ? false : true;
 
-
-                FlashCard flashCard = new FlashCard(cardId, tags, rating, new Date(created), new Date(lastUpdated), question, answers, author, multipleChoice);
+                FlashCard flashCard = new FlashCard(cardId, tags, rating, new Date(created), new Date(lastUpdated), question, answers, author, multipleChoice, marked);
 
                 flashCards.add(flashCard);
             } while (cursor.moveToNext());
@@ -365,7 +387,25 @@ public class DbManager extends DbHelper{
 
         FlashCard flashCard = null;
 
-        Cursor cursor = database.query(TABLE_FLASHCARD, allFlashCardColumns, DbHelper.COLUMN_FLASHCARD_ID + " = " + flashCardId, null, null, null, null);
+        String[] selection =  {
+                COLUMN_FLASHCARD_ID,             //0
+                COLUMN_FLASHCARD_CARDDECK_ID,    //1
+                COLUMN_FLASHCARD_RATING,         //2
+                COLUMN_FLASHCARD_QUESTION_ID,    //3
+                COLUMN_FLASHCARD_MULTIPLE_CHOICE,//4
+                COLUMN_FLASHCARD_CREATED,        //5
+                COLUMN_FLASHCARD_LAST_UPDATED,   //6
+                COLUMN_FLASHCARD_USER_ID,         //7
+                TABLE_BOOKMARK + "." + COLUMN_BOOKMARK_ID,                      //0
+                TABLE_BOOKMARK + "." + COLUMN_BOOKMARK_CARD_ID,                 //1
+                TABLE_BOOKMARK + "." + COLUMN_BOOKMARK_MARK_DATE               //2
+        };
+
+        Cursor cursor = database.query(
+                TABLE_FLASHCARD + " LEFT JOIN "  + TABLE_BOOKMARK + " ON "
+                        + TABLE_FLASHCARD + "." + COLUMN_FLASHCARD_ID + "=" + COLUMN_BOOKMARK_CARD_ID,
+                selection,
+                DbHelper.COLUMN_FLASHCARD_ID + " = " + flashCardId, null, null, null, null);
 
         if (cursor.moveToFirst()) {
             do {
@@ -382,9 +422,10 @@ public class DbManager extends DbHelper{
                 List<Tag> tags = getTags(cardId);
                 Question question = getQuestion(questionId);
                 List<Answer> answers = getAnswers(cardId);
+                boolean marked = cursor.isNull(cursor.getColumnIndex(COLUMN_BOOKMARK_ID)) ? false : true;
 
 
-                flashCard = new FlashCard(cardId, tags, rating, new Date(created), new Date(lastUpdated), question, answers, author, multipleChoice);
+                flashCard = new FlashCard(cardId, tags, rating, new Date(created), new Date(lastUpdated), question, answers, author, multipleChoice, marked);
 
             } while (cursor.moveToNext());
         }
@@ -2667,5 +2708,65 @@ public class DbManager extends DbHelper{
         values.put(DbHelper.COLUMN_USER_PASSWORD, newPwd);
 
         database.updateWithOnConflict(TABLE_USER, values, COLUMN_USER_ID + "=" + userId, null ,SQLiteDatabase.CONFLICT_REPLACE);
+    }
+
+
+    /**
+     * Either creates or deletes the mark of a card
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     * @since 2017-02-27
+     *
+     * Sets a bookmark for a card
+     * @param card
+     */
+    public void setBookmark(FlashCard card) {
+
+        if (!card.isMarked()) {
+
+            ContentValues values = new ContentValues();
+            values.put(DbHelper.COLUMN_BOOKMARK_CARD_ID, card.getId());
+            values.put(DbHelper.COLUMN_BOOKMARK_MARK_DATE, System.currentTimeMillis());
+
+            database.insertWithOnConflict(TABLE_BOOKMARK, null, values, SQLiteDatabase.CONFLICT_REPLACE);
+        } else {
+
+            database.delete(TABLE_BOOKMARK, COLUMN_BOOKMARK_CARD_ID + "=" + card.getId(), null);
+        }
+    }
+
+
+    /**
+     * checks if a card is marked locally - necessary to check after getting cards from server
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     * @since 2017-02-27
+     *
+     * @param flashCard
+     * @return
+     */
+    public boolean isCardMarkedLocally(FlashCard flashCard) {
+
+        int count = 0;
+        Cursor cursor = database.query(
+                DbHelper.TABLE_BOOKMARK,
+                allBookmarkColumns,
+                COLUMN_BOOKMARK_CARD_ID  + "=" + flashCard.getId(),
+                null, null, null, null);
+
+        if (cursor.moveToFirst()) {
+
+            try {
+                count = cursor.getColumnCount();
+
+            } catch (Exception e) {
+                System.out.print(e.getMessage());
+            }
+
+        }
+
+        cursor.close();
+
+        return count > 0;
     }
 }

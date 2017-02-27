@@ -20,8 +20,6 @@ import de.uulm.einhoernchen.flashcardsapp.Fragment.Interface.OnFragmentInteracti
 import de.uulm.einhoernchen.flashcardsapp.Fragment.Interface.OnFragmentInteractionListenerCarddeckLongClick;
 import de.uulm.einhoernchen.flashcardsapp.Model.CardDeck;
 import de.uulm.einhoernchen.flashcardsapp.Model.Filter.CarddeckFilter;
-import de.uulm.einhoernchen.flashcardsapp.Model.Filter.UserGroupFilter;
-import de.uulm.einhoernchen.flashcardsapp.Model.UserGroup;
 import de.uulm.einhoernchen.flashcardsapp.R;
 import de.uulm.einhoernchen.flashcardsapp.Util.Globals;
 
@@ -232,7 +230,7 @@ public class RecyclerViewAdapterCarddecks extends RecyclerView.Adapter<RecyclerV
             // mGroupRatingView = (TextView) view.findViewById(R.id.text_view_listItem_group_rating);
             mCardRatingView = (TextView) view.findViewById(R.id.text_view_listItem_card_rating);
             mDateView = (TextView) view.findViewById(R.id.text_view_listItem_date);
-            mBookmarkView = (ImageView) view.findViewById(R.id.image_view_iscorrect);
+            mBookmarkView = (ImageView) view.findViewById(R.id.image_view_bookmarked);
             mLocalView = (ImageView) view.findViewById(R.id.image_view_offline);
 
             imageView = (ImageView) view.findViewById(R.id.image_view_round_icon);

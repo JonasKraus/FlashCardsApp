@@ -8,7 +8,6 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.NestedScrollView;
-import android.support.v7.app.AppCompatActivity;
 import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -197,7 +196,7 @@ public class FragmentPlayFlashCards extends Fragment implements View.OnClickList
         // mGroupRatingView = (TextView) view.findViewById(R.id.text_view_listItem_group_rating);
         mCardRatingView = (TextView) view.findViewById(R.id.text_view_listItem_card_rating);
         mDateView = (TextView) view.findViewById(R.id.text_view_listItem_date);
-        mIsCorrect = (ImageView) view.findViewById(R.id.image_view_iscorrect);
+        mIsCorrect = (ImageView) view.findViewById(R.id.image_view_bookmarked);
         mIsCorrect.setVisibility(currentFlashcard.isMultipleChoice() ? View.VISIBLE : View.GONE);
 
         mLocalView = (ImageView) view.findViewById(R.id.image_view_offline);

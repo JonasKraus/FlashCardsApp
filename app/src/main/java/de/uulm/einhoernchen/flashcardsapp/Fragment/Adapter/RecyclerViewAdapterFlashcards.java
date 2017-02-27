@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -96,7 +97,7 @@ public class RecyclerViewAdapterFlashcards extends RecyclerView.Adapter<Recycler
     }
 
     @Override
-    public void onBindViewHolder(final ViewHolder holder, int position) {
+    public void onBindViewHolder(final ViewHolder holder, final int position) {
 
 
         Globals.getFloatingActionButtonAdd().setVisibility(View.VISIBLE);
@@ -124,60 +125,91 @@ public class RecyclerViewAdapterFlashcards extends RecyclerView.Adapter<Recycler
 
         } else {
 
-        holder.mItem = flashCards.get(position);
-        // holder.mIdView.setText(flashCards.get(position).getId()+""); TODO Wird das benötigt?
-        holder.mContentView.setText(flashCards.get(position).getQuestion().getQuestionText());
-        String authorName = flashCards.get(position).getAuthor() != null ? flashCards.get(position).getAuthor().getName() : "No Author";
+            holder.mItem = flashCards.get(position);
+            // holder.mIdView.setText(flashCards.get(position).getId()+""); TODO Wird das benötigt?
+            holder.mContentView.setText(flashCards.get(position).getQuestion().getQuestionText());
+            String authorName = flashCards.get(position).getAuthor() != null ? flashCards.get(position).getAuthor().getName() : "No Author";
 
-        holder.mAuthorView.setText(flashCards.get(position).getAuthor().getId() + " " + authorName); //TODO delete
-        // holder.mGroupRatingView.setVisibility(View.INVISIBLE);
-        holder.mCardRatingView.setText(flashCards.get(position).getRatingForView());
-        holder.mDateView.setText(flashCards.get(position).getLastUpdatedString());
-        holder.mBookmarkView.setVisibility(View.VISIBLE);
-        // holder.mIsCorrect.setImageDrawable(// TODO set if marked);
+            holder.mAuthorView.setText(flashCards.get(position).getAuthor().getId() + " " + authorName); //TODO delete
+            // holder.mGroupRatingView.setVisibility(View.INVISIBLE);
+            holder.mCardRatingView.setText(flashCards.get(position).getRatingForView());
+            holder.mDateView.setText(flashCards.get(position).getLastUpdatedString());
+            holder.mBookmarkView.setVisibility(View.VISIBLE);
 
-        checkAnswerMediatype(holder, flashCards.get(position).getQuestion());
 
-        if (!isUpToDate) {
+            // Check db for bookmarks if the card was loaded from the server
+            if (isUpToDate) {
 
-            holder.mLocalView.setVisibility(View.INVISIBLE);
-        } else {
-
-            holder.mLocalView.setVisibility(View.VISIBLE);
-        }
-
-        holder.mView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                if (null != mListener) {
-                    // Notify the active callbacks interface (the activity, if the
-                    // fragment is attached to one) that an item has been selected.
-                    mListener.onFlashcardListFragmentInteraction(holder.mItem);
-                }
+                boolean isMarked = db.isCardMarkedLocally(flashCards.get(position));
+                flashCards.get(position).setMarked(isMarked);
             }
-        });
+            // Sets the bookmark
+            if (flashCards.get(position).isMarked()) {
 
-        //get first letter of each String item
-        final String firstLetter = String.valueOf(flashCards.get(position).getQuestion().getQuestionText().charAt(0)); // hier wird der buchstabe gesetzt
+                holder.mBookmarkView.setImageDrawable(
+                        Globals.getContext().getResources().getDrawable(R.drawable.ic_bookmark));
 
-        ColorGenerator generator = ColorGenerator.MATERIAL; // or use DEFAULT
-        // generate random color
-        int authorRanking = flashCards.get(position).getAuthor() != null ? flashCards.get(position).getAuthor().getRating() : 0;
-        final int color = generator.getColor(authorRanking);
-        //int color = generator.getRandomColor();
+            }
 
-        final long cardID = holder.mItem.getId();
-        holder.mItem.setSelectionDate(db.getCardSelectionDate(cardID));
-        holder.imageView.setTag(holder.mItem.getSelectionDate() > 0);
+            // Click listener for bookmark
+            holder.mBookmarkView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
 
-        TextDrawable drawable;
+                    db.setBookmark(flashCards.get(position));
+                    flashCards.get(position).setMarked(db.isCardMarkedLocally(flashCards.get(position)));
 
-        if (holder.imageView.getTag().equals(false)) {
+                    holder.mBookmarkView.setImageDrawable(
+                            Globals.getContext().getResources()
+                                    .getDrawable(flashCards.get(position).isMarked()
+                                            ? R.drawable.ic_bookmark
+                                            : R.drawable.ic_bookmark_border));
+                }
+            });
 
-            drawable = TextDrawable.builder()
-                    .buildRound(firstLetter, color); // radius in px
-            holder.imageView.setTag(false);
+
+            checkAnswerMediatype(holder, flashCards.get(position).getQuestion());
+
+            if (!isUpToDate) {
+
+                holder.mLocalView.setVisibility(View.INVISIBLE);
+            } else {
+
+                holder.mLocalView.setVisibility(View.VISIBLE);
+            }
+
+            holder.mView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    if (null != mListener) {
+                        // Notify the active callbacks interface (the activity, if the
+                        // fragment is attached to one) that an item has been selected.
+                        mListener.onFlashcardListFragmentInteraction(holder.mItem);
+                    }
+                }
+            });
+
+            //get first letter of each String item
+            final String firstLetter = String.valueOf(flashCards.get(position).getQuestion().getQuestionText().charAt(0)); // hier wird der buchstabe gesetzt
+
+            ColorGenerator generator = ColorGenerator.MATERIAL; // or use DEFAULT
+            // generate random color
+            int authorRanking = flashCards.get(position).getAuthor() != null ? flashCards.get(position).getAuthor().getRating() : 0;
+            final int color = generator.getColor(authorRanking);
+            //int color = generator.getRandomColor();
+
+            final long cardID = holder.mItem.getId();
+            holder.mItem.setSelectionDate(db.getCardSelectionDate(cardID));
+            holder.imageView.setTag(holder.mItem.getSelectionDate() > 0);
+
+            TextDrawable drawable;
+
+            if (holder.imageView.getTag().equals(false)) {
+
+                drawable = TextDrawable.builder()
+                        .buildRound(firstLetter, color); // radius in px
+                holder.imageView.setTag(false);
 
 
         } else {
@@ -358,7 +390,7 @@ public class RecyclerViewAdapterFlashcards extends RecyclerView.Adapter<Recycler
             // mGroupRatingView = (TextView) view.findViewById(R.id.text_view_listItem_group_rating);
             mCardRatingView = (TextView) view.findViewById(R.id.text_view_listItem_card_rating);
             mDateView = (TextView) view.findViewById(R.id.text_view_listItem_date);
-            mBookmarkView = (ImageView) view.findViewById(R.id.image_view_iscorrect);
+            mBookmarkView = (ImageView) view.findViewById(R.id.image_view_bookmarked);
             mLocalView = (ImageView) view.findViewById(R.id.image_view_offline);
 
             imageView = (ImageView) view.findViewById(R.id.image_view_round_icon);

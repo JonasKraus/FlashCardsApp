@@ -159,9 +159,14 @@ public class DbHelper extends SQLiteOpenHelper {
     public static final String COLUMN_CHALLENGE_MESSAGE_ID = "messageId";               //1
     public static final String COLUMN_CHALLENGE_STATISTIC_ID = "statisticId";           //2
 
+    public static final String TABLE_BOOKMARK = "bookmark";
+    public static final String COLUMN_BOOKMARK_ID = "bookmarkId";                       //0
+    public static final String COLUMN_BOOKMARK_CARD_ID = "cardId";                      //1
+    public static final String COLUMN_BOOKMARK_MARK_DATE = "markDate";                  //2
+
     // Database name and version - increase when existing table is altered
     private static final String DATABASE_NAME = "flashcardsDb.db";
-    private static final int DATABASE_VERSION = 27; // @TODO revert version before first release
+    private static final int DATABASE_VERSION = 28; // @TODO revert version before first release
 
     /**
      * Database creation sql statement for table user
@@ -477,6 +482,17 @@ public class DbHelper extends SQLiteOpenHelper {
             + " FOREIGN KEY(" + COLUMN_CHALLENGE_MESSAGE_ID + ") REFERENCES "  + TABLE_MESSAGE + "(" + COLUMN_MESSAGE_ID + ") "
             + ");";
 
+    private static final String BOOKMARK_CREATE = "create table "
+            + TABLE_BOOKMARK + "("
+            + COLUMN_BOOKMARK_ID
+            + " integer primary key NOT NULL, "
+            + COLUMN_BOOKMARK_CARD_ID
+            + " integer NOT NULL , "
+            + COLUMN_BOOKMARK_MARK_DATE
+            + " integer, "
+            + " FOREIGN KEY(" + COLUMN_BOOKMARK_CARD_ID + ") REFERENCES "  + TABLE_FLASHCARD + "(" + COLUMN_FLASHCARD_ID + ") "
+            + ");";
+
     private static final String VOTING_CREATE_UNIQUE_INDEX_1 =
             "CREATE UNIQUE INDEX " + TABLE_VOTING + "_user_card "
                     + "ON " + TABLE_VOTING + "(" + COLUMN_VOTING_USER_ID + ", " + COLUMN_VOTING_CARD_ID + "); ";
@@ -519,6 +535,7 @@ public class DbHelper extends SQLiteOpenHelper {
         db.execSQL(STATISTICS_CREATE);
         db.execSQL(MESSAGE_CREATE);
         db.execSQL(CHALLENGE_CREATE);
+        db.execSQL(BOOKMARK_CREATE);
         db.execSQL(VOTING_CREATE_UNIQUE_INDEX_1);
         db.execSQL(VOTING_CREATE_UNIQUE_INDEX_2);
         db.execSQL(USER_GROUP_JOIN_TABLE_CREATE_UNIQUE_INDEX);
@@ -549,6 +566,7 @@ public class DbHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_STATISTICS);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_MESSAGE);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_CHALLENGE);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_BOOKMARK);
 
         onCreate(db);
     }
@@ -724,6 +742,13 @@ public class DbHelper extends SQLiteOpenHelper {
             TABLE_CHALLENGE + "." + COLUMN_CHALLENGE_ID,                    //0
             TABLE_CHALLENGE + "." + COLUMN_CHALLENGE_MESSAGE_ID,            //1
             TABLE_CHALLENGE + "." + COLUMN_CHALLENGE_STATISTIC_ID,          //2
+    };
+
+
+    public static String[] allBookmarkColumns = {
+            TABLE_BOOKMARK + "." + COLUMN_BOOKMARK_ID,                      //0
+            TABLE_BOOKMARK + "." + COLUMN_BOOKMARK_CARD_ID,                 //1
+            TABLE_BOOKMARK + "." + COLUMN_BOOKMARK_MARK_DATE,               //2
     };
 }
 

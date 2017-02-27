@@ -4,8 +4,6 @@
 package de.uulm.einhoernchen.flashcardsapp.Model;
 
 
-import android.util.Log;
-
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -19,7 +17,6 @@ import java.util.Date;
 import java.util.List;
 
 import de.uulm.einhoernchen.flashcardsapp.Util.JsonKeys;
-import de.uulm.einhoernchen.flashcardsapp.Util.ProcessorDate;
 
 /**
  * @author Jonas Kraus
@@ -64,7 +61,7 @@ public class FlashCard {
     private boolean isSelected;
 
     @JsonIgnore
-    private boolean isMarked;
+    private boolean marked;
     private long selectionDate;
 
 
@@ -120,7 +117,46 @@ public class FlashCard {
         this.answers = answers;
         this.author = author;
         this.multipleChoice = multipleChoice;
+        this.marked = false;
 
+    }
+
+
+    /**
+     * Creates a card with a bookmark
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     * @since 2017-02-27
+     *
+     * @param id
+     * @param tags
+     * @param rating
+     * @param created
+     * @param lastUpdated
+     * @param question
+     * @param answers
+     * @param author
+     * @param multipleChoice
+     * @param marked
+     */
+    public FlashCard(long id, List<Tag> tags, int rating, Date created, Date lastUpdated, Question question, List<Answer> answers, User author, boolean multipleChoice, boolean marked) {
+
+        this.id = id;
+
+        if (tags == null) {
+
+            tags = new ArrayList<>();
+        }
+
+        this.tags = tags;
+        this.rating = rating;
+        this.created = created;
+        this.lastUpdated = lastUpdated;
+        this.question = question;
+        this.answers = answers;
+        this.author = author;
+        this.multipleChoice = multipleChoice;
+        this.marked = marked;
     }
 
 
@@ -235,11 +271,11 @@ public class FlashCard {
     }
     @JsonIgnore
     public boolean isMarked() {
-        return isMarked;
+        return marked;
     }
     @JsonIgnore
     public void setMarked(boolean marked) {
-        isMarked = marked;
+        this.marked = marked;
     }
 
 

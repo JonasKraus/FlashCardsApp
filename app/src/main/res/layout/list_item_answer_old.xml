@@ -88,7 +88,7 @@
             android:layout_width="wrap_content"
             android:layout_height="47dp"
             android:src="@drawable/ic_check"
-            android:id="@+id/image_view_iscorrect"
+            android:id="@+id/image_view_bookmarked"
             android:layout_weight="0"/>
 
         <LinearLayout
