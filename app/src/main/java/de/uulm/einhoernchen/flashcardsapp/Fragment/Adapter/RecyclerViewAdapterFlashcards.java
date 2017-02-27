@@ -143,12 +143,18 @@ public class RecyclerViewAdapterFlashcards extends RecyclerView.Adapter<Recycler
                 boolean isMarked = db.isCardMarkedLocally(flashCards.get(position));
                 flashCards.get(position).setMarked(isMarked);
             }
+
             // Sets the bookmark
             if (flashCards.get(position).isMarked()) {
 
                 holder.mBookmarkView.setImageDrawable(
                         Globals.getContext().getResources().getDrawable(R.drawable.ic_bookmark));
 
+            } else {
+
+
+                holder.mBookmarkView.setImageDrawable(
+                        Globals.getContext().getResources().getDrawable(R.drawable.ic_bookmark_border));
             }
 
             // Click listener for bookmark
