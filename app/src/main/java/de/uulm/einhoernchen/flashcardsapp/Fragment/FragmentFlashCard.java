@@ -250,7 +250,6 @@ public class FragmentFlashCard extends Fragment implements View.OnClickListener 
 
         } else {
 
-
             mImageViewBookmarked.setImageDrawable(
                     Globals.getContext().getResources().getDrawable(R.drawable.ic_bookmark_border));
         }

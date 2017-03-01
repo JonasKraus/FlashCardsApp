@@ -21,6 +21,7 @@ import de.uulm.einhoernchen.flashcardsapp.Fragment.Interface.OnFragmentInteracti
 import de.uulm.einhoernchen.flashcardsapp.Model.UserGroup;
 import de.uulm.einhoernchen.flashcardsapp.R;
 import de.uulm.einhoernchen.flashcardsapp.Util.Globals;
+import de.uulm.einhoernchen.flashcardsapp.Util.ProcessConnectivity;
 
 public class UserGroupsActivity extends AppCompatActivity implements OnFragmentInteractionListenerUserGroup {
 
@@ -38,11 +39,17 @@ public class UserGroupsActivity extends AppCompatActivity implements OnFragmentI
             @Override
             public void onClick(View view) {
 
-                startActivity(new Intent(UserGroupsActivity.this, UsersActivity.class));
+                if (ProcessConnectivity.isOk(getApplicationContext())) {
+
+                    startActivity(new Intent(UserGroupsActivity.this, UsersActivity.class));
+                } else {
+
+                    Snackbar.make(view, getResources().getString(R.string.service_unavailable), Snackbar.LENGTH_LONG).show();
+                }
             }
         });
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         Globals.setFragmentManager(getSupportFragmentManager());
         ContentUserGroups contentUserGroups = new ContentUserGroups();

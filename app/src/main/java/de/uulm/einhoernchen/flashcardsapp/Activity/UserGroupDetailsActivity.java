@@ -1,7 +1,9 @@
 package de.uulm.einhoernchen.flashcardsapp.Activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -38,12 +40,15 @@ public class UserGroupDetailsActivity extends AppCompatActivity  implements OnFr
     private Long groupId = null;
     private UserGroup selectedUserGroup;
     private DbManager db = Globals.getDb();
+    private View contentView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_user_group_details);
+
+        contentView = (View) this.findViewById(R.id.contnet_view_user_group_details);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -55,8 +60,13 @@ public class UserGroupDetailsActivity extends AppCompatActivity  implements OnFr
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if (ProcessConnectivity.isOk(getApplicationContext())) {
 
-                createGroup();
+                    createGroup();
+                } else {
+
+                    Snackbar.make(view, getResources().getString(R.string.service_unavailable), Snackbar.LENGTH_LONG).show();
+                }
             }
         });
 
@@ -120,12 +130,11 @@ public class UserGroupDetailsActivity extends AppCompatActivity  implements OnFr
 
             if (ProcessConnectivity.isOk(this)) {
 
-                Log.d("Create group", jsonObjectGroup.toString());
-
                 task.execute(groupId);
             } else {
 
-                // TODO show some error message
+                Snackbar.make(contentView, getResources().getString(R.string.service_unavailable), Snackbar.LENGTH_LONG).show();
+
                 return;
             }
         } else {
@@ -138,7 +147,8 @@ public class UserGroupDetailsActivity extends AppCompatActivity  implements OnFr
                 task.execute(groupId);
             } else {
 
-                // TODO show some error message
+                Snackbar.make(contentView, getResources().getString(R.string.service_unavailable), Snackbar.LENGTH_LONG).show();
+
                 return;
             }
         }
@@ -164,14 +174,14 @@ public class UserGroupDetailsActivity extends AppCompatActivity  implements OnFr
                 Globals.getFragmentManager().beginTransaction();
 
         // TODO delete if always loaded from local db
-                /*
-                if (backPressed) {
-                    fragmentTransaction.setCustomAnimations(R.anim.enter_from_left, R.anim.exit_to_right);
-                } else if (!fragmentAnimated) {
-                    fragmentTransaction.setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left);
-                    fragmentAnimated = true;
-                }
-                */
+        /*
+        if (backPressed) {
+            fragmentTransaction.setCustomAnimations(R.anim.enter_from_left, R.anim.exit_to_right);
+        } else if (!fragmentAnimated) {
+            fragmentTransaction.setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left);
+            fragmentAnimated = true;
+        }
+        */
 
         fragmentTransaction.replace(R.id.fragment_container_users, fragment);
         fragmentTransaction.commit();
