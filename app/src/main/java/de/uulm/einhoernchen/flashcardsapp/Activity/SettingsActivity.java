@@ -2,22 +2,16 @@ package de.uulm.einhoernchen.flashcardsapp.Activity;
 
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.RadioGroup;
 import android.widget.Switch;
 
 import de.uulm.einhoernchen.flashcardsapp.Const.Constants;
-import de.uulm.einhoernchen.flashcardsapp.Fragment.FragmentSettings;
 import de.uulm.einhoernchen.flashcardsapp.Model.Settings;
 import de.uulm.einhoernchen.flashcardsapp.R;
 import de.uulm.einhoernchen.flashcardsapp.Util.Globals;
-
-import static de.uulm.einhoernchen.flashcardsapp.Fragment.FragmentSettings.equalsId;
 
 public class SettingsActivity extends AppCompatActivity implements CompoundButton.OnCheckedChangeListener, RadioGroup.OnCheckedChangeListener  {
 
@@ -27,6 +21,7 @@ public class SettingsActivity extends AppCompatActivity implements CompoundButto
     private Switch switchAnswerMultiChoiceRandom;
     private Switch switchNightMode;
     private Switch switchShowLastDrawer;
+    private Switch switchOnlyShowBookmarks;
 
     private Settings settings;
 
@@ -68,6 +63,7 @@ public class SettingsActivity extends AppCompatActivity implements CompoundButto
         switchAnswerMultiChoiceRandom.setChecked(settings.isMultiplyChoiceAnswerOrderRandom());
         switchShowLastDrawer.setChecked(settings.isHideLastDrawer());
         switchNightMode.setChecked(settings.isNightMode());
+        switchOnlyShowBookmarks.setChecked(settings.isOnlyLearnBookmarks());
 
         radioGroupLearnMode.check(equalsId(settings.getLearnMode()));
     }
@@ -88,6 +84,7 @@ public class SettingsActivity extends AppCompatActivity implements CompoundButto
         switchAnswerMultiChoiceRandom.setOnCheckedChangeListener(set);
         switchShowLastDrawer.setOnCheckedChangeListener(set);
         switchNightMode.setOnCheckedChangeListener(set);
+        switchOnlyShowBookmarks.setOnCheckedChangeListener(set);
 
         radioGroupLearnMode.setOnCheckedChangeListener(set);
 
@@ -107,6 +104,7 @@ public class SettingsActivity extends AppCompatActivity implements CompoundButto
         switchAnswerMultiChoiceRandom = (Switch) findViewById(R.id.switch_settings_answer_multi_choice_random);
         switchShowLastDrawer = (Switch) findViewById(R.id.switch_setting_show_last_drawer);
         switchNightMode = (Switch) findViewById(R.id.switch_settings_night_mode);
+        switchOnlyShowBookmarks = (Switch) findViewById(R.id.switch_settings_only_learn_bookmarks);
 
         radioGroupLearnMode = (RadioGroup) findViewById(R.id.radio_group_learn_mode);
     }
@@ -142,6 +140,11 @@ public class SettingsActivity extends AppCompatActivity implements CompoundButto
 
                 settings.setNightMode(isChecked);
                 break;
+            case R.id.switch_settings_only_learn_bookmarks:
+
+                settings.setOnlyLearnBookmarks(isChecked);
+                break;
+
         }
 
         settings.save();

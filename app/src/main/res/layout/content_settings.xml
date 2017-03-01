@@ -13,8 +13,6 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-
-
         <!-- START ITEM -->
         <LinearLayout
             android:layout_width="match_parent"
@@ -102,6 +100,37 @@
 
         </LinearLayout>
 
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/divider"/>
+        <!-- END ITEM -->
+
+        <!-- START ITEM -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/activity_horizontal_margin"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingRight="@dimen/activity_horizontal_margin"
+                android:src="@drawable/ic_bookmark"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/settings_only_learn_bookmarks"/>
+
+            <Switch
+                android:id="@+id/switch_settings_only_learn_bookmarks"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+        </LinearLayout>
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"

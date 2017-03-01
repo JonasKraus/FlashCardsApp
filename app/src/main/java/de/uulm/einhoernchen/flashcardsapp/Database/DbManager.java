@@ -333,7 +333,7 @@ public class DbManager extends DbHelper{
             COLUMN_FLASHCARD_MULTIPLE_CHOICE,//4
             COLUMN_FLASHCARD_CREATED,        //5
             COLUMN_FLASHCARD_LAST_UPDATED,   //6
-            COLUMN_FLASHCARD_USER_ID,         //7
+            TABLE_FLASHCARD+ "." + COLUMN_FLASHCARD_USER_ID,         //7
             TABLE_BOOKMARK + "." + COLUMN_BOOKMARK_ID,                      //0
             TABLE_BOOKMARK + "." + COLUMN_BOOKMARK_CARD_ID,                 //1
             TABLE_BOOKMARK + "." + COLUMN_BOOKMARK_MARK_DATE               //2
@@ -395,7 +395,7 @@ public class DbManager extends DbHelper{
                 COLUMN_FLASHCARD_MULTIPLE_CHOICE,//4
                 COLUMN_FLASHCARD_CREATED,        //5
                 COLUMN_FLASHCARD_LAST_UPDATED,   //6
-                COLUMN_FLASHCARD_USER_ID,         //7
+                TABLE_FLASHCARD + "." + COLUMN_FLASHCARD_USER_ID,         //7
                 TABLE_BOOKMARK + "." + COLUMN_BOOKMARK_ID,                      //0
                 TABLE_BOOKMARK + "." + COLUMN_BOOKMARK_CARD_ID,                 //1
                 TABLE_BOOKMARK + "." + COLUMN_BOOKMARK_MARK_DATE               //2
@@ -2726,6 +2726,7 @@ public class DbManager extends DbHelper{
 
             ContentValues values = new ContentValues();
             values.put(DbHelper.COLUMN_BOOKMARK_CARD_ID, card.getId());
+            values.put(DbHelper.COLUMN_BOOKMARK_USER_ID, getLoggedInUser().getId());
             values.put(DbHelper.COLUMN_BOOKMARK_MARK_DATE, System.currentTimeMillis());
 
             database.insertWithOnConflict(TABLE_BOOKMARK, null, values, SQLiteDatabase.CONFLICT_REPLACE);
@@ -2749,7 +2750,8 @@ public class DbManager extends DbHelper{
 
         int count = 0;
         Cursor cursor = database.query(
-                DbHelper.TABLE_BOOKMARK,
+                DbHelper.TABLE_BOOKMARK + " JOIN " + TABLE_USER + " ON "
+                        + TABLE_BOOKMARK + "." +COLUMN_BOOKMARK_USER_ID + "=" + TABLE_USER + "." + COLUMN_USER_ID,
                 allBookmarkColumns,
                 COLUMN_BOOKMARK_CARD_ID  + "=" + flashCard.getId(),
                 null, null, null, null);

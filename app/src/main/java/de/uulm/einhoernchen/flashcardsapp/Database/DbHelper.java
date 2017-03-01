@@ -131,10 +131,11 @@ public class DbHelper extends SQLiteOpenHelper {
     public static final String COLUMN_SETTINGS_USER_ID = "userId";                                  //1
     public static final String COLUMN_SETTINGS_ALLOW_SYNC = "allowSync";                            //2
     public static final String COLUMN_SETTINGS_LEARN_MODE = "learnmode";                            //3
-    public static final String COLUMN_SETTINGS_ORDER_ANSWERS_MULTIPLY_CHOICE_RANDOM = "multiplyChoiceAnswersRandom"; //4
-    public static final String COLUMN_SETTINGS_IS_NIGHT_MODE= "isNightMode";                        //5
-    public static final String COLUMN_SETTINGS_SHOW_LAST_DRAWER = "showLastDrawer";                 //6
-    public static final String COLUMN_SETTINGS_DATE = "changeDate";
+    public static final String COLUMN_SETTINGS_ONLY_LEARNS_BOOKMARKS = "only_learn_bookmarks";      //4
+    public static final String COLUMN_SETTINGS_ORDER_ANSWERS_MULTIPLY_CHOICE_RANDOM = "multiplyChoiceAnswersRandom"; //5
+    public static final String COLUMN_SETTINGS_IS_NIGHT_MODE= "isNightMode";                        //6
+    public static final String COLUMN_SETTINGS_SHOW_LAST_DRAWER = "showLastDrawer";                 //7
+    public static final String COLUMN_SETTINGS_DATE = "changeDate";                                 //8
 
     public static final String TABLE_STATISTICS = "statistics";
     public static final String COLUMN_STATISTICS_ID = "statisticsId";                       //0
@@ -162,11 +163,12 @@ public class DbHelper extends SQLiteOpenHelper {
     public static final String TABLE_BOOKMARK = "bookmark";
     public static final String COLUMN_BOOKMARK_ID = "bookmarkId";                       //0
     public static final String COLUMN_BOOKMARK_CARD_ID = "cardId";                      //1
-    public static final String COLUMN_BOOKMARK_MARK_DATE = "markDate";                  //2
+    public static final String COLUMN_BOOKMARK_USER_ID = "userId";                      //2
+    public static final String COLUMN_BOOKMARK_MARK_DATE = "markDate";                  //3
 
     // Database name and version - increase when existing table is altered
     private static final String DATABASE_NAME = "flashcardsDb.db";
-    private static final int DATABASE_VERSION = 28; // @TODO revert version before first release
+    private static final int DATABASE_VERSION = 30; // @TODO revert version before first release
 
     /**
      * Database creation sql statement for table user
@@ -422,6 +424,8 @@ public class DbHelper extends SQLiteOpenHelper {
             + " integer default 1, "
             + COLUMN_SETTINGS_LEARN_MODE
             + " string default " + Constants.SETTINGS_LEARN_MODE_DRAWER +", "
+            + COLUMN_SETTINGS_ONLY_LEARNS_BOOKMARKS
+            + " integer default 0, "
             + COLUMN_SETTINGS_ORDER_ANSWERS_MULTIPLY_CHOICE_RANDOM
             + " integer default 0, "
             + COLUMN_SETTINGS_IS_NIGHT_MODE
@@ -488,9 +492,12 @@ public class DbHelper extends SQLiteOpenHelper {
             + " integer primary key NOT NULL, "
             + COLUMN_BOOKMARK_CARD_ID
             + " integer NOT NULL , "
+            + COLUMN_BOOKMARK_USER_ID
+            + " integer NOT NULL , "
             + COLUMN_BOOKMARK_MARK_DATE
             + " integer, "
-            + " FOREIGN KEY(" + COLUMN_BOOKMARK_CARD_ID + ") REFERENCES "  + TABLE_FLASHCARD + "(" + COLUMN_FLASHCARD_ID + ") "
+            + " FOREIGN KEY(" + COLUMN_BOOKMARK_CARD_ID + ") REFERENCES "  + TABLE_FLASHCARD + "(" + COLUMN_FLASHCARD_ID + "), "
+            + " FOREIGN KEY(" + COLUMN_BOOKMARK_USER_ID + ") REFERENCES "  + TABLE_USER + "(" + COLUMN_USER_ID + ") "
             + ");";
 
     private static final String VOTING_CREATE_UNIQUE_INDEX_1 =
@@ -709,10 +716,11 @@ public class DbHelper extends SQLiteOpenHelper {
             COLUMN_SETTINGS_USER_ID,                               //1
             COLUMN_SETTINGS_ALLOW_SYNC,                            //2
             COLUMN_SETTINGS_LEARN_MODE,                            //3
-            COLUMN_SETTINGS_ORDER_ANSWERS_MULTIPLY_CHOICE_RANDOM,  //4
-            COLUMN_SETTINGS_IS_NIGHT_MODE,                         //5
-            COLUMN_SETTINGS_SHOW_LAST_DRAWER,                      //6
-            COLUMN_SETTINGS_DATE                                   //7
+            COLUMN_SETTINGS_ONLY_LEARNS_BOOKMARKS,                   //4
+            COLUMN_SETTINGS_ORDER_ANSWERS_MULTIPLY_CHOICE_RANDOM,  //5
+            COLUMN_SETTINGS_IS_NIGHT_MODE,                         //6
+            COLUMN_SETTINGS_SHOW_LAST_DRAWER,                      //7
+            COLUMN_SETTINGS_DATE                                   //8
     };
 
 
@@ -748,7 +756,8 @@ public class DbHelper extends SQLiteOpenHelper {
     public static String[] allBookmarkColumns = {
             TABLE_BOOKMARK + "." + COLUMN_BOOKMARK_ID,                      //0
             TABLE_BOOKMARK + "." + COLUMN_BOOKMARK_CARD_ID,                 //1
-            TABLE_BOOKMARK + "." + COLUMN_BOOKMARK_MARK_DATE,               //2
+            TABLE_BOOKMARK + "." + COLUMN_BOOKMARK_USER_ID,                 //2
+            TABLE_BOOKMARK + "." + COLUMN_BOOKMARK_MARK_DATE,               //3
     };
 }
 

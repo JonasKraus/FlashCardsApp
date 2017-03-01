@@ -13,6 +13,7 @@ import static de.uulm.einhoernchen.flashcardsapp.Database.DbHelper.COLUMN_SETTIN
 import static de.uulm.einhoernchen.flashcardsapp.Database.DbHelper.COLUMN_SETTINGS_DATE;
 import static de.uulm.einhoernchen.flashcardsapp.Database.DbHelper.COLUMN_SETTINGS_IS_NIGHT_MODE;
 import static de.uulm.einhoernchen.flashcardsapp.Database.DbHelper.COLUMN_SETTINGS_LEARN_MODE;
+import static de.uulm.einhoernchen.flashcardsapp.Database.DbHelper.COLUMN_SETTINGS_ONLY_LEARNS_BOOKMARKS;
 import static de.uulm.einhoernchen.flashcardsapp.Database.DbHelper.COLUMN_SETTINGS_ORDER_ANSWERS_MULTIPLY_CHOICE_RANDOM;
 import static de.uulm.einhoernchen.flashcardsapp.Database.DbHelper.COLUMN_SETTINGS_SHOW_LAST_DRAWER;
 import static de.uulm.einhoernchen.flashcardsapp.Database.DbHelper.COLUMN_SETTINGS_USER_ID;
@@ -30,13 +31,13 @@ public class Settings {
     private long userId;
     private boolean allowSync;
     private Constants learnMode;
+    private boolean onlyLearnBookmarks;
     private boolean multiplyChoiceAnswerOrderRandom;
     private boolean isNightMode;
     private boolean showLastDrawer;
     private int changeDate;
 
     private boolean hasCahnges = false;
-
 
     /**
      * Constructs a settings object with all params
@@ -48,17 +49,20 @@ public class Settings {
      * @param userId
      * @param allowSync
      * @param learnMode
+     * @param onlyShowBookmarks
+
      * @param multiplyChoiceAnswerOrderRandom
      * @param isNightMode
      * @param showLastDrawer
      * @param changeDate
      */
-    public Settings(long id, long userId, boolean allowSync, Constants learnMode, boolean multiplyChoiceAnswerOrderRandom, boolean isNightMode, boolean showLastDrawer, int changeDate) {
+    public Settings(long id, long userId, boolean allowSync, Constants learnMode, boolean onlyShowBookmarks, boolean multiplyChoiceAnswerOrderRandom, boolean isNightMode, boolean showLastDrawer, int changeDate) {
 
         this.id = id;
         this.userId = userId;
         this.allowSync = allowSync;
         this.learnMode = learnMode;
+        this.onlyLearnBookmarks = onlyShowBookmarks;
         this.multiplyChoiceAnswerOrderRandom = multiplyChoiceAnswerOrderRandom;
         this.isNightMode = isNightMode;
         this.showLastDrawer = showLastDrawer;
@@ -107,6 +111,16 @@ public class Settings {
         this.learnMode = learnMode;
     }
 
+    public boolean isOnlyLearnBookmarks() {
+        return onlyLearnBookmarks;
+    }
+
+    public void setOnlyLearnBookmarks(boolean onlyShowBookmarks) {
+
+        this.hasCahnges = true;
+        this.onlyLearnBookmarks = onlyShowBookmarks;
+    }
+
     public boolean isMultiplyChoiceAnswerOrderRandom() {
 
         return multiplyChoiceAnswerOrderRandom;
@@ -139,15 +153,7 @@ public class Settings {
         this.showLastDrawer = showLastDrawer;
     }
 
-    public int getChangeDate() {
-        return changeDate;
-    }
 
-    public void setChangeDate(int changeDate) {
-
-        this.hasCahnges = true;
-        this.changeDate = changeDate;
-    }
 
     @Override
     public String toString() {
@@ -190,6 +196,7 @@ public class Settings {
         values.put(COLUMN_SETTINGS_USER_ID, this.getUserId());
         values.put(COLUMN_SETTINGS_ALLOW_SYNC, this.isAllowSync());
         values.put(COLUMN_SETTINGS_LEARN_MODE, String.valueOf(this.getLearnMode()));
+        values.put(COLUMN_SETTINGS_ONLY_LEARNS_BOOKMARKS, this.isOnlyLearnBookmarks());
         values.put(COLUMN_SETTINGS_ORDER_ANSWERS_MULTIPLY_CHOICE_RANDOM, this.isMultiplyChoiceAnswerOrderRandom());
         values.put(COLUMN_SETTINGS_IS_NIGHT_MODE, this.isNightMode());
         values.put(COLUMN_SETTINGS_SHOW_LAST_DRAWER, this.isHideLastDrawer());
@@ -218,6 +225,7 @@ public class Settings {
         boolean allowSync;
         String learnModeString;
         Constants learnMode;
+        boolean onlyShowBookmarks;
         boolean multiplyChoiceAnswerOrderRandom;
         boolean isNightMode;
         boolean showLastDrawer;
@@ -244,6 +252,9 @@ public class Settings {
             allowSync = cursor.getInt(
                     cursor.getColumnIndex(DbHelper.COLUMN_SETTINGS_ALLOW_SYNC)
             ) > 0;
+            onlyShowBookmarks = cursor.getInt(
+                    cursor.getColumnIndex(DbHelper.COLUMN_SETTINGS_ONLY_LEARNS_BOOKMARKS)
+            ) > 0;
             learnModeString = cursor.getString(
                     cursor.getColumnIndex(DbHelper.COLUMN_SETTINGS_LEARN_MODE)
             );
@@ -261,11 +272,11 @@ public class Settings {
                     cursor.getColumnIndex(DbHelper.COLUMN_SETTINGS_DATE)
             );
 
-            settings = new Settings(id, userId, allowSync, learnMode, multiplyChoiceAnswerOrderRandom, isNightMode, showLastDrawer, changeDate);
+            settings = new Settings(id, userId, allowSync, learnMode, onlyShowBookmarks, multiplyChoiceAnswerOrderRandom, isNightMode, showLastDrawer, changeDate);
 
         } else {
 
-            settings = new Settings(0, Globals.getDb().getLoggedInUser().getId(), true, Constants.SETTINGS_LEARN_MODE_DRAWER, false, false, true, 0);
+            settings = new Settings(0, Globals.getDb().getLoggedInUser().getId(), true, Constants.SETTINGS_LEARN_MODE_DRAWER, false, false, false, true, 0);
 
         }
 
