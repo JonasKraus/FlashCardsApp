@@ -67,7 +67,7 @@ public class FragmentPlayFlashCards extends Fragment implements View.OnClickList
     private TextView mAuthorView;
     private TextView mCardRatingView;
     private TextView mDateView;
-    private ImageView mIsCorrect;
+    private ImageView mImageViewBookmarked;
     private ImageView mLocalView;
     private ImageView imageViewUri;
     private ImageView imageViewPlay;
@@ -196,8 +196,7 @@ public class FragmentPlayFlashCards extends Fragment implements View.OnClickList
         // mGroupRatingView = (TextView) view.findViewById(R.id.text_view_listItem_group_rating);
         mCardRatingView = (TextView) view.findViewById(R.id.text_view_listItem_card_rating);
         mDateView = (TextView) view.findViewById(R.id.text_view_listItem_date);
-        mIsCorrect = (ImageView) view.findViewById(R.id.image_view_bookmarked);
-        mIsCorrect.setVisibility(currentFlashcard.isMultipleChoice() ? View.VISIBLE : View.GONE);
+        mImageViewBookmarked = (ImageView) view.findViewById(R.id.image_view_bookmarked);
 
         mLocalView = (ImageView) view.findViewById(R.id.image_view_offline);
 
@@ -230,6 +229,62 @@ public class FragmentPlayFlashCards extends Fragment implements View.OnClickList
         // Initially set visibility of answers
         toggleStateAndFabIcon(true);
 
+        setBookmarkListener();
+
+    }
+
+
+    /**
+     * Sets the click listener of the bookmark icon
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     * @since 2017-03-01
+     *
+     */
+    private void setBookmarkListener() {
+
+        Log.d("visi_______________",
+                mImageViewBookmarked.getVisibility() + "");
+
+        // Listener on bookmark icon
+        mImageViewBookmarked.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                db.setBookmark(currentFlashcard);
+                currentFlashcard.setMarked(db.isCardMarkedLocally(currentFlashcard));
+
+                mImageViewBookmarked.setImageDrawable(
+                        Globals.getContext().getResources()
+                                .getDrawable(currentFlashcard.isMarked()
+                                        ? R.drawable.ic_bookmark
+                                        : R.drawable.ic_bookmark_border));
+            }
+        });
+    }
+
+
+    /**
+     * Sets the bookmark icon for the flashcard
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     * @since 2017-03-01
+     *
+     */
+    private void setBookmarkIcon() {
+
+        // Sets the bookmark
+        if (currentFlashcard.isMarked()) {
+
+            mImageViewBookmarked.setImageDrawable(
+                    Globals.getContext().getResources().getDrawable(R.drawable.ic_bookmark));
+
+        } else {
+
+
+            mImageViewBookmarked.setImageDrawable(
+                    Globals.getContext().getResources().getDrawable(R.drawable.ic_bookmark_border));
+        }
     }
 
 
@@ -293,8 +348,6 @@ public class FragmentPlayFlashCards extends Fragment implements View.OnClickList
 
         initViewQuestion();
 
-        Log.d("image-view", imageViewPlay.getId()+"");
-
         setMedia();
 
         setListener();
@@ -324,6 +377,8 @@ public class FragmentPlayFlashCards extends Fragment implements View.OnClickList
 
         fab.setOnClickListener(null);
         resetFabPlay();
+
+        mImageViewBookmarked.setOnClickListener(null);
     }
 
 
@@ -524,6 +579,7 @@ public class FragmentPlayFlashCards extends Fragment implements View.OnClickList
 
         final long cardID = statistics.get(position).getCardId();
 
+        setBookmarkListener();
         /**
          * Sets the clicklistener to vote a cards rating down
          */
@@ -754,6 +810,8 @@ public class FragmentPlayFlashCards extends Fragment implements View.OnClickList
 
                 setListener();
 
+                setBookmarkIcon();
+
                 if (currentFlashcard.isMultipleChoice()) {
 
                     fab.setImageDrawable(Globals.getContext().getResources().getDrawable(R.drawable.ic_check));
@@ -813,7 +871,6 @@ public class FragmentPlayFlashCards extends Fragment implements View.OnClickList
 
         }
 
-        //toggleVisibilityAnswers();
 
 
     }
