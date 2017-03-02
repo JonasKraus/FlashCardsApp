@@ -152,6 +152,7 @@
     <string name="feedback_salutation">Dear Flashcards Team,</string>
     <string name="share_message">Try out the Flashcards App for Android</string>
     <string name="settings_only_learn_bookmarks">Only learn bookmarks</string>
+    <string name="prompt_choose_image">Choose image</string>
 
 
 </resources>

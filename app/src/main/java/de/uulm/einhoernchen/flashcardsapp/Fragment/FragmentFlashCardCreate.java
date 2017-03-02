@@ -1,14 +1,19 @@
 package de.uulm.einhoernchen.flashcardsapp.Fragment;
 
+import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -28,17 +33,18 @@ import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
 import de.uulm.einhoernchen.flashcardsapp.Activity.MainActivity;
 import de.uulm.einhoernchen.flashcardsapp.AsyncTask.Remote.POST.AsyncPostRemoteCard;
+import de.uulm.einhoernchen.flashcardsapp.AsyncTask.Remote.POST.AsyncPostRemoteImage;
 import de.uulm.einhoernchen.flashcardsapp.Const.Constants;
 import de.uulm.einhoernchen.flashcardsapp.Database.DbManager;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.Adapter.RecyclerViewAdapterFlashCardAnswers;
@@ -51,9 +57,12 @@ import de.uulm.einhoernchen.flashcardsapp.R;
 import de.uulm.einhoernchen.flashcardsapp.Util.Globals;
 import de.uulm.einhoernchen.flashcardsapp.Util.HashtagParser;
 import de.uulm.einhoernchen.flashcardsapp.Util.JsonKeys;
+import de.uulm.einhoernchen.flashcardsapp.Util.PermissionManager;
 import de.uulm.einhoernchen.flashcardsapp.Util.ProcessConnectivity;
 import de.uulm.einhoernchen.flashcardsapp.Util.ProcessorImage;
 import de.uulm.einhoernchen.flashcardsapp.Util.ValidatorInput;
+
+import static android.app.Activity.RESULT_OK;
 
 
 /**
@@ -69,6 +78,10 @@ public class FragmentFlashCardCreate extends Fragment implements View.OnClickLis
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+
+
+    private static final int MY_INTENT_CLICK_GALLERY = 303;
+    private static final int MY_INTENT_CLICK_CAMERA = 304;
 
     private FlashCard flashCard;
 
@@ -114,6 +127,8 @@ public class FragmentFlashCardCreate extends Fragment implements View.OnClickLis
     private FloatingActionButton floatingActionButtonAnswerAdd;
     private FloatingActionButton floatingActionButtonAnswerSave;
     private FloatingActionButton floatingActionButtonCardAnswerAdd;
+    private ImageButton imageButtonInsertImage;
+    private Bitmap bitmapQuestion;
 
 
     public FragmentFlashCardCreate() {
@@ -186,6 +201,7 @@ public class FragmentFlashCardCreate extends Fragment implements View.OnClickLis
         editTextAnswerHint = (EditText) view.findViewById(R.id.edittext_answer_hint);
         editTextAnswerUri = (EditText) view.findViewById(R.id.edittext_answer_uri);
 
+        imageButtonInsertImage = (ImageButton) view.findViewById(R.id.button_insert_image);
 
         textInputLayoutUri = (TextInputLayout) view.findViewById(R.id.textInputLayout_uri);
         textInputLayoutContent = (TextInputLayout) view.findViewById(R.id.textInputLayout_content);
@@ -279,6 +295,8 @@ public class FragmentFlashCardCreate extends Fragment implements View.OnClickLis
         floatingActionButtonCardCreate.setOnClickListener(this);
         floatingActionButtonAnswerAdd.setOnClickListener(this);
         floatingActionButtonCardAnswerAdd.setOnClickListener(this);
+
+        imageButtonInsertImage.setOnClickListener(this);
 
         return view;
 
@@ -412,6 +430,12 @@ public class FragmentFlashCardCreate extends Fragment implements View.OnClickLis
     public void onClick(View v) {
 
         switch (v.getId()) {
+
+            case R.id.button_insert_image:
+
+                handleInsertUriClick();
+
+                break;
 
             case R.id.fab_answer_add:
             case R.id.fab_card_answer_add:
@@ -569,6 +593,28 @@ public class FragmentFlashCardCreate extends Fragment implements View.OnClickLis
         // return if non valid values
         if (!validateQuestion()) return;
 
+        if (!editTextQuestionUri.getText().toString().equals("")) {
+
+            AsyncPostRemoteImage asyncPostRemoteImage = new AsyncPostRemoteImage(new AsyncPostRemoteImage.AsyncPostRemoteImageResponse() {
+
+                @Override
+                public void processFinished(String mediaUri) {
+
+                    editTextQuestionUri.setText(mediaUri);
+                    saveFinalFlashcard();
+
+                }
+            });
+            asyncPostRemoteImage.execute(ProcessorImage.getImageUri(getContext(), bitmapQuestion));
+        }
+
+        saveFinalFlashcard();
+
+    }
+
+
+    private void saveFinalFlashcard() {
+
         String newUri = editTextQuestionUri.getText().toString();
         String newQuestionText = editTextQuestionText.getText().toString();
         boolean isMultiplyChoice = checkBoxMultipleChoice.isChecked();
@@ -607,7 +653,9 @@ public class FragmentFlashCardCreate extends Fragment implements View.OnClickLis
             jsonUser.put(JsonKeys.USER_ID, db.getLoggedInUser().getId());
             //author.put(JsonKeys.AUTHOR, jsonUser);
             questionData.put(JsonKeys.QUESTION_TEXT, newQuestionText);
-            questionData.put(JsonKeys.URI, newUri);
+
+            questionData.put(JsonKeys.QUESTION_MEDIA_URI, newUri);
+
             jsonObjectQuestion.put(JsonKeys.FLASHCARD_QUESTION, questionData);
             jsonObjectQuestion.put(JsonKeys.FLASHCARD_MULTIPLE_CHOICE, isMultiplyChoice);
             jsonObjectQuestion.put(JsonKeys.AUTHOR, jsonUser);
@@ -635,7 +683,7 @@ public class FragmentFlashCardCreate extends Fragment implements View.OnClickLis
 
         } catch (JSONException e) {
 
-            Log.d("Flascard", "init json for question update");
+            Log.d("Flashcard", "init json for question update");
             e.printStackTrace();
         }
 
@@ -654,7 +702,6 @@ public class FragmentFlashCardCreate extends Fragment implements View.OnClickLis
 
             task.execute(this.carddeckId);
         }
-
     }
 
 
@@ -671,7 +718,7 @@ public class FragmentFlashCardCreate extends Fragment implements View.OnClickLis
         if(checkBoxMultipleChoice.isChecked()) {
 
             return ValidatorInput.isNotEmpty(editTextAnswerText)
-                    && ValidatorInput.isValidUri(editTextAnswerUri)
+                    //&& ValidatorInput.isValidUri(editTextAnswerUri)
                     && ValidatorInput.hasCheck(radioGroupAnswerCorrect);
         }
 
@@ -692,7 +739,7 @@ public class FragmentFlashCardCreate extends Fragment implements View.OnClickLis
 
         if (editTextQuestionText.getText().equals("")) return true;
 
-        return ValidatorInput.isNotEmpty(editTextQuestionText) && ValidatorInput.isValidUri(editTextQuestionUri);
+        return ValidatorInput.isNotEmpty(editTextQuestionText);
     }
 
 
@@ -714,5 +761,131 @@ public class FragmentFlashCardCreate extends Fragment implements View.OnClickLis
     public interface OnFlashCardFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
+    }
+
+
+
+    /**
+     *
+     *
+     */
+    private void setQuestionImage() {
+
+        PermissionManager.verifyStoragePermissionsWrite((Activity) getContext());
+        File sd =  Environment.getExternalStorageDirectory();
+
+        File folder = new File(sd + "/flashcards");
+        boolean success = true;
+
+        if (!folder.exists()) {
+            success = folder.mkdir();
+        }
+
+        if (success) {
+
+
+            //Bitmap bitmapQuestion = ProcessorImage.download(imageUri);
+
+        }
+
+    }
+
+
+    /**
+     * Adds a clicklistener to the profile image
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     * @since 2017-01-06
+     */
+    private void handleInsertUriClick() {
+
+        //MEDIA GALLERY
+        PermissionManager.verifyStoragePermissionsWrite((Activity) getContext());
+
+        DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int btn) {
+
+                switch (btn){
+
+                    case DialogInterface.BUTTON_POSITIVE:
+
+                        Intent camIntent = new Intent("android.media.action.IMAGE_CAPTURE");
+                        FragmentFlashCardCreate.this.startActivityForResult(camIntent, MY_INTENT_CLICK_CAMERA);
+                        break;
+
+                    case DialogInterface.BUTTON_NEGATIVE:
+
+                        Intent intent = new Intent();
+                        intent.setType("image/*");
+                        intent.setAction(Intent.ACTION_GET_CONTENT);
+                        FragmentFlashCardCreate.this.startActivityForResult(Intent.createChooser(intent, "Select File"), MY_INTENT_CLICK_GALLERY);
+                        break;
+
+                    default:
+                        // On canel
+                        break;
+                }
+            }
+        };
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setMessage(R.string.prompt_choose_image) //TODO set in constans strings
+                .setPositiveButton(R.string.prompt_choose_camera, dialogClickListener)
+                .setNegativeButton(R.string.prompt_choose_gallery, dialogClickListener)
+                .setNeutralButton(R.string.prompt_cancel, dialogClickListener).show();
+    }
+
+
+
+    /**
+     * Here you get the return values of the intends
+     *
+     * @param requestCode
+     * @param resultCode
+     * @param data
+     */
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+
+        if (resultCode != RESULT_OK) return;
+
+
+        // Get Photo from camera intent
+        if (resultCode == RESULT_OK && data.getData() == null && requestCode == MY_INTENT_CLICK_CAMERA) {
+
+            bitmapQuestion = (Bitmap) data.getExtras().get("data");
+
+            imageViewUri.setVisibility(View.VISIBLE);
+            imageViewUri.setImageBitmap(bitmapQuestion);
+
+            editTextQuestionUri.setText(ProcessorImage.getImageUri(getContext(), bitmapQuestion));
+
+            setQuestionImage();
+
+        }
+
+        // Get Data from Gallery intent
+        if (requestCode == MY_INTENT_CLICK_GALLERY) {
+
+            if (null == data) return;
+
+            String selectedImagePath;
+            Uri selectedImageUri = data.getData();
+
+            selectedImagePath = ProcessorImage.getPath(getContext(), selectedImageUri);
+            BitmapFactory.Options bmOptions = new BitmapFactory.Options();
+
+            bitmapQuestion = BitmapFactory.decodeFile(selectedImagePath, bmOptions);
+
+            imageViewUri.setVisibility(View.VISIBLE);
+            imageViewUri.setImageBitmap(bitmapQuestion);
+
+            editTextQuestionUri.setText(ProcessorImage.getImageUri(getContext(), bitmapQuestion));
+
+            setQuestionImage();
+        }
+
     }
 }

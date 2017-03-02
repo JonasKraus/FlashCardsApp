@@ -13,6 +13,7 @@
         android:fitsSystemWindows="true"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
+
         <android.support.design.widget.CollapsingToolbarLayout
             android:id="@+id/collapsing_toolbar"
             android:layout_width="match_parent"
@@ -20,18 +21,17 @@
             app:contentScrim="?attr/colorPrimary"
             android:fitsSystemWindows="true"
             android:scaleType="centerCrop"
-            app:layout_collapseMode="parallax">
+            app:layout_scrollFlags="scroll|exitUntilCollapsed">
+
 
             <include layout="@layout/fragment_flashcard_header_create"
                 android:id="@+id/parallax"
-                app:layout_collapseMode="pin"
+                app:layout_collapseMode="parallax"
                 app:popupTheme="@style/AppTheme.PopupOverlay"/>
-
 
         </android.support.design.widget.CollapsingToolbarLayout>
 
-    </android.support.design.widget.AppBarLayout>s
-
+    </android.support.design.widget.AppBarLayout>
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab_card_create"
         android:layout_width="wrap_content"

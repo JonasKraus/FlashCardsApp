@@ -29,8 +29,6 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.google.android.gms.nearby.messages.Messages;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -51,17 +49,13 @@ import de.uulm.einhoernchen.flashcardsapp.Fragment.Dataset.ContentCategories;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.FragmentPlayTabs;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.Interface.OnFragmentInteractionListenerAnswer;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.Interface.OnFragmentInteractionListenerCarddeck;
-import de.uulm.einhoernchen.flashcardsapp.Fragment.Interface.OnFragmentInteractionListenerCarddeckLongClick;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.Interface.OnFragmentInteractionListenerCategory;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.Interface.OnFragmentInteractionListenerFlashcard;
-import de.uulm.einhoernchen.flashcardsapp.Fragment.Interface.OnFragmentInteractionListenerUserGroup;
-import de.uulm.einhoernchen.flashcardsapp.Fragment.SimpleRTEditor;
 import de.uulm.einhoernchen.flashcardsapp.Model.Answer;
 import de.uulm.einhoernchen.flashcardsapp.Model.CardDeck;
 import de.uulm.einhoernchen.flashcardsapp.Model.Category;
 import de.uulm.einhoernchen.flashcardsapp.Model.FlashCard;
 import de.uulm.einhoernchen.flashcardsapp.Model.User;
-import de.uulm.einhoernchen.flashcardsapp.Model.UserGroup;
 import de.uulm.einhoernchen.flashcardsapp.R;
 import de.uulm.einhoernchen.flashcardsapp.Const.Constants;
 import de.uulm.einhoernchen.flashcardsapp.Util.Globals;
@@ -96,7 +90,7 @@ public class MainActivity extends AppCompatActivity
     // the Flashcard that was loaded last in details fragment
     private FlashCard currentFlashCard;
 
-    private static final int MY_INTENT_CLICK=302;
+    private static final int MY_INTENT_CLICK_GALLERY = 302;
     private DrawerLayout drawer;
     private TextView profileName;
     private TextView profileEmail;
@@ -106,6 +100,7 @@ public class MainActivity extends AppCompatActivity
     private FloatingActionButton floatingActionButtonAdd;
     public CollapsingToolbarLayout collapsingToolbar;
     private FragmentPlayTabs fragmentPlay;
+    private int MY_INTENT_CLICK_CAMERA = 301;
 
     @Override
     protected void onResume() {
@@ -243,7 +238,7 @@ public class MainActivity extends AppCompatActivity
                             case DialogInterface.BUTTON_POSITIVE:
 
                                 Intent camIntent = new Intent("android.media.action.IMAGE_CAPTURE");
-                                startActivityForResult(camIntent, 1);
+                                startActivityForResult(camIntent, MY_INTENT_CLICK_CAMERA);
                                 break;
 
                             case DialogInterface.BUTTON_NEGATIVE:
@@ -251,7 +246,7 @@ public class MainActivity extends AppCompatActivity
                                 Intent intent = new Intent();
                                 intent.setType("image/*");
                                 intent.setAction(Intent.ACTION_GET_CONTENT);
-                                startActivityForResult(Intent.createChooser(intent, "Select File"),MY_INTENT_CLICK);
+                                startActivityForResult(Intent.createChooser(intent, "Select File"), MY_INTENT_CLICK_GALLERY);
                                 break;
 
                             default:
@@ -451,20 +446,23 @@ public class MainActivity extends AppCompatActivity
      */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
         if (resultCode != RESULT_OK) return;
 
-
         // Get Photo from camera intent
-        if (resultCode == RESULT_OK && data.getData() == null && requestCode != MY_INTENT_CLICK) {
+        if (resultCode == RESULT_OK && data.getData() == null && requestCode == MY_INTENT_CLICK_CAMERA) {
+
 
             Bitmap bitmap = (Bitmap) data.getExtras().get("data");
             ProcessorImage.savebitmap(bitmap, user.getId(), "_flashcards_profile");
             setProfileImage();
 
+
         }
 
         // Get Data from Gallery intent
-        if (requestCode == MY_INTENT_CLICK) {
+        if (requestCode == MY_INTENT_CLICK_GALLERY) {
 
             if (null == data) return;
 
@@ -701,8 +699,6 @@ public class MainActivity extends AppCompatActivity
 
         } else if (id == R.id.nav_logout) {
 
-            // TODO Ascny task to server to invalidate this token
-            // What todo when offline wihle logoff
             db.logoutUser();
 
             startActivity(new Intent(MainActivity.this, LoginActivity.class));

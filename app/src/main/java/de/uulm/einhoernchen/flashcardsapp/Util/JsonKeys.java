@@ -78,6 +78,8 @@ public class JsonKeys {
     //Question
     public static final String QUESTION_ID = "questionId";
     public static final String QUESTION_TEXT = "questionText";
+    public static final String QUESTION_MEDIA_URI = "mediaURI";
+
     public static final String QUESTION_JSON_ELEMENTS = QUESTION_TEXT + ", " + URI + ", " + AUTHOR;
 
     //Token
@@ -126,4 +128,5 @@ public class JsonKeys {
     public static final String CHALLENGE_COMPLETED = "completed";
 
     public static final String MEDIA_URI = "mediaURI";
+
 }
