@@ -15,12 +15,16 @@ import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.widget.ImageView;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.util.Random;
 
 import de.uulm.einhoernchen.flashcardsapp.AsyncTask.Remote.GET.AsyncGetRemoteBitmap;
+import de.uulm.einhoernchen.flashcardsapp.AsyncTask.Remote.PATCH.AsyncPatchRemoteUser;
 import de.uulm.einhoernchen.flashcardsapp.AsyncTask.Remote.POST.AsyncPostRemoteCard;
 import de.uulm.einhoernchen.flashcardsapp.AsyncTask.Remote.POST.AsyncPostRemoteImage;
 import de.uulm.einhoernchen.flashcardsapp.R;
@@ -264,6 +268,23 @@ public class ProcessorImage {
                     if (fileName.contains("_flashcards_profile")) {
 
                         Globals.getDb().saveAvatar(userId, mediaUri);
+                        JSONObject jsonObjectUser = new JSONObject();
+
+                        try {
+
+                            jsonObjectUser.put(JsonKeys.USER_AVATAR, mediaUri);
+
+                            jsonObjectUser.put(JsonKeys.USER_ID, userId);
+
+
+                        } catch (JSONException e) {
+
+                            e.printStackTrace();
+                        }
+
+                        // Update the user on server
+                        AsyncPatchRemoteUser asyncPatchRemoteUser = new AsyncPatchRemoteUser(jsonObjectUser);
+                        asyncPatchRemoteUser.execute(userId);
                     }
 
                 }
