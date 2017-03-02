@@ -426,10 +426,12 @@ public class MainActivity extends AppCompatActivity
             File image = new File(sd+"/flashcards", user.getId()+"_flashcards_profile.png");
 
             if (image.exists()) {
+
                 BitmapFactory.Options bmOptions = new BitmapFactory.Options();
                 Bitmap bitmap = BitmapFactory.decodeFile(image.getAbsolutePath(), bmOptions);
                 profileImage.setImageBitmap(bitmap);
             } else {
+
                 Bitmap bitmap = ProcessorImage.generateImage(this);
                 ProcessorImage.savebitmap(bitmap, user.getId(), "_flashcards_profile");
                 profileImage.setImageBitmap(bitmap);
