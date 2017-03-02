@@ -8,6 +8,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
@@ -307,13 +308,25 @@ public class ProcessorImage {
      * @param id
      * @param appendix
      */
-    public static void download(String url, ImageView imageView, long id, String appendix) {
+    public static BitmapDrawable download(String url, ImageView imageView, long id, String appendix) {
+
+
+        // DEfault setting avatar
+        if (appendix == null) {
+            appendix = "_flashcards_profile.png";
+        }
+
+        if (!appendix.contains(".png")) {
+            appendix += ".png";
+        }
 
         //PermissionManager.verifyStoragePermissionsWrite((Activity) context);
         File sd =  Environment.getExternalStorageDirectory();
 
         File folder = new File(sd + "/flashcards");
         boolean success = true;
+
+        Bitmap bitmap = null;
 
         if (!folder.exists()) {
             success = folder.mkdir();
@@ -327,7 +340,7 @@ public class ProcessorImage {
 
             if (image.exists()) {
                 BitmapFactory.Options bmOptions = new BitmapFactory.Options();
-                Bitmap bitmap = BitmapFactory.decodeFile(image.getAbsolutePath(), bmOptions);
+                bitmap = BitmapFactory.decodeFile(image.getAbsolutePath(), bmOptions);
                 imageView.setImageBitmap(bitmap);
 
             } else {
@@ -338,6 +351,8 @@ public class ProcessorImage {
                 task.execute(url);
             }
         }
+
+        return new BitmapDrawable(Globals.getContext().getResources(), bitmap);
     }
 
 

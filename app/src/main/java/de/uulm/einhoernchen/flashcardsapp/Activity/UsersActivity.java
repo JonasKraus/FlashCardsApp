@@ -2,6 +2,7 @@ package de.uulm.einhoernchen.flashcardsapp.Activity;
 
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -27,6 +28,7 @@ import de.uulm.einhoernchen.flashcardsapp.Fragment.Interface.OnFragmentInteracti
 import de.uulm.einhoernchen.flashcardsapp.Model.User;
 import de.uulm.einhoernchen.flashcardsapp.R;
 import de.uulm.einhoernchen.flashcardsapp.Util.Globals;
+import de.uulm.einhoernchen.flashcardsapp.Util.ProcessorImage;
 
 public class UsersActivity extends AppCompatActivity implements OnFragmentInteractionListenerUser {
 
@@ -148,7 +150,8 @@ public class UsersActivity extends AppCompatActivity implements OnFragmentIntera
     @Override
     public void onUserListFragmentInteraction(RecyclerViewAdapterUsers.ViewHolder item) {
 
-        TextDrawable drawable;
+        TextDrawable drawableText;
+        Drawable drawableImage;
         ColorGenerator generator = ColorGenerator.MATERIAL; // or use DEFAULT
         // generate random color
 
@@ -156,22 +159,23 @@ public class UsersActivity extends AppCompatActivity implements OnFragmentIntera
 
             checkedUsers.remove(item.mItem);
 
-            final int color = generator.getColor(item.mItem.getId());
+            drawableImage = ProcessorImage.download(item.mItem.getAvatar(), item.imageView, item.mItem.getId(), null);
 
-            drawable = TextDrawable.builder()
-                    .buildRound(item.mItem.getName().charAt(0) + "", color); // radius in px
             item.imageView.setTag("unchecked");
+
+            item.imageView.setImageDrawable(drawableImage);
 
         } else {
 
             checkedUsers.add(item.mItem);
 
-            drawable = TextDrawable.builder()
+            drawableText = TextDrawable.builder()
                     .buildRound(String.valueOf("✓"), Color.GRAY); // radius in px
             item.imageView.setTag("checked");
+
+            item.imageView.setImageDrawable(drawableText);
         }
 
-        item.imageView.setImageDrawable(drawable);
 
         setCheckedUsersList();
     }

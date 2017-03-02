@@ -2,6 +2,7 @@ package de.uulm.einhoernchen.flashcardsapp.Fragment.Adapter;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -22,6 +23,7 @@ import de.uulm.einhoernchen.flashcardsapp.Fragment.Interface.OnFragmentInteracti
 import de.uulm.einhoernchen.flashcardsapp.Model.User;
 import de.uulm.einhoernchen.flashcardsapp.R;
 import de.uulm.einhoernchen.flashcardsapp.Util.Globals;
+import de.uulm.einhoernchen.flashcardsapp.Util.ProcessorImage;
 
 /**
  * {@link RecyclerView.Adapter} that can display a {@link de.uulm.einhoernchen.flashcardsapp.Fragment.Dataset.ContentFlashCardAnswers} and makes a call to the
@@ -174,14 +176,24 @@ public class RecyclerViewAdapterUsers extends RecyclerView.Adapter<RecyclerViewA
         final String firstLetter = String.valueOf(user.getName().charAt(0)); // hier wird der buchstabe gesetzt
 
         ColorGenerator generator = ColorGenerator.MATERIAL; // or use DEFAULT
-        // generate random color
-        final int color = generator.getColor(user.getId()); // TODO
-        //int color = generator.getRandomColor();
 
-        TextDrawable drawable = TextDrawable.builder()
-                .buildRound(firstLetter, color); // radius in px
+        final int color = generator.getColor(user.getId());
 
-        holder.imageView.setImageDrawable(drawable);
+        if (user.getAvatar() == null || user.getAvatar().equals("")) {
+
+            TextDrawable drawable = TextDrawable.builder()
+                    .buildRound(firstLetter, color); // radius in px
+
+            holder.imageView.setImageDrawable(drawable);
+
+        } else {
+
+            BitmapDrawable drawableImage = ProcessorImage.download(user.getAvatar(), holder.imageView, user.getId(), null);
+
+            holder.imageView.setTag("unchecked");
+
+            holder.imageView.setImageDrawable(drawableImage);
+        }
     }
 
     /**

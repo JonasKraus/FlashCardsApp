@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
@@ -38,6 +39,7 @@ import de.uulm.einhoernchen.flashcardsapp.Fragment.Interface.OnFragmentInteracti
 import de.uulm.einhoernchen.flashcardsapp.Model.User;
 import de.uulm.einhoernchen.flashcardsapp.R;
 import de.uulm.einhoernchen.flashcardsapp.Util.Globals;
+import de.uulm.einhoernchen.flashcardsapp.Util.ProcessorImage;
 import de.uulm.einhoernchen.flashcardsapp.databinding.FragmentItemListBinding;
 import de.uulm.einhoernchen.flashcardsapp.databinding.ListItemUserBinding;
 
@@ -281,10 +283,26 @@ public class FragmentUsersBinding extends Fragment implements SearchView.OnQuery
             checkedUsers.remove(listItemUserBinding.getModel());
             checkedBindings.remove(listItemUserBinding);
 
-            final int color = generator.getColor(listItemUserBinding.getModel().getId());
+            if (listItemUserBinding.getModel().getAvatar() != null && !listItemUserBinding.getModel().getAvatar().equals("")) {
 
-            drawable = TextDrawable.builder()
-                    .buildRound(listItemUserBinding.getModel().getName().charAt(0) + "", color); // radius in px
+                BitmapDrawable drawableImage = ProcessorImage.download(listItemUserBinding.getModel().getAvatar(), listItemUserBinding.imageViewRoundIcon, listItemUserBinding.getModel().getId(), null);
+
+                listItemUserBinding.imageViewRoundIcon.setTag("unchecked");
+
+                listItemUserBinding.imageViewRoundIcon.setImageDrawable(drawableImage);
+
+                listItemUserBinding.imageViewRoundIcon.setImageDrawable(drawableImage);
+
+            } else {
+
+                final int color = generator.getColor(listItemUserBinding.getModel().getId());
+
+                drawable = TextDrawable.builder()
+                        .buildRound(listItemUserBinding.getModel().getName().charAt(0) + "", color); // radius in px
+
+                listItemUserBinding.imageViewRoundIcon.setImageDrawable(drawable);
+            }
+
             listItemUserBinding.imageViewRoundIcon.setTag("unchecked");
 
             listItemUserBinding.getModel().setChecked(false);
@@ -299,9 +317,10 @@ public class FragmentUsersBinding extends Fragment implements SearchView.OnQuery
             listItemUserBinding.imageViewRoundIcon.setTag("checked");
 
             listItemUserBinding.getModel().setChecked(true);
+
+            listItemUserBinding.imageViewRoundIcon.setImageDrawable(drawable);
         }
 
-        listItemUserBinding.imageViewRoundIcon.setImageDrawable(drawable);
 
         setCheckedUsersListToolbar();
     }

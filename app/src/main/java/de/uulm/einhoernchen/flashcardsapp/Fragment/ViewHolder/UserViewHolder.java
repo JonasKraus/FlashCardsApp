@@ -1,6 +1,7 @@
 package de.uulm.einhoernchen.flashcardsapp.Fragment.ViewHolder;
 
 import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Binder;
 import android.util.Log;
 import android.view.View;
@@ -17,6 +18,7 @@ import de.uulm.einhoernchen.flashcardsapp.Fragment.Adapter.SortedListAdapter;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.Interface.OnFragmentInteractionListenerUserBinding;
 import de.uulm.einhoernchen.flashcardsapp.Model.User;
 import de.uulm.einhoernchen.flashcardsapp.Util.Globals;
+import de.uulm.einhoernchen.flashcardsapp.Util.ProcessorImage;
 import de.uulm.einhoernchen.flashcardsapp.databinding.ListItemUserBinding;
 
 /**
@@ -123,17 +125,28 @@ public class UserViewHolder extends SortedListAdapter.ViewHolder<User> {
      * @param imageView
      */
     private void setRoundIcon(User user, ImageView imageView) {
-        //get first letter of each String item
-        final String firstLetter = String.valueOf(user.getName().charAt(0)); // hier wird der buchstabe gesetzt
 
-        ColorGenerator generator = ColorGenerator.MATERIAL; // or use DEFAULT
-        // generate random color
-        final int color = generator.getColor(user.getId()); // TODO
-        //int color = generator.getRandomColor();
+        if (user.getAvatar() != null && !user.getAvatar().equals("")) {
 
-        TextDrawable drawable = TextDrawable.builder()
-                .buildRound(firstLetter, color); // radius in px
+            BitmapDrawable drawableImage = ProcessorImage.download(user.getAvatar(), imageView, user.getId(), null);
 
-        imageView.setImageDrawable(drawable);
+            imageView.setTag("unchecked");
+
+            imageView.setImageDrawable(drawableImage);
+        } else{
+
+            //get first letter of each String item
+            final String firstLetter = String.valueOf(user.getName().charAt(0)); // hier wird der buchstabe gesetzt
+
+            ColorGenerator generator = ColorGenerator.MATERIAL; // or use DEFAULT
+            // generate random color
+            final int color = generator.getColor(user.getId()); // TODO
+            //int color = generator.getRandomColor();
+
+            TextDrawable drawable = TextDrawable.builder()
+                    .buildRound(firstLetter, color); // radius in px
+
+            imageView.setImageDrawable(drawable);
+        }
     }
 }
