@@ -66,9 +66,12 @@ public class JsonParser {
      */
     public static List<CardDeck> readCardDecks(InputStream in) throws IOException {
         JsonReader reader = new JsonReader(new InputStreamReader(in, "UTF-8"));
+
         try {
+
             return readCardDeckArray(reader);
         } finally {
+
             reader.close();
         }
     }
@@ -84,13 +87,17 @@ public class JsonParser {
      * @throws IOException
      */
     public static User parseUser(InputStream in) throws IOException {
+
         JsonReader reader = new JsonReader(new InputStreamReader(in, "UTF-8"));
         try {
+
             return readUser(reader);
         } finally {
+
             reader.close();
         }
     }
+
 
     /**
      * Takes an inputstream and parses flashCards
@@ -103,10 +110,14 @@ public class JsonParser {
      * @throws IOException
      */
     public static List<FlashCard> readFlashCards(InputStream in)  throws IOException  {
+
         JsonReader reader = new JsonReader(new InputStreamReader(in, "UTF-8"));
+
         try {
+
             return readFlashCardArray(reader);
         } finally {
+
             reader.close();
         }
     }
@@ -1329,7 +1340,7 @@ public class JsonParser {
 
 
     /**
-     * Parses for users
+     * Parse for users
      *
      * @author Jonas Kraus jonas.kraus@uni-ulm.de
      * @since 2017-01-29
@@ -1362,6 +1373,15 @@ public class JsonParser {
         return users;
     }
 
+
+    /**
+     * Parses messages
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     *
+     * @param inputStream
+     * @return
+     */
     public static List<Message> parseMessages(InputStream inputStream) {
 
         if (DEBUG) Log.d("parser Method", "parseMEssages");
@@ -1388,6 +1408,15 @@ public class JsonParser {
         return messages;
     }
 
+
+    /**
+     * Parses the challenge message
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     *
+     * @param inputStream
+     * @return
+     */
     public static List<Challenge> parseChallenges(InputStream inputStream) {
         if (DEBUG) Log.d("parser Method", "parseChallenges");
 
@@ -1411,5 +1440,121 @@ public class JsonParser {
         }
 
         return challenges;
+    }
+
+
+    /**
+     * Parser for the response of an uploaded image
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     * @since 2017-03-02
+     *
+     * @param inputStream
+     * @return
+     */
+    public static String parseImageUploadResonse(InputStream inputStream) {
+        if (DEBUG) Log.d("parser Method", "parseImageUploadResonse");
+
+        String uri = "";
+
+        JsonReader reader = null;
+
+        try {
+
+            reader = new JsonReader(new InputStreamReader(inputStream, "UTF-8"));
+
+            uri = readImageUploadResponse(reader);
+        } catch (UnsupportedEncodingException e) {
+
+            e.printStackTrace();
+        } finally {
+
+            try {
+
+                reader.close();
+            } catch (IOException e) {
+
+                e.printStackTrace();
+                Log.d("json parse upload resp", e.getMessage());
+            }
+        }
+
+        return uri;
+    }
+
+
+
+    /**
+     * Only reads the media uri that is returns
+     *
+     * way more params are available
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     * @since 2017-03-02
+     *
+     * @param reader
+     * @return
+     */
+    private static String readImageUploadResponse(JsonReader reader) {
+        if (DEBUG) Log.d("parser Method", "readImageUploadResponse");
+
+        String uri = "";
+
+        try {
+            reader.beginObject();
+
+            while (reader.hasNext()) {
+
+                String stringName = reader.nextName();
+
+                if (stringName.equals(JsonKeys.MEDIA_URI)) {
+
+
+                        uri = reader.nextString();
+
+
+                } else {
+                    reader.skipValue();
+                }
+
+            }
+            reader.endObject();
+
+        } catch (IOException e) {
+
+            e.printStackTrace();
+        }
+        return uri;
+    }
+
+
+    /**
+     * Generic method to display the json string
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     * @since 2017-03-02
+     *
+     * @param is
+     * @return
+     */
+    public static String convertStreamToString(InputStream is) {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+        StringBuilder sb = new StringBuilder();
+
+        String line = null;
+        try {
+            while ((line = reader.readLine()) != null) {
+                sb.append(line);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                is.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return sb.toString();
     }
 }

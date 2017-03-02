@@ -2771,4 +2771,26 @@ public class DbManager extends DbHelper{
 
         return count > 0;
     }
+
+
+    /**
+     * updates the user with the media uri for the avatar
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     * @since 2017-03-02
+     *
+     * @param userId
+     * @param mediaUri
+     */
+    public void saveAvatar(Long userId, String mediaUri) {
+
+        if (DEBUG) Log.d("save avatar", userId + " " + mediaUri);
+        // For updating user
+
+        ContentValues values = new ContentValues();
+        values.put(DbHelper.COLUMN_USER_AVATAR, mediaUri);
+
+        database.update(DbHelper.TABLE_USER, values, DbHelper.COLUMN_USER_ID + "=" + userId, null);
+
+    }
 }

@@ -21,6 +21,8 @@ import java.io.OutputStream;
 import java.util.Random;
 
 import de.uulm.einhoernchen.flashcardsapp.AsyncTask.Remote.GET.AsyncGetRemoteBitmap;
+import de.uulm.einhoernchen.flashcardsapp.AsyncTask.Remote.POST.AsyncPostRemoteCard;
+import de.uulm.einhoernchen.flashcardsapp.AsyncTask.Remote.POST.AsyncPostRemoteImage;
 import de.uulm.einhoernchen.flashcardsapp.R;
 
 public class ProcessorImage {
@@ -216,7 +218,7 @@ public class ProcessorImage {
      * @param bitmap
      * @return
      */
-    public static File savebitmap(Bitmap bitmap, Long userId, String appendix) {
+    public static File savebitmap(Bitmap bitmap, final Long userId, String appendix) {
 
         if (appendix == null) {
             appendix = "_flashcards_profile.png";
@@ -239,6 +241,8 @@ public class ProcessorImage {
             file = new File(extStorageDirectory, userId + appendix);
         }
 
+        final String fileName = file.getName();
+
         try {
             outStream = new FileOutputStream(file);
 
@@ -250,6 +254,21 @@ public class ProcessorImage {
 
             outStream.flush();
             outStream.close();
+
+            AsyncPostRemoteImage asyncPostRemoteImage = new AsyncPostRemoteImage(new AsyncPostRemoteImage.AsyncPostRemoteImageResponse() {
+
+                @Override
+                public void processFinished(String mediaUri) {
+
+                    // save as avatar
+                    if (fileName.contains("_flashcards_profile")) {
+
+                        Globals.getDb().saveAvatar(userId, mediaUri);
+                    }
+
+                }
+            });
+            asyncPostRemoteImage.execute(extStorageDirectory + "/" + userId + appendix);
 
         } catch (Exception e) {
             e.printStackTrace();

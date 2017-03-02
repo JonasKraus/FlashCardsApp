@@ -124,4 +124,6 @@ public class JsonKeys {
     public static final String CHALLENGE_MESSAGE = "message";
     public static final String CHALLENGE_STATISTICS = "statistics";
     public static final String CHALLENGE_COMPLETED = "completed";
+
+    public static final String MEDIA_URI = "mediaURI";
 }

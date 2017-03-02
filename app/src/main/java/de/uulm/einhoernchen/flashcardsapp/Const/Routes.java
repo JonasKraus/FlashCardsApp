@@ -40,4 +40,5 @@ public class Routes {
     public static final String LOGIN = "login";
     public static final String MESSAGES = "messages";
     public static final String CHALlENGES = "challenges";
+    public static final String UPLOAD = "upload";
 }
