@@ -1605,10 +1605,10 @@ public class DbManager extends DbHelper{
         ContentValues values = new ContentValues();
         values.put(DbHelper.COLUMN_USER_IS_LOGGED_IN, 0);
 
+        invalidateToken();
 
         database.update(DbHelper.TABLE_USER, values, DbHelper.COLUMN_USER_ID + " = " + loggedInUser.getId(), null);
 
-        invalidateToken();
 
         // reset the class var
         this.loggedInUser = null;
