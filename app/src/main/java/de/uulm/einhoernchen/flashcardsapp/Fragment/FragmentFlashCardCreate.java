@@ -112,6 +112,9 @@ public class FragmentFlashCardCreate extends Fragment implements View.OnClickLis
     private TextInputLayout textInputLayoutUri;
     private TextInputLayout textInputLayoutContent;
 
+    private ImageButton imageButtonInsertImage;
+    private ImageButton imageButtonDeleteImage;
+
     private RadioGroup radioGroupAnswerCorrect;
     private RadioButton radioButtonAnswerCorrect;
     private RadioButton radioButtonAnswerIncorrect;
@@ -127,7 +130,6 @@ public class FragmentFlashCardCreate extends Fragment implements View.OnClickLis
     private FloatingActionButton floatingActionButtonAnswerAdd;
     private FloatingActionButton floatingActionButtonAnswerSave;
     private FloatingActionButton floatingActionButtonCardAnswerAdd;
-    private ImageButton imageButtonInsertImage;
     private Bitmap bitmapQuestion;
 
 
@@ -202,6 +204,7 @@ public class FragmentFlashCardCreate extends Fragment implements View.OnClickLis
         editTextAnswerUri = (EditText) view.findViewById(R.id.edittext_answer_uri);
 
         imageButtonInsertImage = (ImageButton) view.findViewById(R.id.button_insert_image);
+        imageButtonDeleteImage = (ImageButton) view.findViewById(R.id.button_delete_image);
 
         textInputLayoutUri = (TextInputLayout) view.findViewById(R.id.textInputLayout_uri);
         textInputLayoutContent = (TextInputLayout) view.findViewById(R.id.textInputLayout_content);
@@ -297,6 +300,7 @@ public class FragmentFlashCardCreate extends Fragment implements View.OnClickLis
         floatingActionButtonCardAnswerAdd.setOnClickListener(this);
 
         imageButtonInsertImage.setOnClickListener(this);
+        imageButtonDeleteImage.setOnClickListener(this);
 
         return view;
 
@@ -434,6 +438,17 @@ public class FragmentFlashCardCreate extends Fragment implements View.OnClickLis
             case R.id.button_insert_image:
 
                 handleInsertUriClick();
+                editTextQuestionUri.setEnabled(false);
+                imageButtonDeleteImage.setVisibility(View.VISIBLE);
+
+                break;
+
+            case R.id.button_delete_image:
+
+                imageButtonDeleteImage.setVisibility(View.GONE);
+                imageViewUri.setImageBitmap(null);
+                editTextQuestionUri.setEnabled(true);
+                editTextQuestionUri.setText(null);
 
                 break;
 
@@ -593,7 +608,7 @@ public class FragmentFlashCardCreate extends Fragment implements View.OnClickLis
         // return if non valid values
         if (!validateQuestion()) return;
 
-        if (!editTextQuestionUri.getText().toString().equals("")) {
+        if (!editTextQuestionUri.isEnabled() && !editTextQuestionUri.getText().toString().equals("")) {
 
             AsyncPostRemoteImage asyncPostRemoteImage = new AsyncPostRemoteImage(new AsyncPostRemoteImage.AsyncPostRemoteImageResponse() {
 
@@ -606,9 +621,10 @@ public class FragmentFlashCardCreate extends Fragment implements View.OnClickLis
                 }
             });
             asyncPostRemoteImage.execute(ProcessorImage.getImageUri(getContext(), bitmapQuestion));
-        }
+        } else {
 
-        saveFinalFlashcard();
+            saveFinalFlashcard();
+        }
 
     }
 
@@ -824,6 +840,12 @@ public class FragmentFlashCardCreate extends Fragment implements View.OnClickLis
 
                     default:
                         // On canel
+
+                        imageButtonDeleteImage.setVisibility(View.GONE);
+                        imageViewUri.setImageBitmap(null);
+                        editTextQuestionUri.setEnabled(true);
+                        editTextQuestionUri.setText(null);
+
                         break;
                 }
             }
