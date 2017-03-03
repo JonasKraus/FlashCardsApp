@@ -5,7 +5,6 @@ import android.graphics.Color;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -140,7 +139,7 @@ public class RecyclerViewAdapterFlashcards extends RecyclerView.Adapter<Recycler
             // Check db for bookmarks if the card was loaded from the server
             if (isUpToDate) {
 
-                boolean isMarked = db.isCardMarkedLocally(flashCards.get(position));
+                boolean isMarked = db.isCardBookmarkedLocally(flashCards.get(position));
                 flashCards.get(position).setMarked(isMarked);
             }
 
@@ -163,7 +162,7 @@ public class RecyclerViewAdapterFlashcards extends RecyclerView.Adapter<Recycler
                 public void onClick(View v) {
 
                     db.setBookmark(flashCards.get(position));
-                    flashCards.get(position).setMarked(db.isCardMarkedLocally(flashCards.get(position)));
+                    flashCards.get(position).setMarked(db.isCardBookmarkedLocally(flashCards.get(position)));
 
                     holder.mBookmarkView.setImageDrawable(
                             Globals.getContext().getResources()

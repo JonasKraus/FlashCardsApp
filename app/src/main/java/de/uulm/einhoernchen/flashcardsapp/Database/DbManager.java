@@ -326,13 +326,13 @@ public class DbManager extends DbHelper{
         List<FlashCard> flashCards = new ArrayList<FlashCard>();
 
         String[] selection =  {
-            COLUMN_FLASHCARD_ID,             //0
-            COLUMN_FLASHCARD_CARDDECK_ID,    //1
-            COLUMN_FLASHCARD_RATING,         //2
-            COLUMN_FLASHCARD_QUESTION_ID,    //3
-            COLUMN_FLASHCARD_MULTIPLE_CHOICE,//4
-            COLUMN_FLASHCARD_CREATED,        //5
-            COLUMN_FLASHCARD_LAST_UPDATED,   //6
+                TABLE_FLASHCARD+ "." + COLUMN_FLASHCARD_ID,             //0
+                TABLE_FLASHCARD+ "." + COLUMN_FLASHCARD_CARDDECK_ID,    //1
+            TABLE_FLASHCARD+ "." + COLUMN_FLASHCARD_RATING,         //2
+                TABLE_FLASHCARD+ "." + COLUMN_FLASHCARD_QUESTION_ID,    //3
+                TABLE_FLASHCARD+ "." + COLUMN_FLASHCARD_MULTIPLE_CHOICE,//4
+                TABLE_FLASHCARD+ "." + COLUMN_FLASHCARD_CREATED,        //5
+                TABLE_FLASHCARD+ "." + COLUMN_FLASHCARD_LAST_UPDATED,   //6
             TABLE_FLASHCARD+ "." + COLUMN_FLASHCARD_USER_ID,         //7
             TABLE_BOOKMARK + "." + COLUMN_BOOKMARK_ID,                      //0
             TABLE_BOOKMARK + "." + COLUMN_BOOKMARK_CARD_ID,                 //1
@@ -341,9 +341,11 @@ public class DbManager extends DbHelper{
 
         Cursor cursor = database.query(
                 TABLE_FLASHCARD + " LEFT JOIN "  + TABLE_BOOKMARK + " ON "
-                        + TABLE_FLASHCARD + "." + COLUMN_FLASHCARD_ID + "=" + COLUMN_BOOKMARK_CARD_ID,
+                        + TABLE_FLASHCARD + "." + COLUMN_FLASHCARD_ID + "=" + COLUMN_BOOKMARK_CARD_ID
+                        + " LEFT JOIN " + TABLE_USER + " ON "
+                        + TABLE_BOOKMARK + "." + COLUMN_BOOKMARK_USER_ID + "=" + TABLE_USER + "." + COLUMN_USER_ID,
                 selection,
-                DbHelper.COLUMN_FLASHCARD_CARDDECK_ID + " = " + parentId,
+                DbHelper.COLUMN_FLASHCARD_CARDDECK_ID + " = " + parentId + " AND " + TABLE_USER + "." + COLUMN_USER_ID  + "=" + loggedInUser.getId(),
                 null, null, null, null);
 
         if (cursor.moveToFirst()) {
@@ -2746,14 +2748,14 @@ public class DbManager extends DbHelper{
      * @param flashCard
      * @return
      */
-    public boolean isCardMarkedLocally(FlashCard flashCard) {
+    public boolean isCardBookmarkedLocally(FlashCard flashCard) {
 
         int count = 0;
         Cursor cursor = database.query(
                 DbHelper.TABLE_BOOKMARK + " JOIN " + TABLE_USER + " ON "
-                        + TABLE_BOOKMARK + "." +COLUMN_BOOKMARK_USER_ID + "=" + TABLE_USER + "." + COLUMN_USER_ID,
+                        + TABLE_BOOKMARK + "." + COLUMN_BOOKMARK_USER_ID + "=" + TABLE_USER + "." + COLUMN_USER_ID,
                 allBookmarkColumns,
-                COLUMN_BOOKMARK_CARD_ID  + "=" + flashCard.getId(),
+                COLUMN_BOOKMARK_CARD_ID  + "=" + flashCard.getId() + " AND " + TABLE_USER + "." + COLUMN_USER_ID  + "=" + loggedInUser.getId(),
                 null, null, null, null);
 
         if (cursor.moveToFirst()) {

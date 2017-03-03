@@ -234,10 +234,11 @@ public class FragmentFlashCard extends Fragment implements View.OnClickListener 
 
         if (!isUpToDate) {
 
-            flashCard.setMarked(Globals.getDb().isCardMarkedLocally(flashCard));
+            flashCard.setMarked(Globals.getDb().isCardBookmarkedLocally(flashCard));
             mLocalView.setVisibility(View.GONE);
         } else {
 
+            //flashCard.setMarked(Globals.getDb().isCardBookmarkedLocally(flashCard));
             mLocalView.setVisibility(View.VISIBLE);
         }
 
@@ -538,7 +539,7 @@ public class FragmentFlashCard extends Fragment implements View.OnClickListener 
             public void onClick(View v) {
 
                 db.setBookmark(flashCard);
-                flashCard.setMarked(db.isCardMarkedLocally(flashCard));
+                flashCard.setMarked(db.isCardBookmarkedLocally(flashCard));
 
                 mImageViewBookmarked.setImageDrawable(
                         Globals.getContext().getResources()

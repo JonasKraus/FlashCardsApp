@@ -252,7 +252,7 @@ public class FragmentPlayFlashCards extends Fragment implements View.OnClickList
             public void onClick(View v) {
 
                 db.setBookmark(currentFlashcard);
-                currentFlashcard.setMarked(db.isCardMarkedLocally(currentFlashcard));
+                currentFlashcard.setMarked(db.isCardBookmarkedLocally(currentFlashcard));
 
                 mImageViewBookmarked.setImageDrawable(
                         Globals.getContext().getResources()
