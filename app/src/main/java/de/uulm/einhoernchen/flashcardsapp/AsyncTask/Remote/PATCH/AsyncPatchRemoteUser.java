@@ -105,7 +105,7 @@ public class AsyncPatchRemoteUser extends AsyncTask<Long, Long, Long> {
 
             } catch (Exception e) {
 
-                Log.e("doInBack user" + urlConnection.getRequestMethod(), e.toString() + jsonObject.toString());
+                Log.e("doInBack user " + urlConnection.getRequestMethod(), e.toString() + jsonObject.toString());
                 System.out.println(e.toString());
                 return null;
             }

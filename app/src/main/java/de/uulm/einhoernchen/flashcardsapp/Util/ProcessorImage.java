@@ -244,6 +244,7 @@ public class ProcessorImage {
         File file = new File(extStorageDirectory, userId + appendix);
 
         if (file.exists()) {
+
             file.delete();
             file = new File(extStorageDirectory, userId + appendix);
         }
@@ -261,6 +262,9 @@ public class ProcessorImage {
 
             outStream.flush();
             outStream.close();
+
+            // Don't upload the file to the server if its not the logged in user image
+            if (userId != Globals.getDb().getLoggedInUser().getId()) return file;
 
             AsyncPostRemoteImage asyncPostRemoteImage = new AsyncPostRemoteImage(new AsyncPostRemoteImage.AsyncPostRemoteImageResponse() {
 
