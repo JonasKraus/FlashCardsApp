@@ -374,12 +374,21 @@ public class ProfileActivity extends AppCompatActivity {
                     }
                 };
 
+
+                // Check if internet connection exists
+                if (ProcessConnectivity.isOk(getApplicationContext())) {
+
                 AlertDialog.Builder builder = new AlertDialog.Builder(ProfileActivity.this);
 
                 builder.setMessage(R.string.prompt_choose_profile)
                         .setPositiveButton(R.string.prompt_choose_camera, dialogClickListener)
                         .setNegativeButton(R.string.prompt_choose_gallery, dialogClickListener)
                         .setNeutralButton(R.string.prompt_cancel, dialogClickListener).show();
+
+                } else {
+
+                    Snackbar.make(v, getResources().getString(R.string.service_unavailable), Snackbar.LENGTH_LONG).show();
+                }
             }
 
         });

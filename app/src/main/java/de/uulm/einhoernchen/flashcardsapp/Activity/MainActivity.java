@@ -229,6 +229,7 @@ public class MainActivity extends AppCompatActivity
                 //MEDIA GALLERY
                 PermissionManager.verifyStoragePermissionsWrite((Activity) context);
 
+
                 DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int btn) {
@@ -255,11 +256,21 @@ public class MainActivity extends AppCompatActivity
                         }
                     }
                 };
-                AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                builder.setMessage(R.string.prompt_choose_profile) //TODO set in constans strings
-                        .setPositiveButton(R.string.prompt_choose_camera, dialogClickListener)
-                        .setNegativeButton(R.string.prompt_choose_gallery, dialogClickListener)
-                        .setNeutralButton(R.string.prompt_cancel, dialogClickListener).show();
+
+
+                // Check if internet connection exists
+                if (ProcessConnectivity.isOk(getApplicationContext())) {
+
+                    AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                    builder.setMessage(R.string.prompt_choose_profile) //TODO set in constans strings
+                            .setPositiveButton(R.string.prompt_choose_camera, dialogClickListener)
+                            .setNegativeButton(R.string.prompt_choose_gallery, dialogClickListener)
+                            .setNeutralButton(R.string.prompt_cancel, dialogClickListener).show();
+                } else {
+
+                    Snackbar.make(v, getResources().getString(R.string.service_unavailable), Snackbar.LENGTH_LONG).show();
+                }
+
             }
 
         });
@@ -294,8 +305,8 @@ public class MainActivity extends AppCompatActivity
 
         collapsingToolbar =
                 (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar_search);
-        collapsingToolbar.setTitle("My Toolbar Tittle");
-        toolbar.setTitle("asdasd");
+        collapsingToolbar.setTitle("My Toolbar Title");
+        toolbar.setTitle("");
 
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
