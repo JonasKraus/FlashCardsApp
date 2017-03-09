@@ -14,6 +14,7 @@ import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.view.MenuItemCompat;
+import android.support.v7.app.ActionBar;
 import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.View;
@@ -29,6 +30,8 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -37,6 +40,9 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.uulm.einhoernchen.flashcardsapp.AsyncTask.Local.AsyncSaveLocalUsers;
+import de.uulm.einhoernchen.flashcardsapp.AsyncTask.Remote.GET.AsyncGetRemoteMessages;
+import de.uulm.einhoernchen.flashcardsapp.AsyncTask.Remote.GET.AsyncGetRemoteUser;
 import de.uulm.einhoernchen.flashcardsapp.AsyncTask.Remote.POST.AsyncPostRemoteToken;
 import de.uulm.einhoernchen.flashcardsapp.Database.DbManager;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.Dataset.ContentFlashCard;
@@ -55,6 +61,7 @@ import de.uulm.einhoernchen.flashcardsapp.Model.Answer;
 import de.uulm.einhoernchen.flashcardsapp.Model.CardDeck;
 import de.uulm.einhoernchen.flashcardsapp.Model.Category;
 import de.uulm.einhoernchen.flashcardsapp.Model.FlashCard;
+import de.uulm.einhoernchen.flashcardsapp.Model.Message;
 import de.uulm.einhoernchen.flashcardsapp.Model.User;
 import de.uulm.einhoernchen.flashcardsapp.R;
 import de.uulm.einhoernchen.flashcardsapp.Const.Constants;
@@ -63,6 +70,8 @@ import de.uulm.einhoernchen.flashcardsapp.Util.JsonKeys;
 import de.uulm.einhoernchen.flashcardsapp.Util.ProcessConnectivity;
 import de.uulm.einhoernchen.flashcardsapp.Util.ProcessorImage;
 import de.uulm.einhoernchen.flashcardsapp.Util.PermissionManager;
+
+import static android.support.v7.app.ActionBar.NAVIGATION_MODE_STANDARD;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
@@ -101,6 +110,7 @@ public class MainActivity extends AppCompatActivity
     public CollapsingToolbarLayout collapsingToolbar;
     private FragmentPlayTabs fragmentPlay;
     private int MY_INTENT_CLICK_CAMERA = 301;
+    private ImageView imageViewChallengeMenuDot;
 
     @Override
     protected void onResume() {
@@ -133,6 +143,8 @@ public class MainActivity extends AppCompatActivity
 
         toolbarTextViewTitle = (TextView ) findViewById(R.id.toolbar_text_view_title);
         collapsingToolbar = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
+
+        imageViewChallengeMenuDot = (ImageView) findViewById(R.id.menu_challenge_item_dot);
 
         createFloatingActionButton();
 
@@ -308,8 +320,66 @@ public class MainActivity extends AppCompatActivity
         collapsingToolbar.setTitle("My Toolbar Title");
         toolbar.setTitle("");
 
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        ActionBarDrawerToggle toggle =
+                new ActionBarDrawerToggle(
+                        this,
+                        drawer,
+                        toolbar,
+                        R.string.navigation_drawer_open,
+                        R.string.navigation_drawer_close
+                ) {
+                    @Override
+                    public void onDrawerStateChanged(int newState) {
+
+                        // update view and messages
+                        if (newState == DrawerLayout.STATE_DRAGGING) {
+
+                                if (ProcessConnectivity.isOk(getApplicationContext())) {
+
+                                    // update user
+                                    AsyncGetRemoteUser asyncGetRemoteUser = new AsyncGetRemoteUser(user.getId(), new AsyncGetRemoteUser.AsyncResponseUser() {
+                                        @Override
+                                        public void processFinish(User user) {
+
+                                            Globals.getDb().saveUser(user);
+
+                                            setProfileView();
+                                        }
+                                    });
+
+                                    asyncGetRemoteUser.execute();
+
+                                    // Update messages
+                                    AsyncGetRemoteMessages asyncGetRemoteMessages =
+                                            new AsyncGetRemoteMessages(new AsyncGetRemoteMessages.AsyncResponseMessages() {
+
+                                                @Override
+                                                public void processFinish(List<Message> messages) {
+
+                                                    if (Globals.getDb().getMessages().size() < messages.size()) {
+
+                                                        if (imageViewChallengeMenuDot == null) {
+                                                            imageViewChallengeMenuDot = (ImageView) findViewById(R.id.menu_challenge_item_dot);
+                                                        }
+
+                                                        imageViewChallengeMenuDot.setVisibility(View.VISIBLE);
+                                                    } else {
+
+                                                        if (imageViewChallengeMenuDot == null) {
+                                                            imageViewChallengeMenuDot = (ImageView) findViewById(R.id.menu_challenge_item_dot);
+                                                        }
+
+                                                        imageViewChallengeMenuDot.setVisibility(View.GONE);
+                                                    }
+                                                }
+                                            });
+                                    asyncGetRemoteMessages.execute();
+                                }
+
+                            invalidateOptionsMenu();
+                        }
+                    }
+                };
         drawer.setDrawerListener(toggle);
         toggle.syncState();
     }

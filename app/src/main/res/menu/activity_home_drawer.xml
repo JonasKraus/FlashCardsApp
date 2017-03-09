@@ -18,9 +18,11 @@
             android:id="@+id/nav_statistics"
             android:icon="@drawable/ic_insert_chart"
             android:title="@string/toolbar_title_statistic" />
-        <item
+        <item xmlns:app="http://schemas.android.com/apk/res-auto"
             android:id="@+id/nav_challenge"
             android:icon="@drawable/ic_trophy"
+            app:actionLayout="@layout/menu_challenges_item"
+            app:showAsAction="always"
             android:title="@string/nav_challenge" />
         <item
             android:id="@+id/nav_challengeRanking"

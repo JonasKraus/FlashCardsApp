@@ -79,6 +79,7 @@ public class AsyncGetRemoteUser extends AsyncTask<Long, Void, User>{
         if (user != null) {
 
             if (delegate != null) {
+
                 delegate.processFinish(user);
             } else {
 
