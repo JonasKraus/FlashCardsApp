@@ -13,6 +13,9 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AbsListView;
+import android.widget.ProgressBar;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,14 +39,12 @@ public class ExploreActivity extends AppCompatActivity
      * The {@link ViewPager} that will host the section contents.
      */
     private ViewPager mViewPager;
-    private RecyclerView recyclerView;
     private FragmentHashtags fragmentHashtags;
-    private ArrayList<Tag> itemList;
-    //private RecyclerViewAdapterHashtags recyclerViewAdapterHashtags;
-
-    public RecyclerView getRecyclerView() {
-        return recyclerView;
-    }
+    private int currentStart = 0;
+    private int limit = 10;
+    private boolean appendChunk = false;
+    private String currentTagQuery = "";
+    private ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,8 +60,10 @@ public class ExploreActivity extends AppCompatActivity
         //adapter.addFragment(new FragmentHome(), getResources().getString(R.string.tab_play));
 
         fragmentHashtags = new FragmentHashtags();
-        adapter.addFragment(fragmentHashtags, getResources().getString(R.string.toolbar_title_hashtag));
+        // set the scroll listener to check when list end is reached
+        fragmentHashtags.setOnScrollListener(createOnScrollListener());
 
+        adapter.addFragment(fragmentHashtags, getResources().getString(R.string.toolbar_title_hashtag));
 
         // Set up the ViewPager with the sections adapter.
         mViewPager = (ViewPager) findViewById(R.id.container);
@@ -108,26 +111,112 @@ public class ExploreActivity extends AppCompatActivity
     @Override
     public boolean onQueryTextChange(String query) {
 
-        AsyncGetRemoteHashtags asyncGetRemoteHashtags =
-                new AsyncGetRemoteHashtags(new AsyncGetRemoteHashtags.AsyncResponseHashtags() {
-            @Override
-            public void processFinish(List<Tag> tags) {
+        // Reset all vars
+        currentTagQuery = query;
 
-                fragmentHashtags.updateItemList(tags);
-            }
-        });
+        appendChunk = false;
 
-        asyncGetRemoteHashtags.setStartAndLimit(0, 20);
-        asyncGetRemoteHashtags.execute(query);
+        currentStart = 0;
+
+        updateTags(query);
 
         return false;
     }
 
 
+    /**
+     * Collect new tags from server
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     * @since 2017-03-10
+     *
+     * @param query
+     */
+    private void updateTags(String query) {
+
+        progressBar = (ProgressBar) findViewById(R.id.progress_small_list_end);
+        progressBar.setVisibility(View.VISIBLE);
+
+        AsyncGetRemoteHashtags asyncGetRemoteHashtags =
+                new AsyncGetRemoteHashtags(new AsyncGetRemoteHashtags.AsyncResponseHashtags() {
+                    @Override
+                    public void processFinish(List<Tag> tags) {
+
+                        if (tags.size() > 0 || !appendChunk) {
+
+                            fragmentHashtags.updateItemList(tags, appendChunk);
+
+                        }
+                        progressBar.setVisibility(View.GONE);
+                    }
+                });
+
+        asyncGetRemoteHashtags.setStartAndLimit(currentStart, limit);
+        asyncGetRemoteHashtags.execute(query);
+    }
+
+
+    /**
+     * handles the click event on an hashtag list item
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     * @since 2017-03-10
+     *
+     * @param item
+     */
     @Override
     public void onHashtagFragmentInteraction(Tag item) {
 
         // TODO to be implemented
         Log.d("click", item.toString());
     }
+
+
+    /**
+     * Creates the scroll listener for the recyclerview
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     * @since 2017-03-10
+     *
+     * @return
+     */
+    public RecyclerView.OnScrollListener createOnScrollListener() {
+
+
+        RecyclerView.OnScrollListener onScrollListener = new RecyclerView.OnScrollListener() {
+
+            int pastVisiblesItems, visibleItemCount, totalItemCount;
+            boolean loading = true;
+
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+
+                switch(recyclerView.getId()) {
+                    case R.id.list_hashtags:
+
+                        if (dy > 0) { //check for scroll down
+
+                            recyclerView.setHasFixedSize(true);
+
+                            visibleItemCount = recyclerView.getLayoutManager().getChildCount();
+                            totalItemCount = recyclerView.getLayoutManager().getItemCount();
+                            pastVisiblesItems = ((android.support.v7.widget.LinearLayoutManager) recyclerView.getLayoutManager()).findFirstVisibleItemPosition();
+
+                            // Load data
+                            if (((pastVisiblesItems + visibleItemCount) >= totalItemCount) && !progressBar.isShown()) {
+
+                                currentStart += limit;
+                                appendChunk = true;
+                                updateTags(currentTagQuery);
+                            }
+                        }
+                        break;
+                }
+            }
+        };
+
+        return onScrollListener;
+    }
+
 }

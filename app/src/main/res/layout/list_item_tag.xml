@@ -56,25 +56,6 @@
                     style="?android:textAppearanceLarge"
                     android:text="@string/toolbar_title_hashtag"/>
 
-
-                <LinearLayout
-                    android:layout_width="15dp"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="bottom"
-                    android:layout_marginBottom="-1dp"
-                    android:layout_marginLeft="-8dp">
-
-                    <ImageView
-                        android:id="@+id/image_view_offline"
-                        android:layout_width="15dp"
-                        android:layout_height="15dp"
-                        android:layout_gravity="bottom"
-                        android:layout_marginBottom="-1dp"
-                        android:layout_marginLeft="-15dp"
-                        android:alpha=".3"
-                        android:src="@drawable/ic_offline_pin"
-                        android:visibility="visible" />
-                </LinearLayout>
             </LinearLayout>
 
             <LinearLayout

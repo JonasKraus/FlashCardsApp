@@ -5,6 +5,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -13,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.uulm.einhoernchen.flashcardsapp.Database.DbManager;
+import de.uulm.einhoernchen.flashcardsapp.Fragment.FragmentHashtags;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.Interface.OnFragmentInteractionListenerHashtag;
 import de.uulm.einhoernchen.flashcardsapp.Model.Tag;
 import de.uulm.einhoernchen.flashcardsapp.R;
@@ -26,13 +28,8 @@ public class RecyclerViewAdapterHashtags
 
 
     private final List<Tag> tags;
-    private final List<Tag> filteredList;
     private final List<ViewHolder> holders = new ArrayList<ViewHolder>();
     private final OnFragmentInteractionListenerHashtag mListener;
-    private final boolean isUpToDate;
-    private final Context context = Globals.getContext();
-    private final DbManager db = Globals.getDb();
-    private final ProgressBar progressBar = Globals.getProgressBar();
 
     /**
      * Constructs the recycler views
@@ -40,20 +37,17 @@ public class RecyclerViewAdapterHashtags
      * @author Jonas Kraus jonas.kraus@uni-ulm.de
      *
      * @param items
-     * @param listener
-     * @param isUpToDate
-     */
-    public RecyclerViewAdapterHashtags(List<Tag> items, OnFragmentInteractionListenerHashtag listener, boolean isUpToDate) {
+     * @param listener  */
+    public RecyclerViewAdapterHashtags(List<Tag> items, OnFragmentInteractionListenerHashtag listener) {
         this.tags = items;
-        this.filteredList = new ArrayList<>();
         this.mListener = listener;
-        this.isUpToDate = isUpToDate;
     }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.list_item_tag, parent, false);
+
         return new ViewHolder(view);
     }
 
@@ -82,7 +76,6 @@ public class RecyclerViewAdapterHashtags
 
 
     /**
-     * Sets the visibilities and states of the gui elements
      *
      * @author Jonas Kraus jonas.kraus@uni-ulm.de
      * @since 2017-01-13
@@ -91,17 +84,6 @@ public class RecyclerViewAdapterHashtags
      * @param position
      */
     private void setViewState(ViewHolder holder, int position) {
-
-        /**
-         * Check if the data is from the server or from the local db
-         */
-        if (!isUpToDate) {
-
-            holder.mLocalView.setVisibility(View.INVISIBLE);
-        } else {
-
-            holder.mLocalView.setVisibility(View.VISIBLE);
-        }
 
     }
 
@@ -123,9 +105,6 @@ public class RecyclerViewAdapterHashtags
     }
 
 
-
-
-
     /**
      * Gets the view elements and sets them to the holder
      *
@@ -136,7 +115,6 @@ public class RecyclerViewAdapterHashtags
         public final View mView;
         public final TextView mIdView;
         public final TextView textviewName;
-        public final ImageView mLocalView;
 
         public Tag mItem;
 
@@ -154,8 +132,6 @@ public class RecyclerViewAdapterHashtags
             mView = view;
             mIdView = (TextView) view.findViewById(R.id.id);
             textviewName = (TextView) view.findViewById(R.id.textview_tag_name);
-
-            mLocalView = (ImageView) view.findViewById(R.id.image_view_offline);
 
         }
 

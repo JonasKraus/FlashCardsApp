@@ -38,6 +38,13 @@
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
+
+    <include
+        layout="@layout/progressbar_small_list_end"
+        android:layout_width="match_parent"
+        android:layout_gravity="end|bottom"
+        android:layout_height="match_parent" />
+
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"
         android:visibility="gone"

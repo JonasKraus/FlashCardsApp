@@ -16,7 +16,7 @@ import de.uulm.einhoernchen.flashcardsapp.Util.JsonParser;
 /**
  * Created by jonas-uni on 04.07.2016.
  */
-public class AsyncGetRemoteHashtags extends AsyncTask<String, Void, List<Tag>>{
+public class AsyncGetRemoteHashtags extends AsyncTask<String, Void, List<Tag>> {
 
     private int start = 0;
     private int limit = 10;

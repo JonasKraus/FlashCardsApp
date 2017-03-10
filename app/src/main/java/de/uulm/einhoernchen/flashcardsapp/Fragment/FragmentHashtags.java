@@ -15,6 +15,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,11 +41,9 @@ public class FragmentHashtags extends Fragment {
     private int mColumnCount = 1;
     private OnFragmentInteractionListenerHashtag mListener;
     private List<Tag> itemList = new ArrayList<>();
-    private DbManager db = Globals.getDb();
-    private boolean isUpToDate;
     private RecyclerView recyclerView;
     private RecyclerViewAdapterHashtags recyclerViewAdapterHashtags;
-
+    private android.support.v7.widget.RecyclerView.OnScrollListener scrollListener;
     public RecyclerView getRecyclerView() {
         return recyclerView;
     }
@@ -54,6 +53,12 @@ public class FragmentHashtags extends Fragment {
      * fragment (e.g. upon screen orientation changes).
      */
     public FragmentHashtags() {
+
+    }
+
+    public void setOnScrollListener (android.support.v7.widget.RecyclerView.OnScrollListener onScrollListener1) {
+
+        this.scrollListener = onScrollListener1;
     }
 
 
@@ -79,13 +84,15 @@ public class FragmentHashtags extends Fragment {
             mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
         }
 
+        //this.setOnScrollListener(scrollListener);
+
         setHasOptionsMenu(true);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_item_list, container, false);
+        View view = inflater.inflate(R.layout.fragment_item_list_hashtags, container, false);
 
         // Set the adapter
         if (view instanceof RecyclerView) {
@@ -93,13 +100,15 @@ public class FragmentHashtags extends Fragment {
             recyclerView = (RecyclerView) view;
 
             if (mColumnCount <= 1) {
-                recyclerView.setLayoutManager(new LinearLayoutManager(context));
+                recyclerView.setLayoutManager(new android.support.v7.widget.LinearLayoutManager(context));
             } else {
-                recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
+                recyclerView.setLayoutManager(new android.support.v7.widget.GridLayoutManager(context, mColumnCount));
             }
 
             recyclerViewAdapterHashtags =
-                    new RecyclerViewAdapterHashtags(itemList, mListener, isUpToDate);
+                    new RecyclerViewAdapterHashtags(itemList, mListener);
+
+            recyclerView.addOnScrollListener(scrollListener);
 
             recyclerView.setAdapter(recyclerViewAdapterHashtags);
         }
@@ -112,18 +121,30 @@ public class FragmentHashtags extends Fragment {
      *
      * @author Jonas Kraus jonas.kraus@uni-ulm.de
      * @since 2017-03-10
-     *
-     * @param newItemList
+     *@param newItemList
+     * @param appendChunk
      */
-    public void updateItemList (List<Tag> newItemList) {
+    public void updateItemList(List<Tag> newItemList, boolean appendChunk) {
 
         int listSize = this.itemList.size();
-        itemList.clear();
-        recyclerViewAdapterHashtags.notifyItemRangeRemoved(0, listSize);
 
-        itemList.addAll(newItemList);
-        recyclerViewAdapterHashtags.notifyItemRangeInserted(0, newItemList.size());
-        recyclerViewAdapterHashtags.notifyDataSetChanged();
+        if (!appendChunk) {
+
+            itemList.clear();
+            recyclerViewAdapterHashtags.notifyItemRangeRemoved(0, listSize);
+
+
+            itemList.addAll(newItemList);
+            recyclerViewAdapterHashtags.notifyItemRangeInserted(0, newItemList.size());
+            recyclerViewAdapterHashtags.notifyDataSetChanged();
+        } else {
+
+            itemList.addAll(newItemList);
+            recyclerView.scrollToPosition(listSize);
+            recyclerViewAdapterHashtags.notifyItemRangeInserted(listSize, itemList.size());
+            recyclerViewAdapterHashtags.notifyDataSetChanged();
+        }
+
 
         recyclerView.setAdapter(recyclerViewAdapterHashtags);
 
@@ -144,12 +165,6 @@ public class FragmentHashtags extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
-    }
-
-
-
-    public void setUpToDate(boolean isUpToDate) {
-        this.isUpToDate = isUpToDate;
     }
 
 }
