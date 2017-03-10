@@ -132,7 +132,7 @@ public class FragmentHashtagFlashCards extends Fragment
             mListener = (OnFragmentInteractionListenerFlashcard) context;
         } else {
             throw new RuntimeException(context.toString()
-                    + " must implement OnListFragmentInteractionListener");
+                    + " must implement OnFragmentInteractionListenerFlashcard");
         }
     }
 

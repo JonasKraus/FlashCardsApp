@@ -155,6 +155,8 @@
     <string name="prompt_choose_image">Choose image</string>
     <string name="nav_hashtag_catalog">Explore</string>
     <string name="title_activity_hashtag_catalog">Explore with hashtags</string>
+    <string name="title_activity_explore">ExploreActivity</string>
+    <string name="section_format">Hello World from section: %1$d</string>
 
 
 </resources>

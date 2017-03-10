@@ -707,7 +707,8 @@ public class MainActivity extends AppCompatActivity
 
         }else if (id == R.id.nav_hashtag_catalog) {
 
-            startActivity(new Intent(MainActivity.this, HashtagCatalogActivity.class));
+            //startActivity(new Intent(MainActivity.this, HashtagCatalogActivity.class));
+            startActivity(new Intent(MainActivity.this, ExploreActivity.class));
 
         } else if (id == R.id.nav_play) {
 
