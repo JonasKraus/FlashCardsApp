@@ -364,6 +364,7 @@ public class FragmentFlashCardCreate extends Fragment implements View.OnClickLis
 
             WebSettings settings = webViewUri.getSettings();
             settings.setJavaScriptEnabled(true);
+            settings.setDomStorageEnabled(true);
             webViewUri.setScrollBarStyle(WebView.SCROLLBARS_OUTSIDE_OVERLAY);
 
 

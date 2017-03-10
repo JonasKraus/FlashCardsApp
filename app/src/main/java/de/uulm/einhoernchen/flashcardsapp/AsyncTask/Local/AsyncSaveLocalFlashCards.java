@@ -46,7 +46,7 @@ public class AsyncSaveLocalFlashCards extends AsyncTask<Long, Long, Void> {
 
     @Override
     protected Void doInBackground(Long... params) {
-        Globals.getDb().saveFlashCards(flashCards, parentId);
+        Globals.getDb().saveFlashCards(flashCards);
 
         return null;
     }

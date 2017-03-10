@@ -378,6 +378,7 @@ public class RecyclerViewAdapterFlashCardAnswers extends RecyclerView.Adapter<Re
 
             WebSettings settings = holder.webViewUri.getSettings();
             settings.setJavaScriptEnabled(true);
+            settings.setDomStorageEnabled(true);
             holder.webViewUri.setScrollBarStyle(WebView.SCROLLBARS_OUTSIDE_OVERLAY);
 
             progressBar.setVisibility(View.VISIBLE);

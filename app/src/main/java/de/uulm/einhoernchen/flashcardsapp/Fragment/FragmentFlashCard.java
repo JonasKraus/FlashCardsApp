@@ -354,8 +354,6 @@ public class FragmentFlashCard extends Fragment implements View.OnClickListener 
      */
     private void setMedia() {
 
-        Log.d("hier media", flashCard.getAnswers().size()+"");
-
         if (flashCard.getQuestion().getUri() != null && flashCard.getQuestion().getUri().toString() != "") {
 
             String uriString = flashCard.getQuestion().getUri().toString().toLowerCase();
@@ -390,6 +388,7 @@ public class FragmentFlashCard extends Fragment implements View.OnClickListener 
 
                 WebSettings settings = webViewUri.getSettings();
                 settings.setJavaScriptEnabled(true);
+                settings.setDomStorageEnabled(true);
                 webViewUri.setScrollBarStyle(WebView.SCROLLBARS_OUTSIDE_OVERLAY);
 
                 Globals.getProgressBar().setVisibility(View.VISIBLE);

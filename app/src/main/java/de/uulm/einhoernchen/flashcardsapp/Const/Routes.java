@@ -10,6 +10,9 @@ public class Routes {
     public static final String SLASH = "/";
     public static final String QUESTION_MARK = "?";
     public static final String EQUAL = "=";
+    public static final String AND = "&";
+    public static final String ID = "id";
+    public static final String NAME = "name";
     public static final String ROOT = "root";
     public static final String BOOL_TRUE = "true";
     public static final String BOOL_FALSE = "false";
@@ -41,4 +44,7 @@ public class Routes {
     public static final String MESSAGES = "messages";
     public static final String CHALlENGES = "challenges";
     public static final String UPLOAD = "upload";
+
+
+    public static final String TAGS = "tags";
 }

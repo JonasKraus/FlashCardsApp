@@ -705,6 +705,10 @@ public class MainActivity extends AppCompatActivity
             ProcessConnectivity.isServerAlive ();
             moveToLastCatalogueState();
 
+        }else if (id == R.id.nav_hashtag_catalog) {
+
+            startActivity(new Intent(MainActivity.this, HashtagCatalogActivity.class));
+
         } else if (id == R.id.nav_play) {
 
             inflateFragmentPlay();

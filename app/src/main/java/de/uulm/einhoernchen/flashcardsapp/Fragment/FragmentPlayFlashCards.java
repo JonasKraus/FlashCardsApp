@@ -542,6 +542,7 @@ public class FragmentPlayFlashCards extends Fragment implements View.OnClickList
 
                 WebSettings settings = webViewUri.getSettings();
                 settings.setJavaScriptEnabled(true);
+                settings.setDomStorageEnabled(true);
                 webViewUri.setScrollBarStyle(WebView.SCROLLBARS_OUTSIDE_OVERLAY);
 
                 Globals.getProgressBar().setVisibility(View.VISIBLE);

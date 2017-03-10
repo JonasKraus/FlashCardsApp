@@ -26,10 +26,10 @@ import de.uulm.einhoernchen.flashcardsapp.R;
 import de.uulm.einhoernchen.flashcardsapp.Util.Globals;
 
 /**
- * {@link RecyclerView.Adapter} that can display a {@link de.uulm.einhoernchen.flashcardsapp.Fragment.Dataset.ContentFlashCardAnswers} and makes a call to the
- * TODO: Replace the implementation with code for your data type.
+ *
  */
-public class RecyclerViewAdapterUserGroups extends RecyclerView.Adapter<RecyclerViewAdapterUserGroups.ViewHolder> implements Filterable {
+public class RecyclerViewAdapterUserGroups
+        extends RecyclerView.Adapter<RecyclerViewAdapterUserGroups.ViewHolder> implements Filterable {
 
 
     private final List<UserGroup> groups;
