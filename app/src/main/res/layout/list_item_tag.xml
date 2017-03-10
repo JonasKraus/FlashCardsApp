@@ -4,14 +4,9 @@
 
     <data>
 
-
-        <variable
-            name="listener"
-            type="de.uulm.einhoernchen.flashcardsapp.Fragment.Interface.OnFragmentInteractionListenerUserBinding" />
-
         <variable
             name="model"
-            type="de.uulm.einhoernchen.flashcardsapp.Model.User"/>
+            type="de.uulm.einhoernchen.flashcardsapp.Model.Tag"/>
 
     </data>
 
@@ -51,13 +46,6 @@
                 android:layout_gravity="center_vertical"
                 android:orientation="horizontal">
 
-                <ImageView
-                    android:id="@+id/image_view_round_icon"
-                    android:tag="unchecked"
-                    android:layout_width="@dimen/icon_round_random"
-                    android:layout_height="@dimen/icon_round_random"
-                    android:contentDescription="@string/app_name" />
-
 
                 <LinearLayout
                     android:layout_width="15dp"
@@ -65,15 +53,6 @@
                     android:layout_gravity="bottom"
                     android:layout_marginBottom="-1dp"
                     android:layout_marginLeft="-8dp">
-
-                    <ImageView
-                        android:id="@+id/image_view_user"
-                        android:layout_width="15dp"
-                        android:layout_height="15dp"
-                        android:alpha=".3"
-                        android:layout_marginBottom="25dp"
-                        android:layout_gravity="bottom"
-                        android:src="@drawable/ic_account_circle"/>
 
                     <ImageView
                         android:id="@+id/image_view_offline"
@@ -101,14 +80,6 @@
                     android:layout_height="wrap_content"
                     android:text="@{model.name}"
                     android:textAppearance="?attr/textAppearanceListItem" />
-
-                <TextView
-                    android:id="@+id/textview_user_email"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:lines="2"
-                    android:text="@{model.email}"
-                    android:textSize="@dimen/item_small_text_size" />
 
 
             </LinearLayout>

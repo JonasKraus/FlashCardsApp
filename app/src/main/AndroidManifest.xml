@@ -152,7 +152,7 @@
                 android:value="de.uulm.einhoernchen.flashcardsapp.Activity.MainActivity" />
         </activity>
         <activity
-            android:name=".Activity.ExploreActivity"
+            android:name=".Activity.Explore.ExploreActivity"
             android:label="@string/title_activity_explore"
             android:parentActivityName=".Activity.MainActivity"
             android:theme="@style/AppTheme">

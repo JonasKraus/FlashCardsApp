@@ -21,8 +21,6 @@ import de.uulm.einhoernchen.flashcardsapp.Database.DbManager;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.Interface.OnFragmentInteractionListenerChallengesRanking;
 import de.uulm.einhoernchen.flashcardsapp.Model.Challenge;
 import de.uulm.einhoernchen.flashcardsapp.Model.Filter.ChallengesFilter;
-import de.uulm.einhoernchen.flashcardsapp.Model.Filter.UserGroupFilter;
-import de.uulm.einhoernchen.flashcardsapp.Model.UserGroup;
 import de.uulm.einhoernchen.flashcardsapp.R;
 import de.uulm.einhoernchen.flashcardsapp.Util.Globals;
 
@@ -201,7 +199,7 @@ public class RecyclerViewAdapterChallengesRanking extends RecyclerView.Adapter<R
 
             mView = view;
             mIdView = (TextView) view.findViewById(R.id.id);
-            textviewName = (TextView) view.findViewById(R.id.textview_user_name);
+            textviewName = (TextView) view.findViewById(R.id.textview_tag_name);
             textViewdescription = (TextView) view.findViewById(R.id.textview_user_email);
 
             mLocalView = (ImageView) view.findViewById(R.id.image_view_offline);

@@ -5,41 +5,34 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Filter;
-import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-
-import com.amulyakhare.textdrawable.TextDrawable;
-import com.amulyakhare.textdrawable.util.ColorGenerator;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import de.uulm.einhoernchen.flashcardsapp.Database.DbManager;
-import de.uulm.einhoernchen.flashcardsapp.Fragment.Interface.OnFragmentInteractionListenerUserGroup;
-import de.uulm.einhoernchen.flashcardsapp.Model.Filter.UserGroupFilter;
-import de.uulm.einhoernchen.flashcardsapp.Model.UserGroup;
+import de.uulm.einhoernchen.flashcardsapp.Fragment.Interface.OnFragmentInteractionListenerHashtag;
+import de.uulm.einhoernchen.flashcardsapp.Model.Tag;
 import de.uulm.einhoernchen.flashcardsapp.R;
 import de.uulm.einhoernchen.flashcardsapp.Util.Globals;
 
 /**
  *
  */
-public class RecyclerViewAdapterUserGroups
-        extends RecyclerView.Adapter<RecyclerViewAdapterUserGroups.ViewHolder> implements Filterable {
+public class RecyclerViewAdapterHashtags
+        extends RecyclerView.Adapter<RecyclerViewAdapterHashtags.ViewHolder> {
 
 
-    private final List<UserGroup> groups;
-    private final List<UserGroup> filteredList;
+    private final List<Tag> tags;
+    private final List<Tag> filteredList;
     private final List<ViewHolder> holders = new ArrayList<ViewHolder>();
-    private final OnFragmentInteractionListenerUserGroup mListener;
+    private final OnFragmentInteractionListenerHashtag mListener;
     private final boolean isUpToDate;
     private final Context context = Globals.getContext();
     private final DbManager db = Globals.getDb();
     private final ProgressBar progressBar = Globals.getProgressBar();
-    private UserGroupFilter userGroupFilter;
 
     /**
      * Constructs the recycler views
@@ -50,8 +43,8 @@ public class RecyclerViewAdapterUserGroups
      * @param listener
      * @param isUpToDate
      */
-    public RecyclerViewAdapterUserGroups(List<UserGroup> items, OnFragmentInteractionListenerUserGroup listener, boolean isUpToDate) {
-        this.groups = items;
+    public RecyclerViewAdapterHashtags(List<Tag> items, OnFragmentInteractionListenerHashtag listener, boolean isUpToDate) {
+        this.tags = items;
         this.filteredList = new ArrayList<>();
         this.mListener = listener;
         this.isUpToDate = isUpToDate;
@@ -60,23 +53,20 @@ public class RecyclerViewAdapterUserGroups
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.list_item_usergroup, parent, false);
+                .inflate(R.layout.list_item_tag, parent, false);
         return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        holder.mItem = groups.get(position);
-        // holder.mIdView.setText(groups.get(position).getId()+""); TODO Wird das benötigt?
-        holder.textviewName.setText(groups.get(position).getName());
-        holder.textViewdescription.setVisibility(View.VISIBLE);
-        holder.textViewdescription.setText(groups.get(position).getDescription());
+        holder.mItem = tags.get(position);
+        // holder.mIdView.setText(tags.get(position).getId()+""); TODO Wird das benötigt?
+        holder.textviewName.setText(tags.get(position).getName());
 
         setViewState(holder, position);
 
         holders.add(holder);
 
-        setRoundIcon(groups.get(position), holder);
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -84,26 +74,12 @@ public class RecyclerViewAdapterUserGroups
                 if (null != mListener) {
                     // Notify the active callbacks interface (the activity, if the
                     // fragment is attached to one) that an item has been selected.
-                    mListener.onUserGroupListFragmentInteraction(holder.mItem);
+                    mListener.onHashtagFragmentInteraction(holder.mItem);
                 }
             }
         });
     }
 
-    private void setRoundIcon(UserGroup userGroup, ViewHolder holder) {
-        //get first letter of each String item
-        final String firstLetter = String.valueOf(userGroup.getName().charAt(0)); // hier wird der buchstabe gesetzt
-
-        ColorGenerator generator = ColorGenerator.MATERIAL; // or use DEFAULT
-        // generate random color
-        final int color = generator.getColor(userGroup.getId()); // TODO
-        //int color = generator.getRandomColor();
-
-        TextDrawable drawable = TextDrawable.builder()
-                .buildRound(firstLetter, color); // radius in px
-
-        holder.imageView.setImageDrawable(drawable);
-    }
 
     /**
      * Sets the visibilities and states of the gui elements
@@ -129,19 +105,6 @@ public class RecyclerViewAdapterUserGroups
 
     }
 
-    /**
-     * Returns the filtered list
-     *
-     * @author Jonas Kraus jonas.kraus@uni-ulm.de
-     * @since 2017-02-03
-     *
-     * @return
-     */
-    public List<UserGroup> getList() {
-
-        return this.groups;
-    }
-
 
 
     /**
@@ -153,21 +116,10 @@ public class RecyclerViewAdapterUserGroups
      */
     @Override
     public int getItemCount() {
-        if (groups != null) {
-            return groups.size();
+        if (tags != null) {
+            return tags.size();
         }
         return 0;
-    }
-
-    @Override
-    public Filter getFilter() {
-
-        if(this.userGroupFilter == null) {
-
-            this.userGroupFilter = new UserGroupFilter(this, groups);
-        }
-
-        return this.userGroupFilter;
     }
 
 
@@ -184,11 +136,9 @@ public class RecyclerViewAdapterUserGroups
         public final View mView;
         public final TextView mIdView;
         public final TextView textviewName;
-        public final TextView textViewdescription;
         public final ImageView mLocalView;
-        public final ImageView imageView; // Text icon
 
-        public UserGroup mItem;
+        public Tag mItem;
 
 
         /**
@@ -204,11 +154,8 @@ public class RecyclerViewAdapterUserGroups
             mView = view;
             mIdView = (TextView) view.findViewById(R.id.id);
             textviewName = (TextView) view.findViewById(R.id.textview_tag_name);
-            textViewdescription = (TextView) view.findViewById(R.id.textview_user_email);
 
             mLocalView = (ImageView) view.findViewById(R.id.image_view_offline);
-
-            imageView = (ImageView) view.findViewById(R.id.image_view_round_icon);
 
         }
 

@@ -1557,4 +1557,44 @@ public class JsonParser {
         }
         return sb.toString();
     }
+
+
+    /**
+     * Reads all tags from imputstream
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     * @since 2017-03-10
+     *
+     * @param inputStream
+     * @return
+     */
+    public static List<Tag> parseTags(InputStream inputStream) {
+        if (DEBUG) Log.d("parser Method", "parseTags");
+
+        List<Tag> tags = null;
+
+        JsonReader reader = null;
+
+        try {
+
+            reader = new JsonReader(new InputStreamReader(inputStream, "UTF-8"));
+
+            tags = readTagArray(reader);
+        } catch (UnsupportedEncodingException e) {
+
+            e.printStackTrace();
+        } finally {
+
+            try {
+
+                reader.close();
+            } catch (IOException e) {
+
+                e.printStackTrace();
+                Log.d("json parse tags", e.getMessage());
+            }
+        }
+
+        return tags;
+    }
 }
