@@ -157,6 +157,7 @@
     <string name="title_activity_hashtag_catalog">Explore with hashtags</string>
     <string name="title_activity_explore">ExploreActivity</string>
     <string name="section_format">Hello World from section: %1$d</string>
+    <string name="toolbar_title_hashtag">#</string>
 
 
 </resources>

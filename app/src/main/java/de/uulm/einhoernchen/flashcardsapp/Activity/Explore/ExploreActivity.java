@@ -56,10 +56,10 @@ public class ExploreActivity extends AppCompatActivity
 
         MyFragmentPagerAdapter adapter = new MyFragmentPagerAdapter(getSupportFragmentManager());
 
-        adapter.addFragment(new FragmentHome(), getResources().getString(R.string.tab_play));
+        //adapter.addFragment(new FragmentHome(), getResources().getString(R.string.tab_play));
 
         fragmentHashtags = new FragmentHashtags();
-        adapter.addFragment(fragmentHashtags, getResources().getString(R.string.toolbar_title_statistic));
+        adapter.addFragment(fragmentHashtags, getResources().getString(R.string.toolbar_title_hashtag));
 
 
         // Set up the ViewPager with the sections adapter.
