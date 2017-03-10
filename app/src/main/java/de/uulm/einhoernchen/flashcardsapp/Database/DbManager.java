@@ -902,7 +902,12 @@ public class DbManager extends DbHelper{
 
         ContentValues values = new ContentValues();
         values.put(DbHelper.COLUMN_FLASHCARD_ID, card.getId());
-        values.put(DbHelper.COLUMN_FLASHCARD_CARDDECK_ID , parentId);
+
+        if (parentId == null) {
+
+            parentId = getCardParentID(card.getId());
+        }
+        values.put(DbHelper.COLUMN_FLASHCARD_CARDDECK_ID, parentId);
         values.put(DbHelper.COLUMN_FLASHCARD_RATING , card.getRating());
         values.put(DbHelper.COLUMN_FLASHCARD_QUESTION_ID , card.getQuestion().getId());
         values.put(DbHelper.COLUMN_FLASHCARD_MULTIPLE_CHOICE , card.isMultipleChoice());
@@ -917,6 +922,36 @@ public class DbManager extends DbHelper{
         }
 
         database.insertWithOnConflict(TABLE_FLASHCARD, null, values, SQLiteDatabase.CONFLICT_REPLACE);
+    }
+
+
+    /**
+     * Get the parent id of a card
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     * @since 2017-03-10
+     *
+     * @param id
+     * @return
+     */
+    private Long getFlashCardParent(long id) {
+
+        Cursor cursor = database.query(
+                DbHelper.TABLE_FLASHCARD,
+                allFlashCardColumns,
+                DbHelper.COLUMN_FLASHCARD_ID + " = " + id
+                , null, null, null, null);
+
+        Long value = null;
+
+        if (cursor.moveToFirst()) {
+
+            value = cursor.getLong(cursor.getColumnIndex(DbHelper.COLUMN_FLASHCARD_CARDDECK_ID));
+        }
+
+        cursor.close();
+
+        return value;
     }
 
 
