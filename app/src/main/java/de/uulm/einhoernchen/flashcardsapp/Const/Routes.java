@@ -15,7 +15,7 @@ public class Routes {
     public static final String NAME = "name";
     public static final String START = "start";
     public static final String STARTS_WITH = "startsWith";
-    public static final String SORT_BY = "sortby";
+    public static final String SORT_BY = "sortBy";
     public static final String USAGE_COUNT = "usageCount";
     public static final String SPACE = "%20";
     public static final String ASC = "ASC";

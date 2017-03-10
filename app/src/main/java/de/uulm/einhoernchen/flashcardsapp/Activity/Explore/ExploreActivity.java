@@ -108,10 +108,6 @@ public class ExploreActivity extends AppCompatActivity
     @Override
     public boolean onQueryTextChange(String query) {
 
-        Log.d("test", query);
-        // recyclerViewAdapterHashtags.getFilter().filter(query);
-
-
         AsyncGetRemoteHashtags asyncGetRemoteHashtags =
                 new AsyncGetRemoteHashtags(new AsyncGetRemoteHashtags.AsyncResponseHashtags() {
             @Override

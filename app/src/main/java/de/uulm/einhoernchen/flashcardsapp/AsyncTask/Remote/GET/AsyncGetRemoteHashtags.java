@@ -56,10 +56,10 @@ public class AsyncGetRemoteHashtags extends AsyncTask<String, Void, List<Tag>>{
 
 
         String urlString = Routes.URL + Routes.SLASH + Routes.TAGS
-                + Routes.QUESTION_MARK + Routes.START + this.start
-                + Routes.AND + Routes.SIZE + this.limit
+                + Routes.QUESTION_MARK + Routes.START + Routes.EQUAL + this.start
+                + Routes.AND + Routes.SIZE + Routes.EQUAL + this.limit
                 + Routes.AND + Routes.STARTS_WITH + Routes.EQUAL + params[0]
-                + Routes.AND + Routes.SORT_BY + Routes.USAGE_COUNT + Routes.SPACE + Routes.ASC;
+                + Routes.AND + Routes.SORT_BY + Routes.EQUAL + Routes.USAGE_COUNT + Routes.SPACE + Routes.ASC;
 
         Log.d("back call to ", urlString);
 
