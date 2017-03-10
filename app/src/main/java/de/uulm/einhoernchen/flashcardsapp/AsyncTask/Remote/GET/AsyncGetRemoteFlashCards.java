@@ -98,6 +98,7 @@ public class AsyncGetRemoteFlashCards extends AsyncTask<Long, Long, List<FlashCa
 
             AsyncSaveLocalFlashCards asyncSaveLocalFlashCards = new AsyncSaveLocalFlashCards(parentId);
             asyncSaveLocalFlashCards.setFlashCards(flashCards);
+            asyncSaveLocalFlashCards.setContext(Globals.getContext());
 
             asyncSaveLocalFlashCards.execute();
         }

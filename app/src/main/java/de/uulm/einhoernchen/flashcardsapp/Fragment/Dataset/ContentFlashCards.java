@@ -49,6 +49,7 @@ public class ContentFlashCards {
 
                 AsyncSaveLocalFlashCards asyncSaveFlashCardLocal = new AsyncSaveLocalFlashCards(parentId);
                 asyncSaveFlashCardLocal.setFlashCards(flashCards);
+                asyncSaveFlashCardLocal.setContext(Globals.getContext());
                 asyncSaveFlashCardLocal.execute();
 
                 ContentFlashCards.flashCards = flashCards;

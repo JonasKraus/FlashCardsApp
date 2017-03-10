@@ -58,6 +58,7 @@ public class ContentHashtagCatalog {
                 AsyncSaveLocalFlashCards asyncSaveFlashCardLocal =
                         new AsyncSaveLocalFlashCards(null);
                 asyncSaveFlashCardLocal.setFlashCards(flashCards);
+                asyncSaveFlashCardLocal.setContext(Globals.getContext());
                 asyncSaveFlashCardLocal.execute();
 
                 isUpToDate = true;

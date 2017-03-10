@@ -51,6 +51,7 @@ public class ContentFlashCard {
 
                 AsyncSaveLocalFlashCards asyncSaveFlashCardLocal = new AsyncSaveLocalFlashCards(flashcardId);
                 asyncSaveFlashCardLocal.setFlashCard(flashCard);
+                asyncSaveFlashCardLocal.setContext(Globals.getContext());
                 asyncSaveFlashCardLocal.execute();
 
                 isUpToDate = true;

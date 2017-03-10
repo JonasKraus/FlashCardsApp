@@ -134,6 +134,7 @@ public class AsyncGetRemoteFlashCardsByHashtag extends AsyncTask<Long, Long, Lis
 
             AsyncSaveLocalFlashCards asyncSaveLocalFlashCards = new AsyncSaveLocalFlashCards(null);
             asyncSaveLocalFlashCards.setFlashCards(flashCards);
+            asyncSaveLocalFlashCards.setContext(Globals.getContext());
 
             asyncSaveLocalFlashCards.execute();
         }

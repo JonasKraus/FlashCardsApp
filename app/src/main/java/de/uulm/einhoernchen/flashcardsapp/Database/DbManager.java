@@ -81,7 +81,7 @@ public class DbManager extends DbHelper{
      */
     public void close() {
 
-        close();
+        super.close();
          if (DEBUG) Log.d("db", "closed");
     }
 
