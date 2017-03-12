@@ -84,8 +84,6 @@ public class FragmentHashtags extends Fragment {
             mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
         }
 
-        //this.setOnScrollListener(scrollListener);
-
         setHasOptionsMenu(true);
     }
 

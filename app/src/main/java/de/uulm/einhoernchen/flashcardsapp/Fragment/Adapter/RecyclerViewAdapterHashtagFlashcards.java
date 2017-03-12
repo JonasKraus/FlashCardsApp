@@ -1,6 +1,8 @@
 package de.uulm.einhoernchen.flashcardsapp.Fragment.Adapter;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentManager;
@@ -56,6 +58,7 @@ public class RecyclerViewAdapterHashtagFlashcards
     private final Context context;
     private final ProgressBar progressBar;
     protected final FragmentManager supportFragmentManager;
+    private final Bitmap defaultImage;
     private HashtagFlashCardFilter filter;
 
     public RecyclerViewAdapterHashtagFlashcards(DbManager db,
@@ -73,6 +76,7 @@ public class RecyclerViewAdapterHashtagFlashcards
         this.context = context;
         this.progressBar = progressBar;
         this.supportFragmentManager = supportFragmentManager;
+        this.defaultImage = BitmapFactory.decodeResource(Globals.getContext().getResources(), R.drawable.flash_icon);
 
     }
 
@@ -316,27 +320,33 @@ public class RecyclerViewAdapterHashtagFlashcards
 
                 uriString = "http://" + uriString;
 
+                WebSettings settings = holder.webViewUri.getSettings();
+                settings.setJavaScriptEnabled(true);
+                settings.setDomStorageEnabled(true);
+
+                progressBar.setVisibility(View.VISIBLE);
+
+                holder.webViewUri.setWebViewClient(new WebViewClient() {
+
+                    public void onPageFinished(WebView view, String url) {
+
+                        if (progressBar.isShown()) {
+                            progressBar.setVisibility(View.GONE);
+                        }
+                    }
+
+                });
+                holder.webViewUri.loadUrl(uriString);
             } else if (uriString == null || uriString.equals("")) {
-                uriString = "http://134.60.51.72:9000/";
+
+                // uriString = "http://134.60.51.72:9000/";
+                isImage = true;
+                isVideo = false;
+
+                holder.imageViewUri.setImageBitmap(defaultImage);
             }
 
-            WebSettings settings = holder.webViewUri.getSettings();
-            settings.setJavaScriptEnabled(true);
-            settings.setDomStorageEnabled(true);
 
-            progressBar.setVisibility(View.VISIBLE);
-
-            holder.webViewUri.setWebViewClient(new WebViewClient() {
-
-                public void onPageFinished(WebView view, String url) {
-
-                    if (progressBar.isShown()) {
-                        progressBar.setVisibility(View.GONE);
-                    }
-                }
-
-            });
-            holder.webViewUri.loadUrl(uriString);
         }
 
         holder.imageViewUri.setVisibility(isImage ? View.VISIBLE : View.GONE);
