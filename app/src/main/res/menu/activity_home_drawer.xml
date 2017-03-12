@@ -12,7 +12,7 @@
             android:title="@string/nav_catalog" />
         <item
             android:id="@+id/nav_hashtag_catalog"
-            android:icon="@drawable/ic_tag"
+            android:icon="@drawable/ic_search"
             android:title="@string/nav_hashtag_catalog" />
         <item
             android:id="@+id/nav_play"
