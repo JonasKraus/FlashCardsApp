@@ -2,6 +2,7 @@ package de.uulm.einhoernchen.flashcardsapp.Activity.Explore;
 
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
@@ -13,11 +14,15 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AbsListView;
+import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,6 +52,8 @@ public class ExploreActivity extends AppCompatActivity
     private boolean appendChunk = false;
     private String currentTagQuery = "";
     private ProgressBar progressBar;
+    private LinearLayout llSelectedItems;
+    private List<Tag> selectedTags = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,6 +80,8 @@ public class ExploreActivity extends AppCompatActivity
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);
+
+        llSelectedItems = (LinearLayout) findViewById(R.id.ll_selected_items);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -178,8 +187,67 @@ public class ExploreActivity extends AppCompatActivity
     @Override
     public void onHashtagFragmentInteraction(Tag item) {
 
-        // TODO to be implemented
-        Log.d("click", item.toString());
+        if (!this.selectedTags.contains(item)) {
+
+            this.selectedTags.add(item);
+            createTagViewWithListener(item);
+        }
+
+    }
+
+
+
+    /**
+     * Creates textview for tag and adds an listener
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     * @since 2017-02-04
+     */
+    private void createTagViewWithListener(final Tag tag) {
+
+        LinearLayout ll = new LinearLayout(this);
+        ll.setOrientation(LinearLayout.HORIZONTAL);
+        ll.setMinimumWidth(AppBarLayout.LayoutParams.WRAP_CONTENT);
+        ll.setMinimumHeight(AppBarLayout.LayoutParams.WRAP_CONTENT);
+
+        AppBarLayout.LayoutParams lparams = new AppBarLayout.LayoutParams(
+                AppBarLayout.LayoutParams.WRAP_CONTENT, AppBarLayout.LayoutParams.WRAP_CONTENT);
+        lparams.rightMargin = 10;
+        lparams.topMargin = 10;
+
+        TextView tv = new TextView(this);
+        tv.setLayoutParams(lparams);
+        tv.setTag(tag.getId());
+        tv.setPadding(5,5,5,5);
+        tv.setBackgroundColor(getResources().getColor(R.color.colorAccent));
+        tv.setText("#" + tag.getName());
+        tv.setTextSize(TypedValue.COMPLEX_UNIT_SP,20);
+        tv.setTextColor(getResources().getColor(R.color.white));
+
+        Button button =  new Button(this);
+        button.setTag(tag.getId());
+        button.setText("x");
+        button.setVisibility(View.GONE);
+        button.setBackgroundColor(getResources().getColor(R.color.colorAccent));
+
+        ll.addView(tv);
+        ll.addView(button);
+
+        llSelectedItems.addView(ll);
+
+        ll.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Log.d("click", v.getTag() + " tag");
+                // TODO add some logic
+
+                llSelectedItems.removeView(v);
+
+                selectedTags.remove(tag);
+            }
+        });
+
     }
 
 
