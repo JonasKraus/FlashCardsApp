@@ -244,7 +244,7 @@
         android:paddingLeft="@dimen/activity_horizontal_margin"
         android:paddingRight="@dimen/activity_horizontal_margin"
         android:paddingBottom="@dimen/activity_horizontal_margin"
-        android:orientation="horizontal">
+        android:orientation="vertical">
 
     </LinearLayout>
 
