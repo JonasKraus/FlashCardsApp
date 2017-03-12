@@ -1095,8 +1095,9 @@ public class MainActivity extends AppCompatActivity
      */
     private void setFlashcardList(boolean backPressed) {
 
-        new ContentFlashCards().collectItemsFromDb(this.childrenId, backPressed);
-        new ContentFlashCards().collectItemsFromServer(this.childrenId, backPressed);
+        ContentFlashCards content = new ContentFlashCards();
+        content.collectItemsFromDb(this.childrenId, backPressed);
+        content.collectItemsFromServer(this.childrenId, backPressed);
 
         catalogueState = Constants.FLASH_CARD_LIST;
     }
