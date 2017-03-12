@@ -18,7 +18,7 @@
             android:src="@drawable/ic_insert_photo"
             android:id="@+id/button_insert_image"
             android:tint="@color/white"
-            android:backgroundTint="@color/colorAccent"
+            android:background="@color/colorAccent"
             android:visibility="gone"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
@@ -28,13 +28,12 @@
             android:id="@+id/button_delete_image"
             android:visibility="gone"
             android:tint="@color/white"
-            android:backgroundTint="@color/colorAccent"
+            android:background="@color/colorAccent"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 
         <android.support.design.widget.TextInputLayout
             android:id="@+id/textInputLayout_uri"
-            android:paddingLeft="@dimen/activity_horizontal_margin"
             android:paddingRight="@dimen/activity_horizontal_margin"
             android:visibility="gone"
             android:layout_width="match_parent"
