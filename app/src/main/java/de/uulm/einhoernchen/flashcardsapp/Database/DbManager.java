@@ -344,9 +344,9 @@ public class DbManager extends DbHelper{
                 TABLE_FLASHCARD + " LEFT JOIN "  + TABLE_BOOKMARK + " ON "
                         + TABLE_FLASHCARD + "." + COLUMN_FLASHCARD_ID + "=" + COLUMN_BOOKMARK_CARD_ID
                         + " LEFT JOIN " + TABLE_USER + " ON "
-                        + TABLE_BOOKMARK + "." + COLUMN_BOOKMARK_USER_ID + "=" + TABLE_USER + "." + COLUMN_USER_ID,
+                        + TABLE_BOOKMARK + "." + COLUMN_BOOKMARK_USER_ID + "=" + loggedInUser.getId(),
                 selection,
-                DbHelper.COLUMN_FLASHCARD_CARDDECK_ID + " = " + parentId + " AND " + TABLE_USER + "." + COLUMN_USER_ID  + "=" + loggedInUser.getId(),
+                DbHelper.COLUMN_FLASHCARD_CARDDECK_ID + " = " + parentId,
                 null, null, null, null);
 
         if (cursor.moveToFirst()) {
@@ -366,7 +366,10 @@ public class DbManager extends DbHelper{
                 List<Answer> answers = getAnswers(cardId);
                 boolean marked = cursor.isNull(cursor.getColumnIndex(COLUMN_BOOKMARK_ID)) ? false : true;
 
-                FlashCard flashCard = new FlashCard(cardId, tags, rating, new Date(created), new Date(lastUpdated), question, answers, author, multipleChoice, marked);
+                FlashCard flashCard = new FlashCard(
+                        cardId, tags, rating,
+                        new Date(created), new Date(lastUpdated),
+                        question, answers, author, multipleChoice, marked);
 
                 flashCards.add(flashCard);
             } while (cursor.moveToNext());
