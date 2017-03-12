@@ -133,16 +133,17 @@ public class FragmentHashtags extends Fragment {
             itemList.clear();
             recyclerViewAdapterHashtags.notifyItemRangeRemoved(0, listSize);
 
-
             itemList.addAll(newItemList);
             recyclerViewAdapterHashtags.notifyItemRangeInserted(0, newItemList.size());
             recyclerViewAdapterHashtags.notifyDataSetChanged();
         } else {
 
             itemList.addAll(newItemList);
-            recyclerView.scrollToPosition(listSize);
+
             recyclerViewAdapterHashtags.notifyItemRangeInserted(listSize, itemList.size());
             recyclerViewAdapterHashtags.notifyDataSetChanged();
+
+            recyclerView.scrollToPosition(listSize);
         }
 
 
