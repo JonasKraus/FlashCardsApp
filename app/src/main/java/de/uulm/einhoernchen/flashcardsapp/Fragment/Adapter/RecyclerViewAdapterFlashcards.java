@@ -1,6 +1,8 @@
 package de.uulm.einhoernchen.flashcardsapp.Fragment.Adapter;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentManager;
@@ -47,6 +49,7 @@ public class RecyclerViewAdapterFlashcards extends RecyclerView.Adapter<Recycler
     private final Context context;
     private final ProgressBar progressBar;
     protected final FragmentManager supportFragmentManager;
+    private Bitmap defaultImage;
 
     public RecyclerViewAdapterFlashcards(DbManager db, List<FlashCard> items, OnFragmentInteractionListenerFlashcard listener, boolean isUpToDate, Context context, ProgressBar progressBar, FragmentManager supportFragmentManager) {
         flashCards = items;
@@ -57,6 +60,7 @@ public class RecyclerViewAdapterFlashcards extends RecyclerView.Adapter<Recycler
         this.progressBar = progressBar;
         this.supportFragmentManager = supportFragmentManager;
 
+        this.defaultImage = BitmapFactory.decodeResource(Globals.getContext().getResources(), R.drawable.flash_icon);
     }
 
     @Override
@@ -290,18 +294,12 @@ public class RecyclerViewAdapterFlashcards extends RecyclerView.Adapter<Recycler
             isVideo = true;
 
 
-        } else {
+        } else if (!uriString.startsWith("https://") && !uriString.startsWith("http://") && !uriString.equals("")) {
 
             holder.webViewUri.setVisibility(View.VISIBLE);
             holder.imageViewUri.setVisibility(View.GONE);
 
-            if (!uriString.startsWith("https://") && !uriString.startsWith("http://") && !uriString.equals("")) {
-
-                uriString = "http://" + uriString;
-
-            } else if (uriString == null || uriString.equals("")) {
-                uriString = "http://134.60.51.72:9000/";
-            }
+            uriString = "http://" + uriString;
 
             WebSettings settings = holder.webViewUri.getSettings();
             settings.setJavaScriptEnabled(true);
@@ -320,6 +318,18 @@ public class RecyclerViewAdapterFlashcards extends RecyclerView.Adapter<Recycler
 
             });
             holder.webViewUri.loadUrl(uriString);
+
+        } else if (uriString == null || uriString.equals("")) {
+
+            //uriString = "http://134.60.51.72:9000/";
+            isImage = true;
+            isVideo = false;
+
+            holder.imageViewUri.setImageBitmap(defaultImage);
+
+            holder.webViewUri.setVisibility(View.GONE);
+            holder.imageViewUri.setVisibility(View.VISIBLE);
+            holder.mediaPlay.setVisibility(View.GONE);
         }
 
         holder.imageViewUri.setVisibility(isImage ? View.VISIBLE : View.GONE);

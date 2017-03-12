@@ -381,35 +381,40 @@ public class FragmentFlashCard extends Fragment implements View.OnClickListener 
 
                     uriString = "http://" + uriString;
 
+                    WebSettings settings = webViewUri.getSettings();
+                    settings.setJavaScriptEnabled(true);
+                    settings.setDomStorageEnabled(true);
+                    webViewUri.setScrollBarStyle(WebView.SCROLLBARS_OUTSIDE_OVERLAY);
+
+                    Globals.getProgressBar().setVisibility(View.VISIBLE);
+
+                    webViewUri.setWebViewClient(new WebViewClient() {
+
+                        public boolean shouldOverrideUrlLoading(WebView view, String url) {
+
+                            view.loadUrl(url);
+                            return true;
+                        }
+
+                        public void onPageFinished(WebView view, String url) {
+
+                            if (Globals.getProgressBar().isShown()) {
+                                Globals.getProgressBar().setVisibility(View.GONE);
+                            }
+                        }
+
+                    });
+                    webViewUri.loadUrl(uriString);
+
                 } else if (uriString.equals("")) {
 
-                    uriString = "http://134.60.51.72:9000/";
+                    webViewUri.setVisibility(View.GONE);
+                    imageViewPlay.setVisibility(View.GONE);
+                    imageViewUri.setVisibility(View.VISIBLE);
+                    //imageViewUri.setImageBitmap();
+
+                    //uriString = "http://134.60.51.72:9000/";
                 }
-
-                WebSettings settings = webViewUri.getSettings();
-                settings.setJavaScriptEnabled(true);
-                settings.setDomStorageEnabled(true);
-                webViewUri.setScrollBarStyle(WebView.SCROLLBARS_OUTSIDE_OVERLAY);
-
-                Globals.getProgressBar().setVisibility(View.VISIBLE);
-
-                webViewUri.setWebViewClient(new WebViewClient() {
-
-                    public boolean shouldOverrideUrlLoading(WebView view, String url) {
-
-                        view.loadUrl(url);
-                        return true;
-                    }
-
-                    public void onPageFinished(WebView view, String url) {
-
-                        if (Globals.getProgressBar().isShown()) {
-                            Globals.getProgressBar().setVisibility(View.GONE);
-                        }
-                    }
-
-                });
-                webViewUri.loadUrl(uriString);
             }
         }
 
