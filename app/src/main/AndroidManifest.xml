@@ -149,7 +149,7 @@
             android:theme="@style/AppTheme">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="de.uulm.einhoernchen.flashcardsapp.Activity.MainActivity" />
+                android:value="de.uulm.einhoernchen.flashcardsapp.Activity.Explore.ExploreActivity" />
         </activity>
         <activity
             android:name=".Activity.Explore.ExploreActivity"

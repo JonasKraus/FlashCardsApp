@@ -20,7 +20,23 @@ import de.uulm.einhoernchen.flashcardsapp.Util.JsonParser;
  */
 public class AsyncGetRemoteFlashCards extends AsyncTask<Long, Long, List<FlashCard>> {
 
+    private final List<Long> cardIds;
     private ProgressBar progressBar = Globals.getProgressBar();
+    public AsyncResponseFlashCards delegate = null;
+    private final Long parentId;
+
+    public AsyncGetRemoteFlashCards(List<Long> cardIds, AsyncResponseFlashCards delegate) {
+
+        this.cardIds = cardIds;
+        this.delegate = delegate;
+        this.parentId = null;
+    }
+
+    public AsyncGetRemoteFlashCards(Long parentId, AsyncResponseFlashCards delegate) {
+        this.parentId = parentId;
+        this.delegate = delegate;
+        this.cardIds = null;
+    }
 
     @Override
     protected void onPreExecute() {
@@ -35,20 +51,33 @@ public class AsyncGetRemoteFlashCards extends AsyncTask<Long, Long, List<FlashCa
         void processFinish(List<FlashCard> flashCards);
     }
 
-    public AsyncResponseFlashCards delegate = null;
-    private final Long parentId;
 
-    public AsyncGetRemoteFlashCards(Long parentId, AsyncResponseFlashCards delegate) {
-        this.parentId = parentId;
-        this.delegate = delegate;
-    }
 
     @Override
     protected List<FlashCard> doInBackground(Long... params) {
 
+        String urlString = "";
 
-        String urlString = Routes.URL + Routes.SLASH + Routes.CARD_DECKS + Routes.SLASH
-                + parentId + Routes.SLASH + Routes.FLASH_CARDS;
+        // Get cards from carddeck
+        if (cardIds == null) {
+
+            urlString = Routes.URL + Routes.SLASH + Routes.CARD_DECKS + Routes.SLASH
+                    + parentId + Routes.SLASH + Routes.FLASH_CARDS;
+        } else { // get cards by id
+
+            urlString = Routes.URL + Routes.SLASH + Routes.FLASH_CARDS + Routes.QUESTION_MARK;
+
+            for (int i = 0; i < cardIds.size(); i++) {
+
+                urlString += Routes.ID + Routes.EQUAL + cardIds.get(i);
+
+                if (i < cardIds.size() -1) {
+
+                    urlString += Routes.AND;
+                }
+            }
+        }
+
         Log.d("back call to ", urlString);
         HttpURLConnection urlConnection = null;
 
@@ -94,14 +123,13 @@ public class AsyncGetRemoteFlashCards extends AsyncTask<Long, Long, List<FlashCa
         if (delegate != null) {
 
             delegate.processFinish(flashCards);
-        } else {
-
-            AsyncSaveLocalFlashCards asyncSaveLocalFlashCards = new AsyncSaveLocalFlashCards(parentId);
-            asyncSaveLocalFlashCards.setFlashCards(flashCards);
-            asyncSaveLocalFlashCards.setContext(Globals.getContext());
-
-            asyncSaveLocalFlashCards.execute();
         }
+
+        AsyncSaveLocalFlashCards asyncSaveLocalFlashCards = new AsyncSaveLocalFlashCards(parentId);
+        asyncSaveLocalFlashCards.setFlashCards(flashCards);
+        asyncSaveLocalFlashCards.setContext(Globals.getContext());
+
+        asyncSaveLocalFlashCards.execute();
 
     }
 

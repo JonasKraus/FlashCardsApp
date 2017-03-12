@@ -8,6 +8,7 @@
     tools:context="de.uulm.einhoernchen.flashcardsapp.Activity.HashtagCatalogActivity"
     tools:showIn="@layout/activity_catalog_hashtag_cards">
 
+    <!-- currently unused -->
     <FrameLayout
         android:id="@+id/fragment_container_catalog_hashtag_cards"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"

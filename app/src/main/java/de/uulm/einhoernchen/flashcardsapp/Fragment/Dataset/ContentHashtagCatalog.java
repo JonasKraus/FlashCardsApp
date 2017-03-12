@@ -1,6 +1,7 @@
 package de.uulm.einhoernchen.flashcardsapp.Fragment.Dataset;
 
 import android.os.Bundle;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,10 +26,6 @@ import de.uulm.einhoernchen.flashcardsapp.Util.ProcessConnectivity;
  */
 public class ContentHashtagCatalog {
 
-    private static List<FlashCard> flashCards = new ArrayList<FlashCard>();
-
-    public static FragmentFlashcards fragment;
-
     private static boolean isUpToDate = false;
 
 
@@ -47,13 +44,6 @@ public class ContentHashtagCatalog {
             @Override
             public void processFinish(List<FlashCard> flashCards) {
 
-                // real dummy content generation
-                if (flashCards == null || flashCards.size() == 0) {
-
-                    //Log.d("ContentFlashCards", "no flashcards");
-                }
-
-
                 // TODO check if null works and check table constraint
                 AsyncSaveLocalFlashCards asyncSaveFlashCardLocal =
                         new AsyncSaveLocalFlashCards(null);
@@ -66,12 +56,6 @@ public class ContentHashtagCatalog {
                 FragmentHashtagFlashCards fragment = new FragmentHashtagFlashCards();
                 fragment.setItemList(flashCards);
                 fragment.setUpToDate(isUpToDate);
-
-                /* TODO if needed
-                Bundle args = new Bundle();
-                args.putParcelableArrayList(FragmentHashtagFlashCards.ARG_TAGS, tags);
-                fragment.setArguments(args);
-                */
 
                 android.support.v4.app.FragmentTransaction fragmentTransaction =
                         Globals.getFragmentManager().beginTransaction();
@@ -122,12 +106,6 @@ public class ContentHashtagCatalog {
                 fragment.setItemList(flashCards);
                 fragment.setUpToDate(isUpToDate);
 
-                /* TODO Check if needed
-                Bundle args = new Bundle();
-                args.putParcelableArrayList(FragmentHashtagFlashCards.ARG_TAGS, tags);
-                fragment.setArguments(args);
-                 */
-
                 android.support.v4.app.FragmentTransaction fragmentTransaction =
                         Globals.getFragmentManager().beginTransaction();
 
@@ -151,7 +129,5 @@ public class ContentHashtagCatalog {
         asyncGetFlashCardLocal.execute();
 
     }
-
-
 
 }

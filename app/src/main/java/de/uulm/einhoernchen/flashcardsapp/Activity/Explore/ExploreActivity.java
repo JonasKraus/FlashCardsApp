@@ -1,10 +1,10 @@
 package de.uulm.einhoernchen.flashcardsapp.Activity.Explore;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.NavUtils;
 import android.support.v4.view.MenuItemCompat;
@@ -13,12 +13,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AbsListView;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -27,13 +25,14 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.uulm.einhoernchen.flashcardsapp.Activity.HashtagCatalogActivity;
+import de.uulm.einhoernchen.flashcardsapp.AsyncTask.Remote.GET.AsyncGetRemoteFlashCardsByHashtag;
 import de.uulm.einhoernchen.flashcardsapp.AsyncTask.Remote.GET.AsyncGetRemoteHashtags;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.Adapter.MyFragmentPagerAdapter;
-import de.uulm.einhoernchen.flashcardsapp.Fragment.FragmentHashtagFlashCards;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.FragmentHashtags;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.FragmentHome;
-import de.uulm.einhoernchen.flashcardsapp.Fragment.FragmentStatistics;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.Interface.OnFragmentInteractionListenerHashtag;
+import de.uulm.einhoernchen.flashcardsapp.Model.FlashCard;
 import de.uulm.einhoernchen.flashcardsapp.Model.Tag;
 import de.uulm.einhoernchen.flashcardsapp.R;
 
@@ -53,7 +52,8 @@ public class ExploreActivity extends AppCompatActivity
     private String currentTagQuery = "";
     private ProgressBar progressBar;
     private LinearLayout llSelectedItems;
-    private List<Tag> selectedTags = new ArrayList<>();
+    private ArrayList<Tag> selectedTags = new ArrayList<>();
+    private ArrayList<Long> tagIds = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,8 +87,40 @@ public class ExploreActivity extends AppCompatActivity
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+
+                if (selectedTags.size() > 0) {
+
+
+                    AsyncGetRemoteFlashCardsByHashtag asyncGetRemoteFlashCardsByHashtag = new AsyncGetRemoteFlashCardsByHashtag(selectedTags, new ArrayList<String>(), new AsyncGetRemoteFlashCardsByHashtag.AsyncResponseHashtagFlashCards() {
+                        @Override
+                        public void processFinish(List<FlashCard> flashCards) {
+
+                            // TODO serach cards by tags
+                            //startActivity(new Intent(ExploreActivity.this, HashtagCatalogActivity.class));
+
+                            Intent cardIntent = new Intent(new Intent(ExploreActivity.this, HashtagCatalogActivity.class));
+
+                            ArrayList<Long> cardIds = new ArrayList<Long>();
+
+                            for (FlashCard card : flashCards) {
+
+                                cardIds.add(card.getId());
+                            }
+
+                            for (Tag tag : selectedTags) {
+
+                                tagIds.add(tag.getId());
+                            }
+
+                            cardIntent.putExtra(HashtagCatalogActivity.CARD_IDS,  cardIds);
+                            cardIntent.putExtra(HashtagCatalogActivity.TAG_IDS,  tagIds);
+
+                            startActivity(cardIntent);
+
+                        }
+                    });
+                    asyncGetRemoteFlashCardsByHashtag.execute();
+                }
             }
         });
 
@@ -187,6 +219,7 @@ public class ExploreActivity extends AppCompatActivity
     @Override
     public void onHashtagFragmentInteraction(Tag item) {
 
+        // Check if tag is already selected
         if (!this.selectedTags.contains(item)) {
 
             this.selectedTags.add(item);
@@ -238,9 +271,6 @@ public class ExploreActivity extends AppCompatActivity
         ll.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                Log.d("click", v.getTag() + " tag");
-                // TODO add some logic
 
                 llSelectedItems.removeView(v);
 

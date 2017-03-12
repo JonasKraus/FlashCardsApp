@@ -60,6 +60,7 @@ public class AsyncGetRemoteFlashCardsByHashtag extends AsyncTask<Long, Long, Lis
 
                 if (start) {
 
+                    start = false;
                     urlString += Routes.QUESTION_MARK + Routes.ID + Routes.EQUAL + tag.getId();
                 } else {
 
@@ -73,6 +74,7 @@ public class AsyncGetRemoteFlashCardsByHashtag extends AsyncTask<Long, Long, Lis
 
                 if (start) {
 
+                    start = false;
                     urlString += Routes.QUESTION_MARK + Routes.NAME + Routes.EQUAL + tag;
                 } else {
 
@@ -130,14 +132,13 @@ public class AsyncGetRemoteFlashCardsByHashtag extends AsyncTask<Long, Long, Lis
         if (delegate != null) {
 
             delegate.processFinish(flashCards);
-        } else {
-
-            AsyncSaveLocalFlashCards asyncSaveLocalFlashCards = new AsyncSaveLocalFlashCards(null);
-            asyncSaveLocalFlashCards.setFlashCards(flashCards);
-            asyncSaveLocalFlashCards.setContext(Globals.getContext());
-
-            asyncSaveLocalFlashCards.execute();
         }
+
+        AsyncSaveLocalFlashCards asyncSaveLocalFlashCards = new AsyncSaveLocalFlashCards(null);
+        asyncSaveLocalFlashCards.setFlashCards(flashCards);
+        asyncSaveLocalFlashCards.setContext(Globals.getContext());
+
+        asyncSaveLocalFlashCards.execute();
 
     }
 

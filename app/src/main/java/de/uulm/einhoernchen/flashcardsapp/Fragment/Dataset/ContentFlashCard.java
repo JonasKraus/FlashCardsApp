@@ -27,6 +27,8 @@ public class ContentFlashCard {
     private static boolean isUpToDate = false;
     private static DbManager db = Globals.getDb();
 
+    // Default container of main activity
+    private int fragmentContainder = R.id.fragment_container_main;
 
 
     /**
@@ -77,7 +79,7 @@ public class ContentFlashCard {
                 }
                 */
 
-                fragmentTransaction.replace(R.id.fragment_container_main, fragment);
+                fragmentTransaction.replace(fragmentContainder, fragment);
                 fragmentTransaction.commit();
 
                 //Log.d("async load", "online");
@@ -134,7 +136,7 @@ public class ContentFlashCard {
                 }
                 */
 
-                fragmentTransaction.replace(R.id.fragment_container_main, fragment);
+                fragmentTransaction.replace(fragmentContainder, fragment);
                 fragmentTransaction.commit();
 
             }
@@ -146,5 +148,15 @@ public class ContentFlashCard {
     }
 
 
-
+    /**
+     * This sets the container the fragment should be placed in
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     * @since 2017-03-12
+     *
+     * @param fragmentContainder
+     */
+    public void setFragmentContainder(int fragmentContainder) {
+        this.fragmentContainder = fragmentContainder;
+    }
 }

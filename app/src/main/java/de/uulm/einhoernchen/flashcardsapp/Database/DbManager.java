@@ -711,6 +711,48 @@ public class DbManager extends DbHelper{
     }
 
     /**
+     * Gets tags of a card
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     * @since 2016.08.30
+     *
+     * @param ids
+     * @return
+     */
+    public List<Tag> getTagsById(List<Long> ids) {
+
+        List<Tag> tags = new ArrayList<Tag>();
+
+        String selection = "";
+
+        for (int i = 0; i < ids.size(); i++) {
+
+            selection += DbHelper.COLUMN_CARD_TAG_TAG_ID + " = " + ids.get(i);
+            if (i < ids.size() -1 ) {
+
+                selection = " OR ";
+            }
+        }
+
+        Cursor cursor = database.query(DbHelper.TABLE_CARD_TAG,
+                allCardTagColumns,
+                selection,
+                null, null, null, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+
+                long tagId = cursor.getLong(cursor.getColumnIndex(DbHelper.COLUMN_TAG_ID));
+                String tagName = cursor.getString(cursor.getColumnIndex(DbHelper.COLUMN_TAG_NAME));
+
+                tags.add(new Tag(tagId, tagName));
+            } while (cursor.moveToNext());
+        }
+
+        return tags;
+    }
+
+    /**
      * gets a tag by its id
      *
      * @author Jonas Kraus jonas.kraus@uni-ulm.de
@@ -3055,6 +3097,73 @@ public class DbManager extends DbHelper{
 
         String selection = TABLE_USER + "." + COLUMN_USER_ID  + "=" + loggedInUser.getId();
 
+
+        Cursor cursor = database.query(
+                TABLE_FLASHCARD + " LEFT JOIN "  + TABLE_BOOKMARK + " ON "
+                        + TABLE_FLASHCARD + "." + COLUMN_FLASHCARD_ID + "=" + COLUMN_BOOKMARK_CARD_ID
+                        + " LEFT JOIN " + TABLE_USER + " ON "
+                        + TABLE_BOOKMARK + "." + COLUMN_BOOKMARK_USER_ID + "=" + TABLE_USER + "." + COLUMN_USER_ID,
+                columns,
+                selection,
+                null, null, null, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+
+                long cardId = cursor.getLong(0);
+                long carddeckId = cursor.getLong(1);
+                int rating = cursor.getInt(2);
+                long questionId = cursor.getLong(3);
+                boolean multipleChoice = cursor.getInt(4) > 0;
+                long created = cursor.getLong(5);
+                long lastUpdated = cursor.getLong(6);
+                long userId = cursor.getLong(7);
+                User author = getUser(userId);
+                List<Tag> tags = getTags(cardId);
+                Question question = getQuestion(questionId);
+                List<Answer> answers = getAnswers(cardId);
+                boolean marked = cursor.isNull(cursor.getColumnIndex(COLUMN_BOOKMARK_ID)) ? false : true;
+
+                FlashCard flashCard = new FlashCard(cardId, tags, rating, new Date(created), new Date(lastUpdated), question, answers, author, multipleChoice, marked);
+
+                flashCards.add(flashCard);
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+
+        return flashCards;
+    }
+
+    public List<FlashCard> getFlashCardsByIds(List<Long> cardIds) {
+        List<FlashCard> flashCards = new ArrayList<FlashCard>();
+
+        String[] columns =  {
+                TABLE_FLASHCARD+ "." + COLUMN_FLASHCARD_ID,             //0
+                TABLE_FLASHCARD+ "." + COLUMN_FLASHCARD_CARDDECK_ID,    //1
+                TABLE_FLASHCARD+ "." + COLUMN_FLASHCARD_RATING,         //2
+                TABLE_FLASHCARD+ "." + COLUMN_FLASHCARD_QUESTION_ID,    //3
+                TABLE_FLASHCARD+ "." + COLUMN_FLASHCARD_MULTIPLE_CHOICE,//4
+                TABLE_FLASHCARD+ "." + COLUMN_FLASHCARD_CREATED,        //5
+                TABLE_FLASHCARD+ "." + COLUMN_FLASHCARD_LAST_UPDATED,   //6
+                TABLE_FLASHCARD+ "." + COLUMN_FLASHCARD_USER_ID,         //7
+                TABLE_BOOKMARK + "." + COLUMN_BOOKMARK_ID,                      //0
+                TABLE_BOOKMARK + "." + COLUMN_BOOKMARK_CARD_ID,                 //1
+                TABLE_BOOKMARK + "." + COLUMN_BOOKMARK_MARK_DATE               //2
+        };
+
+        String selection = "";
+
+        for (int i = 0; i < cardIds.size(); i++) {
+
+            selection += DbHelper.COLUMN_FLASHCARD_ID + " = " + cardIds.get(i);
+
+            if (i < cardIds.size() - 1) {
+
+                selection += " AND ";
+            }
+        }
+
+        selection +=  " AND " + TABLE_USER + "." + COLUMN_USER_ID  + "=" + loggedInUser.getId();
 
         Cursor cursor = database.query(
                 TABLE_FLASHCARD + " LEFT JOIN "  + TABLE_BOOKMARK + " ON "

@@ -310,7 +310,7 @@ public class FragmentFlashCard extends Fragment implements View.OnClickListener 
             tv.setLayoutParams(lparams);
             tv.setTag(tag.getId());
             tv.setText("#" + tag.getName());
-            tv.setTextColor(getContext().getColor(R.color.colorPrimary));
+            tv.setTextColor(getContext().getResources().getColor(R.color.colorPrimary));
 
             linearlayoutHashTags.addView(tv);
 
