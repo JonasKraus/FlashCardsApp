@@ -10,7 +10,7 @@ import de.uulm.einhoernchen.flashcardsapp.AsyncTask.Local.AsyncSaveLocalFlashCar
 import de.uulm.einhoernchen.flashcardsapp.AsyncTask.Remote.GET.AsyncGetRemoteFlashCardAnswers;
 import de.uulm.einhoernchen.flashcardsapp.Database.DbManager;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.FragmentFlashCardAnswers;
-import de.uulm.einhoernchen.flashcardsapp.Fragment.FragmentFlashcards;
+import de.uulm.einhoernchen.flashcardsapp.Fragment.FragmentFlashCards;
 import de.uulm.einhoernchen.flashcardsapp.Model.Answer;
 import de.uulm.einhoernchen.flashcardsapp.Model.Statistic;
 import de.uulm.einhoernchen.flashcardsapp.R;
@@ -62,7 +62,7 @@ public class ContentFlashCardAnswers {
                 fragment.setPlayMultiplyChoiceMode(isPlayMode);
 
                 Bundle args = new Bundle();
-                args.putLong(FragmentFlashcards.ARG_PARENT_ID, parentId);
+                args.putLong(FragmentFlashCards.ARG_PARENT_ID, parentId);
                 fragment.setArguments(args);
 
                 android.support.v4.app.FragmentTransaction fragmentTransaction =
@@ -119,7 +119,7 @@ public class ContentFlashCardAnswers {
                 fragment.setPlayMultiplyChoiceMode(isPlayMultiplyChoiceMode);
 
                 Bundle args = new Bundle();
-                args.putLong(FragmentFlashcards.ARG_PARENT_ID, parentId);
+                args.putLong(FragmentFlashCards.ARG_PARENT_ID, parentId);
                 fragment.setArguments(args);
 
                 android.support.v4.app.FragmentTransaction fragmentTransaction =

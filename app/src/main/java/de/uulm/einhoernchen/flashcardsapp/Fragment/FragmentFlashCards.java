@@ -3,30 +3,21 @@ package de.uulm.einhoernchen.flashcardsapp.Fragment;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.SearchView;
-import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ProgressBar;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import de.uulm.einhoernchen.flashcardsapp.Database.DbManager;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.Adapter.RecyclerViewAdapterFlashcards;
-import de.uulm.einhoernchen.flashcardsapp.Fragment.Adapter.RecyclerViewAdapterHashtagFlashcards;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.Interface.OnFragmentInteractionListenerFlashcard;
 import de.uulm.einhoernchen.flashcardsapp.Model.FlashCard;
-import de.uulm.einhoernchen.flashcardsapp.Model.Tag;
 import de.uulm.einhoernchen.flashcardsapp.R;
 import de.uulm.einhoernchen.flashcardsapp.Util.Globals;
 
@@ -35,38 +26,35 @@ import de.uulm.einhoernchen.flashcardsapp.Util.Globals;
  * <p/>
  * interface.
  */
-public class FragmentHashtagFlashCards extends Fragment
-        implements SearchView.OnQueryTextListener {
+public class FragmentFlashCards extends Fragment {
 
     private static final String ARG_COLUMN_COUNT = "column-count";
-    public static final String ARG_TAGS = "parentId";
+    public static final String ARG_PARENT_ID = "parentId";
 
     private int mColumnCount = 1;
     private OnFragmentInteractionListenerFlashcard mListener;
 
-    private List<Tag> tags = new ArrayList<>();
+    private long parentId = -1;
     private List<FlashCard> itemList;
     private DbManager db = Globals.getDb();
     private boolean isUpToDate;
     private ProgressBar progressBar = Globals.getProgressBar();
-    private RecyclerViewAdapterHashtagFlashcards recyclerViewHastag;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
      */
-    public FragmentHashtagFlashCards() {
+    public FragmentFlashCards() {
     }
 
 
     // TODO: Customize parameter initialization
     @SuppressWarnings("unused")
-    public static FragmentHashtagFlashCards newInstance(int columnCount, long parentId) {
-
-        FragmentHashtagFlashCards fragment = new FragmentHashtagFlashCards();
+    public static FragmentFlashCards newInstance(int columnCount, long parentId) {
+        FragmentFlashCards fragment = new FragmentFlashCards();
         Bundle args = new Bundle();
         args.putInt(ARG_COLUMN_COUNT, columnCount);
-        args.putLong(ARG_TAGS, parentId);
+        args.putLong(ARG_PARENT_ID, parentId);
         fragment.setArguments(args);
         return fragment;
     }
@@ -77,7 +65,7 @@ public class FragmentHashtagFlashCards extends Fragment
 
         if (getArguments() != null) {
             mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
-            // TODO check if needed tags = getArguments().getParcelableArrayList(ARG_TAGS);
+            parentId = getArguments().getLong(ARG_PARENT_ID);
         }
     }
 
@@ -92,36 +80,20 @@ public class FragmentHashtagFlashCards extends Fragment
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
         if (mColumnCount <= 1) {
-
-            mRecyclerView.setLayoutManager(
-                    new LinearLayoutManager(mRecyclerView.getContext()));
+            mRecyclerView.setLayoutManager(new LinearLayoutManager(mRecyclerView.getContext()));
         } else {
-            mRecyclerView.setLayoutManager(
-                    new GridLayoutManager(mRecyclerView.getContext(), mColumnCount));
+            mRecyclerView.setLayoutManager(new GridLayoutManager(mRecyclerView.getContext(), mColumnCount));
         }
 
-        recyclerViewHastag = new RecyclerViewAdapterHashtagFlashcards(db,
-                itemList, mListener, isUpToDate, mRecyclerView.getContext(), progressBar,
-                getFragmentManager());
         // Set the view with the data
-        mRecyclerView.setAdapter(recyclerViewHastag);
+        mRecyclerView.setAdapter(new RecyclerViewAdapterFlashcards(
+                db, itemList, mListener, isUpToDate, mRecyclerView.getContext(), progressBar,
+                getFragmentManager()));
+
+
+        Button button = (Button) view.findViewById(R.id.button_card_add);
 
         return view;
-    }
-
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-
-        inflater.inflate(R.menu.menu_search, menu);
-        final MenuItem searchItem = menu.findItem(R.id.action_search);
-        final SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
-        searchView.setOnQueryTextListener(this);
-
-        Log.d("create", "heir");
-
-        super.onCreateOptionsMenu(menu, inflater);
-
     }
 
 
@@ -132,7 +104,7 @@ public class FragmentHashtagFlashCards extends Fragment
             mListener = (OnFragmentInteractionListenerFlashcard) context;
         } else {
             throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListenerFlashcard");
+                    + " must implement OnListFragmentInteractionListener");
         }
     }
 
@@ -151,17 +123,5 @@ public class FragmentHashtagFlashCards extends Fragment
     }
 
 
-    @Override
-    public boolean onQueryTextSubmit(String query) {
-        return false;
-    }
-
-    @Override
-    public boolean onQueryTextChange(String query) {
-
-        recyclerViewHastag.getFilter().filter(query);
-
-        return false;
-    }
 }
 

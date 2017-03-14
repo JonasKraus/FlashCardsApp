@@ -1,18 +1,11 @@
 package de.uulm.einhoernchen.flashcardsapp.Fragment.Dataset;
 
-import android.os.Bundle;
-import android.util.Log;
-
-import java.util.ArrayList;
 import java.util.List;
 
 import de.uulm.einhoernchen.flashcardsapp.AsyncTask.Local.AsyncGetLocalFlashCardsByHashtag;
 import de.uulm.einhoernchen.flashcardsapp.AsyncTask.Local.AsyncSaveLocalFlashCards;
-import de.uulm.einhoernchen.flashcardsapp.AsyncTask.Remote.GET.AsyncGetRemoteFlashCards;
-import de.uulm.einhoernchen.flashcardsapp.AsyncTask.Local.AsyncGetLocalFlashCards;
 import de.uulm.einhoernchen.flashcardsapp.AsyncTask.Remote.GET.AsyncGetRemoteFlashCardsByHashtag;
-import de.uulm.einhoernchen.flashcardsapp.Fragment.FragmentFlashcards;
-import de.uulm.einhoernchen.flashcardsapp.Fragment.FragmentHashtagFlashCards;
+import de.uulm.einhoernchen.flashcardsapp.Fragment.FragmentGlobalFlashCards;
 import de.uulm.einhoernchen.flashcardsapp.Model.FlashCard;
 import de.uulm.einhoernchen.flashcardsapp.Model.Tag;
 import de.uulm.einhoernchen.flashcardsapp.R;
@@ -53,7 +46,7 @@ public class ContentHashtagCatalog {
 
                 isUpToDate = true;
 
-                FragmentHashtagFlashCards fragment = new FragmentHashtagFlashCards();
+                FragmentGlobalFlashCards fragment = new FragmentGlobalFlashCards();
                 fragment.setItemList(flashCards);
                 fragment.setUpToDate(isUpToDate);
 
@@ -70,7 +63,7 @@ public class ContentHashtagCatalog {
                 }
                 */
 
-                fragmentTransaction.replace(R.id.fragment_container_catalog_hashtag_cards, fragment);
+                fragmentTransaction.replace(R.id.fragment_container_global_flashcards, fragment);
                 fragmentTransaction.commit();
 
                 //Log.d("async load", "online");
@@ -102,7 +95,7 @@ public class ContentHashtagCatalog {
 
                 isUpToDate = false;
 
-                FragmentHashtagFlashCards fragment = new FragmentHashtagFlashCards();
+                FragmentGlobalFlashCards fragment = new FragmentGlobalFlashCards();
                 fragment.setItemList(flashCards);
                 fragment.setUpToDate(isUpToDate);
 
@@ -119,7 +112,7 @@ public class ContentHashtagCatalog {
                 }
                 */
 
-                fragmentTransaction.replace(R.id.fragment_container_catalog_hashtag_cards, fragment);
+                fragmentTransaction.replace(R.id.fragment_container_global_flashcards, fragment);
                 fragmentTransaction.commit();
 
             }

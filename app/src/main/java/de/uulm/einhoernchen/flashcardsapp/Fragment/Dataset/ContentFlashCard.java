@@ -7,7 +7,7 @@ import de.uulm.einhoernchen.flashcardsapp.AsyncTask.Local.AsyncSaveLocalFlashCar
 import de.uulm.einhoernchen.flashcardsapp.AsyncTask.Remote.GET.AsyncGetRemoteFlashCard;
 import de.uulm.einhoernchen.flashcardsapp.Database.DbManager;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.FragmentFlashCard;
-import de.uulm.einhoernchen.flashcardsapp.Fragment.FragmentFlashcards;
+import de.uulm.einhoernchen.flashcardsapp.Fragment.FragmentFlashCards;
 import de.uulm.einhoernchen.flashcardsapp.Model.FlashCard;
 import de.uulm.einhoernchen.flashcardsapp.R;
 import de.uulm.einhoernchen.flashcardsapp.Util.Globals;
@@ -63,7 +63,7 @@ public class ContentFlashCard {
                 fragment.setUpToDate(isUpToDate);
 
                 Bundle args = new Bundle();
-                args.putLong(FragmentFlashcards.ARG_PARENT_ID, flashcardId);
+                args.putLong(FragmentFlashCards.ARG_PARENT_ID, flashcardId);
                 fragment.setArguments(args);
 
                 android.support.v4.app.FragmentTransaction fragmentTransaction =
@@ -120,7 +120,7 @@ public class ContentFlashCard {
                 fragment.setUpToDate(isUpToDate);
 
                 Bundle args = new Bundle();
-                args.putLong(FragmentFlashcards.ARG_PARENT_ID, flashcardId);
+                args.putLong(FragmentFlashCards.ARG_PARENT_ID, flashcardId);
                 fragment.setArguments(args);
 
                 android.support.v4.app.FragmentTransaction fragmentTransaction =

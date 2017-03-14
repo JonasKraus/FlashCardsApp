@@ -1,7 +1,6 @@
 package de.uulm.einhoernchen.flashcardsapp.Fragment.Dataset;
 
 import android.os.Bundle;
-import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,7 +8,7 @@ import java.util.List;
 import de.uulm.einhoernchen.flashcardsapp.AsyncTask.Remote.GET.AsyncGetRemoteFlashCards;
 import de.uulm.einhoernchen.flashcardsapp.AsyncTask.Local.AsyncGetLocalFlashCards;
 import de.uulm.einhoernchen.flashcardsapp.AsyncTask.Local.AsyncSaveLocalFlashCards;
-import de.uulm.einhoernchen.flashcardsapp.Fragment.FragmentFlashcards;
+import de.uulm.einhoernchen.flashcardsapp.Fragment.FragmentFlashCards;
 import de.uulm.einhoernchen.flashcardsapp.Model.FlashCard;
 import de.uulm.einhoernchen.flashcardsapp.R;
 import de.uulm.einhoernchen.flashcardsapp.Util.Globals;
@@ -24,7 +23,7 @@ public class ContentFlashCards {
 
     private static List<FlashCard> flashCards = new ArrayList<FlashCard>();
 
-    public static FragmentFlashcards fragment;
+    public static FragmentFlashCards fragment;
 
     private static boolean isUpToDate = false;
 
@@ -56,12 +55,12 @@ public class ContentFlashCards {
                 ContentFlashCards.flashCards = flashCards;
                 isUpToDate = true;
 
-                FragmentFlashcards fragment = new FragmentFlashcards();
+                FragmentFlashCards fragment = new FragmentFlashCards();
                 fragment.setItemList(flashCards);
                 fragment.setUpToDate(isUpToDate);
 
                 Bundle args = new Bundle();
-                args.putLong(FragmentFlashcards.ARG_PARENT_ID, parentId);
+                args.putLong(FragmentFlashCards.ARG_PARENT_ID, parentId);
                 fragment.setArguments(args);
 
                 android.support.v4.app.FragmentTransaction fragmentTransaction =
@@ -110,12 +109,12 @@ public class ContentFlashCards {
                 ContentFlashCards.flashCards = flashCards;
                 isUpToDate = false;
 
-                FragmentFlashcards fragment = new FragmentFlashcards();
+                FragmentFlashCards fragment = new FragmentFlashCards();
                 fragment.setItemList(flashCards);
                 fragment.setUpToDate(isUpToDate);
 
                 Bundle args = new Bundle();
-                args.putLong(FragmentFlashcards.ARG_PARENT_ID, parentId);
+                args.putLong(FragmentFlashCards.ARG_PARENT_ID, parentId);
                 fragment.setArguments(args);
 
                 android.support.v4.app.FragmentTransaction fragmentTransaction =

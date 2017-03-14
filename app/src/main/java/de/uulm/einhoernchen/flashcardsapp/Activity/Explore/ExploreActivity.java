@@ -25,7 +25,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.uulm.einhoernchen.flashcardsapp.Activity.HashtagCatalogActivity;
+import de.uulm.einhoernchen.flashcardsapp.Activity.FlashCardsActivity;
 import de.uulm.einhoernchen.flashcardsapp.AsyncTask.Remote.GET.AsyncGetRemoteFlashCardsByHashtag;
 import de.uulm.einhoernchen.flashcardsapp.AsyncTask.Remote.GET.AsyncGetRemoteHashtags;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.Adapter.MyFragmentPagerAdapter;
@@ -96,9 +96,9 @@ public class ExploreActivity extends AppCompatActivity
                         public void processFinish(List<FlashCard> flashCards) {
 
                             // TODO serach cards by tags
-                            //startActivity(new Intent(ExploreActivity.this, HashtagCatalogActivity.class));
+                            //startActivity(new Intent(ExploreActivity.this, FlashCardsActivity.class));
 
-                            Intent cardIntent = new Intent(new Intent(ExploreActivity.this, HashtagCatalogActivity.class));
+                            Intent cardIntent = new Intent(new Intent(ExploreActivity.this, FlashCardsActivity.class));
 
                             ArrayList<Long> cardIds = new ArrayList<Long>();
 
@@ -107,13 +107,7 @@ public class ExploreActivity extends AppCompatActivity
                                 cardIds.add(card.getId());
                             }
 
-                            for (Tag tag : selectedTags) {
-
-                                tagIds.add(tag.getId());
-                            }
-
-                            cardIntent.putExtra(HashtagCatalogActivity.CARD_IDS,  cardIds);
-                            cardIntent.putExtra(HashtagCatalogActivity.TAG_IDS,  tagIds);
+                            cardIntent.putExtra(FlashCardsActivity.CARD_IDS,  cardIds);
 
                             startActivity(cardIntent);
 

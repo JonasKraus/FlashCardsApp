@@ -144,7 +144,7 @@
                 android:value="de.uulm.einhoernchen.flashcardsapp.Activity.MainActivity" />
         </activity>
         <activity
-            android:name=".Activity.HashtagCatalogActivity"
+            android:name=".Activity.FlashCardsActivity"
             android:label="@string/title_activity_hashtag_catalog"
             android:theme="@style/AppTheme">
             <meta-data
