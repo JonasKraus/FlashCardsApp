@@ -13,15 +13,15 @@
         <item
             android:id="@+id/nav_cards_explore"
             android:icon="@drawable/ic_search"
-            android:title="@string/nav_hashtag_catalog" />
+            android:title="@string/nav_explore" />
         <item
             android:id="@+id/nav_cards_selected"
             android:icon="@drawable/ic_check"
-            android:title="@string/nav_hashtag_catalog" />
+            android:title="@string/nav_cards_selected" />
         <item
             android:id="@+id/nav_cards_bookmarked"
             android:icon="@drawable/ic_bookmark"
-            android:title="@string/nav_hashtag_catalog" />
+            android:title="@string/nav_cards_bookmarked" />
         <item
             android:id="@+id/nav_play"
             android:icon="@drawable/ic_school"
