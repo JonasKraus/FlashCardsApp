@@ -3262,4 +3262,36 @@ public class DbManager extends DbHelper{
 
         return ids;
     }
+
+
+
+    /**
+     * Selecting all ids of selected cards
+     * return arrayList to get it parcelable and send it through intents
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     * @since 2017-03-14
+     *
+     * @return
+     */
+    public ArrayList<Long> getBookmarkedFlashCardIds() {
+
+        ArrayList<Long> ids = new ArrayList<>();
+
+        Cursor cursor = database.query(
+                DbHelper.TABLE_BOOKMARK,
+                allBookmarkColumns,
+                DbHelper.COLUMN_BOOKMARK_USER_ID + " = " + getLoggedInUserId(),
+                null, null, null, null);
+
+        if (cursor.moveToFirst()) {
+
+            do {
+
+                ids.add(cursor.getLong(cursor.getColumnIndex(COLUMN_BOOKMARK_CARD_ID)));
+            } while (cursor.moveToNext());
+        }
+
+        return ids;
+    }
 }

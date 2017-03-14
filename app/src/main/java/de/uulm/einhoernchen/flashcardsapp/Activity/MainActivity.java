@@ -38,6 +38,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.uulm.einhoernchen.flashcardsapp.Activity.Explore.ExploreActivity;
+import de.uulm.einhoernchen.flashcardsapp.AsyncTask.Local.AsyncGetLocalBookmarkedFlashCards;
 import de.uulm.einhoernchen.flashcardsapp.AsyncTask.Local.AsyncGetLocalSelectedFlashCards;
 import de.uulm.einhoernchen.flashcardsapp.AsyncTask.Remote.GET.AsyncGetRemoteMessages;
 import de.uulm.einhoernchen.flashcardsapp.AsyncTask.Remote.GET.AsyncGetRemoteUser;
@@ -726,8 +727,8 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_cards_bookmarked) {
 
             // Starting async task to get the ids and then start intent
-            AsyncGetLocalSelectedFlashCards getLocal =  new AsyncGetLocalSelectedFlashCards(
-                    new AsyncGetLocalSelectedFlashCards.AsyncResponse() {
+            AsyncGetLocalBookmarkedFlashCards getLocal =  new AsyncGetLocalBookmarkedFlashCards(
+                    new AsyncGetLocalBookmarkedFlashCards.AsyncResponse() {
 
                         @Override
                         public void processFinish(ArrayList<Long> ids) {
