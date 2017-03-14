@@ -29,8 +29,10 @@ public class FlashCardsActivity extends AppCompatActivity
         OnFragmentInteractionListenerAnswer {
 
     public static final String CARD_IDS = "card_ids";
+    public static final String ACTIVITY_TITLE = "activity_title";
     private DbManager db;
     private List<Long> cardIds;
+    private String activityTitle = "Flashcards";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,11 +41,17 @@ public class FlashCardsActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-
         // Check if extras are given
         if (getIntent().hasExtra(CARD_IDS)) {
 
             cardIds = (ArrayList<Long>) getIntent().getSerializableExtra(CARD_IDS);
+        }
+
+        // Check if an activity title is passed
+        if (getIntent().hasExtra(ACTIVITY_TITLE)) {
+
+            activityTitle = getIntent().getStringExtra(ACTIVITY_TITLE);
+            setTitle(activityTitle);
         }
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);

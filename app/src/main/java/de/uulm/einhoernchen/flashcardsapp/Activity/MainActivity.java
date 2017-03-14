@@ -717,6 +717,7 @@ public class MainActivity extends AppCompatActivity
 
                     Intent cardIntent = new Intent(new Intent(MainActivity.this, FlashCardsActivity.class));
                     cardIntent.putExtra(FlashCardsActivity.CARD_IDS,  ids);
+                    cardIntent.putExtra(FlashCardsActivity.ACTIVITY_TITLE,  getResources().getString(R.string.nav_cards_selected));
                     startActivity(cardIntent);
                 }
             });
@@ -735,6 +736,7 @@ public class MainActivity extends AppCompatActivity
 
                             Intent cardIntent = new Intent(new Intent(MainActivity.this, FlashCardsActivity.class));
                             cardIntent.putExtra(FlashCardsActivity.CARD_IDS,  ids);
+                            cardIntent.putExtra(FlashCardsActivity.ACTIVITY_TITLE,  getResources().getString(R.string.nav_cards_bookmarked));
                             startActivity(cardIntent);
                         }
                     });
