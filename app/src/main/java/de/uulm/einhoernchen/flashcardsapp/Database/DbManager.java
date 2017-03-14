@@ -314,6 +314,33 @@ public class DbManager extends DbHelper{
     }
 
 
+
+    /**
+     * Get the currently logged in user id
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     * @since 2016-12-05
+     *
+     * @return
+     */
+    public Long getLoggedInUserId() {
+
+        Long id = null;
+        Cursor cursor = database.query(DbHelper.TABLE_USER, allUserColumns,
+                DbHelper.COLUMN_USER_LOCAL_ACCOUNT + " = " + 1 + " AND " + DbHelper.COLUMN_USER_IS_LOGGED_IN + " = " + 1
+                , null, null, null, null);
+
+        if (cursor.moveToFirst()) {
+
+            id = cursor.getLong(cursor.getColumnIndex(COLUMN_USER_ID));
+        }
+
+        cursor.close();
+
+        return id;
+    }
+
+
     /**
      * Gets all cards with the given CardDeckId
      *
@@ -3202,5 +3229,37 @@ public class DbManager extends DbHelper{
         cursor.close();
 
         return flashCards;
+    }
+
+
+
+    /**
+     * Selecting all ids of selected cards
+     * return arrayList to get it parcelable and send it through intents
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     * @since 2017-03-14
+     *
+     * @return
+     */
+    public ArrayList<Long> getSelectedFlashCardIds() {
+
+        ArrayList<Long> ids = new ArrayList<>();
+
+        Cursor cursor = database.query(
+                DbHelper.TABLE_SELECTION,
+                allSelectionColumns,
+                DbHelper.COLUMN_SELECTION_USER_ID + " = " + getLoggedInUserId(),
+                null, null, null, null);
+
+        if (cursor.moveToFirst()) {
+
+            do {
+
+                ids.add(cursor.getLong(cursor.getColumnIndex(COLUMN_SELECTION_CARD_ID)));
+            } while (cursor.moveToNext());
+        }
+
+        return ids;
     }
 }

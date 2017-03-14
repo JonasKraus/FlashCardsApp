@@ -38,6 +38,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.uulm.einhoernchen.flashcardsapp.Activity.Explore.ExploreActivity;
+import de.uulm.einhoernchen.flashcardsapp.AsyncTask.Local.AsyncGetLocalSelectedFlashCards;
 import de.uulm.einhoernchen.flashcardsapp.AsyncTask.Remote.GET.AsyncGetRemoteMessages;
 import de.uulm.einhoernchen.flashcardsapp.AsyncTask.Remote.GET.AsyncGetRemoteUser;
 import de.uulm.einhoernchen.flashcardsapp.AsyncTask.Remote.POST.AsyncPostRemoteToken;
@@ -700,9 +701,44 @@ public class MainActivity extends AppCompatActivity
             ProcessConnectivity.isServerAlive ();
             moveToLastCatalogueState();
 
-        }else if (id == R.id.nav_hashtag_catalog) {
+        } else if (id == R.id.nav_cards_explore) {
 
             startActivity(new Intent(MainActivity.this, ExploreActivity.class));
+
+        } else if (id == R.id.nav_cards_selected) {
+
+            // Starting async task to get the ids and then start intent
+            AsyncGetLocalSelectedFlashCards getLocal =  new AsyncGetLocalSelectedFlashCards(
+                    new AsyncGetLocalSelectedFlashCards.AsyncResponse() {
+
+                @Override
+                public void processFinish(ArrayList<Long> ids) {
+
+                    Intent cardIntent = new Intent(new Intent(MainActivity.this, FlashCardsActivity.class));
+                    cardIntent.putExtra(FlashCardsActivity.CARD_IDS,  ids);
+                    startActivity(cardIntent);
+                }
+            });
+            getLocal.setProgressBar(this.progressBar);
+            getLocal.execute();
+
+
+        } else if (id == R.id.nav_cards_bookmarked) {
+
+            // Starting async task to get the ids and then start intent
+            AsyncGetLocalSelectedFlashCards getLocal =  new AsyncGetLocalSelectedFlashCards(
+                    new AsyncGetLocalSelectedFlashCards.AsyncResponse() {
+
+                        @Override
+                        public void processFinish(ArrayList<Long> ids) {
+
+                            Intent cardIntent = new Intent(new Intent(MainActivity.this, FlashCardsActivity.class));
+                            cardIntent.putExtra(FlashCardsActivity.CARD_IDS,  ids);
+                            startActivity(cardIntent);
+                        }
+                    });
+            getLocal.setProgressBar(this.progressBar);
+            getLocal.execute();
 
         } else if (id == R.id.nav_play) {
 
