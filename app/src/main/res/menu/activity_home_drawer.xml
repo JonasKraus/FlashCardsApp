@@ -6,6 +6,14 @@
             android:id="@+id/nav_home"
             android:icon="@drawable/ic_home"
             android:title="@string/nav_home" />
+
+        <item
+            android:id="@+id/nav_play"
+            android:icon="@drawable/ic_school"
+            android:title="@string/nav_play" />
+    </group>
+    <group android:checkableBehavior="single"
+        android:id="@+id/menu_group_catalogs">
         <item
             android:id="@+id/nav_catalogue"
             android:icon="@drawable/ic_list"
@@ -22,10 +30,9 @@
             android:id="@+id/nav_cards_bookmarked"
             android:icon="@drawable/ic_bookmark"
             android:title="@string/nav_cards_bookmarked" />
-        <item
-            android:id="@+id/nav_play"
-            android:icon="@drawable/ic_school"
-            android:title="@string/nav_play" />
+    </group>
+    <group android:checkableBehavior="single"
+        android:id="@+id/menu_group_stats">
         <item
             android:id="@+id/nav_statistics"
             android:icon="@drawable/ic_insert_chart"
@@ -40,6 +47,9 @@
             android:id="@+id/nav_challengeRanking"
             android:icon="@drawable/ic_list_numbered"
             android:title="@string/nav_challengeRanking" />
+    </group>
+    <group android:checkableBehavior="single"
+        android:id="@+id/menu_group_people">
         <item
             android:id="@+id/nav_profile"
             android:icon="@drawable/ic_account_circle"
