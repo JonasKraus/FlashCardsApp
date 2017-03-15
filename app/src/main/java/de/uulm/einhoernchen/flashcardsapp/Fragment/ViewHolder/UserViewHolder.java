@@ -73,18 +73,13 @@ public class UserViewHolder extends SortedListAdapter.ViewHolder<User> {
 
         mBinding.setModel(item);
 
-        mBinding.imageViewRoundIcon.post(new Runnable() {
-            @Override
-            public void run() {
+        boolean isChecked = setCheckIcon(mBinding);
 
-                boolean isChecked = setCheckIcon(mBinding);
+        if (!isChecked) {
 
-                if (!isChecked) {
+            setRoundIcon(item, mBinding.imageViewRoundIcon);
+        }
 
-                    setRoundIcon(item, mBinding.imageViewRoundIcon);
-                }
-            }
-        });
     }
 
 
@@ -106,21 +101,10 @@ public class UserViewHolder extends SortedListAdapter.ViewHolder<User> {
 
             mBinding.getModel().setChecked(true);
 
+            mBinding.imageViewRoundIcon.setTag("checked");
 
-
-            mBinding.imageViewRoundIcon.post(new Runnable() {
-                @Override
-                public void run() {
-
-                    TextDrawable drawable = TextDrawable.builder()
-                            .buildRound(String.valueOf("✓"), Color.GRAY); // radius in px
-                    mBinding.imageViewRoundIcon.setTag("checked");
-                    drawable.setIntrinsicWidth(40);
-                    Log.d("size",  mBinding.imageViewRoundIcon.getWidth()+"");
-                    mBinding.imageViewRoundIcon.setImageDrawable(Globals.getContext().getResources().getDrawable(R.drawable.ic_check));
-                }
-            });
-
+            // TODO get better ressource
+            mBinding.imageViewRoundIcon.setImageDrawable(Globals.getContext().getResources().getDrawable(R.drawable.ic_check));
 
             // Set to null, so its unclickable
             //item.mView.setOnClickListener(null);
