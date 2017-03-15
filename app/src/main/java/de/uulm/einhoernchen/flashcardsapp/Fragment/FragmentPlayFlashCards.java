@@ -162,7 +162,7 @@ public class FragmentPlayFlashCards extends Fragment implements View.OnClickList
 
         Globals.getProgressBar().setVisibility(View.VISIBLE);
 
-        statistics = Statistic.getStatisticsOfSelectedCards(message); // TODO
+        statistics = Statistic.getPlayCardsWithStats(message); // TODO
 
         if (statistics.size() == 0) {
 

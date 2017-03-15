@@ -54,7 +54,7 @@ public class StatisticsActivity extends AppCompatActivity {
 
         setContentView(R.layout.fragment_statistics);
 
-        statistics = Statistic.getStatisticsOfSelectedCards(null);
+        statistics = Statistic.getPlayCardsWithStats(null);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_statistics);
         ((MainActivity) getContext()).setSupportActionBar(toolbar);

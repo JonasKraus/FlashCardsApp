@@ -251,7 +251,7 @@ public class Statistic {
      *
      * @return
      */
-    public static List<Statistic> getStatisticsOfSelectedCards(Message challenge) {
+    public static List<Statistic> getPlayCardsWithStats(Message challenge) {
 
         Settings settings = Settings.getSettings();
         Constants learnMode = settings.getLearnMode();
