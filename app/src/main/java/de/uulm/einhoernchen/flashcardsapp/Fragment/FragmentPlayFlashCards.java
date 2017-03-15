@@ -459,13 +459,13 @@ public class FragmentPlayFlashCards extends Fragment implements View.OnClickList
         mAuthorView.setText(currentFlashcard.getQuestion().getAuthor().getName());
 
         if (mImageAuthor == null) mImageAuthor = (ImageView) view.findViewById(R.id.imageViewProfilePhoto);
-        mImageAuthor.setImageDrawable(
-                ProcessorImage.download(
-                        currentFlashcard.getAuthor().getAvatar(),
-                        mImageAuthor,
-                        currentFlashcard.getAuthor().getId(),
-                        null
-                )
+
+            ProcessorImage.download(
+                    currentFlashcard.getAuthor().getAvatar(),
+                    mImageAuthor,
+                    currentFlashcard.getAuthor().getId(),
+                    null
+
         );
         mCardRatingView.setText(currentFlashcard.getRatingForView());
         mDateView.setText(currentFlashcard.getLastUpdatedString());

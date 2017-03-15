@@ -2,9 +2,11 @@ package de.uulm.einhoernchen.flashcardsapp.Fragment.ViewHolder;
 
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.LayerDrawable;
 import android.os.Binder;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.amulyakhare.textdrawable.TextDrawable;
@@ -17,6 +19,7 @@ import de.uulm.einhoernchen.flashcardsapp.Fragment.Adapter.RecyclerViewAdapterUs
 import de.uulm.einhoernchen.flashcardsapp.Fragment.Adapter.SortedListAdapter;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.Interface.OnFragmentInteractionListenerUserBinding;
 import de.uulm.einhoernchen.flashcardsapp.Model.User;
+import de.uulm.einhoernchen.flashcardsapp.R;
 import de.uulm.einhoernchen.flashcardsapp.Util.Globals;
 import de.uulm.einhoernchen.flashcardsapp.Util.ProcessorImage;
 import de.uulm.einhoernchen.flashcardsapp.databinding.ListItemUserBinding;
@@ -66,16 +69,22 @@ public class UserViewHolder extends SortedListAdapter.ViewHolder<User> {
 
 
     @Override
-    protected void performBind(User item) {
+    protected void performBind(final User item) {
 
         mBinding.setModel(item);
 
-        boolean isChecked = setCheckIcon(mBinding);
+        mBinding.imageViewRoundIcon.post(new Runnable() {
+            @Override
+            public void run() {
 
-        if (!isChecked) {
+                boolean isChecked = setCheckIcon(mBinding);
 
-            setRoundIcon(item, mBinding.imageViewRoundIcon);
-        }
+                if (!isChecked) {
+
+                    setRoundIcon(item, mBinding.imageViewRoundIcon);
+                }
+            }
+        });
     }
 
 
@@ -87,21 +96,31 @@ public class UserViewHolder extends SortedListAdapter.ViewHolder<User> {
      *
      * @param mBinding
      */
-    public boolean setCheckIcon(ListItemUserBinding mBinding) {
+    public boolean setCheckIcon(final ListItemUserBinding mBinding) {
 
         if (
             (userIdsOfGroup.size() > 0 && userIdsOfGroup.contains(mBinding.getModel().getId()))
-            || (mBinding.getModel().getId() == Globals.getDb().getLoggedInUser().getId() && userIdsOfGroup.size() == 0)
+            || (mBinding.getModel().getId() == Globals.getDb().getLoggedInUserId() && userIdsOfGroup.size() == 0)
             || mBinding.getModel().isChecked()
             ) {
 
             mBinding.getModel().setChecked(true);
 
-            TextDrawable drawable = TextDrawable.builder()
-                    .buildRound(String.valueOf("✓"), Color.GRAY); // radius in px
-            mBinding.imageViewRoundIcon.setTag("checked");
 
-            mBinding.imageViewRoundIcon.setImageDrawable(drawable);
+
+            mBinding.imageViewRoundIcon.post(new Runnable() {
+                @Override
+                public void run() {
+
+                    TextDrawable drawable = TextDrawable.builder()
+                            .buildRound(String.valueOf("✓"), Color.GRAY); // radius in px
+                    mBinding.imageViewRoundIcon.setTag("checked");
+                    drawable.setIntrinsicWidth(40);
+                    Log.d("size",  mBinding.imageViewRoundIcon.getWidth()+"");
+                    mBinding.imageViewRoundIcon.setImageDrawable(Globals.getContext().getResources().getDrawable(R.drawable.ic_check));
+                }
+            });
+
 
             // Set to null, so its unclickable
             //item.mView.setOnClickListener(null);
@@ -116,7 +135,6 @@ public class UserViewHolder extends SortedListAdapter.ViewHolder<User> {
 
     /**
      * Sets the round icon
-     * // TODO set the profile image
      *
      * @author Jonas Kraus jonas.kraus@uni-ulm.de
      * @since 2017-01-29
@@ -128,11 +146,11 @@ public class UserViewHolder extends SortedListAdapter.ViewHolder<User> {
 
         if (user.getAvatar() != null && !user.getAvatar().equals("")) {
 
-            BitmapDrawable drawableImage = ProcessorImage.download(user.getAvatar(), imageView, user.getId(), null);
+            // Automatically sets image view after downloading
+            ProcessorImage.download(user.getAvatar(), imageView, user.getId(), null);
 
             imageView.setTag("unchecked");
 
-            imageView.setImageDrawable(drawableImage);
         } else{
 
             //get first letter of each String item

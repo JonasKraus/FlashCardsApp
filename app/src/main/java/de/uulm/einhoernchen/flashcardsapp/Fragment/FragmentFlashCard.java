@@ -286,13 +286,13 @@ public class FragmentFlashCard extends Fragment implements View.OnClickListener 
         }
 
         if (mImageAuthor == null) mImageAuthor = (ImageView) view.findViewById(R.id.imageViewProfilePhoto);
-        mImageAuthor.setImageDrawable(
-                ProcessorImage.download(
-                        flashCard.getAuthor().getAvatar(),
-                        mImageAuthor,
-                        flashCard.getAuthor().getId(),
-                        null
-                )
+
+            ProcessorImage.download(
+                    flashCard.getAuthor().getAvatar(),
+                    mImageAuthor,
+                    flashCard.getAuthor().getId(),
+                    null
+
         );
 
         setListener();

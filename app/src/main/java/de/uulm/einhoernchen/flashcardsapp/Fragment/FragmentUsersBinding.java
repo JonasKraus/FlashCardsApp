@@ -318,7 +318,7 @@ public class FragmentUsersBinding extends Fragment implements SearchView.OnQuery
 
             listItemUserBinding.getModel().setChecked(true);
 
-            listItemUserBinding.imageViewRoundIcon.setImageDrawable(drawable);
+            listItemUserBinding.imageViewRoundIcon.setImageDrawable(Globals.getContext().getResources().getDrawable(R.drawable.ic_check));
         }
 
 
