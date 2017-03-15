@@ -115,6 +115,7 @@ public class FragmentFlashCard extends Fragment implements View.OnClickListener 
     private LinearLayout linearlayoutHashTags;
     private EditText editTextQuestionTags;
     private TextInputLayout textInputLayoutTags;
+    private ImageView mImageAuthor;
 
     public FragmentFlashCard() {
         // Required empty public constructor
@@ -175,6 +176,7 @@ public class FragmentFlashCard extends Fragment implements View.OnClickListener 
         mImageViewBookmarked = (ImageView) view.findViewById(R.id.image_view_bookmarked);
 
         mLocalView = (ImageView) view.findViewById(R.id.image_view_offline);
+        mImageAuthor = (ImageView) view.findViewById(R.id.imageViewProfilePhoto);
 
         imageViewUri = (ImageView) view.findViewById(R.id.image_view_question_uri);
 
@@ -282,6 +284,16 @@ public class FragmentFlashCard extends Fragment implements View.OnClickListener 
                 mCardRatingView.setTextColor(getResources().getColor(R.color.colorAccent));
                 break;
         }
+
+        if (mImageAuthor == null) mImageAuthor = (ImageView) view.findViewById(R.id.imageViewProfilePhoto);
+        mImageAuthor.setImageDrawable(
+                ProcessorImage.download(
+                        flashCard.getAuthor().getAvatar(),
+                        mImageAuthor,
+                        flashCard.getAuthor().getId(),
+                        null
+                )
+        );
 
         setListener();
 
