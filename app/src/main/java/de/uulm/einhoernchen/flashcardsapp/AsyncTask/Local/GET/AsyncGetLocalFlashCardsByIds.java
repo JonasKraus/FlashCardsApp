@@ -1,4 +1,4 @@
-package de.uulm.einhoernchen.flashcardsapp.AsyncTask.Local;
+package de.uulm.einhoernchen.flashcardsapp.AsyncTask.Local.GET;
 
 import android.os.AsyncTask;
 import android.view.View;
@@ -16,13 +16,13 @@ import de.uulm.einhoernchen.flashcardsapp.Util.Globals;
  * @author Jonas Kraus jonas.kraus@uni-ulm.de
  * @since 2017-03-14
  */
-public class AsyncGetLocalSelectedFlashCards extends AsyncTask<Long, Long, ArrayList<Long>> {
-
+public class AsyncGetLocalFlashCardsByIds extends AsyncTask<Long, Long, List<FlashCard>> {
 
 
     // Class Attributes
     ProgressBar progressBar = Globals.getProgressBar();
     public AsyncResponse delegate = null;
+    private final List<Long> ids;
 
 
 
@@ -51,7 +51,7 @@ public class AsyncGetLocalSelectedFlashCards extends AsyncTask<Long, Long, Array
      */
     public interface AsyncResponse {
 
-        void processFinish(ArrayList<Long> ids);
+        void processFinish(List<FlashCard> items);
     }
 
 
@@ -64,10 +64,11 @@ public class AsyncGetLocalSelectedFlashCards extends AsyncTask<Long, Long, Array
      *
      * @param delegate
      */
-    public AsyncGetLocalSelectedFlashCards(AsyncResponse delegate) {
+    public AsyncGetLocalFlashCardsByIds(List<Long> ids, AsyncResponse delegate) {
 
         // delegate to get the response back on main ui thread
         this.delegate = delegate;
+        this.ids = ids;
     }
 
 
@@ -82,10 +83,10 @@ public class AsyncGetLocalSelectedFlashCards extends AsyncTask<Long, Long, Array
      * @return
      */
     @Override
-    protected ArrayList<Long> doInBackground(Long... params) {
+    protected List<FlashCard> doInBackground(Long... params) {
 
         // Collecting cards from db
-        return  Globals.getDb().getSelectedFlashCardIds();
+        return  Globals.getDb().getFlashCardsByIds(ids);
     }
 
 
@@ -96,14 +97,14 @@ public class AsyncGetLocalSelectedFlashCards extends AsyncTask<Long, Long, Array
      * @author Jonas Kraus jonas.kraus@uni-ulm.de
      * @since 2017-03-14
      *
-     * @param ids
+     * @param items
      */
     @Override
-    protected void onPostExecute(ArrayList<Long> ids) {
-        super.onPostExecute(ids);
+    protected void onPostExecute(List<FlashCard> items) {
+        super.onPostExecute(items);
 
         progressBar.setVisibility(View.GONE);
-        delegate.processFinish(ids);
+        delegate.processFinish(items);
     }
 
 

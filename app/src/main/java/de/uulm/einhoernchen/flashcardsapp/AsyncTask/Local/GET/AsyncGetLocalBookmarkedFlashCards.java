@@ -1,28 +1,26 @@
-package de.uulm.einhoernchen.flashcardsapp.AsyncTask.Local;
+package de.uulm.einhoernchen.flashcardsapp.AsyncTask.Local.GET;
 
 import android.os.AsyncTask;
 import android.view.View;
 import android.widget.ProgressBar;
 
 import java.util.ArrayList;
-import java.util.List;
 
-import de.uulm.einhoernchen.flashcardsapp.Model.FlashCard;
 import de.uulm.einhoernchen.flashcardsapp.Util.Globals;
 
 /**
- * Class for getting the ids of all selected cards
+ * Class for getting the ids of all bookmarked cards
  *
  * @author Jonas Kraus jonas.kraus@uni-ulm.de
  * @since 2017-03-14
  */
-public class AsyncGetLocalFlashCardsByIds extends AsyncTask<Long, Long, List<FlashCard>> {
+public class AsyncGetLocalBookmarkedFlashCards extends AsyncTask<Long, Long, ArrayList<Long>> {
+
 
 
     // Class Attributes
     ProgressBar progressBar = Globals.getProgressBar();
     public AsyncResponse delegate = null;
-    private final List<Long> ids;
 
 
 
@@ -51,7 +49,7 @@ public class AsyncGetLocalFlashCardsByIds extends AsyncTask<Long, Long, List<Fla
      */
     public interface AsyncResponse {
 
-        void processFinish(List<FlashCard> items);
+        void processFinish(ArrayList<Long> ids);
     }
 
 
@@ -64,11 +62,10 @@ public class AsyncGetLocalFlashCardsByIds extends AsyncTask<Long, Long, List<Fla
      *
      * @param delegate
      */
-    public AsyncGetLocalFlashCardsByIds(List<Long> ids, AsyncResponse delegate) {
+    public AsyncGetLocalBookmarkedFlashCards(AsyncResponse delegate) {
 
         // delegate to get the response back on main ui thread
         this.delegate = delegate;
-        this.ids = ids;
     }
 
 
@@ -83,10 +80,10 @@ public class AsyncGetLocalFlashCardsByIds extends AsyncTask<Long, Long, List<Fla
      * @return
      */
     @Override
-    protected List<FlashCard> doInBackground(Long... params) {
+    protected ArrayList<Long> doInBackground(Long... params) {
 
         // Collecting cards from db
-        return  Globals.getDb().getFlashCardsByIds(ids);
+        return  Globals.getDb().getBookmarkedFlashCardIds();
     }
 
 
@@ -97,14 +94,14 @@ public class AsyncGetLocalFlashCardsByIds extends AsyncTask<Long, Long, List<Fla
      * @author Jonas Kraus jonas.kraus@uni-ulm.de
      * @since 2017-03-14
      *
-     * @param items
+     * @param ids
      */
     @Override
-    protected void onPostExecute(List<FlashCard> items) {
-        super.onPostExecute(items);
+    protected void onPostExecute(ArrayList<Long> ids) {
+        super.onPostExecute(ids);
 
         progressBar.setVisibility(View.GONE);
-        delegate.processFinish(items);
+        delegate.processFinish(ids);
     }
 
 

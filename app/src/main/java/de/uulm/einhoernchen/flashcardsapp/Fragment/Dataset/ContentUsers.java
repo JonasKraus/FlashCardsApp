@@ -3,8 +3,8 @@ package de.uulm.einhoernchen.flashcardsapp.Fragment.Dataset;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.uulm.einhoernchen.flashcardsapp.AsyncTask.Local.AsyncGetLocalUsers;
-import de.uulm.einhoernchen.flashcardsapp.AsyncTask.Local.AsyncSaveLocalUsers;
+import de.uulm.einhoernchen.flashcardsapp.AsyncTask.Local.GET.AsyncGetLocalUsers;
+import de.uulm.einhoernchen.flashcardsapp.AsyncTask.Local.SAVE.AsyncSaveLocalUsers;
 import de.uulm.einhoernchen.flashcardsapp.AsyncTask.Remote.GET.AsyncGetRemoteUsers;
 import de.uulm.einhoernchen.flashcardsapp.Database.DbManager;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.FragmentUsersBinding;

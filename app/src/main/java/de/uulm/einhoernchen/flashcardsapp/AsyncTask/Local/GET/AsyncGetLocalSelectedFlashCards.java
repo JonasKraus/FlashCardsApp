@@ -1,20 +1,22 @@
-package de.uulm.einhoernchen.flashcardsapp.AsyncTask.Local;
+package de.uulm.einhoernchen.flashcardsapp.AsyncTask.Local.GET;
 
 import android.os.AsyncTask;
 import android.view.View;
 import android.widget.ProgressBar;
 
 import java.util.ArrayList;
+import java.util.List;
 
+import de.uulm.einhoernchen.flashcardsapp.Model.FlashCard;
 import de.uulm.einhoernchen.flashcardsapp.Util.Globals;
 
 /**
- * Class for getting the ids of all bookmarked cards
+ * Class for getting the ids of all selected cards
  *
  * @author Jonas Kraus jonas.kraus@uni-ulm.de
  * @since 2017-03-14
  */
-public class AsyncGetLocalBookmarkedFlashCards extends AsyncTask<Long, Long, ArrayList<Long>> {
+public class AsyncGetLocalSelectedFlashCards extends AsyncTask<Long, Long, ArrayList<Long>> {
 
 
 
@@ -62,7 +64,7 @@ public class AsyncGetLocalBookmarkedFlashCards extends AsyncTask<Long, Long, Arr
      *
      * @param delegate
      */
-    public AsyncGetLocalBookmarkedFlashCards(AsyncResponse delegate) {
+    public AsyncGetLocalSelectedFlashCards(AsyncResponse delegate) {
 
         // delegate to get the response back on main ui thread
         this.delegate = delegate;
@@ -83,7 +85,7 @@ public class AsyncGetLocalBookmarkedFlashCards extends AsyncTask<Long, Long, Arr
     protected ArrayList<Long> doInBackground(Long... params) {
 
         // Collecting cards from db
-        return  Globals.getDb().getBookmarkedFlashCardIds();
+        return  Globals.getDb().getSelectedFlashCardIds();
     }
 
 

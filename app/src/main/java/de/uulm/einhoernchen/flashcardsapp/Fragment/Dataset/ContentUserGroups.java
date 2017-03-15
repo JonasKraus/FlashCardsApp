@@ -3,11 +3,10 @@ package de.uulm.einhoernchen.flashcardsapp.Fragment.Dataset;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.uulm.einhoernchen.flashcardsapp.AsyncTask.Local.AsyncGetLocalUserGroups;
-import de.uulm.einhoernchen.flashcardsapp.AsyncTask.Local.AsyncSaveLocalUserGroups;
+import de.uulm.einhoernchen.flashcardsapp.AsyncTask.Local.GET.AsyncGetLocalUserGroups;
+import de.uulm.einhoernchen.flashcardsapp.AsyncTask.Local.SAVE.AsyncSaveLocalUserGroups;
 import de.uulm.einhoernchen.flashcardsapp.AsyncTask.Remote.GET.AsyncGetRemoteUserGroups;
 import de.uulm.einhoernchen.flashcardsapp.Database.DbManager;
-import de.uulm.einhoernchen.flashcardsapp.Fragment.FragmentChallengesRanking;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.FragmentUserGroups;
 import de.uulm.einhoernchen.flashcardsapp.Model.UserGroup;
 import de.uulm.einhoernchen.flashcardsapp.R;

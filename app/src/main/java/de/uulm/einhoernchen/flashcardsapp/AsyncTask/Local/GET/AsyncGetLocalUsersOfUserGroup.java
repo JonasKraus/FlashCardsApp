@@ -1,4 +1,4 @@
-package de.uulm.einhoernchen.flashcardsapp.AsyncTask.Local;
+package de.uulm.einhoernchen.flashcardsapp.AsyncTask.Local.GET;
 
 import android.os.AsyncTask;
 import android.view.View;

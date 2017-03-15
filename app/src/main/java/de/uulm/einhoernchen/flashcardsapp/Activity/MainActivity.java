@@ -38,8 +38,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.uulm.einhoernchen.flashcardsapp.Activity.Explore.ExploreActivity;
-import de.uulm.einhoernchen.flashcardsapp.AsyncTask.Local.AsyncGetLocalBookmarkedFlashCards;
-import de.uulm.einhoernchen.flashcardsapp.AsyncTask.Local.AsyncGetLocalSelectedFlashCards;
+import de.uulm.einhoernchen.flashcardsapp.AsyncTask.Local.GET.AsyncGetLocalBookmarkedFlashCards;
+import de.uulm.einhoernchen.flashcardsapp.AsyncTask.Local.GET.AsyncGetLocalSelectedFlashCards;
 import de.uulm.einhoernchen.flashcardsapp.AsyncTask.Remote.GET.AsyncGetRemoteMessages;
 import de.uulm.einhoernchen.flashcardsapp.AsyncTask.Remote.GET.AsyncGetRemoteUser;
 import de.uulm.einhoernchen.flashcardsapp.AsyncTask.Remote.POST.AsyncPostRemoteToken;

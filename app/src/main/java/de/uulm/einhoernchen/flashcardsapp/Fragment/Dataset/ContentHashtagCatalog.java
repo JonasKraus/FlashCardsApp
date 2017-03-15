@@ -2,8 +2,8 @@ package de.uulm.einhoernchen.flashcardsapp.Fragment.Dataset;
 
 import java.util.List;
 
-import de.uulm.einhoernchen.flashcardsapp.AsyncTask.Local.AsyncGetLocalFlashCardsByHashtag;
-import de.uulm.einhoernchen.flashcardsapp.AsyncTask.Local.AsyncSaveLocalFlashCards;
+import de.uulm.einhoernchen.flashcardsapp.AsyncTask.Local.GET.AsyncGetLocalFlashCardsByHashtag;
+import de.uulm.einhoernchen.flashcardsapp.AsyncTask.Local.SAVE.AsyncSaveLocalFlashCards;
 import de.uulm.einhoernchen.flashcardsapp.AsyncTask.Remote.GET.AsyncGetRemoteFlashCardsByHashtag;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.FragmentGlobalFlashCards;
 import de.uulm.einhoernchen.flashcardsapp.Model.Filter.HashtagFlashCardFilter;
