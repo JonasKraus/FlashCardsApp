@@ -128,6 +128,13 @@ public class Question {
                 '}';
     }
 
+    public String toFilterString() {
+        return "" +
+                "" + questionText +
+                "" + uri +
+                "" + author;
+    }
+
     public long getId() {
         return id;
     }

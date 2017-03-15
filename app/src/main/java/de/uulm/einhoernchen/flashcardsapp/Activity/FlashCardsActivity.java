@@ -3,9 +3,12 @@ package de.uulm.einhoernchen.flashcardsapp.Activity;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 
 import java.util.ArrayList;
@@ -20,6 +23,7 @@ import de.uulm.einhoernchen.flashcardsapp.Fragment.FragmentGlobalFlashCards;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.Interface.OnFragmentInteractionListenerAnswer;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.Interface.OnFragmentInteractionListenerFlashcard;
 import de.uulm.einhoernchen.flashcardsapp.Model.Answer;
+import de.uulm.einhoernchen.flashcardsapp.Model.Filter.FlashCardFilter;
 import de.uulm.einhoernchen.flashcardsapp.Model.FlashCard;
 import de.uulm.einhoernchen.flashcardsapp.R;
 import de.uulm.einhoernchen.flashcardsapp.Util.Globals;
@@ -28,7 +32,8 @@ import de.uulm.einhoernchen.flashcardsapp.Util.ProcessConnectivity;
 public class FlashCardsActivity extends AppCompatActivity
         implements OnFragmentInteractionListenerFlashcard,
         FragmentFlashCard.OnFlashCardFragmentInteractionListener,
-        OnFragmentInteractionListenerAnswer {
+        OnFragmentInteractionListenerAnswer,
+        SearchView.OnQueryTextListener {
 
     public static final String CARD_IDS = "card_ids";
     public static final String ACTIVITY_TITLE = "activity_title";
@@ -82,7 +87,7 @@ public class FlashCardsActivity extends AppCompatActivity
                             public void processFinish(List<FlashCard> flashCards) {
 
                                 fragment = new FragmentGlobalFlashCards();
-                                fragment.setFilterForRecyclerView(null);
+                                fragment.setFilterForRecyclerView(FlashCardFilter.class.getName());
                                 fragment.setItemList(flashCards);
                                 fragment.setUpToDate(false);
 
@@ -117,7 +122,7 @@ public class FlashCardsActivity extends AppCompatActivity
 
                                 fragment = new FragmentGlobalFlashCards();
                                 fragment.setItemList(flashCards);
-                                fragment.setFilterForRecyclerView(null);
+                                fragment.setFilterForRecyclerView(FlashCardFilter.class.getName());
                                 fragment.setUpToDate(true);
 
                                 android.support.v4.app.FragmentTransaction fragmentTransaction =
@@ -175,5 +180,30 @@ public class FlashCardsActivity extends AppCompatActivity
     @Override
     public void onAnswerListFragmentInteraction(Answer item) {
         Log.d("Click", item.toString());
+    }
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_flashcards, menu);
+        final MenuItem searchItem = menu.findItem(R.id.action_search);
+        final SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
+        searchView.setOnQueryTextListener(this);
+
+        return true;
+    }
+
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+        return false;
+    }
+
+    @Override
+    public boolean onQueryTextChange(String query) {
+
+        Log.d("query", query);
+        fragment.getRecyclerViewAdapter().getFilter().filter(query);
+        return false;
     }
 }

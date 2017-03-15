@@ -168,5 +168,19 @@ public class FragmentGlobalFlashCards extends Fragment
     public void setFilterForRecyclerView(String filterForRecyclerView) {
         this.filterForRecyclerView = filterForRecyclerView;
     }
+
+
+
+    /**
+     * Return the adapter to filter in Activity
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     * @since 2017-03-15
+     *
+     * @return
+     */
+    public RecyclerViewAdapterGlobalFlashcards getRecyclerViewAdapter() {
+        return this.recyclerViewGlobalFlashCards;
+    }
 }
 

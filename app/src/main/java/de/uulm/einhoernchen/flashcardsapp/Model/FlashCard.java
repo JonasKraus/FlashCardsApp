@@ -182,6 +182,16 @@ public class FlashCard {
                 '}';
     }
 
+
+    public String toFilterString() {
+        return "" +
+                "" + rating +
+                "" + created +
+                "" + lastUpdated +
+                "" + author +
+                "" + getQuestion().toFilterString();
+    }
+
     public long getId() {
         return id;
     }

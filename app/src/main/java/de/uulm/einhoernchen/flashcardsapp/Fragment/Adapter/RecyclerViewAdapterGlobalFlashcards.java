@@ -30,6 +30,7 @@ import de.uulm.einhoernchen.flashcardsapp.Activity.MainActivity;
 import de.uulm.einhoernchen.flashcardsapp.Const.Constants;
 import de.uulm.einhoernchen.flashcardsapp.Database.DbManager;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.Interface.OnFragmentInteractionListenerFlashcard;
+import de.uulm.einhoernchen.flashcardsapp.Model.Filter.FlashCardFilter;
 import de.uulm.einhoernchen.flashcardsapp.Model.Filter.HashtagFlashCardFilter;
 import de.uulm.einhoernchen.flashcardsapp.Model.FlashCard;
 import de.uulm.einhoernchen.flashcardsapp.Model.Question;
@@ -391,9 +392,15 @@ public class RecyclerViewAdapterGlobalFlashcards
     @Override
     public Filter getFilter() {
 
-        if (filterClassName.equals(HashtagFlashCardFilter.class.getName())) {
+        if (filter == null) {
 
-            filter = new HashtagFlashCardFilter(this, flashCards);
+            if (filterClassName.equals(HashtagFlashCardFilter.class.getName())) {
+
+                filter = new HashtagFlashCardFilter(this, flashCards);
+            } else if (filterClassName.equals(FlashCardFilter.class.getName())) {
+
+                filter = new FlashCardFilter(this, flashCards);
+            }
         }
 
         return this.filter;
