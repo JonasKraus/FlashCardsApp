@@ -109,6 +109,7 @@ public class FragmentPlayFlashCards extends Fragment implements View.OnClickList
     private List<Statistic> statistics;
     private Message message;
     private NestedScrollView mainScrollView;
+    private ImageView mImageAuthor;
 
 
     public FragmentPlayFlashCards() {
@@ -199,6 +200,7 @@ public class FragmentPlayFlashCards extends Fragment implements View.OnClickList
         mImageViewBookmarked = (ImageView) view.findViewById(R.id.image_view_bookmarked);
 
         mLocalView = (ImageView) view.findViewById(R.id.image_view_offline);
+        mImageAuthor = (ImageView) view.findViewById(R.id.imageViewProfilePhoto);
 
         imageViewUri = (ImageView) view.findViewById(R.id.image_view_question_uri);
 
@@ -455,6 +457,16 @@ public class FragmentPlayFlashCards extends Fragment implements View.OnClickList
 
         mContentView.setText(Html.fromHtml(currentFlashcard.getQuestion().getQuestionText()));
         mAuthorView.setText(currentFlashcard.getQuestion().getAuthor().getName());
+
+        if (mImageAuthor == null) mImageAuthor = (ImageView) view.findViewById(R.id.imageViewProfilePhoto);
+        mImageAuthor.setImageDrawable(
+                ProcessorImage.download(
+                        currentFlashcard.getAuthor().getAvatar(),
+                        mImageAuthor,
+                        currentFlashcard.getAuthor().getId(),
+                        null
+                )
+        );
         mCardRatingView.setText(currentFlashcard.getRatingForView());
         mDateView.setText(currentFlashcard.getLastUpdatedString());
 
