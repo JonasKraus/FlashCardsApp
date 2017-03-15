@@ -295,7 +295,16 @@ public class Statistic {
 
         Cursor cursor = null;
 
-        // Can be called via normal mode or challenge mode
+        if (settings.isOnlyLearnBookmarks()) {
+
+            cursor = database.rawQuery("SELECT bookmark.userId, bookmark.cardId, knowledge, drawer, startDate, endDate " +
+                    "FROM bookmark\n" +
+                    "    LEFT JOIN statistics ON bookmark.cardId = statistics.cardId\n" +
+                    "    JOIN user ON user.isLoggedIn = 1\n" +
+                    "    WHERE bookmark.cardId NOT NULL\n" +
+                    "     GROUP BY (bookmark.cardId)\n" +
+                    "    " + orderBy, null);
+        } else // Can be called via normal mode or challenge mode
         if (challenge == null) {
 
             cursor = database.rawQuery("SELECT selection.userId, selection.cardId, knowledge, drawer, startDate, endDate " +
