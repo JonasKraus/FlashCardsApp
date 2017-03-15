@@ -61,7 +61,6 @@ public class FlashCardsActivity extends AppCompatActivity
 
         Globals.setFragmentManager(getSupportFragmentManager());
 
-        fragment = new FragmentGlobalFlashCards();
         collectItemsFromDb();
         collectItemsFromServer();
     }
@@ -82,6 +81,7 @@ public class FlashCardsActivity extends AppCompatActivity
                             @Override
                             public void processFinish(List<FlashCard> flashCards) {
 
+                                fragment = new FragmentGlobalFlashCards();
                                 fragment.setItemList(flashCards);
                                 fragment.setUpToDate(false);
 
@@ -113,6 +113,7 @@ public class FlashCardsActivity extends AppCompatActivity
                             @Override
                             public void processFinish(List<FlashCard> flashCards) {
 
+                                fragment = new FragmentGlobalFlashCards();
                                 fragment.setItemList(flashCards);
                                 fragment.setUpToDate(true);
 

@@ -3204,7 +3204,12 @@ public class DbManager extends DbHelper{
             }
         }
 
-        selection +=  " AND " + TABLE_USER + "." + COLUMN_USER_ID  + "=" + loggedInUser.getId();
+        if (cardIds.size() > 0) {
+
+            selection +=  " AND ";
+        }
+
+        selection += TABLE_USER + "." + COLUMN_USER_ID  + "=" + loggedInUser.getId();
 
         Cursor cursor = database.query(
                 TABLE_FLASHCARD + " LEFT JOIN "  + TABLE_BOOKMARK + " ON "
