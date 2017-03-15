@@ -82,6 +82,7 @@ public class FlashCardsActivity extends AppCompatActivity
                             public void processFinish(List<FlashCard> flashCards) {
 
                                 fragment = new FragmentGlobalFlashCards();
+                                fragment.setFilterForRecyclerView(null);
                                 fragment.setItemList(flashCards);
                                 fragment.setUpToDate(false);
 
@@ -96,6 +97,7 @@ public class FlashCardsActivity extends AppCompatActivity
         asyncGetLocalFlashCards.execute();
 
     }
+
 
 
     /**
@@ -115,6 +117,7 @@ public class FlashCardsActivity extends AppCompatActivity
 
                                 fragment = new FragmentGlobalFlashCards();
                                 fragment.setItemList(flashCards);
+                                fragment.setFilterForRecyclerView(null);
                                 fragment.setUpToDate(true);
 
                                 android.support.v4.app.FragmentTransaction fragmentTransaction =

@@ -6,6 +6,7 @@ import de.uulm.einhoernchen.flashcardsapp.AsyncTask.Local.AsyncGetLocalFlashCard
 import de.uulm.einhoernchen.flashcardsapp.AsyncTask.Local.AsyncSaveLocalFlashCards;
 import de.uulm.einhoernchen.flashcardsapp.AsyncTask.Remote.GET.AsyncGetRemoteFlashCardsByHashtag;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.FragmentGlobalFlashCards;
+import de.uulm.einhoernchen.flashcardsapp.Model.Filter.HashtagFlashCardFilter;
 import de.uulm.einhoernchen.flashcardsapp.Model.FlashCard;
 import de.uulm.einhoernchen.flashcardsapp.Model.Tag;
 import de.uulm.einhoernchen.flashcardsapp.R;
@@ -48,6 +49,7 @@ public class ContentHashtagCatalog {
 
                 FragmentGlobalFlashCards fragment = new FragmentGlobalFlashCards();
                 fragment.setItemList(flashCards);
+                fragment.setFilterForRecyclerView(HashtagFlashCardFilter.class.getName());
                 fragment.setUpToDate(isUpToDate);
 
                 android.support.v4.app.FragmentTransaction fragmentTransaction =
@@ -97,6 +99,7 @@ public class ContentHashtagCatalog {
 
                 FragmentGlobalFlashCards fragment = new FragmentGlobalFlashCards();
                 fragment.setItemList(flashCards);
+                fragment.setFilterForRecyclerView(HashtagFlashCardFilter.class.getName());
                 fragment.setUpToDate(isUpToDate);
 
                 android.support.v4.app.FragmentTransaction fragmentTransaction =

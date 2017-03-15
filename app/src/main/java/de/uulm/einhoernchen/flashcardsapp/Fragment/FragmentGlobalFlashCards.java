@@ -21,7 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.uulm.einhoernchen.flashcardsapp.Database.DbManager;
-import de.uulm.einhoernchen.flashcardsapp.Fragment.Adapter.RecyclerViewAdapterHashtagFlashcards;
+import de.uulm.einhoernchen.flashcardsapp.Fragment.Adapter.RecyclerViewAdapterGlobalFlashcards;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.Interface.OnFragmentInteractionListenerFlashcard;
 import de.uulm.einhoernchen.flashcardsapp.Model.FlashCard;
 import de.uulm.einhoernchen.flashcardsapp.Model.Tag;
@@ -47,7 +47,8 @@ public class FragmentGlobalFlashCards extends Fragment
     private DbManager db = Globals.getDb();
     private boolean isUpToDate;
     private ProgressBar progressBar = Globals.getProgressBar();
-    private RecyclerViewAdapterHashtagFlashcards recyclerViewHastag;
+    private RecyclerViewAdapterGlobalFlashcards recyclerViewGlobalFlashCards;
+    private String filterForRecyclerView;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -98,11 +99,11 @@ public class FragmentGlobalFlashCards extends Fragment
                     new GridLayoutManager(mRecyclerView.getContext(), mColumnCount));
         }
 
-        recyclerViewHastag = new RecyclerViewAdapterHashtagFlashcards(db,
+        recyclerViewGlobalFlashCards = new RecyclerViewAdapterGlobalFlashcards(db,
                 itemList, mListener, isUpToDate, mRecyclerView.getContext(), progressBar,
-                getFragmentManager());
+                getFragmentManager(), filterForRecyclerView);
         // Set the view with the data
-        mRecyclerView.setAdapter(recyclerViewHastag);
+        mRecyclerView.setAdapter(recyclerViewGlobalFlashCards);
 
         return view;
     }
@@ -115,8 +116,6 @@ public class FragmentGlobalFlashCards extends Fragment
         final MenuItem searchItem = menu.findItem(R.id.action_search);
         final SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
         searchView.setOnQueryTextListener(this);
-
-        Log.d("create", "heir");
 
         super.onCreateOptionsMenu(menu, inflater);
 
@@ -157,9 +156,17 @@ public class FragmentGlobalFlashCards extends Fragment
     @Override
     public boolean onQueryTextChange(String query) {
 
-        recyclerViewHastag.getFilter().filter(query);
+        recyclerViewGlobalFlashCards.getFilter().filter(query);
 
         return false;
+    }
+
+    public String getFilterForRecyclerView() {
+        return filterForRecyclerView;
+    }
+
+    public void setFilterForRecyclerView(String filterForRecyclerView) {
+        this.filterForRecyclerView = filterForRecyclerView;
     }
 }
 

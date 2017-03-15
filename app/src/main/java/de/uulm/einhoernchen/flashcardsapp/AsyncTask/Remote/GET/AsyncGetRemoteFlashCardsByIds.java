@@ -7,6 +7,7 @@ import android.widget.ProgressBar;
 
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 
 import de.uulm.einhoernchen.flashcardsapp.AsyncTask.Local.AsyncSaveLocalFlashCards;
@@ -63,7 +64,7 @@ public class AsyncGetRemoteFlashCardsByIds extends AsyncTask<Long, Long, List<Fl
 
             urlString = Routes.URL + Routes.SLASH + Routes.CARD_DECKS + Routes.SLASH
                     + parentId + Routes.SLASH + Routes.FLASH_CARDS;
-        } else { // get cards by id
+        } else if (cardIds.size() > 0) { // get cards by id
 
             urlString = Routes.URL + Routes.SLASH + Routes.FLASH_CARDS + Routes.QUESTION_MARK;
 
@@ -76,6 +77,9 @@ public class AsyncGetRemoteFlashCardsByIds extends AsyncTask<Long, Long, List<Fl
                     urlString += Routes.AND;
                 }
             }
+        } else {
+
+            return new ArrayList<FlashCard>();
         }
 
         Log.d("back call to ", urlString);

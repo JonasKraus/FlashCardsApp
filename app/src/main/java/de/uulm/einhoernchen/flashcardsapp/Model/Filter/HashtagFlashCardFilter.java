@@ -6,10 +6,8 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-import de.uulm.einhoernchen.flashcardsapp.Fragment.Adapter.RecyclerViewAdapterHashtagFlashcards;
-import de.uulm.einhoernchen.flashcardsapp.Fragment.Adapter.RecyclerViewAdapterUserGroups;
+import de.uulm.einhoernchen.flashcardsapp.Fragment.Adapter.RecyclerViewAdapterGlobalFlashcards;
 import de.uulm.einhoernchen.flashcardsapp.Model.FlashCard;
-import de.uulm.einhoernchen.flashcardsapp.Model.UserGroup;
 
 /**
  * @author Jonas Kraus jonas.kraus@uni-ulm.de
@@ -18,13 +16,13 @@ import de.uulm.einhoernchen.flashcardsapp.Model.UserGroup;
 
 public class HashtagFlashCardFilter extends Filter {
 
-    private final RecyclerViewAdapterHashtagFlashcards adapter;
+    private final RecyclerViewAdapterGlobalFlashcards adapter;
 
     private final List<FlashCard> originalList;
 
     private final List<FlashCard> filteredList;
 
-    public HashtagFlashCardFilter(RecyclerViewAdapterHashtagFlashcards adapter, List<FlashCard> originalList) {
+    public HashtagFlashCardFilter(RecyclerViewAdapterGlobalFlashcards adapter, List<FlashCard> originalList) {
 
         super();
         this.adapter = adapter;

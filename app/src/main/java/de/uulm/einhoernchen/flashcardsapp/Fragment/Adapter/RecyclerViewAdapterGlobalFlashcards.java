@@ -31,10 +31,8 @@ import de.uulm.einhoernchen.flashcardsapp.Const.Constants;
 import de.uulm.einhoernchen.flashcardsapp.Database.DbManager;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.Interface.OnFragmentInteractionListenerFlashcard;
 import de.uulm.einhoernchen.flashcardsapp.Model.Filter.HashtagFlashCardFilter;
-import de.uulm.einhoernchen.flashcardsapp.Model.Filter.UserGroupFilter;
 import de.uulm.einhoernchen.flashcardsapp.Model.FlashCard;
 import de.uulm.einhoernchen.flashcardsapp.Model.Question;
-import de.uulm.einhoernchen.flashcardsapp.Model.UserGroup;
 import de.uulm.einhoernchen.flashcardsapp.R;
 import de.uulm.einhoernchen.flashcardsapp.Util.Globals;
 import de.uulm.einhoernchen.flashcardsapp.Util.ProcessConnectivity;
@@ -44,8 +42,8 @@ import de.uulm.einhoernchen.flashcardsapp.Util.ProcessorImage;
  * {@link RecyclerView.Adapter} that can display a {@link de.uulm.einhoernchen.flashcardsapp.Fragment.Dataset.ContentFlashCards} and makes a call to the
  * TODO: Replace the implementation with code for your data type.
  */
-public class RecyclerViewAdapterHashtagFlashcards
-        extends RecyclerView.Adapter<RecyclerViewAdapterHashtagFlashcards.ViewHolder>
+public class RecyclerViewAdapterGlobalFlashcards
+        extends RecyclerView.Adapter<RecyclerViewAdapterGlobalFlashcards.ViewHolder>
         implements View.OnClickListener, Filterable {
 
     private static final int VIEW_TYPE_FOOTER = 1;
@@ -59,15 +57,17 @@ public class RecyclerViewAdapterHashtagFlashcards
     private final ProgressBar progressBar;
     protected final FragmentManager supportFragmentManager;
     private final Bitmap defaultImage;
-    private HashtagFlashCardFilter filter;
+    // Filter can be of any type
+    private String filterClassName;
+    private Filter filter;
 
-    public RecyclerViewAdapterHashtagFlashcards(DbManager db,
-                                                List<FlashCard> items,
-                                                OnFragmentInteractionListenerFlashcard listener,
-                                                boolean isUpToDate,
-                                                Context context,
-                                                ProgressBar progressBar,
-                                                FragmentManager supportFragmentManager) {
+    public RecyclerViewAdapterGlobalFlashcards(DbManager db,
+                                               List<FlashCard> items,
+                                               OnFragmentInteractionListenerFlashcard listener,
+                                               boolean isUpToDate,
+                                               Context context,
+                                               ProgressBar progressBar,
+                                               FragmentManager supportFragmentManager, String filter) {
         if (items == null) items = new ArrayList<>();
         this.flashCards = items;
         this.filteredList = new ArrayList<>();
@@ -77,6 +77,7 @@ public class RecyclerViewAdapterHashtagFlashcards
         this.context = context;
         this.progressBar = progressBar;
         this.supportFragmentManager = supportFragmentManager;
+        this.filterClassName = filter;
         this.defaultImage = BitmapFactory.decodeResource(Globals.getContext().getResources(), R.drawable.flash_icon);
 
     }
@@ -379,16 +380,25 @@ public class RecyclerViewAdapterHashtagFlashcards
     }
 
 
+
+    /**
+     * Check wich filter should be applied
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     * @since 2017-01-07
+     *
+     */
     @Override
     public Filter getFilter() {
 
-        if(this.filter == null) {
+        if (filterClassName.equals(HashtagFlashCardFilter.class.getName())) {
 
-            this.filter = new HashtagFlashCardFilter(this, flashCards);
+            filter = new HashtagFlashCardFilter(this, flashCards);
         }
 
         return this.filter;
     }
+
 
 
     /**
