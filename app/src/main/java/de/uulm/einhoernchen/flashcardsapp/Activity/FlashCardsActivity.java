@@ -83,7 +83,7 @@ public class FlashCardsActivity extends AppCompatActivity
                             public void processFinish(List<FlashCard> flashCards) {
 
                                 fragment.setItemList(flashCards);
-                                fragment.setUpToDate(true);
+                                fragment.setUpToDate(false);
 
                                 android.support.v4.app.FragmentTransaction fragmentTransaction =
                                         Globals.getFragmentManager().beginTransaction();
