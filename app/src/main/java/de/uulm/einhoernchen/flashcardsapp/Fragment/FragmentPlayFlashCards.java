@@ -243,9 +243,6 @@ public class FragmentPlayFlashCards extends Fragment implements View.OnClickList
      */
     private void setBookmarkListener() {
 
-        Log.d("visi_______________",
-                mImageViewBookmarked.getVisibility() + "");
-
         // Listener on bookmark icon
         mImageViewBookmarked.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -492,6 +489,10 @@ public class FragmentPlayFlashCards extends Fragment implements View.OnClickList
                 imageViewVoteUp.setColorFilter(getResources().getColor(R.color.colorAccent));
                 mCardRatingView.setTextColor(getResources().getColor(R.color.colorAccent));
                 break;
+            default:
+                imageViewVoteUp.setColorFilter(getResources().getColor(R.color.primary_text));
+                imageViewVoteDown.setColorFilter(getResources().getColor(R.color.primary_text));
+                mCardRatingView.setTextColor(getResources().getColor(R.color.primary_text));
 
         }
 
