@@ -5,7 +5,7 @@ import android.os.Bundle;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.uulm.einhoernchen.flashcardsapp.AsyncTask.Remote.GET.AsyncGetRemoteFlashCards;
+import de.uulm.einhoernchen.flashcardsapp.AsyncTask.Remote.GET.AsyncGetRemoteFlashCardsByIds;
 import de.uulm.einhoernchen.flashcardsapp.AsyncTask.Local.AsyncGetLocalFlashCards;
 import de.uulm.einhoernchen.flashcardsapp.AsyncTask.Local.AsyncSaveLocalFlashCards;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.FragmentFlashCards;
@@ -36,7 +36,7 @@ public class ContentFlashCards {
      */
     public void collectItemsFromServer(final long parentId,final boolean backPressed) {
 
-        AsyncGetRemoteFlashCards asyncGetFlashCard = new AsyncGetRemoteFlashCards(parentId, new AsyncGetRemoteFlashCards.AsyncResponseFlashCards() {
+        AsyncGetRemoteFlashCardsByIds asyncGetFlashCard = new AsyncGetRemoteFlashCardsByIds(parentId, new AsyncGetRemoteFlashCardsByIds.AsyncResponseFlashCards() {
 
             @Override
             public void processFinish(List<FlashCard> flashCards) {

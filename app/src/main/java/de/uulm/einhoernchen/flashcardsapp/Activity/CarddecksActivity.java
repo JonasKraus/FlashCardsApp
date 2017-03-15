@@ -9,17 +9,11 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 
-import de.uulm.einhoernchen.flashcardsapp.AsyncTask.Remote.GET.AsyncGetRemoteCarddecks;
-import de.uulm.einhoernchen.flashcardsapp.AsyncTask.Remote.GET.AsyncGetRemoteFlashCards;
+import de.uulm.einhoernchen.flashcardsapp.AsyncTask.Remote.GET.AsyncGetRemoteFlashCardsByIds;
 import de.uulm.einhoernchen.flashcardsapp.Database.DbManager;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.Dataset.ContentAllCarddecks;
-import de.uulm.einhoernchen.flashcardsapp.Fragment.Dataset.ContentCarddecks;
-import de.uulm.einhoernchen.flashcardsapp.Fragment.Dataset.ContentUserGroups;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.Interface.OnFragmentInteractionListenerCarddeck;
-import de.uulm.einhoernchen.flashcardsapp.Fragment.Interface.OnFragmentInteractionListenerCarddeckLongClick;
-import de.uulm.einhoernchen.flashcardsapp.Fragment.Interface.OnFragmentInteractionListenerUserGroup;
 import de.uulm.einhoernchen.flashcardsapp.Model.CardDeck;
-import de.uulm.einhoernchen.flashcardsapp.Model.UserGroup;
 import de.uulm.einhoernchen.flashcardsapp.R;
 import de.uulm.einhoernchen.flashcardsapp.Util.Globals;
 
@@ -75,7 +69,7 @@ public class CarddecksActivity extends AppCompatActivity implements OnFragmentIn
 
         Intent intent = new Intent(CarddecksActivity.this, UsersActivity.class);
 
-        AsyncGetRemoteFlashCards asyncGetRemoteFlashCards = new AsyncGetRemoteFlashCards(item.getId(), null);
+        AsyncGetRemoteFlashCardsByIds asyncGetRemoteFlashCards = new AsyncGetRemoteFlashCardsByIds(item.getId(), null);
         asyncGetRemoteFlashCards.execute();
 
         intent.putExtra("create_message", true);

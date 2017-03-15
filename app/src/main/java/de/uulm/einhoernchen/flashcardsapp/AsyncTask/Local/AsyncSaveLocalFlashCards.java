@@ -81,6 +81,11 @@ public class AsyncSaveLocalFlashCards extends AsyncTask<Long, Integer, Void> {
             e.printStackTrace();
         }
 
+        if (flashCards == null || flashCards.size() < 1) {
+
+            flashCards = new ArrayList<>();
+        }
+
         mProgressDialog.setMax(flashCards.size());
 
         if (parentId != null) {

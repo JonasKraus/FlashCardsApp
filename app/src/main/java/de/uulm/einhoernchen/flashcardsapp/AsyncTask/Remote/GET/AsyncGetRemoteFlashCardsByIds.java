@@ -18,21 +18,21 @@ import de.uulm.einhoernchen.flashcardsapp.Util.JsonParser;
 /**
  * Created by jonas-uni on 17.08.2016.
  */
-public class AsyncGetRemoteFlashCards extends AsyncTask<Long, Long, List<FlashCard>> {
+public class AsyncGetRemoteFlashCardsByIds extends AsyncTask<Long, Long, List<FlashCard>> {
 
     private final List<Long> cardIds;
     private ProgressBar progressBar = Globals.getProgressBar();
     public AsyncResponseFlashCards delegate = null;
     private final Long parentId;
 
-    public AsyncGetRemoteFlashCards(List<Long> cardIds, AsyncResponseFlashCards delegate) {
+    public AsyncGetRemoteFlashCardsByIds(List<Long> cardIds, AsyncResponseFlashCards delegate) {
 
         this.cardIds = cardIds;
         this.delegate = delegate;
         this.parentId = null;
     }
 
-    public AsyncGetRemoteFlashCards(Long parentId, AsyncResponseFlashCards delegate) {
+    public AsyncGetRemoteFlashCardsByIds(Long parentId, AsyncResponseFlashCards delegate) {
         this.parentId = parentId;
         this.delegate = delegate;
         this.cardIds = null;

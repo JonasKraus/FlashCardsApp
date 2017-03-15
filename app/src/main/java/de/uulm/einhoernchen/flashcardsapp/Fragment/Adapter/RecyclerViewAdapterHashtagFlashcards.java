@@ -68,9 +68,10 @@ public class RecyclerViewAdapterHashtagFlashcards
                                                 Context context,
                                                 ProgressBar progressBar,
                                                 FragmentManager supportFragmentManager) {
-        flashCards = items;
-        this.filteredList = new ArrayList<FlashCard>();
-        mListener = listener;
+        if (items == null) items = new ArrayList<>();
+        this.flashCards = items;
+        this.filteredList = new ArrayList<>();
+        this.mListener = listener;
         this.isUpToDate = isUpToDate;
         this.db = db;
         this.context = context;

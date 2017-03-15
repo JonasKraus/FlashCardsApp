@@ -3164,21 +3164,32 @@ public class DbManager extends DbHelper{
         return flashCards;
     }
 
+
+
+    /**
+     * Selects all flashcards with the given ids
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     * @since 2017-03-14
+     *
+     * @param cardIds
+     * @return
+     */
     public List<FlashCard> getFlashCardsByIds(List<Long> cardIds) {
         List<FlashCard> flashCards = new ArrayList<FlashCard>();
 
         String[] columns =  {
-                TABLE_FLASHCARD+ "." + COLUMN_FLASHCARD_ID,             //0
-                TABLE_FLASHCARD+ "." + COLUMN_FLASHCARD_CARDDECK_ID,    //1
-                TABLE_FLASHCARD+ "." + COLUMN_FLASHCARD_RATING,         //2
-                TABLE_FLASHCARD+ "." + COLUMN_FLASHCARD_QUESTION_ID,    //3
-                TABLE_FLASHCARD+ "." + COLUMN_FLASHCARD_MULTIPLE_CHOICE,//4
-                TABLE_FLASHCARD+ "." + COLUMN_FLASHCARD_CREATED,        //5
-                TABLE_FLASHCARD+ "." + COLUMN_FLASHCARD_LAST_UPDATED,   //6
-                TABLE_FLASHCARD+ "." + COLUMN_FLASHCARD_USER_ID,         //7
-                TABLE_BOOKMARK + "." + COLUMN_BOOKMARK_ID,                      //0
-                TABLE_BOOKMARK + "." + COLUMN_BOOKMARK_CARD_ID,                 //1
-                TABLE_BOOKMARK + "." + COLUMN_BOOKMARK_MARK_DATE               //2
+                TABLE_FLASHCARD+ "." + COLUMN_FLASHCARD_ID,
+                TABLE_FLASHCARD+ "." + COLUMN_FLASHCARD_CARDDECK_ID,
+                TABLE_FLASHCARD+ "." + COLUMN_FLASHCARD_RATING,
+                TABLE_FLASHCARD+ "." + COLUMN_FLASHCARD_QUESTION_ID,
+                TABLE_FLASHCARD+ "." + COLUMN_FLASHCARD_MULTIPLE_CHOICE,
+                TABLE_FLASHCARD+ "." + COLUMN_FLASHCARD_CREATED,
+                TABLE_FLASHCARD+ "." + COLUMN_FLASHCARD_LAST_UPDATED,
+                TABLE_FLASHCARD+ "." + COLUMN_FLASHCARD_USER_ID,
+                TABLE_BOOKMARK + "." + COLUMN_BOOKMARK_ID,
+                TABLE_BOOKMARK + "." + COLUMN_BOOKMARK_CARD_ID,
+                TABLE_BOOKMARK + "." + COLUMN_BOOKMARK_MARK_DATE
         };
 
         String selection = "";
@@ -3189,7 +3200,7 @@ public class DbManager extends DbHelper{
 
             if (i < cardIds.size() - 1) {
 
-                selection += " AND ";
+                selection += " OR ";
             }
         }
 

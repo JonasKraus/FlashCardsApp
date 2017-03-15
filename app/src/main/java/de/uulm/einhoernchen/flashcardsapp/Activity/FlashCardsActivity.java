@@ -11,7 +11,8 @@ import android.view.MenuItem;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.uulm.einhoernchen.flashcardsapp.AsyncTask.Remote.GET.AsyncGetRemoteFlashCards;
+import de.uulm.einhoernchen.flashcardsapp.AsyncTask.Local.AsyncGetLocalFlashCardsByIds;
+import de.uulm.einhoernchen.flashcardsapp.AsyncTask.Remote.GET.AsyncGetRemoteFlashCardsByIds;
 import de.uulm.einhoernchen.flashcardsapp.Database.DbManager;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.Dataset.ContentFlashCard;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.FragmentFlashCard;
@@ -22,6 +23,7 @@ import de.uulm.einhoernchen.flashcardsapp.Model.Answer;
 import de.uulm.einhoernchen.flashcardsapp.Model.FlashCard;
 import de.uulm.einhoernchen.flashcardsapp.R;
 import de.uulm.einhoernchen.flashcardsapp.Util.Globals;
+import de.uulm.einhoernchen.flashcardsapp.Util.ProcessConnectivity;
 
 public class FlashCardsActivity extends AppCompatActivity
         implements OnFragmentInteractionListenerFlashcard,
@@ -33,6 +35,7 @@ public class FlashCardsActivity extends AppCompatActivity
     private DbManager db;
     private List<Long> cardIds;
     private String activityTitle = "Flashcards";
+    private FragmentGlobalFlashCards fragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,28 +61,73 @@ public class FlashCardsActivity extends AppCompatActivity
 
         Globals.setFragmentManager(getSupportFragmentManager());
 
+        fragment = new FragmentGlobalFlashCards();
+        collectItemsFromDb();
+        collectItemsFromServer();
+    }
+
+
+    /**
+     * Collects all flashcards from server as async task
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     * @since 2017-03-14
+     */
+    private void collectItemsFromDb() {
+        // Getting cards from db
+        AsyncGetLocalFlashCardsByIds asyncGetLocalFlashCards =
+                new AsyncGetLocalFlashCardsByIds(cardIds,
+                        new AsyncGetLocalFlashCardsByIds.AsyncResponse() {
+
+                            @Override
+                            public void processFinish(List<FlashCard> flashCards) {
+
+                                fragment.setItemList(flashCards);
+                                fragment.setUpToDate(true);
+
+                                android.support.v4.app.FragmentTransaction fragmentTransaction =
+                                        Globals.getFragmentManager().beginTransaction();
+
+                                fragmentTransaction.replace(R.id.fragment_container_global_flashcards, fragment);
+                                fragmentTransaction.commit();
+                            }
+                        });
+
+        asyncGetLocalFlashCards.execute();
+
+    }
+
+
+    /**
+     * Collects all flashcards from server as async task
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     * @since 2017-03-14
+     */
+    private void collectItemsFromServer() {
         // Getting cards from server
-        AsyncGetRemoteFlashCards asyncGetRemoteFlashCards =
-                new AsyncGetRemoteFlashCards(cardIds,
-                        new AsyncGetRemoteFlashCards.AsyncResponseFlashCards() {
+        AsyncGetRemoteFlashCardsByIds asyncGetRemoteFlashCards =
+                new AsyncGetRemoteFlashCardsByIds(cardIds,
+                        new AsyncGetRemoteFlashCardsByIds.AsyncResponseFlashCards() {
 
-            @Override
-            public void processFinish(List<FlashCard> flashCards) {
+                            @Override
+                            public void processFinish(List<FlashCard> flashCards) {
 
-                FragmentGlobalFlashCards fragment = new FragmentGlobalFlashCards();
-                fragment.setItemList(flashCards);
-                fragment.setUpToDate(true);
+                                fragment.setItemList(flashCards);
+                                fragment.setUpToDate(true);
 
-                android.support.v4.app.FragmentTransaction fragmentTransaction =
-                        Globals.getFragmentManager().beginTransaction();
+                                android.support.v4.app.FragmentTransaction fragmentTransaction =
+                                        Globals.getFragmentManager().beginTransaction();
 
-                fragmentTransaction.replace(R.id.fragment_container_global_flashcards, fragment);
-                fragmentTransaction.commit();
-            }
-        });
+                                fragmentTransaction.replace(R.id.fragment_container_global_flashcards, fragment);
+                                fragmentTransaction.commit();
+                            }
+                        });
 
-        // Execute Async task
-        asyncGetRemoteFlashCards.execute();
+        if (ProcessConnectivity.isOk(this)) {
+            // Execute Async task
+            asyncGetRemoteFlashCards.execute();
+        }
     }
 
 
