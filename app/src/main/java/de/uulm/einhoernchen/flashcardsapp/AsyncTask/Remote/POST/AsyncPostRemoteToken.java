@@ -1,20 +1,21 @@
 package de.uulm.einhoernchen.flashcardsapp.AsyncTask.Remote.POST;
 
 import android.os.AsyncTask;
+import android.util.JsonReader;
 import android.util.Log;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.DataOutputStream;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-import de.uulm.einhoernchen.flashcardsapp.Activity.MainActivity;
-import de.uulm.einhoernchen.flashcardsapp.AsyncTask.Remote.PATCH.AsyncPatchRemoteCarddeck;
 import de.uulm.einhoernchen.flashcardsapp.Const.Routes;
 import de.uulm.einhoernchen.flashcardsapp.Database.DbManager;
+import de.uulm.einhoernchen.flashcardsapp.Model.Response.Response;
 import de.uulm.einhoernchen.flashcardsapp.Util.Globals;
 import de.uulm.einhoernchen.flashcardsapp.Util.JsonKeys;
 import de.uulm.einhoernchen.flashcardsapp.Util.JsonParser;
@@ -22,10 +23,11 @@ import de.uulm.einhoernchen.flashcardsapp.Util.JsonParser;
 /**
  * Created by jonas-uni on 17.08.2016.
  */
-public class AsyncPostRemoteToken extends AsyncTask<Long, String, String> {
+public class AsyncPostRemoteToken extends AsyncTask<Long, String, Response> {
 
     private JSONObject jsonObject;
     private DbManager db;
+
     /**
      * @author Jonas Kraus jonas.kraus@uni-ulm.de
      * @since 2016-12-30
@@ -45,7 +47,7 @@ public class AsyncPostRemoteToken extends AsyncTask<Long, String, String> {
 
 
     @Override
-    protected String doInBackground(Long... params) {
+    protected Response doInBackground(Long... params) {
 
         String urlString = Routes.URL + Routes.SLASH + Routes.LOGIN;
         Log.d("back call to", urlString);
@@ -79,7 +81,11 @@ public class AsyncPostRemoteToken extends AsyncTask<Long, String, String> {
                 Log.e("resp", urlConnection.getResponseCode()+ " " + urlConnection.getResponseMessage() + "");
             }
 
-            return JsonParser.readResponseToken(urlConnection.getInputStream());
+
+            InputStream inputStream = urlConnection.getInputStream();
+            JsonReader reader = new JsonReader(new InputStreamReader(inputStream, "UTF-8"));
+
+            return JsonParser.readResponseObject(reader);
 
         } catch (Exception e) {
 
@@ -91,14 +97,22 @@ public class AsyncPostRemoteToken extends AsyncTask<Long, String, String> {
     }
 
     @Override
-    protected void onPostExecute(String token) {
-        super.onPostExecute(token);
+    protected void onPostExecute(Response response) {
+        super.onPostExecute(response);
 
-        if (token != null) {
+        Log.d("response", response.toString());
 
-            db.saveToken(token);
-            Globals.setToken(token);
-            Log.d("token", token);
+        if (response != null) {
+
+            //db.saveToken(userId, token);
+            try {
+
+                db.updateUserAfterLogin(response.getUserId(), jsonObject.getString(JsonKeys.USER_EMAIL), jsonObject.getString(JsonKeys.USER_PASSWORD), response.getToken());
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            Globals.setToken(response.getToken());
 
         } else {
             Log.w("POST TOKEN", "FAILED");

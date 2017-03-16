@@ -29,6 +29,7 @@ import de.uulm.einhoernchen.flashcardsapp.Model.Challenge;
 import de.uulm.einhoernchen.flashcardsapp.Model.FlashCard;
 import de.uulm.einhoernchen.flashcardsapp.Model.Message;
 import de.uulm.einhoernchen.flashcardsapp.Model.Question;
+import de.uulm.einhoernchen.flashcardsapp.Model.Response.Response;
 import de.uulm.einhoernchen.flashcardsapp.Model.Statistic;
 import de.uulm.einhoernchen.flashcardsapp.Model.Tag;
 import de.uulm.einhoernchen.flashcardsapp.Model.User;
@@ -1114,8 +1115,9 @@ public class JsonParser {
     }
 
 
+
     /**
-     * reads the responsecode from the post method of creating a rating
+     * reads the token of a response
      *
      * @author Jonas Kraus jonas.kraus@uni-ulm.de
      * @since 2016-12-29
@@ -1133,6 +1135,7 @@ public class JsonParser {
             reader.close();
         }
     }
+
 
 
     /**
@@ -1155,8 +1158,32 @@ public class JsonParser {
         }
     }
 
+
+
     /**
-     * reads the responsecode from the post method of creating a rating
+     * reads the user id of the response of an token request
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     * @since 2017-03-16
+     *
+     * @param inputStream
+     * @return
+     */
+    public static Long readResponseUserId(InputStream inputStream) throws IOException {
+
+        JsonReader reader = new JsonReader(new InputStreamReader(inputStream, "UTF-8"));
+
+        try {
+            return readResponseUserId(reader);
+        } finally {
+            reader.close();
+        }
+    }
+
+
+
+    /**
+     * reads the responsecode from a request
      *
      * @author Jonas Kraus jonas.kraus@uni-ulm.de
      * @since 2016-12-29
@@ -1164,7 +1191,7 @@ public class JsonParser {
      * @param reader
      * @return
      */
-    private static Long readResponse(JsonReader reader) {
+    public static Long readResponse(JsonReader reader) {
         if (DEBUG) Log.d("parser Method", "readResponse");
 
         int statuscode = 400;
@@ -1231,8 +1258,103 @@ public class JsonParser {
         return ratingId;
     }
 
+
+
     /**
-     * reads the response and returns the token from the post method of creating a rating
+     * reads the response and creates a global object
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     * @since 2017-03-16
+     *
+     * @param reader
+     * @return
+     */
+    public static Response readResponseObject (JsonReader reader) {
+        if (DEBUG) Log.d("parser Method", "readResponseObject");
+
+        int statuscode = 0;
+        boolean created = false;
+        String description = "";
+        Long ratingId = null;
+        Long userId = null;
+        String token = null;
+
+        try {
+            reader.beginObject();
+            while (reader.hasNext()) {
+
+                String stringName = reader.nextName();
+
+                if (stringName.equals(JsonKeys.STATUS_CODE)) {
+
+                    statuscode = reader.nextInt();
+
+                } else if (stringName.equals(JsonKeys.DESCRIPTION)) {
+
+                    JsonToken check = reader.peek();
+
+                    if (check != JsonToken.NULL) {
+
+                        description = reader.nextString();
+
+                    } else {
+
+                        reader.nextNull();
+                    }
+
+                } else if (stringName.equals(JsonKeys.ID)) {
+
+                    JsonToken check = reader.peek();
+
+                    if (check != JsonToken.NULL) {
+
+                        ratingId = reader.nextLong();
+
+                    } else {
+                        reader.nextNull();
+                    }
+
+                } else if (stringName.equals(JsonKeys.USER_ID)) {
+
+                    JsonToken check = reader.peek();
+
+                    if (check != JsonToken.NULL) {
+
+                        userId = reader.nextLong();
+
+                    } else {
+                        reader.nextNull();
+                    }
+
+                } else if (stringName.equals(JsonKeys.TOKEN)) {
+
+                    JsonToken check = reader.peek();
+
+                    if (check != JsonToken.NULL) {
+
+                        token = reader.nextString();
+
+                    } else {
+                        reader.nextNull();
+                    }
+
+                }  else {
+                    reader.skipValue();
+                }
+
+            }
+            reader.endObject();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return new Response(statuscode, description, token, ratingId, userId);
+    }
+
+
+
+    /**
+     * reads the response and returns the token from the token request
      *
      * @author Jonas Kraus jonas.kraus@uni-ulm.de
      * @since 2016-12-29
@@ -1301,6 +1423,57 @@ public class JsonParser {
         }
 
         return token;
+    }
+
+
+
+    /**
+     * reads the response and returns the userId of the token request
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     * @since 2017-03-16
+     *
+     * @param reader
+     * @return
+     */
+    public static Long readResponseUserId(JsonReader reader) {
+        if (DEBUG) Log.d("parser Method", "readResponseUserId");
+
+        Long userId = null;
+
+        try {
+
+            reader.beginObject();
+            while (reader.hasNext()) {
+
+                String stringName = reader.nextName();
+
+                if (stringName.equals(JsonKeys.USER_ID)) {
+
+                    JsonToken check = reader.peek();
+
+                    if (check != JsonToken.NULL) {
+
+                        userId = reader.nextLong();
+
+                    } else {
+
+                        reader.nextNull();
+                    }
+
+                }  else {
+
+                    reader.skipValue();
+                }
+
+            }
+            reader.endObject();
+        } catch (IOException e) {
+
+            e.printStackTrace();
+        }
+
+        return userId;
     }
 
 

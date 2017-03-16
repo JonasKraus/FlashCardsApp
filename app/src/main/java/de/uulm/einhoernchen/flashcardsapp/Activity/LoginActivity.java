@@ -52,6 +52,7 @@ import de.uulm.einhoernchen.flashcardsapp.Const.Routes;
 import de.uulm.einhoernchen.flashcardsapp.Database.DbManager;
 import de.uulm.einhoernchen.flashcardsapp.Model.User;
 import de.uulm.einhoernchen.flashcardsapp.R;
+import de.uulm.einhoernchen.flashcardsapp.Util.Globals;
 import de.uulm.einhoernchen.flashcardsapp.Util.JsonKeys;
 import de.uulm.einhoernchen.flashcardsapp.Util.ProcessConnectivity;
 
@@ -114,7 +115,9 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             @Override
             public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
                 if (id == R.id.login || id == EditorInfo.IME_NULL) {
-                    attemptLogin();
+                    attemptRegister();
+
+                    // TODO getToken
                     return true;
                 }
                 return false;
@@ -125,15 +128,79 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         mUserNameView = (EditText) findViewById(R.id.user_name);
 
         Button mEmailSignInButton = (Button) findViewById(R.id.email_sign_in_button);
+        Button mEmailRegisterButton = (Button) findViewById(R.id.email_register_button);
+        Button mEmailForgotPwdButton = (Button) findViewById(R.id.email_forgot_pwd);
+
+        mEmailForgotPwdButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                // TODO request to get new pwd
+            }
+        });
+
         mEmailSignInButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                attemptLogin();
+
+                if (db.loginUser(mEmailView.getText().toString(), mUserNameView.getText().toString(), mPasswordView.getText().toString())) {
+
+                    startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                }
+            }
+        });
+
+        mEmailRegisterButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if (mUserNameView.getVisibility() == View.GONE) {
+
+                    mUserNameView.setVisibility(View.VISIBLE);
+                } else {
+
+                    //attemptToRegister();
+                    Log.d("Attempts", "register");
+                    attemptRegister();
+                }
             }
         });
 
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
+    }
+
+
+
+
+    /**
+     * Gets the token from local storage if already existent
+     * otherwise requests it frfom the server
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     * @since 2017-02-15
+     */
+    private void requestUserToken() {
+
+
+        // Get the token from the server if no token exists
+        JSONObject jsonObject = new JSONObject();
+
+        try {
+
+            jsonObject.put(JsonKeys.USER_EMAIL, db.getLoggedInUser().getEmail());
+            jsonObject.put(JsonKeys.USER_PASSWORD, db.getLoggedInUser().getPassword());
+
+        } catch (JSONException e) {
+
+            Log.e("ERROR", "json token");
+            e.printStackTrace();
+        }
+
+        // Gets the login token and saves it locally
+        AsyncPostRemoteToken asyncToken = new AsyncPostRemoteToken(jsonObject, db);
+        asyncToken.execute();
+
     }
 
     private void populateAutoComplete() {
@@ -185,7 +252,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
      * If there are form errors (invalid email, missing fields, etc.), the
      * errors are presented and no actual login attempt is made.
      */
-    private void attemptLogin() {
+    private void attemptRegister() {
         if (mAuthTask != null) {
             return;
         }

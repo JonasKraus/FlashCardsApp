@@ -918,6 +918,53 @@ public class DbManager extends DbHelper{
         return exists;
     }
 
+
+
+    /**
+     * updates a user after login 
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     * @since 2017-03-15
+     *
+     * @param email
+     * @param pwd
+     *
+     * @return
+     */
+    public boolean updateUserAfterLogin(long userId, String email, String pwd, String token) {
+
+        long affectedRows = 0;
+
+        saveToken(userId, token);
+
+        ContentValues values = new ContentValues();
+        values.put(DbHelper.COLUMN_USER_ID, userId);
+        values.put(DbHelper.COLUMN_USER_PASSWORD, pwd);
+        values.put(DbHelper.COLUMN_USER_EMAIL, email);
+        values.put(DbHelper.COLUMN_USER_LOCAL_ACCOUNT, 1);
+        values.put(DbHelper.COLUMN_USER_IS_LOGGED_IN, 1);
+
+        User user = getUser(userId);
+
+        if (user == null) {
+
+            affectedRows = database.insertWithOnConflict(TABLE_USER, null, values, SQLiteDatabase.CONFLICT_REPLACE);
+        } else {
+
+            values.put(DbHelper.COLUMN_USER_NAME, user.getName());
+            values.put(DbHelper.COLUMN_USER_AVATAR, user.getAvatar());
+            //values.put(DbHelper.COLUMN_USER_CREATED, user.getCreated());
+            //values.put(DbHelper.COLUMN_USER_LAST_LOGIN, System.currentTimeMillis());
+            values.put(DbHelper.COLUMN_USER_RATING, user.getRating());
+
+            affectedRows = database.update(TABLE_USER, values, COLUMN_USER_ID + "=" + userId, null);
+        }
+
+        return affectedRows > 0;
+    }
+
+
+
     /**
      * Saves/updates a flashcards list list with all its dependencies
      *
@@ -1934,16 +1981,36 @@ public class DbManager extends DbHelper{
     public boolean loginUser(String mEmail, String mUserName, String mPassword) {
         ContentValues values = new ContentValues();
         values.put(DbHelper.COLUMN_USER_IS_LOGGED_IN, 1);
+        values.put(DbHelper.COLUMN_USER_LOCAL_ACCOUNT, 1);
 
-        int affectedRows = database.update(DbHelper.TABLE_USER, values,
-                DbHelper.COLUMN_USER_NAME + " = '" + mUserName
-                + "' AND " + DbHelper.COLUMN_USER_EMAIL + " = '" + mEmail
-                + "' AND " + DbHelper.COLUMN_USER_PASSWORD + " = '" + mPassword
-                + "' AND " + DbHelper.COLUMN_USER_LOCAL_ACCOUNT + " = " + 1
-                , null);
+        String selection = "";
+
+        if (mUserName != null && !mUserName.equals("")) {
+
+            selection += DbHelper.COLUMN_USER_NAME + " = '" + mUserName + "' AND ";
+        }
+
+        selection += DbHelper.COLUMN_USER_EMAIL + " = '" + mEmail
+                + "' AND " + DbHelper.COLUMN_USER_PASSWORD + " = '" + mPassword + "'";
+                //+ "' AND " + DbHelper.COLUMN_USER_LOCAL_ACCOUNT + " = " + 1;
+
+        Cursor cursor = database.query(TABLE_USER, allUserColumns, selection, null, null, null, null);
+
+        boolean success = false;
+
+        if (cursor.moveToFirst()) {
+
+                success = cursor.getLong(cursor.getColumnIndex(DbHelper.COLUMN_USER_ID)) > 0;
+        }
+
+        cursor.close();
+
+        if (!success) return false;
+
+        int affectedRows = database.update(DbHelper.TABLE_USER, values, selection, null);
 
         // Check if it was successful
-        if (affectedRows > 0) {
+        if (affectedRows == 1) {
 
             this.loggedInUser = getLoggedInUser();
 
@@ -2553,6 +2620,7 @@ public class DbManager extends DbHelper{
     }
 
 
+
     /**
      * Saves a relation of user and group to the joining table
      *
@@ -2573,6 +2641,7 @@ public class DbManager extends DbHelper{
     }
 
 
+
     /**
      * Saves a token for a user
      *
@@ -2581,15 +2650,16 @@ public class DbManager extends DbHelper{
      *
      * @param token
      */
-    public void saveToken(String token) {
+    public void saveToken(Long userId, String token) {
 
         ContentValues values = new ContentValues();
         values.put(DbHelper.COLUMN_AUTH_TOKEN_TOKEN, token);
-        values.put(DbHelper.COLUMN_AUTH_TOKEN_USER_ID, this.getLoggedInUser().getId());
+        values.put(DbHelper.COLUMN_AUTH_TOKEN_USER_ID, userId == null ? this.getLoggedInUserId() : userId);
         values.put(DbHelper.COLUMN_AUTH_TOKEN_CREATED, System.currentTimeMillis());
 
         database.insertWithOnConflict(DbHelper.TABLE_AUTH_TOKEN, null, values, SQLiteDatabase.CONFLICT_ABORT);
     }
+
 
 
     /**
@@ -2627,6 +2697,7 @@ public class DbManager extends DbHelper{
     }
 
 
+
     /**
      * Invalidates a token for a user
      *
@@ -2640,6 +2711,7 @@ public class DbManager extends DbHelper{
                 COLUMN_AUTH_TOKEN_USER_ID + " = " + this.getLoggedInUser().getId(),
                 null);
     }
+
 
 
     /**

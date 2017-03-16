@@ -5,8 +5,8 @@
     <string name="prompt_email">Email</string>
     <string name="prompt_password">Password</string>
     <string name="prompt_user_name">User name</string>
-    <string name="action_sign_in">Sign in or register</string>
-    <string name="action_sign_in_short">Sign in</string>
+    <string name="action_login">Login</string>
+    <string name="action_login_short">Login</string>
     <string name="error_invalid_email">This email address is invalid</string>
     <string name="error_invalid_password">This password is too short</string>
     <string name="error_invalid_username">This user name is too short</string>
@@ -160,6 +160,9 @@
     <string name="toolbar_title_hashtag">#</string>
     <string name="nav_cards_selected">Selected Flashcards</string>
     <string name="nav_cards_bookmarked">Bookmarked Flashcards</string>
+    <string name="or">or</string>
+    <string name="action_register">Register</string>
+    <string name="action_forgot_pwd">Forgot password?</string>
 
 
 </resources>
