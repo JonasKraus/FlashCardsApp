@@ -163,6 +163,7 @@
     <string name="or">or</string>
     <string name="action_register">Register</string>
     <string name="action_forgot_pwd">Forgot password?</string>
+    <string name="login_failed">Login failed</string>
 
 
 </resources>

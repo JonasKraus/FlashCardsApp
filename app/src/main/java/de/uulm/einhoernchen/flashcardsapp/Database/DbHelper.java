@@ -168,7 +168,7 @@ public class DbHelper extends SQLiteOpenHelper {
 
     // Database name and version - increase when existing table is altered
     private static final String DATABASE_NAME = "flashcardsDb.db";
-    private static final int DATABASE_VERSION = 33; // @TODO revert version before first release
+    private static final int DATABASE_VERSION = 34; // @TODO revert version before first release
 
     /**
      * Database creation sql statement for table user
@@ -179,7 +179,7 @@ public class DbHelper extends SQLiteOpenHelper {
             + COLUMN_USER_ID
             + " integer primary key, "
             + COLUMN_USER_NAME
-            + " text not null, "
+            + " text, "
             + COLUMN_USER_AVATAR
             + " blob, "
             + COLUMN_USER_PASSWORD

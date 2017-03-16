@@ -31,6 +31,7 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -50,6 +51,7 @@ import de.uulm.einhoernchen.flashcardsapp.AsyncTask.Remote.GET.AsyncGetRemoteUse
 import de.uulm.einhoernchen.flashcardsapp.AsyncTask.Remote.POST.AsyncPostRemoteToken;
 import de.uulm.einhoernchen.flashcardsapp.Const.Routes;
 import de.uulm.einhoernchen.flashcardsapp.Database.DbManager;
+import de.uulm.einhoernchen.flashcardsapp.Model.Response.Response;
 import de.uulm.einhoernchen.flashcardsapp.Model.User;
 import de.uulm.einhoernchen.flashcardsapp.R;
 import de.uulm.einhoernchen.flashcardsapp.Util.Globals;
@@ -115,9 +117,15 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             @Override
             public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
                 if (id == R.id.login || id == EditorInfo.IME_NULL) {
-                    attemptRegister();
 
-                    // TODO getToken
+                    if (db.loginUser(mEmailView.getText().toString(), mUserNameView.getText().toString(), mPasswordView.getText().toString())) {
+
+                        startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                    } else {
+
+                        requestUserToken();
+                    }
+
                     return true;
                 }
                 return false;
@@ -146,6 +154,9 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 if (db.loginUser(mEmailView.getText().toString(), mUserNameView.getText().toString(), mPasswordView.getText().toString())) {
 
                     startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                } else {
+
+                    requestUserToken();
                 }
             }
         });
@@ -188,8 +199,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         try {
 
-            jsonObject.put(JsonKeys.USER_EMAIL, db.getLoggedInUser().getEmail());
-            jsonObject.put(JsonKeys.USER_PASSWORD, db.getLoggedInUser().getPassword());
+            jsonObject.put(JsonKeys.USER_EMAIL, mEmailView.getText().toString());
+            jsonObject.put(JsonKeys.USER_PASSWORD, mPasswordView.getText().toString());
 
         } catch (JSONException e) {
 
@@ -198,10 +209,24 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         }
 
         // Gets the login token and saves it locally
-        AsyncPostRemoteToken asyncToken = new AsyncPostRemoteToken(jsonObject, db);
+        AsyncPostRemoteToken asyncToken = new AsyncPostRemoteToken(jsonObject, db, new AsyncPostRemoteToken.AsyncResponse(){
+
+            @Override
+            public void processFinish(Response response) {
+
+                if (response.getStatuscode() < 400 && response.getToken() != null && response.getUserId() != null) {
+                    startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                } else {
+
+                    Snackbar.make(mEmailView, R.string.login_failed, Snackbar.LENGTH_SHORT).show();
+                }
+            }
+        });
         asyncToken.execute();
 
     }
+
+
 
     private void populateAutoComplete() {
         if (!mayRequestContacts()) {
@@ -318,9 +343,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
                             user.setPassword(password);
                             db.saveUser(user, true);
-
-
-
 
                             startActivity(new Intent(LoginActivity.this, MainActivity.class));
                         }

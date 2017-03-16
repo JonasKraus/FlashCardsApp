@@ -12,9 +12,11 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.List;
 
 import de.uulm.einhoernchen.flashcardsapp.Const.Routes;
 import de.uulm.einhoernchen.flashcardsapp.Database.DbManager;
+import de.uulm.einhoernchen.flashcardsapp.Model.Message;
 import de.uulm.einhoernchen.flashcardsapp.Model.Response.Response;
 import de.uulm.einhoernchen.flashcardsapp.Util.Globals;
 import de.uulm.einhoernchen.flashcardsapp.Util.JsonKeys;
@@ -25,8 +27,10 @@ import de.uulm.einhoernchen.flashcardsapp.Util.JsonParser;
  */
 public class AsyncPostRemoteToken extends AsyncTask<Long, String, Response> {
 
+    private final AsyncResponse delegate;
     private JSONObject jsonObject;
     private DbManager db;
+    private Response errorResponse;
 
     /**
      * @author Jonas Kraus jonas.kraus@uni-ulm.de
@@ -36,8 +40,27 @@ public class AsyncPostRemoteToken extends AsyncTask<Long, String, Response> {
      */
     public AsyncPostRemoteToken(JSONObject jsonObject, DbManager db) {
 
+        this.delegate = null;
         this.jsonObject = jsonObject;
         this.db = db;
+    }
+
+    public interface AsyncResponse {
+
+        void processFinish(Response response);
+    }
+
+    /**
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     * @since 2016-12-30
+     *
+     * @param jsonObject
+     */
+    public AsyncPostRemoteToken(JSONObject jsonObject, DbManager db, AsyncPostRemoteToken.AsyncResponse delegate) {
+
+        this.jsonObject = jsonObject;
+        this.db = db;
+        this.delegate = delegate;
     }
 
     @Override
@@ -78,20 +101,20 @@ public class AsyncPostRemoteToken extends AsyncTask<Long, String, Response> {
 
             if (urlConnection.getResponseCode() >= 400) {
 
-                Log.e("resp", urlConnection.getResponseCode()+ " " + urlConnection.getResponseMessage() + "");
+                errorResponse = new Response(urlConnection.getResponseCode(), urlConnection.getResponseMessage());
+            } else {
+
+                InputStream inputStream = urlConnection.getInputStream();
+                JsonReader reader = new JsonReader(new InputStreamReader(inputStream, "UTF-8"));
+                return JsonParser.readResponseObject(reader);
             }
 
-
-            InputStream inputStream = urlConnection.getInputStream();
-            JsonReader reader = new JsonReader(new InputStreamReader(inputStream, "UTF-8"));
-
-            return JsonParser.readResponseObject(reader);
-
+            return errorResponse;
         } catch (Exception e) {
 
-            Log.e("doInBack token " + urlConnection.getRequestMethod(), e.toString() + jsonObject.toString());
-            System.out.println(e.toString());
-            return null;
+            Log.d("doInBack token " + urlConnection.getRequestMethod(), e.toString() + jsonObject.toString());
+            //System.out.println(e.toString());
+            return errorResponse;
         }
 
     }
@@ -102,12 +125,18 @@ public class AsyncPostRemoteToken extends AsyncTask<Long, String, Response> {
 
         Log.d("response", response.toString());
 
-        if (response != null) {
+        if (delegate != null) {
+
+            delegate.processFinish(response);
+        }
+
+        if (response != null && response.getStatuscode() < 400) {
 
             //db.saveToken(userId, token);
             try {
 
                 db.updateUserAfterLogin(response.getUserId(), jsonObject.getString(JsonKeys.USER_EMAIL), jsonObject.getString(JsonKeys.USER_PASSWORD), response.getToken());
+
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -115,7 +144,7 @@ public class AsyncPostRemoteToken extends AsyncTask<Long, String, Response> {
             Globals.setToken(response.getToken());
 
         } else {
-            Log.w("POST TOKEN", "FAILED");
+            Log.w("POST TOKEN", "FAILED " + response.toString());
         }
 
     }
