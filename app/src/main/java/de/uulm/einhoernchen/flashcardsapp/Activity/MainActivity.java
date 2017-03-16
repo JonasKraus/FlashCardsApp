@@ -112,6 +112,8 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onResume() {
         super.onResume();
+
+        requestUserToken();
         this.context = this;
         openDb();
         Globals.initGlobals(context, progressBar, db, getSupportFragmentManager(), floatingActionButton, floatingActionButtonAdd);
@@ -155,6 +157,7 @@ public class MainActivity extends AppCompatActivity
         Globals.initGlobals(context, progressBar, db, getSupportFragmentManager(), floatingActionButton, floatingActionButtonAdd);
 
         setProfileView();
+
         ProcessConnectivity.isServerAlive ();
 
         setProfileImageClickListener();
@@ -163,13 +166,12 @@ public class MainActivity extends AppCompatActivity
 
         createToolbar();
 
-        requestUserToken();
     }
 
 
     /**
      * Gets the token from local storage if already existent
-     * otherwise requests it frfom the server
+     * otherwise requests it from the server
      *
      * @author Jonas Kraus jonas.kraus@uni-ulm.de
      * @since 2017-02-15
@@ -216,6 +218,7 @@ public class MainActivity extends AppCompatActivity
         profileName.setText(user.getName());
         profileEmail.setText(user.getEmail());
         profileRating.setText(user.getRating()+"");
+
         setProfileImage();
     }
 
