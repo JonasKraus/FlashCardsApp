@@ -2,6 +2,7 @@ package de.uulm.einhoernchen.flashcardsapp.Fragment.ViewHolder;
 
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
 import android.os.Binder;
 import android.util.Log;
@@ -137,18 +138,7 @@ public class UserViewHolder extends SortedListAdapter.ViewHolder<User> {
 
         } else{
 
-            //get first letter of each String item
-            final String firstLetter = String.valueOf(user.getName().charAt(0)); // hier wird der buchstabe gesetzt
-
-            ColorGenerator generator = ColorGenerator.MATERIAL; // or use DEFAULT
-            // generate random color
-            final int color = generator.getColor(user.getId()); // TODO
-            //int color = generator.getRandomColor();
-
-            TextDrawable drawable = TextDrawable.builder()
-                    .buildRound(firstLetter, color); // radius in px
-
-            imageView.setImageDrawable(drawable);
+            imageView.setImageDrawable(Globals.getContext().getResources().getDrawable(R.drawable.ic_account_circle));
         }
     }
 }
