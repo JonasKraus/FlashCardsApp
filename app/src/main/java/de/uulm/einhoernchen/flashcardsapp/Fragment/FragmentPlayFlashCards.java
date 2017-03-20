@@ -578,7 +578,6 @@ public class FragmentPlayFlashCards extends Fragment implements View.OnClickList
                     imageViewUri.setVisibility(View.VISIBLE);
                     //imageViewUri.setImageBitmap();
 
-                    //uriString = "http://134.60.51.72:9000/";
                 }
             }
         }

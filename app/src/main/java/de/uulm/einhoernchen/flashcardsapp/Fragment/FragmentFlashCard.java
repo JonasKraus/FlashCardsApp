@@ -424,8 +424,6 @@ public class FragmentFlashCard extends Fragment implements View.OnClickListener 
                     imageViewPlay.setVisibility(View.GONE);
                     imageViewUri.setVisibility(View.VISIBLE);
                     //imageViewUri.setImageBitmap();
-
-                    //uriString = "http://134.60.51.72:9000/";
                 }
             }
         }

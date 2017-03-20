@@ -2,7 +2,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingTop="?attr/actionBarSize"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context="de.uulm.einhoernchen.flashcardsapp.Fragment.FragmentHome">
 
@@ -14,12 +13,60 @@
         >
 
 
-        <TextView
+        <android.support.v7.widget.CardView
+            android:layout_margin="@dimen/activity_horizontal_margin"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:text="Home Fragment"
-            android:id="@+id/textview_fragment_home"
-            />
+            android:id="@+id/heartbeat_cardView"
+            android:background="?android:attr/selectableItemBackground"
+
+            android:layout_height="wrap_content">
+            <LinearLayout
+                android:orientation="vertical"
+                android:padding="@dimen/activity_horizontal_margin"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <ImageView
+                    android:tint="@color/white"
+                    android:id="@+id/heartbeat_image"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_offline_pin"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="@dimen/activity_horizontal_margin"
+                    android:paddingTop="3dp"
+                    android:textColor="@color/white"
+                    android:text="@string/label_connection_to_service"
+                    />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/label_established"
+                    android:paddingLeft="5dp"
+                    android:textColor="@color/white"
+                    android:id="@+id/textview_heartbeat"
+                    />
+            </LinearLayout>
+
+
+                <TextView
+                    android:layout_marginTop="@dimen/activity_horizontal_margin"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/klick_to_refresh"
+                    android:textAlignment="center"
+                    style="@style/TextAppearance.AppCompat.Button"
+                    android:textColor="@color/white"
+                    />
+            </LinearLayout>
+
+        </android.support.v7.widget.CardView>
     </LinearLayout>
 
 

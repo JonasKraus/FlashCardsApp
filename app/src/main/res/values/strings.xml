@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">FlashCardsApp</string>
+    <string name="app_name">FlashCards</string>
 
     <!-- Strings related to login -->
     <string name="prompt_email">Email</string>
@@ -18,7 +18,7 @@
     </string>
 
     <!-- Strings related to Home -->
-    <string name="title_activity_home">HomeActivity</string>
+    <string name="title_activity_home">Home</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
@@ -164,6 +164,10 @@
     <string name="action_register">Register</string>
     <string name="action_forgot_pwd">Forgot password?</string>
     <string name="login_failed">Login failed</string>
+    <string name="label_connection_to_service">Connection to Service: </string>
+    <string name="label_established">established</string>
+    <string name="label_unestablished">unestablished</string>
+    <string name="klick_to_refresh">Click to refresh</string>
 
 
 </resources>

@@ -187,9 +187,11 @@ public class FlashCardsActivity extends AppCompatActivity
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_flashcards, menu);
-        final MenuItem searchItem = menu.findItem(R.id.action_search);
-        final SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
-        searchView.setOnQueryTextListener(this);
+
+        // TODO add these to get a search view
+        //final MenuItem searchItem = menu.findItem(R.id.action_search);
+        //final SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
+        //searchView.setOnQueryTextListener(this);
 
         return true;
     }

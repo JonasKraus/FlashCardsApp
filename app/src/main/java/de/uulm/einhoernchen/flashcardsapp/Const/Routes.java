@@ -6,6 +6,9 @@ package de.uulm.einhoernchen.flashcardsapp.Const;
  */
 public class Routes {
 
+    // Change this to toggle between dev and live ip
+    private static final boolean DEV = false;
+
 
     public static final String SLASH = "/";
     public static final String QUESTION_MARK = "?";
@@ -28,17 +31,12 @@ public class Routes {
     public static final String APPEND = "append";
     public static final String BASE_PROTOCOL = "http:" + SLASH + SLASH;
     public static final String BASE_PORT = ":9000";
+    public static final String BASE_URL_IP_DEV = "134.60.51.72";
+    public static final String BASE_URL_IP_LIVE = "134.60.51.194";
 
     public static final String HEARTBEAT = "heartbeat";
 
-    public static final String BASE_URL_LOCAL_HOST = BASE_PROTOCOL + "localhost" + BASE_PORT;
-    public static final String BASE_URL_LOCAL_IP_HOME = BASE_PROTOCOL + "192.168.56.1" + BASE_PORT;
-    public static final String BASE_URL_LOCAL_IP_WELCOME = BASE_PROTOCOL + "134.60.132.174" + BASE_PORT;
-    public static final String BASE_URL_LOCAL_DOMAIN = BASE_PROTOCOL + "dev-flashcards.de" + BASE_PORT;
-    public static final String BASE_URL_LIVE_DOMAIN = BASE_PROTOCOL + "chernobog.dd-dns.de" + BASE_PORT;
-    public static final String BASE_URL_BW_CLOUD = BASE_PROTOCOL + "134.60.51.72" + BASE_PORT;
-
-    public static final String URL = BASE_URL_BW_CLOUD;
+    public static final String URL = BASE_PROTOCOL + (DEV ? BASE_URL_IP_DEV : BASE_URL_IP_LIVE) + BASE_PORT;
 
     public static final String FLASH_CARDS = "cards";
     public static final String CARD_DECKS = "cardDecks";
@@ -50,9 +48,7 @@ public class Routes {
     public static final String USER_GROUPS = "groups";
     public static final String LOGIN = "login";
     public static final String MESSAGES = "messages";
-    public static final String CHALlENGES = "challenges";
+    public static final String CHALLENGES = "challenges";
     public static final String UPLOAD = "upload";
-
-
     public static final String TAGS = "tags";
 }

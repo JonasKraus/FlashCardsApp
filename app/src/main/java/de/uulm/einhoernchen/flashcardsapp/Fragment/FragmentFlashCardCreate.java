@@ -46,6 +46,7 @@ import de.uulm.einhoernchen.flashcardsapp.Activity.MainActivity;
 import de.uulm.einhoernchen.flashcardsapp.AsyncTask.Remote.POST.AsyncPostRemoteCard;
 import de.uulm.einhoernchen.flashcardsapp.AsyncTask.Remote.POST.AsyncPostRemoteImage;
 import de.uulm.einhoernchen.flashcardsapp.Const.Constants;
+import de.uulm.einhoernchen.flashcardsapp.Const.Routes;
 import de.uulm.einhoernchen.flashcardsapp.Database.DbManager;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.Adapter.RecyclerViewAdapterFlashCardAnswers;
 import de.uulm.einhoernchen.flashcardsapp.Fragment.Dataset.ContentFlashCard;
@@ -358,7 +359,7 @@ public class FragmentFlashCardCreate extends Fragment implements View.OnClickLis
 
             } else if (uriString.equals("")) {
 
-                uriString = "http://134.60.51.72:9000/"; // TODO from Routes
+                uriString = Routes.URL;
             }
 
 

@@ -153,6 +153,8 @@ public class MainActivity extends AppCompatActivity
         this.context = this;
         openDb();
 
+        createToolbar();
+
         // init Globals
         Globals.initGlobals(context, progressBar, db, getSupportFragmentManager(), floatingActionButton, floatingActionButtonAdd);
 
@@ -162,9 +164,9 @@ public class MainActivity extends AppCompatActivity
 
         setProfileImageClickListener();
 
+        toolbarTextViewTitle.setText(R.string.title_activity_home);
+        collapsingToolbar.setTitle(getString(R.string.title_activity_home));
         createFragmentHome();
-
-        createToolbar();
 
     }
 
@@ -582,6 +584,10 @@ public class MainActivity extends AppCompatActivity
 
                 } else {
 
+
+                    toolbarTextViewTitle.setText(R.string.title_activity_home);
+                    collapsingToolbar.setTitle(getString(R.string.title_activity_home));
+
                     createFragmentHome();
                     getFragmentManager().popBackStack();
                 }
@@ -692,11 +698,9 @@ public class MainActivity extends AppCompatActivity
 
         if (id == R.id.nav_home) {
 
-            ProcessConnectivity.isServerAlive ();
+            toolbarTextViewTitle.setText(R.string.title_activity_home);
+            collapsingToolbar.setTitle(getString(R.string.title_activity_home));
             createFragmentHome();
-
-            toolbarTextViewTitle.setText(R.string.app_name);
-            collapsingToolbar.setTitle(getResources().getString(R.string.app_name));
 
         } else if (id == R.id.nav_catalogue) {
 

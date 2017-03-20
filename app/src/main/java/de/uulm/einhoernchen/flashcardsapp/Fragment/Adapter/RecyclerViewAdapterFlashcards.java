@@ -321,7 +321,6 @@ public class RecyclerViewAdapterFlashcards extends RecyclerView.Adapter<Recycler
 
         } else if (uriString == null || uriString.equals("")) {
 
-            //uriString = "http://134.60.51.72:9000/";
             isImage = true;
             isVideo = false;
 

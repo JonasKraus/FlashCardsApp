@@ -1,9 +1,11 @@
 package de.uulm.einhoernchen.flashcardsapp.Util;
 
 import android.content.Context;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.FragmentManager;
 import android.util.Log;
+import android.view.View;
 import android.widget.ProgressBar;
 
 import de.uulm.einhoernchen.flashcardsapp.Activity.MainActivity;
@@ -25,7 +27,6 @@ public class Globals {
     private static FragmentManager fragmentManager;
     private static FloatingActionButton floatingActionButton;
     private static FloatingActionButton floatingActionButtonAdd;
-    private static int scrollX;
     private static String token;
     private final static String ADMIN_MAIL = "jonas.kraus@uni-ulm.de";
 
@@ -41,8 +42,7 @@ public class Globals {
      * @param db
      * @param fragmentManager
      * @param floatingActionButton
-     * @param floatingActionButtonAdd
-     */
+     * @param floatingActionButtonAdd      */
     public static void initGlobals(Context context, ProgressBar progressBar, DbManager db, FragmentManager fragmentManager, FloatingActionButton floatingActionButton, FloatingActionButton floatingActionButtonAdd) {
 
         Globals.context = context;
@@ -113,13 +113,6 @@ public class Globals {
         Globals.fragmentManager = fragmentManager;
     }
 
-    public static void setScrollX(int scrollX) {
-        Globals.scrollX = scrollX;
-    }
-
-    public static int getScrollX() {
-        return scrollX;
-    }
 
 
     /**
@@ -132,6 +125,22 @@ public class Globals {
 
         MainActivity mainActivity = (MainActivity) Globals.getContext();
         mainActivity.findViewById(R.id.collapsing_toolbar_search).setVisibility(visibility);
+    }
+
+
+
+    /**
+     * Gets the collapsing toolbar of the main activity
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     * @since 2017-03-17
+     *
+     * @return
+     */
+    public static View getCollapsingToolbarMain() {
+
+        MainActivity mainActivity = (MainActivity) Globals.getContext();
+        return mainActivity.findViewById(R.id.collapsing_toolbar_search);
     }
 
 

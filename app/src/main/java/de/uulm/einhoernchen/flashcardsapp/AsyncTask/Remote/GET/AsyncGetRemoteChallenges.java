@@ -9,7 +9,6 @@ import java.util.List;
 
 import de.uulm.einhoernchen.flashcardsapp.Const.Routes;
 import de.uulm.einhoernchen.flashcardsapp.Model.Challenge;
-import de.uulm.einhoernchen.flashcardsapp.Model.UserGroup;
 import de.uulm.einhoernchen.flashcardsapp.Util.Globals;
 import de.uulm.einhoernchen.flashcardsapp.Util.JsonParser;
 
@@ -37,7 +36,7 @@ public class AsyncGetRemoteChallenges extends AsyncTask<Long, Void, List<Challen
         List<Challenge> challenges;
 
 
-        String urlString = Routes.URL + Routes.SLASH + Routes.CHALlENGES; // TODO URL to call
+        String urlString = Routes.URL + Routes.SLASH + Routes.CHALLENGES; // TODO URL to call
 
         Log.d("back call to ", urlString);
 
