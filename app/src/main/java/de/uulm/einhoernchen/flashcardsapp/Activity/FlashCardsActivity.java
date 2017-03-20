@@ -203,7 +203,6 @@ public class FlashCardsActivity extends AppCompatActivity
     @Override
     public boolean onQueryTextChange(String query) {
 
-        Log.d("query", query);
         fragment.getRecyclerViewAdapter().getFilter().filter(query);
         return false;
     }
