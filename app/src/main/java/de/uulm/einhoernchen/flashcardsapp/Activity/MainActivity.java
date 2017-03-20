@@ -642,6 +642,7 @@ public class MainActivity extends AppCompatActivity
         getMenuInflater().inflate(R.menu.home, menu);
 
         MenuItem item = menu.findItem(R.id.action_search);
+        item.setVisible(false); // TODO comment this to see the search icon
         SearchView searchView = new SearchView(getSupportActionBar().getThemedContext());
         MenuItemCompat.setShowAsAction(item, MenuItemCompat.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW | MenuItemCompat.SHOW_AS_ACTION_IF_ROOM);
         MenuItemCompat.setActionView(item, searchView);
@@ -659,12 +660,12 @@ public class MainActivity extends AppCompatActivity
             }
         });
         searchView.setOnClickListener(new View.OnClickListener() {
-                                          @Override
-                                          public void onClick(View v) {
+              @Override
+              public void onClick(View v) {
 
-                                              Log.d("click", v.getId() + "");
-                                          }
-                                      }
+                  Log.d("click", v.getId() + "");
+              }
+          }
         );
         return true;
     }
@@ -679,6 +680,8 @@ public class MainActivity extends AppCompatActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+
+            startActivity(new Intent(MainActivity.this, SettingsActivity.class));
             return true;
         }
 

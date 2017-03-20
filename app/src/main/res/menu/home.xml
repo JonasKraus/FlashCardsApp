@@ -8,6 +8,7 @@
         app:showAsAction="never" />
     <item android:id="@+id/action_sync"
         android:title="@string/action_sync"
+        android:visible="false"
         android:orderInCategory="100"
         app:showAsAction="never" />
     <item android:id="@+id/action_search"
