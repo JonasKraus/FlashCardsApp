@@ -25,6 +25,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import org.json.JSONArray;
@@ -412,6 +413,16 @@ public class FragmentFlashCard extends Fragment implements View.OnClickListener 
 
                             if (Globals.getProgressBar().isShown()) {
                                 Globals.getProgressBar().setVisibility(View.GONE);
+                            }
+
+                            // Set maximal height of webview
+                            if (view.getHeight() > Globals.getContext().getResources().getDisplayMetrics().heightPixels) {
+
+                                view.setLayoutParams(new RelativeLayout.LayoutParams(
+                                                Globals.getContext().getResources().getDisplayMetrics().widthPixels,
+                                                Globals.getContext().getResources().getDisplayMetrics().heightPixels
+                                        )
+                                );
                             }
                         }
 

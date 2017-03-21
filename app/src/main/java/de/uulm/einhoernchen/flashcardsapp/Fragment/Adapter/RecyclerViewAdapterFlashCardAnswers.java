@@ -396,6 +396,16 @@ public class RecyclerViewAdapterFlashCardAnswers extends RecyclerView.Adapter<Re
                     if (progressBar.isShown()) {
                         progressBar.setVisibility(View.GONE);
                     }
+
+                    // Set maximal height of webview
+                    if (view.getHeight() > Globals.getContext().getResources().getDisplayMetrics().heightPixels) {
+
+                        view.setLayoutParams(new RelativeLayout.LayoutParams(
+                                Globals.getContext().getResources().getDisplayMetrics().widthPixels,
+                                Globals.getContext().getResources().getDisplayMetrics().heightPixels
+                                )
+                        );
+                    }
                 }
 
             });
