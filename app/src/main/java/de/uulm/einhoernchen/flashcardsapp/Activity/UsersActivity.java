@@ -37,11 +37,27 @@ public class UsersActivity extends AppCompatActivity implements OnFragmentIntera
     private TextView textViewToolbarCheckedUsers;
     private List<User> usersOfGroup;
     private Long groupId = null;
+    private boolean isUserChecked = true; // TODO check if the user is authorised to edit the group
+
 
     @Override
     protected void onPostResume() {
         super.onPostResume();
 
+    }
+
+    public boolean checkIfUserIsChecked() {
+
+        for (int i = 0; i < checkedUsers.size(); i++) {
+
+            Log.d("check", checkedUsers.get(i).getId() + " " + Globals.getDb().getLoggedInUserId());
+            // Check if user is in checked list
+            if (checkedUsers.get(i).getId() == Globals.getDb().getLoggedInUserId()) {
+
+                return true;
+            }
+        }
+        return false;
     }
 
 
@@ -53,16 +69,23 @@ public class UsersActivity extends AppCompatActivity implements OnFragmentIntera
 
         Globals.setFragmentManager(getSupportFragmentManager());
 
+        setContentView(R.layout.activity_users);
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        textViewToolbarCheckedUsers = (TextView) findViewById(R.id.textView_checked_users);
+
         if (extras != null && extras.containsKey("group_id")) {
+
 
             groupId = extras.getLong("group_id");
 
             ContentUsersOfUserGroup contentUsersOfUserGroup = new ContentUsersOfUserGroup();
-            contentUsersOfUserGroup.collectItemsFromDb(false, groupId);
-            contentUsersOfUserGroup.collectItemsFromServer(false, groupId);
+            contentUsersOfUserGroup.collectItemsFromDb(false, groupId, isUserChecked);
+            contentUsersOfUserGroup.collectItemsFromServer(false, groupId, isUserChecked);
 
         } else if (extras != null && extras.containsKey("create_message")) {
-
 
             // directly call this content to go faster
             ContentUsers contentUsers = new ContentUsers();
@@ -77,14 +100,6 @@ public class UsersActivity extends AppCompatActivity implements OnFragmentIntera
             contentUsers.collectItemsFromDb(false);
             contentUsers.collectItemsFromServer(false);
         }
-
-
-        setContentView(R.layout.activity_users);
-
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-
-        textViewToolbarCheckedUsers = (TextView) findViewById(R.id.textView_checked_users);
 
         /*
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);

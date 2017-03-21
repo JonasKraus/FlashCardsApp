@@ -93,7 +93,7 @@ public class UserGroupDetailsActivity extends AppCompatActivity  implements OnFr
         if (!isUserInList(users)) {
 
             disableView();
-        };
+        }
 
         setUsersListFragment(users);
     }

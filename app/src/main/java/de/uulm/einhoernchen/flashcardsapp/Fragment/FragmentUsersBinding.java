@@ -85,6 +85,7 @@ public class FragmentUsersBinding extends Fragment implements SearchView.OnQuery
     private RecyclerViewAdapterUsersBinding mAdapterClean;
     private boolean createMessage;
     private Long deckId;
+    private boolean editable = true;
 
 
     public RecyclerView getRecyclerView() {
@@ -278,6 +279,9 @@ public class FragmentUsersBinding extends Fragment implements SearchView.OnQuery
         ColorGenerator generator = ColorGenerator.MATERIAL; // or use DEFAULT
         // generate random color
 
+        // Return if unauthorised to edit
+        if (!editable) return;
+
         if (listItemUserBinding.imageViewRoundIcon.getTag().equals("checked")) {
 
             checkedUsers.remove(listItemUserBinding.getModel());
@@ -411,5 +415,21 @@ public class FragmentUsersBinding extends Fragment implements SearchView.OnQuery
      */
     public void setCreateMessage(boolean createMessage) {
         this.createMessage = createMessage;
+    }
+
+
+
+    /**
+     * Says if the gui should be editable
+     * Default to true
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     * @since 2017-03-21
+     *
+     * @param editable
+     */
+    public void setEditable(boolean editable) {
+
+        this.editable = editable;
     }
 }

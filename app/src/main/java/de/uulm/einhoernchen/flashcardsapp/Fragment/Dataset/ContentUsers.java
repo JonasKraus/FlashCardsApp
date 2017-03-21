@@ -28,6 +28,7 @@ public class ContentUsers {
     private static DbManager db = Globals.getDb();
     private List<User> usersOfGroup;
     private boolean createMessage = false;
+    private boolean editable = true;
 
 
     /**
@@ -54,6 +55,7 @@ public class ContentUsers {
                 fragment.setUsersOfGroup(usersOfGroup);
                 fragment.setItemList(users);
                 fragment.setUpToDate(isUpToDate);
+                fragment.setEditable(editable);
                 fragment.setCreateMessage(createMessage);
 
                 android.support.v4.app.FragmentTransaction fragmentTransaction =
@@ -107,6 +109,7 @@ public class ContentUsers {
                 fragment.setUsersOfGroup(usersOfGroup);
                 fragment.setItemList(users);
                 fragment.setUpToDate(isUpToDate);
+                fragment.setEditable(editable);
                 fragment.setCreateMessage(createMessage);
 
 
@@ -140,5 +143,19 @@ public class ContentUsers {
 
     public void setCreateMessage(boolean createMessage) {
         this.createMessage = createMessage;
+    }
+
+
+
+    /**
+     * Says if the gui should be editable
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     * @since 2017-03-21
+     *
+     * @param editable
+     */
+    public void setEditable(boolean editable) {
+        this.editable = editable;
     }
 }

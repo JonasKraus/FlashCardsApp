@@ -29,11 +29,11 @@ public class ContentUsersOfUserGroup {
     /**
      * @author Jonas Kraus jonas.kraus@uni-ulm.de
      * @since 2017-01-28
-     *
-     * @param backPressed
+     *@param backPressed
+     * @param isEditable
      *
      */
-    public void collectItemsFromServer(final boolean backPressed, final Long userGroupId) {
+    public void collectItemsFromServer(final boolean backPressed, final Long userGroupId, final boolean isEditable) {
 
         AsyncGetRemoteUsersOfUserGroup asyncGetUsers = new AsyncGetRemoteUsersOfUserGroup(new AsyncGetRemoteUsersOfUserGroup.AsyncResponseUsers() {
 
@@ -51,6 +51,7 @@ public class ContentUsersOfUserGroup {
 
                 ContentUsers contentUsers = new ContentUsers();
                 contentUsers.setUsersOfGroup(users);
+                contentUsers.setEditable(isEditable);
                 contentUsers.collectItemsFromDb(false);
                 contentUsers.collectItemsFromServer(false);
 
@@ -95,10 +96,10 @@ public class ContentUsersOfUserGroup {
      *
      * @author Jonas Kraus jonas.kraus@uni-ulm.de
      * @since 2016-12-16
-     *
-     * @param backPressed
+     *@param backPressed
+     * @param isEditable
      */
-    public void collectItemsFromDb(final boolean backPressed, Long userGroupId) {
+    public void collectItemsFromDb(final boolean backPressed, Long userGroupId, final boolean isEditable) {
 
         AsyncGetLocalUsersOfUserGroup asyncGetLocalUsersOfUserGroup = new AsyncGetLocalUsersOfUserGroup(new AsyncGetLocalUsersOfUserGroup.AsyncResponseLocalUsers() {
 
@@ -109,6 +110,7 @@ public class ContentUsersOfUserGroup {
 
                 ContentUsers contentUsers = new ContentUsers();
                 contentUsers.setUsersOfGroup(users);
+                contentUsers.setEditable(isEditable);
                 contentUsers.collectItemsFromDb(false);
                 contentUsers.collectItemsFromServer(false);
 
