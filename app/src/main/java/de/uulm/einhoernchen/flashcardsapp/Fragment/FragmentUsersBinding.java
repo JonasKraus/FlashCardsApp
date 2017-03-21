@@ -295,12 +295,15 @@ public class FragmentUsersBinding extends Fragment implements SearchView.OnQuery
 
             } else {
 
+                /*
                 final int color = generator.getColor(listItemUserBinding.getModel().getId());
 
                 drawable = TextDrawable.builder()
                         .buildRound(listItemUserBinding.getModel().getName().charAt(0) + "", color); // radius in px
 
                 listItemUserBinding.imageViewRoundIcon.setImageDrawable(drawable);
+                */
+                listItemUserBinding.imageViewRoundIcon.setImageDrawable(Globals.getContext().getResources().getDrawable(R.drawable.ic_account_circle));
             }
 
             listItemUserBinding.imageViewRoundIcon.setTag("unchecked");

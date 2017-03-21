@@ -180,10 +180,15 @@ public class RecyclerViewAdapterUsers extends RecyclerView.Adapter<RecyclerViewA
 
         if (user.getAvatar() == null || user.getAvatar().equals("")) {
 
+            /*
             TextDrawable drawable = TextDrawable.builder()
                     .buildRound(firstLetter, color); // radius in px
 
             holder.imageView.setImageDrawable(drawable);
+            */
+
+            holder.imageView.setImageDrawable(Globals.getContext().getResources().getDrawable(R.drawable.ic_account_circle));
+
 
         } else {
 
