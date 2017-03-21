@@ -168,6 +168,7 @@
     <string name="label_established">established</string>
     <string name="label_unestablished">unestablished</string>
     <string name="klick_to_refresh">Click to refresh</string>
+    <string name="finished">Finished</string>
 
 
 </resources>

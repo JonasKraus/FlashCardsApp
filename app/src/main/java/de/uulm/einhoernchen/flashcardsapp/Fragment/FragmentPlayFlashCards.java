@@ -25,6 +25,7 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -459,6 +460,10 @@ public class FragmentPlayFlashCards extends Fragment implements View.OnClickList
         mContentView.setText(Html.fromHtml(currentFlashcard.getQuestion().getQuestionText()));
         mAuthorView.setText(currentFlashcard.getQuestion().getAuthor().getName());
 
+        webViewUri.setVisibility(View.GONE);
+        imageViewPlay.setVisibility(View.GONE);
+        imageViewUri.setVisibility(View.GONE);
+
         if (mImageAuthor == null) mImageAuthor = (ImageView) view.findViewById(R.id.imageViewProfilePhoto);
 
             ProcessorImage.download(
@@ -520,7 +525,7 @@ public class FragmentPlayFlashCards extends Fragment implements View.OnClickList
      */
     private void setMedia() {
 
-        if (currentFlashcard.getQuestion().getUri() != null && currentFlashcard.getQuestion().getUri().toString() != "") {
+        if (currentFlashcard.getQuestion().getUri() != null) {
 
             String uriString = currentFlashcard.getQuestion().getUri().toString().toLowerCase();
 
@@ -586,11 +591,19 @@ public class FragmentPlayFlashCards extends Fragment implements View.OnClickList
 
                     webViewUri.setVisibility(View.GONE);
                     imageViewPlay.setVisibility(View.GONE);
-                    imageViewUri.setVisibility(View.VISIBLE);
+                    imageViewUri.setVisibility(View.GONE);
                     //imageViewUri.setImageBitmap();
 
                 }
             }
+        } else {
+
+            Log.d("image", "null");
+
+            webViewUri.setVisibility(View.GONE);
+            imageViewPlay.setVisibility(View.GONE);
+            imageViewUri.setVisibility(View.GONE);
+            imageViewUri.setImageDrawable(null);
         }
 
     }
@@ -823,6 +836,10 @@ public class FragmentPlayFlashCards extends Fragment implements View.OnClickList
                     // count ups
                     position++;
 
+                    if (position == statistics.size() -1) {
+
+                        Toast.makeText(getContext(), R.string.finished, Toast.LENGTH_SHORT).show();
+                    }
                     // get loop if end is reached
                     position %= statistics.size();
 
@@ -833,6 +850,10 @@ public class FragmentPlayFlashCards extends Fragment implements View.OnClickList
 
                 setContent();
 
+                webViewUri.setVisibility(View.GONE);
+                imageViewPlay.setVisibility(View.GONE);
+                imageViewUri.setVisibility(View.GONE);
+                Log.d("urrri " + position, currentFlashcard.getQuestion().getUri().toString());
                 setMedia();
 
                 setListener();
