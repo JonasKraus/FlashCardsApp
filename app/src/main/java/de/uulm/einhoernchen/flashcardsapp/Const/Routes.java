@@ -33,6 +33,7 @@ public class Routes {
     public static final String BASE_PORT = ":9000";
     public static final String BASE_URL_IP_DEV = "134.60.51.72";
     public static final String BASE_URL_IP_LIVE = "134.60.51.194";
+    public static final String URL_HELP = "http://134.60.51.194/help.html";
 
     public static final String HEARTBEAT = "heartbeat";
 
