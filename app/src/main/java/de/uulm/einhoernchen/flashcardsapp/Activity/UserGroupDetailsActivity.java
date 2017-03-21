@@ -1,13 +1,11 @@
 package de.uulm.einhoernchen.flashcardsapp.Activity;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
@@ -41,6 +39,7 @@ public class UserGroupDetailsActivity extends AppCompatActivity  implements OnFr
     private UserGroup selectedUserGroup;
     private DbManager db = Globals.getDb();
     private View contentView;
+    private FloatingActionButton fab;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,14 +55,18 @@ public class UserGroupDetailsActivity extends AppCompatActivity  implements OnFr
         editTextName = (EditText) findViewById(R.id.edittext_usergroup_name);
         editTextDescription = (EditText) findViewById(R.id.edittext_usergroup_description);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab = (FloatingActionButton) findViewById(R.id.fab);
+
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (ProcessConnectivity.isOk(getApplicationContext())) {
+                if (ProcessConnectivity.isOk(getApplicationContext()) && isUserInList(users)) {
 
                     createGroup();
-                } else {
+                } else if (ProcessConnectivity.isOk(getApplicationContext()) && !isUserInList(users)){
+
+                    Snackbar.make(view, getResources().getString(R.string.unauthorised), Snackbar.LENGTH_LONG).show();
+                } else if (!ProcessConnectivity.isOk(getApplicationContext())){
 
                     Snackbar.make(view, getResources().getString(R.string.service_unavailable), Snackbar.LENGTH_LONG).show();
                 }
@@ -89,6 +92,39 @@ public class UserGroupDetailsActivity extends AppCompatActivity  implements OnFr
 
         setUsersListFragment(users);
 
+        if (!isUserInList(users)) {
+
+            disableView();
+        };
+    }
+
+    private void disableView() {
+        editTextName.setEnabled(false);
+        editTextDescription.setEnabled(false);
+    }
+
+
+    /**
+     * Checks if the logged in User is in the list
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     * @since 2017-03-21
+     *
+     * @param users
+     * @return
+     */
+    private boolean isUserInList(ArrayList<User> users) {
+
+        boolean isInList = false;
+
+        for (User user : users) {
+
+            if (user.getId() == Globals.getDb().getLoggedInUserId()) {
+
+                isInList = true;
+            }
+        }
+        return isInList;
     }
 
 
