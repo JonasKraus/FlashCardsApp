@@ -88,7 +88,7 @@ public class FragmentFlashCards extends Fragment {
         // Set the view with the data
         mRecyclerView.setAdapter(new RecyclerViewAdapterFlashcards(
                 db, itemList, mListener, isUpToDate, mRecyclerView.getContext(), progressBar,
-                getFragmentManager()));
+                getFragmentManager(), parentId));
 
 
         Button button = (Button) view.findViewById(R.id.button_card_add);

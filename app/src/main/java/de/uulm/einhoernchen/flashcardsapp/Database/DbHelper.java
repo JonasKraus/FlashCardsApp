@@ -582,17 +582,17 @@ public class DbHelper extends SQLiteOpenHelper {
      * All Columns of an user
      */
     public static String[] allUserColumns = {
-            COLUMN_USER_ID,                  //0
-            COLUMN_USER_AVATAR,              //1
-            COLUMN_USER_NAME,                //2
-            COLUMN_USER_PASSWORD,            //3
-            COLUMN_USER_EMAIL,               //4
-            COLUMN_USER_RATING,              //5
-            COLUMN_USER_GROUP,               //6
-            COLUMN_USER_CREATED,             //7
-            COLUMN_USER_LAST_LOGIN,          //8
-            COLUMN_USER_LOCAL_ACCOUNT,       //9
-            COLUMN_USER_IS_LOGGED_IN         //10
+            TABLE_USER + "." + COLUMN_USER_ID,                  //0
+            TABLE_USER + "." + COLUMN_USER_AVATAR,              //1
+            TABLE_USER + "." + COLUMN_USER_NAME,                //2
+            TABLE_USER + "." + COLUMN_USER_PASSWORD,            //3
+            TABLE_USER + "." + COLUMN_USER_EMAIL,               //4
+            TABLE_USER + "." + COLUMN_USER_RATING,              //5
+            TABLE_USER + "." + COLUMN_USER_GROUP,               //6
+            TABLE_USER + "." + COLUMN_USER_CREATED,             //7
+            TABLE_USER + "." + COLUMN_USER_LAST_LOGIN,          //8
+            TABLE_USER + "." + COLUMN_USER_LOCAL_ACCOUNT,       //9
+            TABLE_USER + "." + COLUMN_USER_IS_LOGGED_IN         //10
     };
 
     public static String[] allFlashCardColumns = {

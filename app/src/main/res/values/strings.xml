@@ -169,6 +169,7 @@
     <string name="label_unestablished">unestablished</string>
     <string name="klick_to_refresh">Click to refresh</string>
     <string name="finished">Finished</string>
+    <string name="unauthorised">You are not authorised to edit</string>
 
 
 </resources>

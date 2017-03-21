@@ -3382,4 +3382,43 @@ public class DbManager extends DbHelper{
 
         return ids;
     }
+
+
+
+    /**
+     * checks if a user is in group of a carddeck
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     * @since 2017-03-21
+     *
+     * @param carddeckId
+     * @return
+     */
+    public boolean isUserMemberOfCarddeckUsersGroup(long carddeckId) {
+
+        int count = 0;
+        Cursor cursor = database.query(
+                DbHelper.TABLE_CARD_DECK
+                        + " JOIN " + TABLE_USER_GROUP_JOIN_TABLE + " ON "
+                        + TABLE_CARD_DECK + "." + COLUMN_CARD_DECK_GROUP + "=" + TABLE_USER_GROUP_JOIN_TABLE + "." + COLUMN_USER_GROUP_JOIN_TABLE_GROUP_ID
+                        + " JOIN " + TABLE_USER + " ON " + TABLE_USER + "." + COLUMN_USER_ID + "=" + TABLE_USER_GROUP_JOIN_TABLE + "." + COLUMN_USER_GROUP_JOIN_TABLE_USER_ID,
+                allUserColumns,
+                TABLE_CARD_DECK + "." + COLUMN_CARD_DECK_ID  + "=" + carddeckId + " AND " + TABLE_USER + "." + COLUMN_USER_ID  + "=" + loggedInUser.getId(),
+                null, null, null, null);
+
+        if (cursor.moveToFirst()) {
+
+            try {
+                count = cursor.getColumnCount();
+
+            } catch (Exception e) {
+                System.out.print(e.getMessage());
+            }
+
+        }
+
+        cursor.close();
+
+        return count > 0;
+    }
 }

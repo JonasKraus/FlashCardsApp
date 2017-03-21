@@ -49,9 +49,10 @@ public class RecyclerViewAdapterFlashcards extends RecyclerView.Adapter<Recycler
     private final Context context;
     private final ProgressBar progressBar;
     protected final FragmentManager supportFragmentManager;
+    private final long carddeckId;
     private Bitmap defaultImage;
 
-    public RecyclerViewAdapterFlashcards(DbManager db, List<FlashCard> items, OnFragmentInteractionListenerFlashcard listener, boolean isUpToDate, Context context, ProgressBar progressBar, FragmentManager supportFragmentManager) {
+    public RecyclerViewAdapterFlashcards(DbManager db, List<FlashCard> items, OnFragmentInteractionListenerFlashcard listener, boolean isUpToDate, Context context, ProgressBar progressBar, FragmentManager supportFragmentManager, long parentId) {
         flashCards = items;
         mListener = listener;
         this.isUpToDate = isUpToDate;
@@ -59,6 +60,7 @@ public class RecyclerViewAdapterFlashcards extends RecyclerView.Adapter<Recycler
         this.context = context;
         this.progressBar = progressBar;
         this.supportFragmentManager = supportFragmentManager;
+        this.carddeckId = parentId;
 
         this.defaultImage = BitmapFactory.decodeResource(Globals.getContext().getResources(), R.drawable.flash_icon);
     }
@@ -362,9 +364,17 @@ public class RecyclerViewAdapterFlashcards extends RecyclerView.Adapter<Recycler
 
                 if (ProcessConnectivity.isOk(Globals.getContext())) {
 
-                    MainActivity mainActivity = (MainActivity) Globals.getContext();
-                    mainActivity.onFlashcardListFragmentInteraction(null);
-                    mainActivity.setCatalogueState(Constants.FLASH_CARD_CREATE);
+                    boolean isInGroup = db.isUserMemberOfCarddeckUsersGroup(this.carddeckId);
+
+                    if (isInGroup) {
+
+                        MainActivity mainActivity = (MainActivity) Globals.getContext();
+                        mainActivity.onFlashcardListFragmentInteraction(null);
+                        mainActivity.setCatalogueState(Constants.FLASH_CARD_CREATE);
+                    } else {
+
+                        Snackbar.make(v, Globals.getContext().getResources().getString(R.string.unauthorised), Snackbar.LENGTH_SHORT).show();
+                    }
                 } else {
 
                     Snackbar.make(v, Globals.getContext().getString(R.string.service_unavailable), Snackbar.LENGTH_LONG).show();
