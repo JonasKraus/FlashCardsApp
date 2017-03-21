@@ -90,14 +90,23 @@ public class UserGroupDetailsActivity extends AppCompatActivity  implements OnFr
             editTextDescription.setText(selectedUserGroup.getDescription());
         }
 
-        setUsersListFragment(users);
-
         if (!isUserInList(users)) {
 
             disableView();
         };
+
+        setUsersListFragment(users);
     }
 
+
+
+    /**
+     * Disabled edit texts to prevent the user to edit
+     *
+     * @author Jonas Kraus jonas.kraus@uni-ulm.de
+     * @since 2017-03-21
+     *
+     */
     private void disableView() {
         editTextName.setEnabled(false);
         editTextDescription.setEnabled(false);
