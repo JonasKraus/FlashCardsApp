@@ -346,14 +346,17 @@ public class RecyclerViewAdapterFlashCardAnswers extends RecyclerView.Adapter<Re
             isImage = true;
             isVideo = true;
 
-            holder.mediaPlay.setOnClickListener(new View.OnClickListener() {
-
+            View.OnClickListener youtubeClickListener = new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
 
                     context.startActivity(new Intent(Intent.ACTION_VIEW,Uri.parse(uriStringFinal)));
                 }
-            });
+            };
+
+            holder.mediaImage.setOnClickListener(youtubeClickListener);
+
+            holder.mediaPlay.setOnClickListener(youtubeClickListener);
 
 
         } else {
